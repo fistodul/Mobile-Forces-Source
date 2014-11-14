@@ -1,0 +1,9 @@
+"LightmappedGeneric"
+{
+	"$baseTexture" "nature/rock_diffuse"
+	"$bumpmap" "nature/rock_normal"
+<dx90
+{
+$nodiffusebumplighting 1
+}
+}

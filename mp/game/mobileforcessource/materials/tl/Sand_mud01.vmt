@@ -1,0 +1,5 @@
+"lightmappedgeneric"
+{
+    "$basetexture" "tl/Sand_mud01"
+    "$surfaceprop" "mud"
+}

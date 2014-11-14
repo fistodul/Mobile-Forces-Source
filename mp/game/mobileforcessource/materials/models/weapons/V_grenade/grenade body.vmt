@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/V_grenade/grenade body"
+                "$phong" "1"
+	"$phongexponent" "20"
+	"$phongboost" ".3"	
+}

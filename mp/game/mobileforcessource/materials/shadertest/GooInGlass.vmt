@@ -1,0 +1,25 @@
+"Refract"
+{
+	"$baseTexture" "shadertest/fire_glass"
+	"$normalmap" "shadertest/fire_glass_NORM"
+	"$dudvmap" "shadertest/fire_glass_DUDV"
+	"$refractamount" .2
+        "$refracttint" "[1 1 1]"
+        
+        "%keywords" "gooinglass; shadertest; fire_glass; glass; gta; refract; gooinglass_fix" 
+	
+
+                "Proxies"
+	{
+		"TextureScroll"
+		{
+			texturescrollvar $bumpTransform
+		        texturescrollangle -90
+                        texturescrollrate 0.2
+		}
+	}
+}
+
+//Made by gtamike_TSGK
+//www.gtamikes-maps.piczo.com
+//Valve broken shadertest/gooinglass in ob update so heres my fix as another option instead :)

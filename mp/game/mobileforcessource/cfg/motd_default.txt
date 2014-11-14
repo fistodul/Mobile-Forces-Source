@@ -1,0 +1,48 @@
+<html>
+<body bgcolor="black">
+<text color="green">
+<head>
+<title>Mobile Forces Source Motd</title>
+<style type="text/css">
+pre 	{
+		font-family:Verdana,Tahoma;
+		color:#FFB000;
+    	}
+body	{
+		background:#000000;
+		margin-left:8px;
+		margin-top:0px;
+		}
+a	{
+    	text-decoration:    italic;
+	}
+a:link  {
+    color:  #FFFFFF;
+    }
+a:visited   {
+    color:  #FFFFFF;
+    }
+a:active    {
+    color:  #FFFFFF;
+    }
+a:hover {
+    color:  #FFFFFF;
+    text-decoration:    italic;
+    }
+</style>
+</head>
+<body scroll="no">
+<pre>
+You are playing Mobile Forces Source(but you probably already know that xD)
+Developed by: World Gamers
+Project Leaders: Filip Stojanovic, Marko Petrovic
+Full Credits: <a href="exec credits.cfg">Credits</a>
+
+Facebook: <a href="http://www.facebook.com/groups/mobileforcesandmfs/">Mobile Forces + MFS</a>
+Skype: <a href="skype:?chat&blob=m7_cEG6nwvsEjpu9BhJ5GjZtgx-abw0N87v6ZFu4keQBsJBYlRqu9gQORi6x5CqS72yROTnjHr4ZaOj7PtWlFjD8Mz0CjD_9HHk3L4W82HPt23NRXGCpELHBzHOvx6vLcmzhCYLVmeZGlrPdxGLaa9MSLYxx">Mobile Forces + MFS Gaming Community</a>
+Troll Skype Group: <a href="skype:?chat&blob=7l4iURn9wxPgeNjDzrJkiL0eTHwCq1AqZim_FMjeZCb9IQQ32_ocekF7cQtjiRqusWvN8tSRLg8fyXv05LHKxEdi3ONyCS3cFhgAYYcOWIXjQbho5b33f9bG">Test xD</a>
+
+Visit the official Mobile Forces Source Website:<a href="http://world-gamers.forumotion.net">World-Gamers.forumotion.net</a>
+</pre>
+</body>
+</html>

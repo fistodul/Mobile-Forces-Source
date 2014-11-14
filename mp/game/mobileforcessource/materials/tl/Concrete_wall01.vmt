@@ -1,0 +1,5 @@
+"lightmappedgeneric"
+{
+    "$basetexture" "tl/Concrete_wall01"
+    "$surfaceprop" "concrete"
+}

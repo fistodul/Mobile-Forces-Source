@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/props/box3"
+	"$surfaceprop" "wood"
+}

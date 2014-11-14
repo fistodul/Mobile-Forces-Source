@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "HatsuneMiku/expression"
+	"$surfaceprop" "flesh"
+	"$nocull" 1
+	"$model" 1
+	"$halflambert" "1"
+	"$vertexcolor" 1
+//	"$alphatest" 1
+	"$translucent" 1
+
+}

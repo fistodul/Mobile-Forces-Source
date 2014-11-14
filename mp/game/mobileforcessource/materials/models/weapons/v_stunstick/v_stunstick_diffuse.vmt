@@ -1,0 +1,15 @@
+VertexLitGeneric
+{
+"$basetexture" "models\weapons\v_stunstick\v_stunstick_diffuse" 
+"$normalmapalphaenvmapmask" "0"
+"$frame" "12"
+"Proxies" 
+{
+"AnimatedTexture" 
+{ 
+"animatedTextureVar" "$basetexture" 
+"animatedTextureFrameNumVar" "$frame" 
+"animatedTextureFrameRate" "8" //this is the FPS that the texture will animate at
+}
+}
+}

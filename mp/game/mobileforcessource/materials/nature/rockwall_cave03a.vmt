@@ -1,0 +1,24 @@
+"LightmappedGeneric"
+{
+	"$basetexture"	"nature/rockwall_cave03a"
+	"$surfaceprop"	"rock"
+	"$bumpmap" "Nature/rockwall_cave_03a_height-ssbump"
+	"$ssbump" "1"
+	"$SSBumpMathFix"	"0"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .2 .2 .2 ]"
+	"$envmap" "cubemaps/cubemap_cave01"
+	"%keywords" "ep2"
+	"$seamless_scale" 0.005
+    "$parallaxmap"	"Nature/rockwall_cave03a_parallax"
+    "$parallaxmapscale"	0.75
+	"$detail" "Nature/cave_detail"
+	"$detaiblendmode" "0"
+	"$detailscale" "2"
+
+	"LightmappedGeneric_hdr_dx9"
+	{
+	"$envmaptint" "[ .2 .2 .2 ]"
+	"$envmap" "cubemaps/cubemap_cave01"
+	}
+}

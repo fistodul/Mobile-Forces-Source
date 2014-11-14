@@ -1,0 +1,16 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "Nature/rockwall_cave01a"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "Nature/rockwall_cave_01a_ssbump"
+        "$ssbump" "1"
+	"$SSBumpMathFix"	"0"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .09 .09 .09 ]"
+	"$envmap" "env_cubemap"
+	"$detail" "Nature/cave_detail"
+	"$detaiblendmode" "0"
+	"$detailscale" "2"
+    "$parallaxmap"	"Nature/rockwall_cave01a_parallax"
+    "$parallaxmapscale"	0.75
+}

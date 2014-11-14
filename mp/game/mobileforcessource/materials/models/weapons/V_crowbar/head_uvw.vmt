@@ -1,0 +1,13 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$basetexture" "models/Weapons/v_crowbar/head"
+	"$bumpmap" "models/Weapons/v_crowbar/head_normal"
+//	"$envmap" "Environment Maps/specular"
+	"$envmaptint" "[ .64 .64 .64 ]"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+                "$phong" "1"
+	"$phongexponent" "20"
+	"$phongboost" ".3"	
+}

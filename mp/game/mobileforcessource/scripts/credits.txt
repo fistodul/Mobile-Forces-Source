@@ -1,0 +1,20 @@
+"IntroCreditsNames"
+{
+       "Mobile Forces Source" "ClientTitleFont"
+       "Credits:"	  "CreditsText"
+       " "	          "CreditsText"
+       "Well..."             "CreditsText"
+       "You reached the end, Congratulations" 	          "CreditsText"
+       "Mobile Forces Source"	          "CreditsOutroLogos"
+}
+"CreditsParams"
+{
+	"fadeintime"	"2"
+	"fadeouttime"	"2.5"
+	"nextfadetime"	"1.5"
+	"posx"	"96"
+	"posy"	"360"
+	"color" "255 255 255 128"
+	"scrolltime" "150"
+	"separation"  "5"
+}

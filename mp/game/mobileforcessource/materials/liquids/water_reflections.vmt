@@ -1,0 +1,20 @@
+"LightMappedGeneric"
+  { 
+"$baseTexture" "liquids/water_reflections"
+"$translucent" "1"
+"$additive" "1"
+"Proxies" 
+     { 
+       "AnimatedTexture" 
+       { 
+          "animatedTextureVar" "$basetexture" 
+          "animatedTextureFrameNumVar" "$frame" 
+          "animatedTextureFrameRate" "24" 
+       }
+     }
+<dx90
+{
+$nodiffusebumplighting 1
+$forcecheap 1
+}
+}

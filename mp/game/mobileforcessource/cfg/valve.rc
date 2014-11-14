@@ -1,0 +1,23 @@
+// Some Important stuff
+//sv_pure -1
+sv_unlockedchapters 99
+jpeg_quality 100
+//cl_forcepreload 1
+r_fastzreject -1
+r_lod -2 // -8
+//mat_parallaxmap 1
+//mat_queue_mode -1 // maybe this is already set by default to -1 idk
+//mp_decals 800 // Can increase lag but can also "fix badly made sprays xD"
+//r_decals 800
+exec skill_manifest.cfg
+
+// Setup custom controller
+exec joystick.cfg
+
+// run a user script file if present
+exec autoexec.cfg
+
+//
+// stuff command line statements
+//
+stuffcmds

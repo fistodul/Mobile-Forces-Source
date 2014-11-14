@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\weapons\v_gauss/V_GAUSS_REFERENCE"
+                 "$bumpmap" "models\weapons\v_gauss/V_GAUSS_REFERENCE_normal"
+}

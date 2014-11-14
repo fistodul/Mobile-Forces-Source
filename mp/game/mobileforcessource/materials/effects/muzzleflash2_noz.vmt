@@ -1,0 +1,10 @@
+"UnlitGeneric"
+{
+	"$basetexture" "effects/muzzleflash2"
+                "$bumpmap" "effects/muzzleflash2_bump"
+	"$additive" "1"
+	"$vertexcolor" 1
+	"$vertexalpha" "1"
+	"$translucent" "1"
+	"$ignorez" "1"
+}

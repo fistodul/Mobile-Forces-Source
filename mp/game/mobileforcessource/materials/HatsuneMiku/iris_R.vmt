@@ -1,0 +1,48 @@
+"eyes"
+{
+	"$baseTexture" "HatsuneMiku/eyeball"
+	"$iris" "HatsuneMiku/iris_r"
+	"$halflambert" 1
+	"$nodecal" "1"
+	"$nocull" 1
+
+
+	// Rim lighting parameters
+
+	"$rimlight" "1"					// To enable rim lighting (requires phong)
+	"$rimlightexponent" "4"				// Exponent for phong component of rim lighting	
+	"$rimlightboost" "2"				// Boost for ambient cube component of rim lighting
+
+
+
+	// Flesh Interior Pass
+	"$FleshInteriorEnabled"      "1" // Enables effect
+	"$FleshInteriorTexture"      "models/Alyx/alyx_flesh_color" // Mask in alpha
+	"$FleshNormalTexture"		 "models/Alyx/alyx_flesh_normal"
+	"$FleshBorderTexture1D"      "models/Alyx/alyx_flesh_border"
+	"$FleshInteriorNoiseTexture" "Engine/noise-blur-256x256"
+	"$FleshSubsurfaceTexture"	 "models/Alyx/alyx_flesh_subsurface"
+	"$FleshCubeTexture"          "env_cubemap"
+	"$FleshBorderNoiseScale"     "3" // Flesh Noise UV scalar for border
+	"$FleshBorderWidth"			 "0.2" // Width of flesh border
+	"$FleshBorderSoftness"		 "0.5" // Border softness must be greater than 0.0 and up tp 0.5
+	"$FleshBorderTint"			 "[.2 .2 .4]" // Tint / brighten the border 1D texture
+	"$FleshGlossBrightness"		 "1.0" // Change the brightness of the glossy layer
+	"$FleshDebugForceFleshOn"	 "0" // DEBUG: This will force on full flesh for testing
+	"$FleshScrollSpeed"			 "1.0"
+	"$Time" "0.0"
+	"Proxies"
+	{
+		"FleshInterior"
+		{
+		}
+		"MaterialModify"
+		{
+		}
+		"CurrentTime"
+		{
+			"resultVar" "$time"
+		}
+	}
+}
+

@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/tsf/blue-drum/Oil_Drum001h"
+	"$surfaceprop" "metal"
+	
+}

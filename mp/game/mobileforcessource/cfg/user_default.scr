@@ -1,0 +1,104 @@
+VERSION 1.0
+
+DESCRIPTION INFO_OPTIONS
+{
+	"r_drawviewmodel" //the convar
+	{
+		"Draw the viewmodel"  //the description
+		{ BOOL }  //the type of convar
+		{ "1" }  //the boolean value
+	}	
+	
+	"viewmodel_fov"  //the convar
+	{
+		"Adjust the field of view"  //the description
+		{ SLIDER 54 70 }  //the type of convar
+		{ "1" }  //the boolean value
+	}	
+	
+	"mat_dxlevel"
+	{
+	"mat_dxlevel, advanced users only pls xD(default value is 90)"
+		LIST
+		"70" "70"
+		"80" "80"
+		"81" "81"
+		"90" "90"
+		"95" "95"
+		"98" "98"
+	}
+	
+	"mat_clipz"
+	{
+	"mat_clipz, some Nvidia FX card owners need to disable this to fix rendering problems"
+		{
+			LIST
+			"Off" "0"
+			"On" "1"
+		}
+		{ "1" }
+	}
+	
+	"mat_softwarelighting"
+	{
+	"If enabled, uses only software-supported lighting"
+	{ BOOL }
+	{ "0" }
+	}
+	
+	"mat_parallaxmap"
+	{
+	"enables Parallax Mapping which can improve visual quality but may reduce performance."
+	{ BOOL }
+	{ "0" }
+	}
+	
+	"cl_detaildist"
+	{
+	"Adjusts the range at which detail props are shown(e.g. grass)increasing this setting will improve image quality through more detail at the cost of performance"
+	{ SLIDER 0 2400 }  //the type of convar
+	{ "1200" }  //the boolean value
+	}
+	
+	"cl_detailfade"
+	{
+	"Determines the range at which detail props fade into view."
+	{ SLIDER 0 800 }  //the type of convar
+	{ "400" }  //the boolean value
+	}
+	
+	"lod_TransitionDist"
+	{
+	"The distance at which the lod is reduced on objects"
+	( SLIDER 0 1600 )
+	( "800" )
+	}
+	
+	"r_maxdlights"
+	{
+	"Determines the maximum number of dynamic lights visible on the screen if dynamic lighting is enabled"
+	{ NUMBER 0 -1 }
+	{ "32" }
+	}
+	
+	"mem_max_heapsize"
+	{
+	"tells the engine the max amount of mb's of memory to allocate to the system heap(max working value of the -heapsize command line variable)"
+	{ NUMBER 0 -1 }
+	{ "256" }
+	}
+	
+	"datacachesize"
+	{
+	"Data cache size, altering it to higher values can actually reduce the size of some caches made higher by default..."
+	{ NUMBER 0 128 }
+	{ "32" }
+	}
+		
+	"r_cheapwaterend"
+	{
+	"determens the range beyond which water effects are reduced."
+	{ NUMBER 0 -1 }
+	//{ "32" }
+	}
+}

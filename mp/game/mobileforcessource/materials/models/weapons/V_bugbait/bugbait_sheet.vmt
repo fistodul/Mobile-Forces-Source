@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/V_bugbait/bugbait_sheet"
+	"$selfillum" "1"
+                "$phong" "1"
+	"$phongexponent" "5"
+	"$phongboost" ".1"	
+}

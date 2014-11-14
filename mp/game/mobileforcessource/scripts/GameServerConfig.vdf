@@ -1,0 +1,188 @@
+"GameServerConfig"
+{
+	"mp_timelimit"
+	{
+		"name"	"Time Limit (Min.)"
+		"type"	"string"
+	}
+
+	"mp_fraglimit"
+	{
+		"name"	"Frag Limit"
+		"type"	"string"
+	}
+
+	"mp_teamplay"
+	{
+		"name" "Enable Squads ?"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "I Want it to be Deathmatch :P"
+			"1" "Yay Squads :D"
+		}
+	}
+
+	"mp_weaponstay"
+	{
+		"name" "Weapons Stay"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1" "Enabled"
+		}
+	}
+
+	"mp_footsteps"
+	{
+		"name" "Footsteps"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1" "Enabled"
+		}
+	}
+
+	"mp_flashlight"
+	{
+		"name" "Flashlight"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1" "Enabled"
+		}
+	}
+
+	"mp_forcerespawn"
+	{
+		"name" "Force Respawn"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1" "Enabled"
+		}
+	}
+	
+	"mp_friendlyfire"
+	{
+		"name" "Enable Friendly Fire?"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Disabled"
+			"1" "Enabled"
+		}
+	}
+	
+	"mp_falldamage"
+	{
+		"name" "Fall Damage"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Normal"
+			"1" "Realistic"
+		}
+	}
+		
+	"sv_regeneration"
+	{
+		"name" "Enable Health regeneration?"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "No..."
+			"1" "Yes!!!"
+	}
+	
+	"sprintdisable"
+	{
+	"name" "Disable Running?"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Nah"
+			"1" "Yes"
+		}
+	}
+	
+	"sv_hl2mp_item_respawn_time"
+	{
+	"name" "Define Item respawn time
+		"type" "NUMBER 0 -1"
+		{ "20" }
+	}
+
+	"sv_hl2mp_weapon_respawn_time"
+	{
+	"name" "Define Weapon respawn time"
+		"type" "NUMBER 0 -1"
+		{ "20" }
+	}
+	
+	"skill"
+	{
+	"name"	"#MFS_Difficulty"
+		"type"	"NUMBER 1 3"
+		{ "2" }
+	}
+	
+	"sv_cheats"
+	{
+	"name" "Enable Cheats?"
+		"type" "enumeration"
+		"list"
+		{
+			"0" "Nope"
+			"1" "Yes, Cheating :3"
+		}
+	}
+	
+	"fps_max"
+	{
+	"name" "Define the max fps"
+		"type" "enumeration"
+		"list"
+		{
+		"Good Enough" "250"
+		"Dedicated Server" "300"
+		"Epic Server" "600"
+		"Insane" "750"
+		}
+	}
+	
+	"rate"
+	{
+	"name" "Define the server rate"
+		"type" "enumeration"
+		"list"
+		{
+		"Low" "30000"
+		"Medium" "60000"
+		"High" "90000"
+		}
+	}
+	
+	"sv_region"
+	{
+	"name" "Where is your server hosted?"
+		"type" "enumeration"
+		"list"
+		{
+		"US East coast" "0"
+		"US West coast" "1"
+		"South America" "2"
+		"Europe" "3"
+		"Asia" "4"
+		"Middle East" "6"
+		"Australia" "5"
+		"Africa" "7"
+		"The Earth" "255"
+		}
+	}
+
+}

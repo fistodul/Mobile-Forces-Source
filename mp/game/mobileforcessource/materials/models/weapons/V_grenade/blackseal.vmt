@@ -1,0 +1,12 @@
+// envmaptint_fix
+"VertexLitGeneric"
+{
+	"$bumpmap" "models/weapons/v_grenade/black seal_normal"
+	"$envmap" "env_cubemap"
+	"$envmapcontrast" 1
+	"$envmaptint" "[ .5 .5 .5 ]"
+	"$baseTexture" "Models/Weapons/V_grenade/blackseal"
+                "$phong" "1"
+	"$phongexponent" "20"
+	"$phongboost" ".3"	
+}

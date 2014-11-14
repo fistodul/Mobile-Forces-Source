@@ -1,0 +1,368 @@
+@include "base.fgd"
+@include "hl2mp.fgd"
+
+@PointClass base(Weapon, EnableDisable) studio("models/items/357ammo.mdl") = item_weaponset : "A weapon spawn point that uses weapon sets"
+[
+	spawnitem(choices) : "Spawn what" : -20 : "What item should spawn? Unless 'Use Weapon Set' is selected the attribute <weaponsetslot> won't be considered." =
+	[
+		-20:	"Use Weapon Set"
+		-5:	"All Weapons Classic"
+		-4:	"All Weapons Modern"
+		-3:	"True Random"
+		-2:	"Spawn Random Weapons"
+		-1:	"Spawn Random Ammo"
+		0:	"Spawn Nothing"
+		1:	"weapon_ar2"
+		2:	"weapon_pistol"
+		3:	"weapon_smg1"
+		4:	"weapon_357"
+		5:	"weapon_xbow"
+		6:	"weapon_shotgun"
+		7:	"weapon_ml"
+		8:	"weapon_stunstick"
+		9:	"item_grenade (1)"
+		10:	"weapon_slam (1)"
+		11:	"item_ammo_ar2 (20)"
+		12:	"item_ammo_ar2_secondary (1)"
+		13:	"item_ammo_pistol (20)"
+		14:	"item_ammo_smg1 (45)"
+		15:	"item_ammo_357 (6)"
+		16:	"item_xbow_bolt (1)"
+		17:	"item_box_buckshot (20)"
+		18:	"item_ml_grenade (1)"
+		19:	"item_smg1_grenade (1)"
+		20:	"item_ammo_pistol_large (100)"
+		21:	"item_ammo_smg1_large (225)"
+		22:	"item_ammo_ar2_large (100)"
+		23:	"item_ammo_357_large (20)"
+		24:	"item_health (1)"
+		25:	"item_battery (100)"
+	]
+
+	weaponsetslot(integer)	: "Weapon Set slot" : 1 : "What Weapon Set slot will this entity use,  random slot if 0. Needs <spawnitem> to be 'Use Weapon Set'. Sets defined in weaponsets.txt."
+
+	howtogiveammo(choices) : "How To Give Ammo" : 0 : "Consider health, armor or whatever the item gives as 'ammo', 'PrimaryAmmo' if it is the only thing they give.\n" +
+	"0: Default - If 'Box of Rounds' always gives 10 ammo then give 10 ammo.\n" +
+	"1: Absolute - If <ammovalue> says to give 1 ammo give 1 ammo despite the default being 10.\n" +
+	"2: Relative - If <ammovalue> says to give 0.5 ammo (50%), a pistol that takes up to 50 rounds and 20 in the magazine will receive 50+20 = 70 * 0.5 = 35 rounds.\n" +
+	"   In the case of health we can say the recipient is the player, so he would get 50% health recovered. Same for Armor, and other items." =
+	[
+		0:	"0-Use Default for item"
+		1:	"1-Use Ammo Value as Absolute Value"
+		2:	"2-Use Ammo Value as Relative Value (% of Max)"
+		3:	"3-Use Custom Ammo String"
+	]
+
+	ammovalue(string)	: "Ammo Value" : "" : "Read as integer or float. Only affects 'Primary Ammo'."
+
+	customammostring(string) : "Custom Ammo String" : ""
+			: "For items giving two types of ammo, weapons, with different values." +
+			" #<GiveIndex> <value> #<GiveIndex> <value>... i.e. primary set as Default" +
+			" and Secondary set as Relative 50%: '#0 0 #2 0.5'"
+
+	//spawnflags(Flags) = [ ] the base class weapon has a flag Start constrained
+]
+@PointClass base(Weapon) studio("models/weapons/w_crowbar.mdl") = weapon_minigun : "minigun" []
+@PointClass base(Item) studio("models/items/healthkit.mdl") = item_rotating: "A spinning health kit"
+[
+	givehealth(integer) : "Health to give" : 25
+	respawntime(float) : "Respawn time" : 20
+ 
+	spawnflags(Flags) =
+	[
+		2 : "Suppress location decal" : 0
+	]
+]
+@PointClass base(game_text) iconsprite("editor/game_text.vmt") = mm_game_text : 
+    "An entity that displays customized text on player's screens."
+[
+  input DisplayText(string) : "Display this message text."
+]
+//input Use(void) : "Equip player"
+@PointClass base(Targetname) = AVIMaterial : "Material to play AVIs"
+[
+	spawnflags(Flags) = 
+	[
+		1 : "Play  movie immediately" : 0
+		2 : "Loop movie" : 1
+	]
+
+	input Play(void) : "Starts the movie."
+	input Pause(void) : "Pauses the movie."
+	input Stop(void) : "Stops the movie."
+	input AdvanceFrame(void) : "Advances a frame"
+	input SetMovie(string) : "Sets the movie to be the file"
+	TextureName(string) : "Texture name" : "" : "The name of the texture this movie will be drawn to (no leading slash)"
+	MovieName(string) : "Movie name" : "" : "The name of the movie this entity will play (absolute path)"
+]
+@PointClass base(Targetname) = my_logical_entity : "Tutorial logical entity."
+[
+	threshold(integer) : "Threshold" : 1 : "Threshold value."
+	input Tick(void) : "Adds one tick to the entity's count."
+	output OnThreshold(void) : "Threshold was hit."
+]
+@PointClass base(Targetname) studio("models/combine_scanner.mdl")= my_model_entity :  "Tutorial model entity."
+[
+	input Toggle(void) : "Toggle movement."
+]
+@SolidClass base(Targetname) = my_brush_entity : "Tutorial brush entity."
+[
+ 
+]
+@PointClass base(Targetname) size(-8 -8 -8, 8 8 8) = env_hudtasklist: 
+	"An entity to display a set of tasks for the player on the screen."
+[
+	task1message(string) : "Task 1 Text " : "" : "This is the text of the first task."
+	task1urgency(choices) : "Task 1 Urgency" : 0 : "Urgency of this task" =
+	[
+			0 : "INACTIVE"
+			1 : "COMPLETE"
+			2 : "LOW PRIORITY"
+			3 : "MEDIUM PRIORITY"
+			4 : "HIGH PRIORITY"
+	]
+
+	task2message(string) : "Task 2 Text " : "" : "This is the text of the second task."
+	task2urgency(choices) : "Task 2 Urgency" : 0 : "Urgency of this task" =
+	[
+			0 : "INACTIVE"
+			1 : "COMPLETE"
+			2 : "LOW PRIORITY"
+			3 : "MEDIUM PRIORITY"
+			4 : "HIGH PRIORITY"
+	]
+
+	task3message(string) : "Task 3 Text " : "" : "This is the text of the third task."
+	task3urgency(choices) : "Task 3 Urgency" : 0 : "Urgency of this task" =
+	[
+			0 : "INACTIVE"
+			1 : "COMPLETE"
+			2 : "LOW PRIORITY"
+			3 : "MEDIUM PRIORITY"
+			4 : "HIGH PRIORITY"
+	]
+
+	task4message(string) : "Task 4 Text " : "" : "This is the text of the fourth task."
+	task4urgency(choices) : "Task 4 Urgency" : 0 : "Urgency of this task" =
+	[
+			0 : "INACTIVE"
+			1 : "COMPLETE"
+			2 : "LOW PRIORITY"
+			3 : "MEDIUM PRIORITY"
+			4 : "HIGH PRIORITY"
+ 	]
+ 
+ 	// Inputs
+	input ShowHudTasklist(void) : "Shows the task list"
+	input HideHudTasklist(void) : "Hides the task list"
+
+	input Task1Message(string) : "Set task 1 message"
+	input Task2Message(string) : "Set task 2 message"
+	input Task3Message(string) : "Set task 3 message"
+	input Task4Message(string) : "Set task 4 message"
+
+	input Task1Urgency(integer) : "Set task 1 urgency (0-4)"
+	input Task2Urgency(integer) : "Set task 2 urgency (0-4)"
+	input Task3Urgency(integer) : "Set task 3 urgency (0-4)"
+	input Task4Urgency(integer) : "Set task 4 urgency (0-4)"
+]
+@PointClass base(Targetname) = env_flash : "Manages flash UI."
+ [
+	file(string) : "File Name" : "" : "Path to flash file (e.g. flash\ui\title.swf)"
+	x(integer) : "X Position" : 0 : "Distance from the left of the screen"
+	y(integer) : "Y Position" : 0 : "Distance from the top of the screen"
+	width(integer) : "Width" : -1 : "Width. Use -1 to auto-detect"
+	height(integer) : "Height" : -1 : "Height. Use -1 to auto-detect"
+	blend(integer) : "Blending" : 1 : "Enables alpha blending (similar to photoshop's Screen blend mode), where black colors are made transparent"
+ 
+	// Inputs
+	input RenderFlashMovie(void) : "Loads and renders the SWF flash movie"
+	input StopMovie(void) : "Stops any playing SWF flash movie"
+	input StartMovie(void) : "Stops any playing SWF flash movie"
+ 
+	// Outputs
+	output OnFSCommand1(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand1');"
+	output OnFSCommand2(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand2');"
+	output OnFSCommand3(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand3');"
+	output OnFSCommand4(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand4');"
+ ]
+@PointClass base(BasePropPhysics, RenderFields) studioprop() sphere(radius) = prop_sphere : "Creates a perfect sphere."
+[
+	radius(float) : "Radius" : 12 : ""
+]
+@PointClass base(BaseDriveableVehicle, Parentname) studioprop() = prop_vehicle_passengerseat :
+	"Our method of multiplayer passenger vehicles."
+[
+]
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_assaulter :
+	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
+	"info_player_assaulter entities may be placed in a map."
+[
+]
+ 
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_supporter :
+	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
+	"info_player_supporter entities may be placed in a map."
+[
+]
+ 
+ 
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_medic :
+	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
+	"info_player_medic entities may be placed in a map."
+[
+]
+ 
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_heavy :
+	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
+	"info_player_heavy entities may be placed in a map."
+[
+]
+ 
+@PointClass base(Targetname, Angles) studio( "models/combine_turrets/floor_turret.mdl" ) = npc_turret_floor : "Combine Floor Turret"
+[
+		spawnflags(Flags) = 
+	[
+		32 : "Autostart" : 0
+		64 : "Start Inactive" : 0
+		128 : "Fast Retire" : 0
+		256 : "Out of Ammo" : 0
+		512 : "Citizen modified (Friendly)" : 0
+		1024 : "Portal Turret" : 0
+	]
+ 
+	SkinNumber(integer) : "Skin Number" : 0 : "Which skin to use for this turret. Set to 0 to select randomly."
+ 
+	// Inputs
+	input Toggle(void) : "Toggle - If open, close. If closed, open."
+	input Enable(void) : "Enable the turret."
+	input Disable(void) : "Disable the turret."
+	input DepleteAmmo(void) : "Depletes all the ammo from a turret, causing it to dry-fire."
+	input RestoreAmmo(void) : "Restores ammo to a turret, allowing it to fire live rounds again."
+	input SelfDestruct(void) : "Causes the turret to warn and then explode."
+ 
+	// Outputs
+	output OnDeploy(void) : "Turret is becoming active and dangerous."
+	output OnRetire(void) : "Turret is becoming inactive and harmless."
+	output OnTipped(void) : "Turret has been tipped over and is inactive."
+	output OnPhysGunPickup(void) : "Picked up with physgun"
+	output OnPhysGunDrop(void) : "Released by physgun"
+]
+ 
+//-------------------------------------------------------------------------
+//
+// Vehicles.
+//
+//-------------------------------------------------------------------------
+@BaseClass base(Targetname, Origin, Global, prop_static_base) = BaseVehicle
+[
+	vehiclescript(string) : "Vehicle Script File" : "scripts/vehicles/jeep_test.txt"
+	actionScale(float) : "Scale of action input / framerate" : "1"
+ 
+	// Inputs
+	input Action(float) : "Set the speed of the action animation"
+ 
+	input TurnOn(void) : "Turn on: Start engine & enable throttle"
+	input TurnOff(void) : "Turn off: Stop engine, disable throttle, engage brakes."
+ 
+	input Lock(void) : "Prevent the player from entering or exiting the vehicle."
+	input Unlock(void) : "Re-allow the player to enter or exit the vehicle."
+]
+ 
+ 
+@BaseClass base(BaseVehicle) = BaseDriveableVehicle
+[
+	VehicleLocked(choices) : "Start locked" : 0 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]	
+ 
+	// Outputs
+	output PlayerOn(void) : "Player entered the vehicle"
+	output PlayerOff(void) : "Player exited the vehicle"
+ 
+	output PressedAttack(void) : "Player Pressed attack key"
+	output PressedAttack2(void) : "Player Pressed attack2 key"
+ 
+	output AttackAxis(string) : "State of attack button [0,1]"
+	output Attack2Axis(string) : "State of attack2 button [0,1]"
+ 
+	// Inputs
+	input HandBrakeOn(void) : "Turns the handbrake on"
+	input HandBrakeOff(void): "Releases the handbrake"
+]
+ 
+@PointClass base(BaseVehicle) studioprop() = prop_vehicle :
+	"Studiomodel vehicle that can be driven via inputs."
+[
+	// Inputs
+	input Steer(float) : "Steer the vehicle +/-1"
+	input Throttle(float) : "Throttle +/-1"
+ 
+	spawnflags(flags) =
+	[
+		1 : "Always Think (Run physics every frame)" : 0
+	]
+]
+
+@PointClass base(BaseDriveableVehicle) studioprop() = prop_vehicle_driveable :
+	"Generic driveable studiomodel vehicle."
+[
+]
+
+@PointClass base(BaseDriveableVehicle) studioprop() = prop_vehicle_jeep : "Driveable studiomodel jeep."
+[
+]
+
+@PointClass base(BaseDriveableVehicle) studioprop() = prop_vehicle_hl2buggy : "Jeep for episode 2 mods."
+[
+model(studio) : "World model" : "models/buggy.mdl"
+vehiclescript(string) : "Vehicle Script File" : "scripts/vehicles/jeep_test.txt"
+]
+
+@PointClass base(BaseDriveableVehicle) studioprop() = prop_vehicle_jalopy : "Jeep for episode 2 mods."
+[
+model(studio) : "World model" : "models/vehicle.mdl"
+vehiclescript(string) : "Vehicle Script File" : "scripts/vehicles/jalopy.txt"
+]
+ 
+@PointClass base(BaseDriveableVehicle, Parentname) studioprop() = prop_vehicle_passengerseat :
+	"Our method of multiplayer passenger vehicles."
+[
+model(studio) : "World model" : "models/ss_passenger_cube.mdl"
+ 
+	vehiclescript(string) : "Vehicle Script File" : "scripts/vehicles/prisoner_pod.txt"
+ 
+	input Open(void) : "Plays the pod's open animation and unlocks the pod for entry or exit."
+	input Close(void) : "Plays the pod's close animation and locks the pod for entry or exit."
+	input EnterVehicle(void) : "Forces the activator (or player) into the pod."
+	input EnterVehicleImmediate(void) : "Forces the activator (or player) into the pod without enter/exit animations."
+	input ExitVehicle(void) : "Boots the prisoner out of the pod."
+ 
+	output OnOpen(void) : "Fired when the pod is open enough to enter."
+	output OnClose(void) : "Fired when the pod too closed to enter."
+]
+ 
+//----------------------------------//
+//							   	    //
+// 		Switch Model Targets	    //
+//  Sets all players to set model   //
+//									//
+//----------------------------------//
+@PointClass base(Targetname, Angles, EnableDisable) iconsprite("sprites/icons/switchmodel.vmt") = info_switchmodel : "Set Model"
+[
+]
+ 
+//-------------------------------------------------------------------------
+//
+// Solid Classes
+//
+//-------------------------------------------------------------------------
+ 
+@SolidClass = func_ladder : 
+	"Ladder. Players will be able to freely along this brush, as if it was a ladder. If you are using a model prop " +
+	"for the visual representation of the ladder in the map, apply the toolsinvisibleladder material to the " +
+	"func_ladder brush."
+[
+]

@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\weapons\w_gauss/w_gauss"
+                  "$bumpmap" "models\weapons\w_gauss/w_gauss_normal"
+}

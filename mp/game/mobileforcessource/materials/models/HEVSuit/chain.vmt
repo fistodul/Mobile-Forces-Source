@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/hevsuit/chain"
+	"$surfaceprop" "metal"
+	"$model" 1
+	//"$bumpmap" "models/hevsuit/Universal_normal"
+ 	//"$phong" "1"
+	"$phongexponent" "14"
+	"$phongboost"	"11"
+	"$phongfresnelranges"	"[0.1 0.5 1.5]" // BOOSTED
+	"$phongalbedotint" "1"
+	"$rimlight" "0"	
+	"$rimlightexponent" "5"
+	"$rimlightboost" "2"
+
+} 

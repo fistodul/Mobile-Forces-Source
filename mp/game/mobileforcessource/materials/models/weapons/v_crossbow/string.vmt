@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+
+	"$baseTexture" "Models/Weapons/v_crossbow/string"
+	"$bumpmap" "Models/Weapons/v_crossbow/string_normal"
+//	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+                "$phong" "1"
+	"$phongexponent" "3"
+	"$phongboost" ".1"	
+}

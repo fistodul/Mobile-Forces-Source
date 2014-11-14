@@ -1,0 +1,11 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "nature/hd_grass"
+	"$surfaceprop" "grass"
+=>dx90
+{
+    "$detail" "tsgk/hd_grass_detail"
+    "$detailscale" "10"
+}
+	"%keywords" "hd_grass" 
+}

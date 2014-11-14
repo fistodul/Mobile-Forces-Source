@@ -1,0 +1,5 @@
+"lightmappedgeneric"
+{
+    "$basetexture" "aw/ground/Grass02"
+    "$surfaceprop" "grass"
+}

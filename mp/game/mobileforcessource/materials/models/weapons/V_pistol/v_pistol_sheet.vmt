@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "Models/Weapons/V_pistol/v_pistol_sheet"
+	"$bumpmap" "Models/Weapons/V_pistol/v_pistol_sheet_normal"
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+	"$selfillum" "1"
+                "$phong" "1"
+	"$phongexponent" "3"
+	"$phongboost" ".1"	
+}

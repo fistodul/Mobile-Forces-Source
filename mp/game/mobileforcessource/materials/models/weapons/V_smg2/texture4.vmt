@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitTexture
+	"$basetexture" "models/Weapons/V_smg2/TEXTURE4"
+                "$phong" "1"
+	"$phongexponent" "1"
+	"$phongboost" ".1"	
+}

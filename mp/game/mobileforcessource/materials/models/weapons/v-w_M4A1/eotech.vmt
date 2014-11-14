@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "models/weapons/v-w_M4A1/EOTECH"
+	"$translucent" 1
+}

@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+      "$baseTexture" "texture_samples/fx_clouds_0"
+      "$bumpmap" "nature/fx_clouds_0_normal"
+}
