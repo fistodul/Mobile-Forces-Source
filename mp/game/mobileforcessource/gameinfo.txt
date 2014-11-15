@@ -18,6 +18,7 @@
 	advcrosshair
 	//SupportsDX8 "1"
 	//InstancePath	"maps/instances/"
+	supportsvr	"1"
 	hidden_maps
 	{
 		"c1m1"			1
@@ -29,7 +30,6 @@
 	FileSystem
 	{
 		SteamAppId				243750		// GCF for Source SDK Base 2013 Multiplayer
-		//ToolsAppId				211		// Tools will load this (ie: source SDK caches) to get things like materials\debug, materials\editor, etc.
 
 		//
 		// The code that loads this file automatically does a few things here:
