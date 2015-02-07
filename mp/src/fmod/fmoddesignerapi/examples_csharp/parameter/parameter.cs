@@ -1,5 +1,5 @@
 /*=======================================================================
-  Simple Event Example.  Copyright (c) Firelight Technologies 2004-2011.
+  Simple Event Example.  Copyright (c) Firelight Technologies 2004-2015.
 
  This example plays an event created with the FMOD Designer sound
  designer tool.  It simply plays an event, retrieves the parameters
@@ -177,7 +177,7 @@ namespace simple_event
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 17;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timer1

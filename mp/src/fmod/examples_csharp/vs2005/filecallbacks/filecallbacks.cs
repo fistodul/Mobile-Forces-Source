@@ -1,6 +1,6 @@
 /*===============================================================================================
  File Callbacks Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example is a modified version of the playstream example.
  It shows the correct way declare and handle fmod file callbacks with System::setFileSystem.
@@ -87,7 +87,7 @@ namespace filecallbacks
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 10;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // playButton

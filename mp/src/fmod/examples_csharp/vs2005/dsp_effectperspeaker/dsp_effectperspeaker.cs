@@ -1,6 +1,6 @@
 /*===============================================================================================
  DSP Effect per speaker Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to manipulate a DSP network and as an example, creates 2 dsp effects,
  and splits a single sound into 2 audio paths, which it then filters seperately.
@@ -120,7 +120,7 @@ namespace dsp_effectperspeaker
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 10;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timer

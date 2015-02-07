@@ -1,6 +1,6 @@
 /*===============================================================================================
  Info-only Event Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Demonstrates usage and functionality of info-only events
 ===============================================================================================*/
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     int                   key;
 
     printf("======================================================================\n");
-    printf("Info-only Event Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Info-only Event Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("==============================-------=================================\n");
     printf("This demonstrates usage and functionality of info-only events.\n");
     printf("======================================================================\n\n");

@@ -1,6 +1,6 @@
 /*===============================================================================================
  OUTPUT_MP3.DLL
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Shows how to write an FMOD output plugin that writes the output to an mp3 file using 
  lame_enc.dll.

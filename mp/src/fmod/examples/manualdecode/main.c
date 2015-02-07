@@ -1,6 +1,6 @@
 /*===============================================================================================
  ManualDecode Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Sound played here decoded in realtime by the user with a 'decoder sound'    
  The mp3 is created as a stream opened with FMOD_OPENONLY. This is the       
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     ERRCHECK(result);
 
     printf("============================================================================\n");
-    printf("Manual Decode example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Manual Decode example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("============================================================================\n");
     printf("Sound played here decoded in realtime by the user with a 'decoder sound'    \n");
     printf("The mp3 is created as a stream opened with FMOD_OPENONLY. This is the       \n");

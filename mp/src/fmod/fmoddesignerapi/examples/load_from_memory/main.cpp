@@ -1,6 +1,6 @@
 /*===============================================================================================
  Load From Memory Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Demonstrates loading all resources from memory allocated and filled by the user.
 ===============================================================================================*/
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     int                   key = 0;
 
     printf("======================================================================\n");
-    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("==============================-------=================================\n");
     printf("This Demonstrates loading all resources from memory allocated and filled\n");
     printf("by the user.\n");

@@ -1,6 +1,6 @@
 /*==================================================================================================
  3D Reverb Example
- Copyright (c), Firelight Technologies Pty, Ltd 2005-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2005-2015.
 
  Example to demonstrate 3d reverb spheres, global reverb, multiple reverb instances and music reverb
 ===================================================================================================*/
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     FMOD_RESULT                      result;
 
     printf("======================================================================\n");
-    printf("3D Reverb Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("3D Reverb Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("======================================================================\n");
     printf("This demonstrates 3d reverb spheres as well as global reverb,\n");
     printf("multiple reverb instances and music reverb\n");

@@ -1,6 +1,6 @@
 /*===============================================================================================
  Record to disk example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to do a streaming record to disk.
 ===============================================================================================*/
@@ -107,7 +107,7 @@ namespace recordtodisk
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 7;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBoxRecord
@@ -391,7 +391,7 @@ namespace recordtodisk
                     /*
                         Unlock the sound to allow FMOD to use it again.
                     */
-                    sound.unlock(ptr1, ptr1, len1, len2);
+                    sound.unlock(ptr1, ptr2, len1, len2);
                 }
 
                 lastrecordpos = recordpos;

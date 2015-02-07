@@ -1,6 +1,6 @@
 /*===============================================================================================
  Record example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to record a sound, then write it to a wav file.
  It then shows how to play a sound while it is being recorded to.  Because it is recording, the
@@ -107,7 +107,7 @@ namespace recording
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 6;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBoxOutput

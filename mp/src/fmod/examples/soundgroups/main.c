@@ -1,6 +1,6 @@
 /*===============================================================================================
  soundgroups Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to use the sound group behavior modes
 ===============================================================================================*/
@@ -34,7 +34,7 @@ int main(int argc, char * argv[])
     unsigned int        version;
 
     printf("======================================================================\n");
-    printf("soundgroups Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("soundgroups Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("======================================================================\n");
     printf("This example plays 3 sounds in a sound group, demonstrating the effect\n");
     printf("of the three different sound group behavior modes\n");

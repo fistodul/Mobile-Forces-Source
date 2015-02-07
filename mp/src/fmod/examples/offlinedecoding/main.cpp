@@ -1,6 +1,6 @@
 /*===============================================================================================
  Offline Decoding Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how decode a file to PCM, without playing it.
  It writes out the data as a raw data file.
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     ERRCHECK(result);
 
     printf("===============================================================================\n");
-    printf("Offline Decoding Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Offline Decoding Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("===============================================================================\n");
     printf("\n");
     printf("This program will open wave.mp3 and decode it into wave.raw using the\n");

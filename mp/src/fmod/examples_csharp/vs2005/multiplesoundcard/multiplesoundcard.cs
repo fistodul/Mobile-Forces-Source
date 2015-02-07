@@ -1,6 +1,6 @@
 /*===============================================================================================
  MultipleSoundCard Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to play sounds on 2 different sound cards from the same application.
  It creates 2 FMOD::System objects, selects a different sound device for each, then allows
@@ -105,7 +105,7 @@ namespace multiplesoundcard
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 6;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // statusBar

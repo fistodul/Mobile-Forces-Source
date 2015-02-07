@@ -1,6 +1,6 @@
 /*===============================================================================================
  Submixing Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to put channels into channel groups, so that you can affect a group
  of channels at a time instead of just one channel at a time.
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     ERRCHECK(result);
 
     printf("======================================================================\n");
-    printf("Sub-mixing example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Sub-mixing example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("======================================================================\n");
     printf("                                                       (drumloop.wav) \n");
     printf("                                                      /               \n");

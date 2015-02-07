@@ -1,6 +1,6 @@
 /*===============================================================================================
  Realtime Tweaking Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Demonstrates basic usage of FMOD's network data-driven event library (fmod_event_net.dll)
 ===============================================================================================*/
@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     int                key, i, userdata = 0;
 
     printf("======================================================================\n");
-    printf("Realtime Tweaking. Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Realtime Tweaking. Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("======================================================================\n");
     printf("This example shows how to initialize the FMOD Net Event System so that\n");
     printf("FMOD Designer can connect to your game and tweak events as they're\n");

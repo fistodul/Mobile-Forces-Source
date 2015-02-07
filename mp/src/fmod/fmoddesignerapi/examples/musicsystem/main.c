@@ -1,6 +1,6 @@
 /*===============================================================================================
  Music System Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  Demonstrates basic usage of FMOD's data-driven event library (fmod_event.dll)
 ===============================================================================================*/
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     int                key;
 
     printf("======================================================================\n");
-    printf("Music System Example.  Copyright (c) Firelight Technologies 2004-2011.\n");
+    printf("Music System Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
     printf("======================================================================\n");
     printf("Press '1'       to activate/deactivate country cue.\n");
     printf("Press '2'       to activate/deactivate stealth cue.\n");

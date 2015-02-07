@@ -1,6 +1,6 @@
 /*===============================================================================================
  Effects Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows how to apply some of the built in software effects to sounds. 
  This example filters the global mix.  All software sounds played here would be filtered in the 
@@ -111,7 +111,7 @@ namespace effects
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 9;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2011";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pause_button

@@ -1,6 +1,6 @@
 /*===============================================================================================
  Virtual Voices Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2011.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
 
  This example shows the virtual channels of FMOD. The listener and sounce sources can be moved
  around by clicking and dragging. Sound sources will change colour depending on whether they
@@ -95,7 +95,7 @@ namespace virtualvoices
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(632, 451);
             this.Name = "VirtualVoices";
-            this.Text = "Virtual Voices Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2011." +
+            this.Text = "Virtual Voices Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2015." +
                 " ";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
             this.Load += new System.EventHandler(this.VirtualVoices_Load);
