@@ -29,12 +29,6 @@ ConVar wisdom( "wisdom", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "wisdom, truth of all
 ConVar training( "training", "0", FCVAR_CHEAT | FCVAR_ARCHIVE, "U know what doesent kill u makes u stronger xD" );
 ConVar gamemode( "gamemode", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE, "Decides the gamemode, 0=does nothing, 1=singleplayer, 2=coop" );
 
-/*int trola = troll.GetInt();
-int rage = rageburst.GetInt();
-int wisdoma = wisdom.GetInt();
-int train = training.GetInt();
-int power = (trola + rage + wisdoma + train);*/
-
 void superpowers( void )
 {
 if ( gamemode.GetInt() == 10 )
@@ -107,7 +101,7 @@ if ( trola >= 5 )
 
 }
 }*/
-if ( rage >= 1 )
+if ( rage >= 2 )
 {
 sv_infinite_aux_power.SetValue( "1" );
 /*if ( rage >= 5 )
@@ -180,7 +174,7 @@ pPlayer->RemoveGlowEffect();
 #endif
 
 #ifdef CLIENT_DLL
-static ConCommand powerup( "powerup", superpowers, "Try to power up, DB/DBZ/DBGT STYLE" );
+static ConCommand powerup( "powerup", superpowers, "Try to power up, DBZ STYLE" );
 #ifndef Auto-Testing
 static ConCommand powerdown( "powerdown", desuperpower, "Compleatly power down, idk why would u wanna do that?" );
 #endif

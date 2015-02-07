@@ -56,6 +56,9 @@ extern CBaseEntity*	FindPickerEntity( CBasePlayer* pPlayer );
 extern bool IsInCommentaryMode( void );
 
 ConVar  *sv_cheats = NULL;
+#ifdef MFS
+int loadout = NULL;
+#endif
 
 void ClientKill( edict_t *pEdict, const Vector &vecForce, bool bExplode = false )
 {
@@ -826,6 +829,44 @@ CON_COMMAND( give, "Give item to player.\n\tArguments: <item_name>" )
 		string_t iszItem = AllocPooledString( item_to_give );	// Make a copy of the classname
 		pPlayer->GiveNamedItem( STRING(iszItem) );
 	}
+	#ifdef MFS
+	else if ( pPlayer 
+		&& (gpGlobals->maxClients == 1 || pPlayer->loadout == 1 ) 
+		&& args.ArgC() >= 2 )
+	{
+		char item_to_give[ 256 ];
+		Q_strncpy( item_to_give, args[1], sizeof( item_to_give ) );
+		Q_strlower( item_to_give );
+
+		// Don't allow regular users to create point_servercommand entities for the same reason as blocking ent_fire
+		if ( !Q_stricmp( item_to_give, "point_servercommand" ) )
+		{
+			if ( engine->IsDedicatedServer() )
+			{
+				// We allow people with disabled autokick to do it, because they already have rcon.
+				if ( pPlayer->IsAutoKickDisabled() == false )
+					return;
+			}
+			else if ( gpGlobals->maxClients > 1 )
+			{
+				// On listen servers with more than 1 player, only allow the host to create point_servercommand.
+				CBasePlayer *pHostPlayer = UTIL_GetListenServerHost();
+				if ( pPlayer != pHostPlayer )
+					return;
+			}
+		}
+
+		// Dirty hack to avoid suit playing it's pickup sound
+		if ( !Q_stricmp( item_to_give, "item_suit" ) )
+		{
+			pPlayer->EquipSuit( false );
+			return;
+		}
+
+		string_t iszItem = AllocPooledString( item_to_give );	// Make a copy of the classname
+		pPlayer->GiveNamedItem( STRING(iszItem) );
+	}
+	#endif
 }
 
 
@@ -851,10 +892,12 @@ CON_COMMAND( fov, "Change players FOV" )
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
+#ifdef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 void CC_Player_SetModel( const CCommand &args )
 {
-	if ( gpGlobals->deathmatch )
-		return;
+	//SecobMod__MiscFixes
+	//if ( gpGlobals->deathmatch )
+		//return;
 
 	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() );
 	if ( pPlayer && args.ArgC() == 2)
@@ -866,6 +909,7 @@ void CC_Player_SetModel( const CCommand &args )
 	}
 }
 static ConCommand setmodel("setmodel", CC_Player_SetModel, "Changes's player's model", FCVAR_CHEAT );
+#endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1056,7 +1100,7 @@ static int FindPassableSpace( CBasePlayer *pPlayer, const Vector& direction, flo
 	return 0;
 }
 
-
+#ifdef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 //------------------------------------------------------------------------------
 // Noclip
 //------------------------------------------------------------------------------
@@ -1065,7 +1109,7 @@ void EnableNoClip( CBasePlayer *pPlayer )
 	// Disengage from hierarchy
 	pPlayer->SetParent( NULL );
 	pPlayer->SetMoveType( MOVETYPE_NOCLIP );
-	ClientPrint( pPlayer, HUD_PRINTCONSOLE, "noclip ON\n");
+	ClientPrint( pPlayer, HUD_PRINTCONSOLE, "OMG KAMUI\n");
 	pPlayer->AddEFlags( EFL_NOCLIP_ACTIVE );
 }
 
@@ -1091,7 +1135,7 @@ void CC_Player_NoClip( void )
 	pPlayer->SetMoveType( MOVETYPE_WALK );
 
 	Vector oldorigin = pPlayer->GetAbsOrigin();
-	ClientPrint( pPlayer, HUD_PRINTCONSOLE, "noclip OFF\n");
+	ClientPrint( pPlayer, HUD_PRINTCONSOLE, "Awww mannn no more Kamui\n");
 	if ( !TestEntityPosition( pPlayer ) )
 	{
 		Vector forward, right, up;
@@ -1111,7 +1155,7 @@ void CC_Player_NoClip( void )
 						{
 							if ( !FindPassableSpace( pPlayer, forward, -1, oldorigin ) )	// back
 							{
-								Msg( "Can't find the world\n" );
+								Msg( "Can't find the world, LOL\n" );
 							}
 						}
 					}
@@ -1123,7 +1167,7 @@ void CC_Player_NoClip( void )
 	}
 }
 
-static ConCommand noclip("noclip", CC_Player_NoClip, "Toggle. Player becomes non-solid and flies.", FCVAR_CHEAT);
+static ConCommand noclip("noclip", CC_Player_NoClip, "Toggle. Player enters the kamui and flies.", FCVAR_CHEAT);
 
 
 //------------------------------------------------------------------------------
@@ -1145,18 +1189,20 @@ void CC_God_f (void)
 		   return;
    }
 #else
-	if ( gpGlobals->deathmatch )
+	#ifndef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
+		if ( gpGlobals->deathmatch )
 		return;
+	#endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 #endif
 
 	pPlayer->ToggleFlag( FL_GODMODE );
 	if (!(pPlayer->GetFlags() & FL_GODMODE ) )
-		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "godmode OFF\n");
+		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "Super Saiyan Mode OFF\n");
 	else
-		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "godmode ON\n");
+		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "Super Saiyan Mode ON\n");
 }
 
-static ConCommand god("god", CC_God_f, "Toggle. Player becomes invulnerable.", FCVAR_CHEAT );
+static ConCommand god("god", CC_God_f, "Toggle. Player becomes a suepr Saiyan.", FCVAR_CHEAT );
 
 
 //------------------------------------------------------------------------------
@@ -1188,7 +1234,7 @@ CON_COMMAND_F( setpos, "Move player to specified origin (must have sv_cheats).",
 
 	if ( !TestEntityPosition( pPlayer ) )
 	{
-		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "setpos into world, use noclip to unstick yourself!\n");
+		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "setpos into world, use noclip(kamui) to unstick yourself!\n");
 	}
 }
 
@@ -1314,8 +1360,10 @@ void CC_Notarget_f (void)
 	if ( !pPlayer )
 		return;
 
+	#ifndef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 	if ( gpGlobals->deathmatch )
 		return;
+	#endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 
 	pPlayer->ToggleFlag( FL_NOTARGET );
 	if ( !(pPlayer->GetFlags() & FL_NOTARGET ) )
@@ -1324,7 +1372,7 @@ void CC_Notarget_f (void)
 		ClientPrint( pPlayer, HUD_PRINTCONSOLE, "notarget ON\n");
 }
 
-ConCommand notarget("notarget", CC_Notarget_f, "Toggle. Player becomes hidden to NPCs.", FCVAR_CHEAT);
+ConCommand notarget("notarget", CC_Notarget_f, "Toggle. Player becomes hidden to NPCs(Ghost mode :O).", FCVAR_CHEAT);
 
 //------------------------------------------------------------------------------
 // Damage the client the specified amount
@@ -1348,8 +1396,9 @@ void CC_HurtMe_f(const CCommand &args)
 }
 
 static ConCommand hurtme("hurtme", CC_HurtMe_f, "Hurts the player.\n\tArguments: <health to lose>", FCVAR_CHEAT);
+#endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 
-#ifdef DBGFLAG_ASSERT
+//#ifdef DBGFLAG_ASSERT
 static bool IsInGroundList( CBaseEntity *ent, CBaseEntity *ground )
 {
 	if ( !ground || !ent )
@@ -1370,7 +1419,7 @@ static bool IsInGroundList( CBaseEntity *ent, CBaseEntity *ground )
 
 	return false;
 }
-#endif
+//#endif
 
 static int DescribeGroundList( CBaseEntity *ent )
 {
@@ -1524,12 +1573,12 @@ void ClientCommand( CBasePlayer *pPlayer, const CCommand &args )
 		{
 			if ( Q_strlen( pCmd ) > 128 )
 			{
-				ClientPrint( pPlayer, HUD_PRINTCONSOLE, "Console command too long.\n" );
+				ClientPrint( pPlayer, HUD_PRINTCONSOLE, "Console command too long LOLlololololTrrololol.\n" );
 			}
 			else
 			{
 				// tell the user they entered an unknown command
-				ClientPrint( pPlayer, HUD_PRINTCONSOLE, UTIL_VarArgs( "Unknown command: %s\n", pCmd ) );
+				ClientPrint( pPlayer, HUD_PRINTCONSOLE, UTIL_VarArgs( "WTF is this Shit I never Heard of it: %s\n", pCmd ) );
 			}
 		}
 	}

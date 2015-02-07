@@ -74,7 +74,10 @@ public:
 	void				SatchelAttach( void );
 	bool				Deploy( void );
 	bool				Holster( CBaseCombatWeapon *pSwitchingTo = NULL );
-
+	#ifdef Beeping_Tripmine
+	void	TrollSpam( void );
+	int	shouldplay;
+	#endif
 
 	CWeapon_SLAM();
 

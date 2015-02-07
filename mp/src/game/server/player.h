@@ -253,6 +253,39 @@ public:
 	IPlayerInfo *GetPlayerInfo() { return &m_PlayerInfo; }
 	IBotController *GetBotController() { return &m_PlayerInfo; }
 
+	//#ifdef SecobMod__USE_PLAYERCLASSES
+	 // Here are the players speed is set:
+	void SetWalkSpeed(int WalkSpeed);
+	void SetNormSpeed(int NormSpeed);
+	void SetSprintSpeed(int SprintSpeed);
+	void SetJumpHeight(float JumpHeight);
+	
+	// Spielergeschwindigkeit:
+	int m_iWalkSpeed;
+	int m_iNormSpeed;
+	int m_iSprintSpeed;
+	
+	CNetworkVar( float, m_iJumpHeight );
+	
+	int GetWalkSpeed();
+	int GetNormSpeed();
+	int GetSprintSpeed();
+	float GetJumpHeight();
+	//#endif //SecobMod__USE_PLAYERCLASSES
+
+	#ifdef MFS
+	int loadout;
+	#endif
+
+	#ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS
+	void SafeVehicleExit(CBasePlayer *pPlayer);
+	#endif //SecobMod__ENABLE_FAKE_PASSENGER_SEATS
+
+	#ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+		bool m_bTransition; //SecobMod__Information:  This is important as it allows the game to save each players progress over a map change. Create the booleans required for transitions to work.
+		bool m_bTransitionTeleported; //SecobMod__Information:  This is important as it allows the game to save each players progress over a map change.  Create the booleans required for transitions to work.
+	#endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+
 	virtual void			SetModel( const char *szModelName );
 	void					SetBodyPitch( float flPitch );
 
@@ -282,7 +315,11 @@ public:
 	// Returns true if this player wants pPlayer to be moved back in time when this player runs usercmds.
 	// Saves a lot of overhead on the server if we can cull out entities that don't need to lag compensate
 	// (like team members, entities out of our PVS, etc).
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+	virtual bool			WantsLagCompensationOnEntity( const CBaseEntity	*pEntity, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const;
+#else
 	virtual bool			WantsLagCompensationOnEntity( const CBasePlayer	*pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const;
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 	virtual void			Spawn( void );
 	virtual void			Activate( void );
@@ -301,6 +338,13 @@ public:
 	const char				*GetTracerType( void );
 	void					MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );
 	void					DoImpactEffect( trace_t &tr, int nDamageType );
+
+	#ifdef SecobMod__MULTIPLAYER_CHAT_BUBBLES
+		void MakeChatBubble(int chatbubble);
+		void KillChatBubble();
+		void CheckChatBubble( CUserCmd *cmd );
+		EHANDLE m_hChatBubble;
+	#endif //SecobMod__MULTIPLAYER_CHAT_BUBBLES
 
 #if !defined( NO_ENTITY_PREDICTION )
 	void					AddToPlayerSimulationList( CBaseEntity *other );
@@ -550,6 +594,9 @@ public:
 	virtual void			PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize = true ) {}
 	virtual void			ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis = NULL ) {}
 	virtual float			GetHeldObjectMass( IPhysicsObject *pHeldObject );
+
+	//SecobMod__MiscFixes
+	virtual CBaseEntity		*GetHeldObject( void );
 
 	void					CheckSuitUpdate();
 	void					SetSuitUpdate(const char *name, int fgroup, int iNoRepeat);
@@ -1120,6 +1167,14 @@ private:
 
 	EHANDLE					m_hViewEntity;
 
+	#ifdef Rotational_Gravity_Gun
+	// send the use angles for the current player... set when they press use
+	// UPDATE: this could be improved somehow by only storing these on the server side
+	//  - set a flag on the client and send that, stating that the viewangles shouldnt change
+	//  - ... maybe not
+	CNetworkQAngle( m_vecUseAngles );
+	#endif
+
 	// Movement constraints
 	CNetworkHandle( CBaseEntity, m_hConstraintEntity );
 	CNetworkVector( m_vecConstraintCenter );
@@ -1178,6 +1233,11 @@ protected:
 	bool			m_bSinglePlayerGameEnding;
 
 public:
+
+	/*#ifdef Rotational_Gravity_Gun
+	//  we need access to the CurrentCMD
+	CUserCmd *GetCurrentCommand( void ) { return m_pCurrentCommand; }
+	#endif*/
 
 	float  GetLaggedMovementValue( void ){ return m_flLaggedMovementValue;	}
 	void   SetLaggedMovementValue( float flValue ) { m_flLaggedMovementValue = flValue;	}

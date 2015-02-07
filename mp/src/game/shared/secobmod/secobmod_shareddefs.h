@@ -13,22 +13,17 @@
 /*****************/
 /* MFS.			*/
 /*****************/
-//Filip: I honestly dont know why would someone Disable General Fixes so why da lol are fix defines even here xD, it was hard to implement superpowers and weighted weaponry together with playerclasses i just had to say that
+//Filip: I honestly dont know why would someone Disable General Fixes so why da fck are fix defines even here xD, it was hard to implement superpowers and weighted weaponry together with playerclasses i just had to say that
+#define MFS // MF Specific changes :P(Not having the RPG Laser guiding turned on by default, beeping tripmines :P, Exploding on touch tripmines, weighted weaponry, Exploding_Vehicles, Loadouts, Picking Teams)
 #define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
 #define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
 #define Rotational_Gravity_Gun // Well Basically it lets u rotate shit with the gravity gun :P
-#define Beeping_Tripmine // it makes the slam beep when its activated, frown :P well until it blows up xD
 #define DARKEN_SCREEN_ON_PLAYER_DEATH // It basically makes everything darker after u die :P(wow realistic xD)
 #define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
 #define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
-//#define Exploding_Vehicles // Pretty Obvious ;p, Broken ;(
-#define Exploding_On_Touch_Slams // Still pretty obvious but it makes the slams explode if u stand on them :P
-#define Testing // SuperPowers xD
-#define Weighted_Weaponry // It reduces ur speed when u pickup a wep and doesent let you to carry more than 7 weight(having armor is 1 weight)
+//#define Testing // SuperPowers xD
 //#define Auto-Testing // Instead of Needing to manually powerup(call the SuperPowers function and everything connected to it) this will automatically call it as a part of PostThink
-//#define Loadout // Basically it lets u pick weps at spawn ;p
-#define Spawn_Dead // It spawns you dead lol so you have to pick a team before you spawn, on deathmatch it will just auto-switch to alive :P
 #define hitmarkers // it enables battlefield style hitmarkers :P
 #define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them(idk why this is even a define but why da fuq since its only 1 small code change xD)
 

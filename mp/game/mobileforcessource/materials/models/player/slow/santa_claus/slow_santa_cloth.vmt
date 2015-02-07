@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/slow/santa_claus/slow_santa_cloth"
+
+	"$detail" "models/player/slow/santa_claus/slow_santa_detail"
+
+}
