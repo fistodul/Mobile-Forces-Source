@@ -830,9 +830,7 @@ CON_COMMAND( give, "Give item to player.\n\tArguments: <item_name>" )
 		pPlayer->GiveNamedItem( STRING(iszItem) );
 	}
 	#ifdef MFS
-	else if ( pPlayer 
-		&& (gpGlobals->maxClients == 1 || pPlayer->loadout == 1 ) 
-		&& args.ArgC() >= 2 )
+	else if ( pPlayer && pPlayer->loadout == 1 && args.ArgC() >= 2 )
 	{
 		char item_to_give[ 256 ];
 		Q_strncpy( item_to_give, args[1], sizeof( item_to_give ) );

@@ -8,12 +8,11 @@
 #endif
 
 #define HL2_EPISODIC //Choose Episode 2 code for preference. Disabling this means you must exclude all episodic cpp/h files from your project.
-#define SOURCE_2013 // Some shit for source shader editor XD. Disabling this means idk what(might break muzzle flashes xD) but idk why would you want to remove le source shader editor :P, Ok fine disabling this means absoloutley nuffin cuz i changed the blocks in the code so that you dont have to define anything for it to load the 2013 engine dll... The sole purpose of this define here is so that pirates who steal code will know that they should define their engine version here instead of leaving it to 2013 or else itl load the dll for source 2013 XD (SWARM_DLL, SOURCE_2007, and a mysterious SOURCE_2006 which has non-existing dll's even in the original package ;p<thoose are yer choices)
 
 /*****************/
 /* MFS.			*/
 /*****************/
-//Filip: I honestly dont know why would someone Disable General Fixes so why da fck are fix defines even here xD, it was hard to implement superpowers and weighted weaponry together with playerclasses i just had to say that
+//Filip: I honestly dont know why would someone Disable General Fixes so why da fck are fix defines even here xD
 #define MFS // MF Specific changes :P(Not having the RPG Laser guiding turned on by default, beeping tripmines :P, Exploding on touch tripmines, weighted weaponry, Exploding_Vehicles, Loadouts, Picking Teams)
 #define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
 #define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
@@ -21,11 +20,14 @@
 #define DARKEN_SCREEN_ON_PLAYER_DEATH // It basically makes everything darker after u die :P(wow realistic xD)
 #define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
+#define SOURCE_2013 // Some shit for source shader editor XD... Do change to 2007 if using swarm/2007 sdk xD
 #define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
 //#define Testing // SuperPowers xD
 //#define Auto-Testing // Instead of Needing to manually powerup(call the SuperPowers function and everything connected to it) this will automatically call it as a part of PostThink
 #define hitmarkers // it enables battlefield style hitmarkers :P
-#define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them(idk why this is even a define but why da fuq since its only 1 small code change xD)
+#define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them
+#define TaskList // lets u use a vgui task list :P
+#define cloak // allows use of a magical cloak xD
 
 /*****************/
 /* Base Defines. */

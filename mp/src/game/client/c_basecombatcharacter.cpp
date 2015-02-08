@@ -167,6 +167,11 @@ BEGIN_RECV_TABLE(C_BaseCombatCharacter, DT_BaseCombatCharacter)
 	RecvPropInt( RECVINFO( m_iPowerups ) ),
 #endif
 
+#ifdef cloak
+RecvPropInt( RECVINFO( m_intCloakStatus ) ),
+RecvPropFloat( RECVINFO( m_floatCloakFactor ) )
+#endif
+
 END_RECV_TABLE()
 
 

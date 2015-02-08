@@ -1962,6 +1962,11 @@ bool CAI_BaseNPC::QueryHearSound( CSound *pSound )
 
 bool CAI_BaseNPC::QuerySeeEntity( CBaseEntity *pEntity, bool bOnlyHateOrFearIfNPC )
 {
+#ifdef cloak
+CBaseCombatCharacter *pCC = dynamic_cast<CBaseCombatCharacter *>(pEntity);
+if ( pCC && pCC->GetCloakStatus() == 2 )
+	return false;
+#endif
 	if ( bOnlyHateOrFearIfNPC && pEntity->IsNPC() )
 	{
 		Disposition_t disposition = IRelationType( pEntity );
@@ -2000,10 +2005,18 @@ void CAI_BaseNPC::OnLooked( int iDistance )
 	{
 		if ( pSightEnt->IsPlayer() )
 		{
+		#ifdef cloak
+		CBasePlayer *pPlayer = ToBasePlayer( pSightEnt );
+		if ( pPlayer && pPlayer->GetCloakStatus() != 2 )
+		{
+		#endif cloak
 			// if we see a client, remember that (mostly for scripted AI)
 			SetCondition(COND_SEE_PLAYER);
 			m_flLastSawPlayerTime = gpGlobals->curtime;
 		}
+		#ifdef cloak
+		}
+		#endif
 
 		Disposition_t relation = IRelationType( pSightEnt );
 
@@ -2013,9 +2026,15 @@ void CAI_BaseNPC::OnLooked( int iDistance )
 		{
 			if ( pSightEnt == GetEnemy() )
 			{
+			#ifdef cloak
+			if ( pEnemy && pEnemy->GetCloakStatus() != 2 )
+			{
 				// we know this ent is visible, so if it also happens to be our enemy, store that now.
 				SetCondition(COND_SEE_ENEMY);
 			}
+			#ifdef cloak
+			}
+			#endif
 
 			// don't add the Enemy's relationship to the conditions. We only want to worry about conditions when
 			// we see npcs other than the Enemy.
@@ -5410,6 +5429,11 @@ bool CAI_BaseNPC::InnateWeaponLOSCondition( const Vector &ownerPos, const Vector
 //=========================================================
 bool CAI_BaseNPC::FCanCheckAttacks( void )
 {
+#ifdef cloak
+//Cannot check attacks while not fully uncloaked
+if ( GetCloakStatus() != 0 )
+   return false;
+#endif
 	// Not allowed to check attacks while climbing or jumping
 	// Otherwise schedule is interrupted while on ladder/etc
 	// which is NOT a legal place to attack from
@@ -5582,7 +5606,12 @@ void CAI_BaseNPC::GatherEnemyConditions( CBaseEntity *pEnemy )
 			// Have LOS but may not be in view cone
 			SetCondition( COND_HAVE_ENEMY_LOS );
 
+			#ifdef cloak
+			CBaseCombatCharacter *pCC = dynamic_cast<CBaseCombatCharacter *>( pEnemy );
+			if ( bSensesDidSee && pCC && pCC->GetCloakStatus() != 2 )
+			#else
 			if ( bSensesDidSee )
+			#endif
 			{
 				// Have LOS and in view cone
 				SetCondition( COND_SEE_ENEMY );
@@ -5711,6 +5740,9 @@ void CAI_BaseNPC::GatherEnemyConditions( CBaseEntity *pEnemy )
 		}
 	}
 
+	#ifdef cloak
+	CBaseCombatCharacter *pNPC = dynamic_cast< CBaseCombatCharacter *>( pEnemy );
+	#endif
 	//-----------------------------------------------------------------------
 	// If I haven't seen the enemy in a while he may have eluded me
 	//-----------------------------------------------------------------------
@@ -5736,6 +5768,16 @@ void CAI_BaseNPC::GatherEnemyConditions( CBaseEntity *pEnemy )
 				MarkEnemyAsEluded();
 			}
 		}
+		#ifdef cloak
+		if ( pNPC )
+{
+	if ( /*!HasCondition( COND_SEE_ENEMY ) && HasCondition( COND_ENEMY_OCCLUDED ) &&*/ pNPC->GetCloakStatus() == 2 )
+		//Memory on the cloaked enemy needs to be wiped out or the NPC will find said enemy immediately, regardless of position or occlusion
+		ClearCondition( COND_SEE_ENEMY );
+		GetEnemies()->ClearMemory( pEnemy );
+		MarkEnemyAsEluded();
+}
+#endif
 	}
 }
 

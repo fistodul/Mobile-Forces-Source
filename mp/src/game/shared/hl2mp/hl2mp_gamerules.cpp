@@ -216,9 +216,9 @@ CHL2MPRules::CHL2MPRules()
 		g_Teams.AddToTail( pTeam );
 	}
 
-	/*#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-		InitDefaultAIRelationships(); //I guess this overwrites ai_relationship entities
-	#endif //SecobMod__Enable_Fixed_Multiplayer_AI*/
+	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+		InitDefaultAIRelationships();
+	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	
 	#ifdef SecobMod__FORCE_TEAMPLAY_AS_ALWAYS_ON
 			m_bTeamPlayEnabled = true;

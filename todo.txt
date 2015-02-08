@@ -1,5 +1,4 @@
 achievements_hlx.cpp 
-activitylist.cpp 
 ai_activity.cpp 
 ai_activity.h 
 ai_allymanager.cpp 
@@ -24,7 +23,6 @@ ai_speech.cpp
 ai_utils.h 
 antlion_maker.cpp 
 baseanimating.h 
-basecombatcharacter.cpp 
 basecombatweapon_shared.cpp 
 baseentity.cpp 
 baseentity_shared.cpp 
@@ -54,12 +52,10 @@ combine_mine.cpp
 CommentarySystem.cpp 
 effects.cpp 
 EntityDissolve.cpp 
-entitylist.cpp 
 env_headcrabcanister.cpp 
 env_zoom.cpp 
 EnvHudHint.cpp 
 EnvMessage.cpp 
-ep2_gamestats.cpp 
 func_break.cpp 
 func_recharge.cpp 
 func_tank.cpp 
@@ -67,8 +63,6 @@ func_tank.h
 fx_impact.cpp 
 gameinterface.cpp 
 gameinterface.h 
-gamemovement.cpp 
-gamemovement.h 
 gamerules.cpp 
 gameweaponmanager.cpp 
 geiger.cpp 
@@ -76,14 +70,10 @@ genericactor.cpp
 gib.cpp 
 globals.cpp 
 globals.h 
-grenade_frag.cpp 
-hl_gamemovement.cpp 
-hl_gamemovement.h 
+grenade_frag.cpp
 hl2_gamerules.cpp 
 hl2_gamerules.h 
 hl2_player.cpp 
-hl2_usermessages.cpp 
-hl2mp_player.cpp 
 hl2mp_player.h 
 hl2mp_weapon_parse.cpp 
 hl2mp_weapon_parse.h 
@@ -99,7 +89,6 @@ hud_posture.cpp
 hud_squadstatus.cpp 
 hud_suitpower.cpp 
 hud_zoom.cpp 
-ilagcompensationmanager.h 
 in_main.cpp 
 item_battery.cpp 
 item_dynamic_resupply.cpp 
@@ -162,7 +151,6 @@ ragdoll_shared.cpp
 recipientfilter.cpp 
 sceneentity.cpp 
 script_intro.cpp 
-shareddefs.h 
 soundscape.cpp 
 subs.cpp 
 teamplayroundbased_gamerules.cpp 

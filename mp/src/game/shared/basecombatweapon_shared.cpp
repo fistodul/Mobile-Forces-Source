@@ -1655,6 +1655,27 @@ void CBaseCombatWeapon::ItemPreFrame( void )
 		}
 	}
 #endif
+#ifdef cloak
+CBasePlayer *pOwner = ToBasePlayer( GetOwner() ); 
+if (!pOwner)
+  return;
+
+#ifndef CLIENT_DLL //Only done on the server, since the client won't be transmitting anything
+if ( pOwner->GetCloakStatus() == 1 || pOwner->GetCloakStatus() == 2 || pOwner->GetCloakStatus() == 3 )
+{
+//if ( pOwner->GetTroll() == 0 );
+//{
+  pOwner->DisableButtons( IN_ATTACK );
+  pOwner->DisableButtons( IN_ATTACK2 ); 
+//}
+}
+else
+{
+  pOwner->EnableButtons( IN_ATTACK );
+  pOwner->EnableButtons( IN_ATTACK2 );
+}
+#endif
+#endif
 }
 
 bool CBaseCombatWeapon::CanPerformSecondaryAttack() const

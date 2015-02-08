@@ -114,7 +114,11 @@ ConVar cl_backspeed( "cl_backspeed", "450", FCVAR_REPLICATED | FCVAR_CHEAT );
 #endif // CSTRIKE_DLL
 
 // This is declared in the engine, too
-ConVar	sv_noclipduringpause( "sv_noclipduringpause", "0", FCVAR_REPLICATED | FCVAR_CHEAT, "If cheats are enabled, then you can noclip with the game paused (for doing screenshots, etc.)." );
+ConVar	sv_noclipduringpause( "sv_noclipduringpause", "1", FCVAR_REPLICATED | FCVAR_CHEAT, "If cheats are enabled, then you can noclip with the game paused (for doing screenshots, etc.)." );
+
+ConVar sv_regeneration ("sv_regeneration", "1", FCVAR_REPLICATED );
+ConVar sv_regeneration_wait_time ("sv_regeneration_wait_time", "1.0", FCVAR_REPLICATED );
+ConVar sv_regeneration_rate ("sv_regeneration_rate", "0.5", FCVAR_REPLICATED );
 
 extern ConVar sv_maxunlag;
 extern ConVar sv_turbophysics;
@@ -156,6 +160,7 @@ extern CServerGameDLL g_ServerGameDLL;
 
 extern bool		g_fDrawLines;
 int				gEvilImpulse101;
+float     m_fRegenRemander;
 
 bool gInitHUD = true;
 
@@ -327,6 +332,7 @@ BEGIN_DATADESC( CBasePlayer )
 	DEFINE_FIELD( m_iBonusChallenge, FIELD_INTEGER ),
 	DEFINE_FIELD( m_lastDamageAmount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_tbdPrev, FIELD_TIME ),
+	DEFINE_FIELD( m_fTimeLastHurt, FIELD_TIME ),
 	DEFINE_FIELD( m_flStepSoundTime, FIELD_FLOAT ),
 	DEFINE_ARRAY( m_szNetname, FIELD_CHARACTER, MAX_PLAYER_NAME_LENGTH ),
 
@@ -548,6 +554,10 @@ CBasePlayer *CBasePlayer::CreatePlayer( const char *className, edict_t *ed )
 //-----------------------------------------------------------------------------
 CBasePlayer::CBasePlayer( )
 {
+#ifdef Loadout
+m_bInBuyZone = false;
+#endif
+
 	AddEFlags( EFL_NO_AUTO_EDICT_ATTACH );
 
 #ifdef _DEBUG
@@ -579,6 +589,7 @@ CBasePlayer::CBasePlayer( )
 	m_szNetname[0] = '\0';
 
 	m_iHealth = 0;
+	m_fRegenRemander = 0;
 	Weapon_SetLast( NULL );
 	m_bitsDamageType = 0;
 
@@ -643,6 +654,13 @@ CBasePlayer::~CBasePlayer( )
 {
 	VPhysicsDestroyObject();
 }
+
+#ifdef Loadout
+bool CBasePlayer::IsInBuyZone()
+{
+	return m_bInBuyZone;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1403,6 +1421,10 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	}
 
 	return fTookDamage;
+	if ( GetHealth() < 100 )
+	{
+    m_fTimeLastHurt = gpGlobals->curtime;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -4613,6 +4635,32 @@ void CBasePlayer::PostThink()
 	SimulatePlayerSimulatedEntities();
 #endif
 
+#ifdef MFS
+
+#endif
+
+// Regenerate heath
+if ( IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1) )
+{
+	// Color to overlay on the screen while the player is taking damage
+	color32 hurtScreenOverlay = {80,0,0,64};
+ 
+	if ( gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat() )
+	{
+                //Regenerate based on rate, and scale it by the frametime
+		m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+ 
+		if(m_fRegenRemander >= 1)
+		{
+			TakeHealth( m_fRegenRemander, DMG_GENERIC );
+			m_fRegenRemander = 0;
+		}
+	}
+	else
+	{
+		UTIL_ScreenFade( this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN|FFADE_PURGE );
+	}	
+}
 }
 
 // handles touching physics objects
@@ -6548,6 +6596,73 @@ bool CBasePlayer::ClientCommand( const CCommand &args )
 		}
 		return true;
 	}
+	  //Keypad
+	else if (stricmp(cmd, "keypad_codematch"))
+	{
+ 
+		CBaseEntity *pEntity = NULL;
+ 
+		//while ((pEntity = gEntList.FindEntityByClassnameWithin(pEntity, "player", GetLocalOrigin(), 512)) != NULL)
+		//	CBasePlayer *pPlayer = ToBasePlayer(pEntity);
+ 
+ 
+		while ((pEntity = gEntList.FindEntityInSphere(pEntity, GetLocalOrigin(), 512)) != NULL)//512 
+		{
+			if (FClassnameIs(pEntity, "point_keypad"))
+			{
+				edict_t *pFind;
+				pFind = pEntity->edict();
+ 
+				CBaseEntity *pEnt = CBaseEntity::Instance(pFind);
+				CPointKeypad *pKeypadSettings = (CPointKeypad *)pEnt;
+ 
+					//DevMsg("code_match - firing FireTarget\n");
+ 
+					pKeypadSettings->FireTarget();
+ 
+					return true;
+			}
+		}
+	}
+	else if (stricmp(cmd, "keypad_codedismatch"))
+	{
+		CBaseEntity *pEntity = NULL;
+ 
+		//	while ((pEntity = gEntList.FindEntityByClassnameWithin(pEntity, "player", GetLocalOrigin(), 512)) != NULL)
+		//	CBasePlayer *pPlayer = ToBasePlayer(pEntity);
+ 
+		//same as above, but calls a different function
+		while ((pEntity = gEntList.FindEntityInSphere(pEntity, GetLocalOrigin(), 512)) != NULL)//512
+		{
+			if (FClassnameIs(pEntity, "point_keypad"))
+			{
+				edict_t *pFind;
+				pFind = pEntity->edict();
+ 
+				CBaseEntity *pEnt = CBaseEntity::Instance(pFind);
+				CPointKeypad *pKeypadSettings = (CPointKeypad *)pEnt;
+ 
+					//DevMsg("code_dismatch - firing WrongCode\n");
+ 
+					pKeypadSettings->WrongCode();
+ 
+					return true;
+			}
+		}
+	}
+	#ifdef Loadout
+	else if ( FStrEq( args[0], "buy" ) )
+	{
+	if ( >= 11 )
+	{
+		loadout=0;
+	else
+	{
+		loadout=1;
+	}
+		return true;
+	}
+	#endif
 
 	return false;
 }
@@ -7997,6 +8112,9 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropEHandle	(SENDINFO(m_hZoomOwner) ),
 		SendPropArray	( SendPropEHandle( SENDINFO_ARRAY( m_hViewModel ) ), m_hViewModel ),
 		SendPropString	(SENDINFO(m_szLastPlaceName) ),
+		#ifdef Loadout
+		SendPropInt( SENDINFO( m_bInBuyZone ), 1, SPROP_UNSIGNED ),
+		#endif
 
 #if defined USES_ECON_ITEMS
 		SendPropUtlVector( SENDINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER, SendPropEHandle( NULL, 0 ) ),

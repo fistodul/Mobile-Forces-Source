@@ -149,7 +149,7 @@ private:
 // Uncomment this line to hit the ~CLeakTrack assert to see what's looking like it's leaking
 // #define LEAKTRACK
 
-#ifdef LEAKTRACK
+//#ifdef LEAKTRACK
 
 class CLeakTrack
 {
@@ -159,6 +159,7 @@ public:
 	}
 	~CLeakTrack()
 	{
+	AssertMsg ( keys.Count() == 0, VarArgs("keys.Count() is %i",keys.Count()) );
 		if ( keys.Count() != 0 )
 		{
 			Assert( 0 );
@@ -201,12 +202,12 @@ static CLeakTrack track;
 #define TRACK_KV_ADD( ptr, name )	track.AddKv( ptr, name )
 #define TRACK_KV_REMOVE( ptr )		track.RemoveKv( ptr )
 
-#else
+/*#else
 
 #define TRACK_KV_ADD( ptr, name ) 
 #define TRACK_KV_REMOVE( ptr )	
 
-#endif
+#endif*/
 
 
 //-----------------------------------------------------------------------------

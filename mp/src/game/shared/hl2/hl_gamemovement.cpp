@@ -4,13 +4,26 @@
 //
 //=============================================================================//
 #include "cbase.h"
+#ifdef SecobMod__USE_CSS_LADDERS
+#include "gamemovement.h"
+#else
 #include "hl_gamemovement.h"
 #include "in_buttons.h"
 #include "utlrbtree.h"
 #include "hl2_shareddefs.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
+#ifdef SecobMod__USE_CSS_LADDERS
+// Expose our interface.
+static CGameMovement g_GameMovement;
+IGameMovement *g_pGameMovement = ( IGameMovement * )&g_GameMovement;
+
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameMovement, IGameMovement,INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
+
+#else
 
 static ConVar sv_autoladderdismount( "sv_autoladderdismount", "1", FCVAR_REPLICATED, "Automatically dismount from ladders when you reach the end (don't have to +USE)." );
 static ConVar sv_ladderautomountdot( "sv_ladderautomountdot", "0.4", FCVAR_REPLICATED, "When auto-mounting a ladder by looking up its axis, this is the tolerance for looking now directly along the ladder axis." );
@@ -1150,3 +1163,4 @@ bool CHL2GameMovement::CanAccelerate()
 
 	EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameMovement, IGameMovement,INTERFACENAME_GAMEMOVEMENT, g_GameMovement );
 #endif
+#endif //SecobMod__USE_CSS_LADDERS

@@ -68,6 +68,9 @@ ConVar r_sequence_debug( "r_sequence_debug", "" );
 
 // If an NPC is moving faster than this, he should play the running footstep sound
 const float RUN_SPEED_ESTIMATE_SQR = 150.0f * 150.0f;
+#ifdef Fading_Ragdolls
+const float RAGDOLL_FADE_OUT_DELAY = 3.0f;
+#endif
 
 // Removed macro used by shared code stuff
 #if defined( CBaseAnimating )
@@ -294,6 +297,9 @@ C_ClientRagdoll::C_ClientRagdoll( bool bRestoring )
 	{
 		m_pRagdoll = new CRagdoll;
 	}
+	#ifdef Fading_Ragdolls
+	m_flFadeOutDelay = gpGlobals->curtime + RAGDOLL_FADE_OUT_DELAY;
+	#endif
 }
 
 void C_ClientRagdoll::OnSave( void )
@@ -573,6 +579,10 @@ void C_ClientRagdoll::ClientThink( void )
 
 	HandleAnimatedFriction();
 
+	#ifdef Fading_Ragdolls
+	if ( gpGlobals->curtime >= m_flFadeOutDelay )
+	SUB_Remove();
+	#endif
 	FadeOut();
 }
 

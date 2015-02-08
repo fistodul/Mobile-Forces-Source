@@ -13,6 +13,7 @@
 #endif
 
 #include "mapentities.h"
+#include MyBlockHandler.h
 
 class IReplayFactory;
 

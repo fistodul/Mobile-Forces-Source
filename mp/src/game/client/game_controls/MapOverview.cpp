@@ -127,6 +127,8 @@ CON_COMMAND( overview_mode, "Sets overview map mode off,small,large: <0|1|2>" )
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+// Without this the overview map element doesn't get created
+DECLARE_HUDELEMENT( CMapOverview );
 
 using namespace vgui;
 

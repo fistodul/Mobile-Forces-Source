@@ -538,11 +538,12 @@ enum
 	BLOOD_COLOR_GREEN,
 	BLOOD_COLOR_MECH,
 
-#if defined( HL2_EPISODIC )
+//SecobMod__IFDEF_Fixes
+//#ifdef HL2_EPISODIC
 	BLOOD_COLOR_ANTLION,		// FIXME: Move to Base HL2
 	BLOOD_COLOR_ZOMBIE,			// FIXME: Move to Base HL2
 	BLOOD_COLOR_ANTLION_WORKER,
-#endif // HL2_EPISODIC
+//#endif // HL2_EPISODIC
 };
 
 //-----------------------------------------------------------------------------
@@ -944,5 +945,8 @@ enum
 	MAX_VISION_MODES
 };
 #endif // TF_DLL || TF_CLIENT_DLL
+
+//SecobMod__Information: Here we add in the Source Engine Co-Operative Base Mod shared definitions file.
+#include "./secobmod/secobmod_shareddefs.h"
 
 #endif // SHAREDDEFS_H

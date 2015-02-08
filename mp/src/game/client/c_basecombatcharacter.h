@@ -99,6 +99,15 @@ public:
 	virtual void		GetGlowEffectColor( float *r, float *g, float *b );
 #endif // GLOWS_ENABLE
 
+#ifdef cloak
+//Cloak functions
+int    GetCloakStatus( void )    {    return m_intCloakStatus;    }
+float    GetCloakFactor( void )    {    return    m_floatCloakFactor;    }
+
+//Cloak variables
+int                m_intCloakStatus;
+float            m_floatCloakFactor
+#endif
 public:
 
 	float			m_flNextAttack;

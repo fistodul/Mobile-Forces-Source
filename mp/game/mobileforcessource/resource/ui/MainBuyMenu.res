@@ -263,7 +263,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give item_battery"
+		"Command"		"give item_armor"
 		"Default"		"0"
 	}
 	"CancelButton"

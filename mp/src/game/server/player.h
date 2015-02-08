@@ -849,6 +849,8 @@ public:
 		}
 	}
 
+	float			m_fTimeLastHurt;
+	
 private:
 	// How much of a movement time buffer can we process from this user?
 	float				m_flMovementTimeForUserCmdProcessingRemaining;

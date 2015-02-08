@@ -1822,7 +1822,7 @@ void CWeaponRPG::PrimaryAttack( void )
 				DrawHitmarker();
 			}
 			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-			if ( tr.m_pEnt->IsNPC() )
+			else if ( tr.m_pEnt->IsNPC() )
 			{
 				DrawHitmarker();
 			}

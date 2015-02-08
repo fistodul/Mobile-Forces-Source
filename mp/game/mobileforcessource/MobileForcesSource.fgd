@@ -366,3 +366,22 @@ model(studio) : "World model" : "models/ss_passenger_cube.mdl"
 	"func_ladder brush."
 [
 ]
+@PointClass base(Targetname) size(-8 -8 -8, 8 8 8) = point_keypad : "An interactive keypad that fires outputs depending if is correct " +
+"or not the introduced code."
+[
+	//my_target(string) : "Target" : ""
+	code(string) : "Code (MAX 4!)" : "1234"
+	label(string) : "Label" : "Mah keypad"
+	hide_pass(choices) : "Hide password?" : "1" =
+	[
+		"0" : 	"No"
+		"1": 	"Yes"
+	]
+ 
+	// Inputs
+	input Enable(void) : "Enables the keypad."
+ 
+	// Outputs
+	output OnCorrectCode(void) : "Fired when the code is correct."
+	output OnIncorrectCode(void) : "Fired when the code is incorrect."
+]

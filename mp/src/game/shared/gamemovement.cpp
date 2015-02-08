@@ -55,6 +55,13 @@ ConVar player_limit_jump_speed( "player_limit_jump_speed", "1", FCVAR_REPLICATED
 // duck controls. Its value is meaningless anytime we don't have the options window open.
 ConVar option_duck_method("option_duck_method", "1", FCVAR_REPLICATED|FCVAR_ARCHIVE );// 0 = HOLD to duck, 1 = Duck is a toggle
 
+#ifdef SecobMod__PLAYER_MOVEMENT_CAMERA_BOB
+// Camera Bob
+ConVar cl_viewbob_enabled	( "cl_viewbob_enabled", "1", 0, "Oscillation Toggle", true, 0, true, 1 );
+ConVar cl_viewbob_timer		( "cl_viewbob_timer", "10", 0, "Speed of Oscillation");
+ConVar cl_viewbob_scale		( "cl_viewbob_scale", "0.1", 0, "Magnitude of Oscillation");
+#endif //SecobMod__PLAYER_MOVEMENT_CAMERA_BOB
+
 #ifdef STAGING_ONLY
 #ifdef CLIENT_DLL
 ConVar debug_latch_reset_onduck( "debug_latch_reset_onduck", "1", FCVAR_CHEAT );
@@ -1723,7 +1730,11 @@ void CGameMovement::AirAccelerate( Vector& wishdir, float wishspeed, float accel
 		wishspd = GetAirSpeedCap();
 
 	// Determine veer amount
+	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+	currentspeed = sqrt( DotProduct(mv->m_vecVelocity, mv->m_vecVelocity) );
+	#else
 	currentspeed = mv->m_vecVelocity.Dot(wishdir);
+	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 	// See how much to add
 	addspeed = wishspd - currentspeed;
@@ -1894,6 +1905,14 @@ void CGameMovement::StayOnGround( void )
 //-----------------------------------------------------------------------------
 void CGameMovement::WalkMove( void )
 {
+#ifdef SecobMod__PLAYER_MOVEMENT_CAMERA_BOB
+ 	if ( cl_viewbob_enabled.GetInt() == 1 && !engine->IsPaused() )
+	{
+		float xoffset = sin( gpGlobals->curtime * cl_viewbob_timer.GetFloat() ) * player->GetAbsVelocity().Length() * cl_viewbob_scale.GetFloat() / 400; // Was 100
+		float yoffset = sin( 2 * gpGlobals->curtime * cl_viewbob_timer.GetFloat() ) * player->GetAbsVelocity().Length() * cl_viewbob_scale.GetFloat() / 800; // Was 400.
+		player->ViewPunch( QAngle( xoffset, yoffset, 0));
+	}
+#endif //SecobMod__PLAYER_MOVEMENT_CAMERA_BOB
 	int i;
 
 	Vector wishvel;
@@ -2434,7 +2453,11 @@ bool CGameMovement::CheckJumpButton( void )
 	{
 #if defined(HL2_DLL) || defined(HL2_CLIENT_DLL)
 		Assert( GetCurrentGravity() == 600.0f );
+	#ifdef SecobMod__USE_PLAYERCLASSES
+		flMul = sqrt(2 * sv_gravity.GetFloat() * GAMEMOVEMENT_JUMP_HEIGHT);
+	#else
 		flMul = 160.0f;	// approx. 21 units.
+	#endif //SecobMod__USE_PLAYERCLASSES
 #else
 		Assert( GetCurrentGravity() == 800.0f );
 		flMul = 268.3281572999747f;
