@@ -292,6 +292,10 @@ END_RECV_TABLE()
 		
 
 		RecvPropString( RECVINFO(m_szLastPlaceName) ),
+		
+		#ifdef Loadout
+		RecvPropInt( RECVINFO( m_bInBuyZone ) ),
+		#endif
 
 #if defined USES_ECON_ITEMS
 		RecvPropUtlVector( RECVINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER,	RecvPropEHandle(NULL, 0, 0) ),
@@ -480,6 +484,12 @@ void C_BasePlayer::Spawn( void )
 	m_bWasFreezeFraming = false;
 
 	m_bFiredWeapon = false;
+	#ifdef Loadout
+	if ( IsInBuyZone() == true )
+	{
+	engine->ClientCmd( "buy" );
+	}
+	#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1825,6 +1835,13 @@ C_BasePlayer *C_BasePlayer::GetLocalPlayer( void )
 {
 	return s_pLocalPlayer;
 }
+
+#ifdef Loadout
+bool C_BasePlayer::IsInBuyZone()
+{
+	return m_bInBuyZone;
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 

@@ -140,7 +140,6 @@ physconstraint.cpp
 physics.cpp 
 physics.h 
 physics_npc_solver.cpp 
-player.cpp 
 player_command.cpp 
 player_lagcompensation.cpp 
 player_pickup.cpp 

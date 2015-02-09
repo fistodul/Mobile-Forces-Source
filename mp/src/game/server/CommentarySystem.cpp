@@ -658,6 +658,7 @@ public:
 				m_hSpawnedEntities[i]->Activate();
 			}
 		}
+		pkvFile->deleteThis();
 		else
 		{
 			Msg( "Commentary: Could not find commentary data file '%s'. \n", szFullName );
