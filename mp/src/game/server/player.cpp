@@ -2331,11 +2331,11 @@ void CBasePlayer::PlayerDeathThink(void)
 // if the player has been dead for one second longer than allowed by forcerespawn, 
 // forcerespawn isn't on. Send the player off to an intermission camera until they 
 // choose to respawn.
-	if ( g_pGameRules->IsMultiplayer() && ( gpGlobals->curtime > (m_flDeathTime + DEATH_ANIMATION_TIME) ) && !IsObserver() )
+	/*if ( g_pGameRules->IsMultiplayer() && ( gpGlobals->curtime > (m_flDeathTime + DEATH_ANIMATION_TIME) ) && !IsObserver() )
 	{
 		// go to dead camera. 
 		StartObserverMode( m_iObserverLastMode );
-	}
+	}*/
 	
 // wait for any button down,  or mp_forcerespawn is set and the respawn time is up
 	if (!fAnyButtonDown 
@@ -2846,9 +2846,9 @@ bool CBasePlayer::IsValidObserverTarget(CBaseEntity * target)
 
 	CBasePlayer * player = ToBasePlayer( target );
 
-	/* Don't spec observers or players who haven't picked a class yet
+	//Don't spec observers or players who haven't picked a class yet
  	if ( player->IsObserver() )
-		return false;	*/
+		return false;
 
 	if( player == this )
 		return false; // We can't observe ourselves.
@@ -3833,6 +3833,10 @@ ConVar xc_crouch_debounce( "xc_crouch_debounce", "0", FCVAR_NONE );
 //-----------------------------------------------------------------------------
 void CBasePlayer::PlayerRunCommand(CUserCmd *ucmd, IMoveHelper *moveHelper)
 {
+// Ms - Spectators can't use anything
+if (GetTeamNumber() == TEAM_SPECTATOR)
+    ucmd->buttons &= ~IN_USE;
+    
 	m_touchedPhysObject = false;
 
 	if ( pl.fixangle == FIXANGLE_NONE)
@@ -6094,6 +6098,9 @@ ImpulseCommands
 
 void CBasePlayer::ImpulseCommands( )
 {
+	// Ms - Spectators can't use impulse commands
+if (GetTeamNumber() == TEAM_SPECTATOR)
+    return;
 	trace_t	tr;
 		
 	int iImpulse = (int)m_nImpulse;
