@@ -314,7 +314,8 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		}
 		else
 		{
-			CTeam *pCombine = g_Teams[TEAM_COMBINE];
+			ChangeTeam( TEAM_SPECTATOR );
+			/*CTeam *pCombine = g_Teams[TEAM_COMBINE];
 			CTeam *pRebels = g_Teams[TEAM_REBELS];
 
 			if ( pCombine == NULL || pRebels == NULL )
@@ -335,7 +336,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				{
 					ChangeTeam( random->RandomInt( TEAM_COMBINE, TEAM_REBELS ) );
 				}
-			}
+			}*/
 		}
 	}
 }
@@ -766,6 +767,16 @@ CBaseEntity *ent = NULL;
 		}
 	}
 #endif //SecobMod__ENABLE_MAP_SPECIFIC_PLAYER_MODEL_OVERRIDES
+if ( GetTeamNumber() != TEAM_SPECTATOR )
+{
+    StopObserverMode();
+}
+else
+{
+    // Ms - If we are spectating then go roaming
+    StartObserverMode( OBS_MODE_ROAMING );
+}
+}
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
@@ -2406,6 +2417,8 @@ bool CHL2MP_Player::StartObserverMode(int mode)
 		return BaseClass::StartObserverMode( mode );
 	}
 	return false;
+	// Ms - Call CBasePlayer::StartObserverMode(mode)
+return BaseClass::StartObserverMode(mode);
 }
 
 void CHL2MP_Player::StopObserverMode()
