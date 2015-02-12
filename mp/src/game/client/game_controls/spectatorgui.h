@@ -77,6 +77,7 @@ protected:
 	void SetLabelText(const char *textEntryName, wchar_t *text);
 	void MoveLabelToFront(const char *textEntryName);
 	void UpdateTimer();
+	void UpdateScores();
 	void SetLogoImage(const char *image);
 
 protected:	
