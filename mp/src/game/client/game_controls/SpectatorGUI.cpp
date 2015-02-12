@@ -38,6 +38,7 @@
 #include <imapoverview.h>
 #include <shareddefs.h>
 #include <igameresources.h>
+#include "c_team.h""
 
 #ifdef TF_CLIENT_DLL
 #include "tf_gamerules.h"
@@ -179,6 +180,23 @@ void CSpectatorMenu::PerformLayout()
 	SetSize(w,GetTall());
 }
 
+// Ms - Update team scores
+void CSpectatorGUI::UpdateScores()
+{
+    // Ms - Do team scores
+    wchar_t eltTeamScore[6], ratTeamScore[6];
+    C_Team *teamElt = GetGlobalTeam(TEAM_COMBINE);
+    C_Team *teamRat = GetGlobalTeam(TEAM_REBELS);
+
+    if (teamElt) {
+        swprintf(eltTeamScore, L"%d", teamElt->Get_Score());
+        SetLabelText("MFS_Spec_Blue_Score", eltTeamScore);
+    }
+    if (teamRat) {
+        swprintf(ratTeamScore, L"%d", teamRat->Get_Score());
+        SetLabelText("MFS_Spec_Red_Score", ratTeamScore);
+    }
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles changes to combo boxes
@@ -522,6 +540,10 @@ void CSpectatorGUI::OnThink()
 				gViewPortInterface->ShowPanel( PANEL_SCOREBOARD, m_bSpecScoreboard );
 			}
 		}
+	// Ms - Update the timer
+        UpdateTimer();
+        // Ms - Update team scores
+        UpdateScores();
 	}
 }
 
@@ -579,7 +601,7 @@ void CSpectatorGUI::ShowPanel(bool bShow)
 {
 	if ( bShow && !IsVisible() )
 	{
-		m_bSpecScoreboard = false;
+		m_bSpecScoreboard = true;
 	}
 	SetVisible( bShow );
 	if ( !bShow && m_bSpecScoreboard )
@@ -707,7 +729,7 @@ void CSpectatorGUI::UpdateTimer()
 {
 	wchar_t szText[ 63 ];
 
-	int timer = 0;
+	int timer = gpGlobals->curtime;
 
 	V_swprintf_safe ( szText, L"%d:%02d\n", (timer / 60), (timer % 60) );
 
