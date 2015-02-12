@@ -6252,7 +6252,7 @@ static void CreateJeep( CBasePlayer *pPlayer )
 	// Cheat to create a jeep in front of the player
 	Vector vecForward;
 	AngleVectors( pPlayer->EyeAngles(), &vecForward );
-	/SecobMod__Information: Changed the define to hl2_episodic so people can summon the hl2 buggy.
+	//SecobMod__Information: Changed the define to hl2_episodic so people can summon the hl2 buggy.
 	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_jeep" );
 	if ( pJeep )
 	{
