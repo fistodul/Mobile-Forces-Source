@@ -278,7 +278,17 @@ Scheme
 	Fonts
 	{
 		// fonts are used in order that they are listed
-		// fonts are used in order that they are listed
+		Icons
+		{
+			"1"
+			{
+			"name"	"Counter-Strike" // Cstrike.ttf
+			"tall"	"28"
+			"weight"	"0"
+			"additive"	"1"
+			"antialias"	"1"
+			}
+		}
 		"DebugFixed"
 		{
 			"1"
@@ -1579,6 +1589,7 @@ Scheme
 		"1"		"resource/HL2MP.ttf"
 		"2"		"resource/HL2crosshairs.ttf"
 		"3"		"resource/csd.ttf"
+		"3"		"resource/CStrike.ttf"
 	}
 
 }
