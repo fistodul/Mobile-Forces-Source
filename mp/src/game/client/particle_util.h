@@ -400,6 +400,33 @@ inline void RenderParticle_ColorSizeAngles(
  	pBuilder->AdvanceVertex();
 }
 
+#ifdef Far_Clipping
+// If you can find a MAX_VIEW_DISTANCE or something, maybe use that instead of 65536.
+inline float GetAlphaDistanceFade(
+    const Vector &pos,
+    const float fadeNearMin,
+    const float fadeNearMax,
+    const float fadeFarMin = 65536,
+    const float fadeFarMax = 65536)
+{
+    if ( -pos.z < fadeNearMin || -pos.z > fadeFarMax )
+    {
+        return 0;
+    }
+    else if ( -pos.z < fadeNearMax && fadeNearMax != fadeNearMin )
+    {
+        return ( -pos.z - fadeNearMin ) / ( fadeNearMax - fadeNearMin );
+    }
+    else if( -pos.z > fadeFarMin && fadeFarMax != fadeFarMin )
+    {
+        return 1 - ( ( -pos.z - fadeFarMin ) / ( fadeFarMax - fadeFarMin ) );
+    }
+    else
+    {
+        return 1;
+    }
+}
+#else
 inline float GetAlphaDistanceFade(
 	const Vector &pos,
 	const float fadeNearDist,
@@ -418,7 +445,7 @@ inline float GetAlphaDistanceFade(
 		return 0;
 	}
 }
-
+#endif
 
 inline Vector WorldGetLightForPoint(const Vector &vPos, bool bClamp)
 {

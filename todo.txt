@@ -192,29 +192,17 @@ weapon_striderbuster.cpp
 weapon_stunstick.cpp
 
 // Important Shit:
-// https://developer.valvesoftware.com/wiki/Looping_a_Sound
-// https://developer.valvesoftware.com/wiki/Creating_Teams
 // http://articles.thewavelength.net/682/
 // http://articles.thewavelength.net/710/
-// http://articles.thewavelength.net/672/
-// http://articles.thewavelength.net/702/
-// http://articles.thewavelength.net/636/
 // http://articles.thewavelength.net/680
 // https://developer.valvesoftware.com/wiki/Creating_an_NPC (add the troll)
-// https://developer.valvesoftware.com/wiki/Save_Game_Files
 // https://developer.valvesoftware.com/wiki/VGUI_HTML_Screen_In_Orange_Box
-// https://developer.valvesoftware.com/wiki/Duplicate_Animation_Events_Fix
-// https://developer.valvesoftware.com/wiki/Weapon_Respawn_Fix
-// https://developer.valvesoftware.com/wiki/Detail_props/Aspect_ratio_fix
-// https://developer.valvesoftware.com/wiki/Viewmodel_Prediction_Fix
 // https://developer.valvesoftware.com/wiki/SDK_Known_Issues_List
 // https://developer.valvesoftware.com/wiki/Duck_Jump_Fix
 // https://developer.valvesoftware.com/wiki/Adding_an_experience_system
-// https://github.com/ValveSoftware/source-sdk-2013/commits/master
-// look at ur old mfs vpc's and add stuff
 // Not so important shit XD:
 // http://forums.steampowered.com/forums/showthread.php?t=3129924
-// http://forums.steamgames.com/forums/showthread.php?t=1935224
+// http://forums.steamgames.com/forums/showthread.php?t=1935224 ( https://developer.valvesoftware.com/wiki/Adding_an_inventory )
 // https://developer.valvesoftware.com/wiki/Category:Particle_System
 // https://developer.valvesoftware.com/wiki/Creating_a_Roundtimer
 

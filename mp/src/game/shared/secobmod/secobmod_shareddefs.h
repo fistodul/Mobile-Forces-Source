@@ -28,6 +28,8 @@
 #define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them
 #define TaskList // lets u use a vgui task list :P
 #define cloak // allows use of a magical cloak xD
+#define Far_Clipping // fades particles when u get far away from them
+#define viewmodelshadow // by default Shadow receiving is disabled on various types of rendables... this makes the shadows cast upon the view model
 
 /*****************/
 /* Base Defines. */

@@ -112,6 +112,9 @@ void FinishClientPutInServer( CHL2MP_Player *pPlayer )
 	data->SetString( "msg",	"motd" );		// use this stringtable entry
 	data->SetBool( "unload", sv_motd_unload_on_dismissal.GetBool() );
 
+	#ifndef SecobMod__USE_PLAYERCLASSES
+	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
+	#endif
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 	data->deleteThis();
 	
