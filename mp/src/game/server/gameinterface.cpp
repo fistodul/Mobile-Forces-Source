@@ -800,10 +800,17 @@ void CServerGameDLL::DLLShutdown( void )
 
 	gameeventmanager = NULL;
 	
+	#if !defined( NO_STEAM )
+	SteamClient()->ReleaseUser( GetHSteamPipe(), GetHSteamUser() );
+	SteamClient()->BReleaseSteamPipe( GetHSteamPipe() );
+	#endif
+	
 	DisconnectTier3Libraries();
 	DisconnectTier2Libraries();
 	ConVar_Unregister();
 	DisconnectTier1Libraries();
+	
+	//alarm(10);
 }
 
 bool CServerGameDLL::ReplayInit( CreateInterfaceFn fnReplayFactory )

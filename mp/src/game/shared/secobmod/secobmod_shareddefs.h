@@ -10,6 +10,11 @@
 #define HL2_EPISODIC //Choose Episode 2 code for preference. Disabling this means you must exclude all episodic cpp/h files from your project.
 
 /*****************/
+/* PP.			*/
+/*****************/
+#define PP // Project Purity specific Changes()
+
+/*****************/
 /* MFS.			*/
 /*****************/
 //Filip: I honestly dont know why would someone Disable General Fixes so why da fck are fix defines even here xD
@@ -30,6 +35,10 @@
 #define cloak // allows use of a magical cloak xD
 #define Far_Clipping // fades particles when u get far away from them
 #define viewmodelshadow // by default Shadow receiving is disabled on various types of rendables... this makes the shadows cast upon the view model
+#define af // add's flashlights on viewmodels, well it kind of makes a visible change so i guess it rly should be a define XD
+#define css_muzzle_tweaks // https://developer.valvesoftware.com/wiki/Importing_CSS_Weapons_Into_HL2
+//#define Realistic_Rain_Splashes // https://developer.valvesoftware.com/wiki/Rain_splashes
+#define blah // basically i was bored so i did this xd
 
 /*****************/
 /* Base Defines. */

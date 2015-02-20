@@ -1172,9 +1172,11 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 
+#ifndef BOTRIX_HL2MP
 #ifdef DEBUG
 	extern void Bot_RunAll();
 	Bot_RunAll();
+#endif
 #endif
 }
 

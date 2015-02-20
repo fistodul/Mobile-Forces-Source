@@ -234,6 +234,15 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 		if ( pOther->GetCollisionGroup() == COLLISION_GROUP_BREAKABLE_GLASS )
 			 return;
 
+		#ifdef blah // Adrian did say "keep going through the glass." but i still put this here lol
+		if(FClassnameIs(pOther, "func_breakable"))
+		{
+			CBreakable* pOtherEntity =  static_cast<CBreakable*> (pOther);
+			if(pOtherEntity->GetMaterialType() == matGlass)
+				return;
+		}
+		#endif
+			 
 		SetAbsVelocity( Vector( 0, 0, 0 ) );
 
 		// play body "thwack" sound

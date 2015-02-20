@@ -3319,6 +3319,26 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
+			#ifdef muzzlelightning
+			Vector vAttachment, vAng;
+			QAngle angles;
+			#ifdef HL2_EPISODIC
+            GetAttachment( 1, vAttachment, angles ); // set 1 instead "attachment"
+			#else
+            GetAttachment( attachment, vAttachment, angles );
+			#endif
+			AngleVectors( angles, &vAng );
+			vAttachment += vAng * 2;
+ 
+			dlight_t *dl = effects->CL_AllocDlight ( index );
+			dl->origin = vAttachment;
+			dl->color.r = 231;
+			dl->color.g = 219;
+			dl->color.b = 14;
+			dl->die = gpGlobals->curtime + 0.05f;
+			dl->radius = random->RandomFloat( 245.0f, 256.0f );
+			dl->decay = 512.0f;
+			#else
 			Vector vAttachment;
 			QAngle dummyAngles;
 			GetAttachment( 1, vAttachment, dummyAngles );
@@ -3333,6 +3353,7 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 			el->color.g = 192;
 			el->color.b = 64;
 			el->color.exponent = 5;
+			#endif
 		}
 	}
 }
@@ -4114,10 +4135,26 @@ void C_BaseAnimating::FireObsoleteEvent( const Vector& origin, const QAngle& ang
 
 			if ( iAttachment != -1 && m_Attachments.Count() > iAttachment )
 			{
+			#ifndef css_muzzle_tweaks
 				GetAttachment( iAttachment+1, attachOrigin, attachAngles );
 				int entId = render->GetViewEntity();
 				ClientEntityHandle_t hEntity = ClientEntityList().EntIndexToHandle( entId );
 				tempents->MuzzleFlash( attachOrigin, attachAngles, atoi( options ), hEntity, bFirstPerson );
+			#else
+			if ( input->CAM_IsThirdPerson() )
+ 				{
+ 					C_BaseCombatWeapon *pWeapon = GetActiveWeapon();
+ 					pWeapon->GetAttachment( iAttachment+1, attachOrigin, attachAngles );
+ 				}
+ 				else
+ 				{
+ 					C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+ 					CBaseViewModel *vm = pPlayer->GetViewModel();
+ 					vm->GetAttachment( iAttachment+1, attachOrigin, attachAngles );
+ 					engine->GetViewAngles( attachAngles );
+ 				}
+ 				g_pEffects->MuzzleFlash( attachOrigin, attachAngles, 1.0, MUZZLEFLASH_TYPE_DEFAULT );
+			#endif
 			}
 		}
 		break;

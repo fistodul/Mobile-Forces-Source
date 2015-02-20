@@ -137,7 +137,8 @@ public:
 
 	void						DrawProgressBar( int x, int y, int width, int height, float percentage, Color& clr, unsigned char type );
 	void						DrawIconProgressBar( int x, int y, CHudTexture *icon, CHudTexture *icon2, float percentage, Color& clr, int type );
-
+	void	DrawIconProgressBarExt( int x, int y, int w, int h, CHudTexture *icon, CHudTexture *icon2, float percentage, Color &clr, int type );
+	
 	CHudTexture					*GetIcon( const char *szIcon );
 
 	// loads a new icon into the list, without duplicates

@@ -65,6 +65,8 @@
 #undef CBasePlayer	
 #endif
 
+extern void FormatViewModelAttachment( Vector &vOrigin, bool bInverse );
+
 int g_nKillCamMode = OBS_MODE_NONE;
 int g_nKillCamTarget1 = 0;
 int g_nKillCamTarget2 = 0;
@@ -293,7 +295,7 @@ END_RECV_TABLE()
 
 		RecvPropString( RECVINFO(m_szLastPlaceName) ),
 		
-		#ifdef Loadout
+		#ifdef MFS
 		RecvPropInt( RECVINFO( m_bInBuyZone ) ),
 		#endif
 
@@ -484,7 +486,7 @@ void C_BasePlayer::Spawn( void )
 	m_bWasFreezeFraming = false;
 
 	m_bFiredWeapon = false;
-	#ifdef Loadout
+	#ifdef MFS
 	if ( IsInBuyZone() == true )
 	{
 	engine->ClientCmd( "buy" );
@@ -1227,11 +1229,23 @@ void C_BasePlayer::UpdateFlashlight()
 			m_pFlashlight->TurnOn();
 		}
 
+		#ifdef af
+		QAngle angLightDir;
+		Vector vecLightOrigin, vecForward, vecRight, vecUp;
+		GetViewModel()->GetAttachment( 1, vecLightOrigin, angLightDir );
+
+		::FormatViewModelAttachment( vecLightOrigin, true );
+		
+		AngleVectors( angLightDir, &vecForward, &vecRight, &vecUp );
+		m_pFlashlight->UpdateLight( vecLightOrigin, vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
+		#else
 		Vector vecForward, vecRight, vecUp;
 		EyeVectors( &vecForward, &vecRight, &vecUp );
-
+		
 		// Update the light with the new position and direction.		
 		m_pFlashlight->UpdateLight( EyePosition(), vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
+		#endif
+		
 	}
 	else if (m_pFlashlight)
 	{
@@ -1836,7 +1850,7 @@ C_BasePlayer *C_BasePlayer::GetLocalPlayer( void )
 	return s_pLocalPlayer;
 }
 
-#ifdef Loadout
+#ifdef MFS
 bool C_BasePlayer::IsInBuyZone()
 {
 	return m_bInBuyZone;

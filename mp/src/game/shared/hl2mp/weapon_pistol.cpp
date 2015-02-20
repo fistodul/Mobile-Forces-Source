@@ -15,6 +15,9 @@
 #endif
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
+#ifdef blah
+#include "particle_parse.h"
+#endif
 
 #define	PISTOL_FASTEST_REFIRE_TIME		0.1f
 #define	PISTOL_FASTEST_DRY_REFIRE_TIME	0.2f
@@ -166,6 +169,9 @@ CWeaponPistol::CWeaponPistol( void )
 //-----------------------------------------------------------------------------
 void CWeaponPistol::Precache( void )
 {
+#ifdef blah
+PrecacheParticleSystem( "weapon_muzzle_smoke" );
+#endif
 	BaseClass::Precache();
 }
 
@@ -210,6 +216,14 @@ void CWeaponPistol::PrimaryAttack( void )
 		pOwner->ViewPunchReset();
 	}
 
+	#ifdef blah
+	if(m_nNumShotsFired >= 5)
+{
+     //We shot >5, clean up and start the muzzle smoking effect (like l4d)
+     DispatchParticleEffect( "weapon_muzzle_smoke", PATTACH_POINT_FOLLOW, pOwner->GetViewModel(), "muzzle", true);
+}
+#endif
+	
 	BaseClass::PrimaryAttack();
 
 	// Add an accuracy penalty which can move past our maximum penalty time if we're really spastic

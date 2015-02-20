@@ -88,5 +88,5 @@
 
 	//"file" "particles/smg_muzzle_flash.pcf"
 
-	//"file" "particles/weapon_smoke.pcf"
+	"file" "particles/weapon_smoke.pcf"
 

@@ -200,17 +200,17 @@ weapon_stunstick.cpp
 // https://developer.valvesoftware.com/wiki/SDK_Known_Issues_List
 // https://developer.valvesoftware.com/wiki/Duck_Jump_Fix
 // https://developer.valvesoftware.com/wiki/Adding_an_experience_system
+https://developer.valvesoftware.com/wiki/Authoring_a_Model_Entity
+https://developer.valvesoftware.com/wiki/Particle_Muzzle_Flash
+https://developer.valvesoftware.com/wiki/Rain_splashes (make particle)
 // Not so important shit XD:
 // http://forums.steampowered.com/forums/showthread.php?t=3129924
 // http://forums.steamgames.com/forums/showthread.php?t=1935224 ( https://developer.valvesoftware.com/wiki/Adding_an_inventory )
 // https://developer.valvesoftware.com/wiki/Category:Particle_System
 // https://developer.valvesoftware.com/wiki/Creating_a_Roundtimer
-
 // https://developer.valvesoftware.com/wiki/Interactive_Ingame_VGUI_Panels<Fixing Screen Errors(not so important cuz it might be outdated, makes stuff broken)
 // https://developer.valvesoftware.com/wiki/Resetting_the_Map
-
 // https://developer.valvesoftware.com/wiki/Last_Man_Standing_Gametype
-
 // https://developer.valvesoftware.com/wiki/Hud_AngleSplit
 // https://developer.valvesoftware.com/wiki/CHudFadingObject
 // https://developer.valvesoftware.com/wiki/CAreaPortalOneWay

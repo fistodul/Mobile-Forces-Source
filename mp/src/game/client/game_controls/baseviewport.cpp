@@ -216,6 +216,8 @@ void CBaseViewport::OnScreenSizeChanged(int iOldWide, int iOldTall)
 	m_pBackGround->SetVisible( false );
 #endif
 	CreateDefaultPanels();
+	// reload again... this fixes the ammo display etc
+    ReloadScheme( NULL );
 #ifndef _XBOX
 	vgui::ipanel()->MoveToBack( m_pBackGround->GetVPanel() ); // really send it to the back 
 #endif

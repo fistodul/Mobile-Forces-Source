@@ -563,7 +563,7 @@ CBasePlayer *CBasePlayer::CreatePlayer( const char *className, edict_t *ed )
 //-----------------------------------------------------------------------------
 CBasePlayer::CBasePlayer( )
 {
-#ifdef Loadout
+#ifdef MFS
 m_bInBuyZone = false;
 #endif
 
@@ -673,7 +673,7 @@ CBasePlayer::~CBasePlayer( )
 	VPhysicsDestroyObject();
 }
 
-#ifdef Loadout
+#ifdef MFS
 bool CBasePlayer::IsInBuyZone()
 {
 	return m_bInBuyZone;
@@ -1783,7 +1783,7 @@ KillChatBubble();
 	m_flDeathTime = gpGlobals->curtime;
 
 	ClearLastKnownArea();
-
+	
 	BaseClass::Event_Killed( info );
 }
 
@@ -6921,7 +6921,7 @@ bool CBasePlayer::ClientCommand( const CCommand &args )
 			}
 		}
 	}
-	#ifdef Loadout
+	#ifdef MFS
 	else if ( FStrEq( args[0], "buy" ) )
 	{
 	if ( >= 11 )
@@ -8438,7 +8438,7 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropEHandle	(SENDINFO(m_hZoomOwner) ),
 		SendPropArray	( SendPropEHandle( SENDINFO_ARRAY( m_hViewModel ) ), m_hViewModel ),
 		SendPropString	(SENDINFO(m_szLastPlaceName) ),
-		#ifdef Loadout
+		#ifdef MFS
 		SendPropInt( SENDINFO( m_bInBuyZone ), 1, SPROP_UNSIGNED ),
 		#endif
 

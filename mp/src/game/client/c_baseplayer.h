@@ -102,6 +102,10 @@ public:
 
 	virtual float GetPlayerMaxSpeed();
 
+	#ifdef MFS
+	int loadout;
+	#endif
+	
 	void	SetAnimationExtension( const char *pExtension );
 
 	C_BaseViewModel		*GetViewModel( int viewmodelindex = 0, bool bObserverOK=true );

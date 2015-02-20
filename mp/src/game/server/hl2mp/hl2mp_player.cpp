@@ -730,6 +730,15 @@ CBaseEntity *ent = NULL;
 	SetPlayerUnderwater(false);
 
 	m_bReady = false;
+	
+	/*#ifdef MFS
+	if teamplay = true
+	if get team = rebeles
+	SetModel (modelnames[ random->RandomInt( 0, ARRAYSIZE(modelnames) - 1 ) ]);
+	else if get team = combine
+	SetModel (modelnames[ random->RandomInt( 0, ARRAYSIZE(modelnames) - 1 ) ]);
+	#endif*/
+	
 	#ifdef SecobMod__ENABLE_MAP_SPECIFIC_PLAYER_MODEL_OVERRIDES
 	//SecobMod__Information: This allows map makers to override player models per-map. Note that it sets the same player model for EVERY player.
 		CBaseEntity *pSwitchModelEnt = NULL;
@@ -775,7 +784,6 @@ else
 {
     // Ms - If we are spectating then go roaming
     StartObserverMode( OBS_MODE_ROAMING );
-}
 }
 }
 
@@ -1852,6 +1860,18 @@ void CHL2MP_Player::Event_Killed( const CTakeDamageInfo &info )
 	// because we still want to transmit to the clients in our PVS.
 	if (GetTeamNumber() != TEAM_SPECTATOR)
 	CreateRagdollEntity();
+	
+if( info.GetDamageType() & (DMG_BLAST|DMG_BURN) )
+{
+    if( m_hRagdoll )
+    {
+        CBaseAnimating *pRagdoll = (CBaseAnimating *)CBaseEntity::Instance(m_hRagdoll);
+        if( info.GetDamageType() & (DMG_BURN|DMG_BLAST) )
+        {
+            pRagdoll->Ignite(45, false, 10 );
+        }
+    }
+}
 
 	#ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 	//SecobMod__Information: When a player is killed and if there's a ragdoll (there always is, even if it gets removed instantly) then we either get the position of our next (other) nearest player (because GetNearestPlayer would return ourselves) and set it to be the vector labelled respawn_origin or we just use the position of our ragdolls first spawn if no players are alive.
