@@ -15,7 +15,7 @@
 	nocrosshair "0"
 	nodegraph "1"
 	//GameData "..\..\..\sourcemods\mobileforcessource\mobileforcessource.fdg""
-	advcrosshair
+	//advcrosshair
 	//SupportsDX8 "1"
 	//InstancePath	"maps/instances/"
 	supportsvr	"1"
