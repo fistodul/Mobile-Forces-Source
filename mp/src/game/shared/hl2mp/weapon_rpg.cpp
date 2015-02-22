@@ -33,6 +33,9 @@
 	#include "collisionutils.h"
 	#include "hl2_shareddefs.h"
 #endif
+#ifdef blah
+#include "movevars_shared.h"
+#endif
 
 #include "debugoverlay_shared.h"
 
@@ -43,7 +46,7 @@
 extern int vaild;
 extern int rage;
 #else
-#define	RPG_SPEED	500
+#define	RPG_SPEED	600
 #endif
 
 #ifndef CLIENT_DLL
@@ -150,6 +153,9 @@ BEGIN_DATADESC( CMissile )
 	DEFINE_FUNCTION( AugerThink ),
 	DEFINE_FUNCTION( IgniteThink ),
 	DEFINE_FUNCTION( SeekThink ),
+	#ifdef blah
+	DEFINE_FUNCTION( DumbThink ),
+	#endif
 
 END_DATADESC()
 
@@ -212,7 +218,11 @@ void CMissile::Spawn( void )
 	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		SetDamage( EXPLOSION_DAMAGE );
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
-	
+	#ifdef blah
+	// Test out grav.
+    // We should definately have the rocket be modified by gravity.
+    SetGravity( sv_gravity.GetFloat() / 1200);
+	#endif
 	m_takedamage = DAMAGE_YES;
 	m_iHealth = m_iMaxHealth = 100;
 	m_bloodColor = DONT_BLEED;
@@ -492,7 +502,11 @@ void CMissile::CreateSmokeTrail( void )
 //-----------------------------------------------------------------------------
 void CMissile::IgniteThink( void )
 {
+	#ifdef blah
+	SetMoveType( MOVETYPE_FLYGRAVITY )
+	#else
 	SetMoveType( MOVETYPE_FLY );
+	#endif
 	SetModel("models/weapons/w_missile.mdl");
 	UTIL_SetSize( this, vec3_origin, vec3_origin );
  	RemoveSolidFlags( FSOLID_NOT_SOLID );
@@ -510,7 +524,11 @@ void CMissile::IgniteThink( void )
 	SetAbsVelocity( vecForward * RPG_SPEED );
 #endif
 
+	#ifdef blah
+	SetThink( &CMissile::DumbThink );
+	#else
 	SetThink( &CMissile::SeekThink );
+	#endif
 	SetNextThink( gpGlobals->curtime );
 
 	if ( m_hOwner && m_hOwner->GetOwner() )
@@ -728,6 +746,33 @@ if( pLaserDot->GetTargetEntity() != NULL && flDist <= 240.0f ) //
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 }
 
+#ifdef blah
+//-----------------------------------------------------------------------------
+// Purpose: To make the rocket follow gravity and set the face of it to what direction
+//            it's pointing.
+//-----------------------------------------------------------------------------
+void CMissile::DumbThink( void )
+{
+ 
+    // If we have a grace period, go solid when it ends
+    if ( m_flGracePeriodEndsAt )
+    {
+        if ( m_flGracePeriodEndsAt < gpGlobals->curtime )
+        {
+            RemoveSolidFlags( FSOLID_NOT_SOLID );
+            m_flGracePeriodEndsAt = 0;
+        }
+    }
+ 
+    // Correct the face of the rocket.
+    QAngle angNewAngles;
+ 
+    VectorAngles( GetAbsVelocity(), angNewAngles );
+    SetAbsAngles( angNewAngles );
+ 
+    SetNextThink( gpGlobals->curtime + 0.1f );
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -1959,12 +2004,12 @@ void CWeaponRPG::ItemPostFrame( void )
 	}
 	else
 	{
-	RPGSpeed = 500;
+	RPGSpeed = 600;
 	}
 	}
 	else
 	{
-	RPGSpeed = 500;
+	RPGSpeed = 600;
 	}
 	#endif Testing
 }

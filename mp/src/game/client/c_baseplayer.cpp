@@ -65,7 +65,9 @@
 #undef CBasePlayer	
 #endif
 
+#ifdef af
 extern void FormatViewModelAttachment( Vector &vOrigin, bool bInverse );
+#endif
 
 int g_nKillCamMode = OBS_MODE_NONE;
 int g_nKillCamTarget1 = 0;

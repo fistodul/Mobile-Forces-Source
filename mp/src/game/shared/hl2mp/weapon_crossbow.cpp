@@ -22,6 +22,9 @@
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 #include "effect_dispatch_data.h"
+#ifdef blah
+#include "movevars_shared.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -167,7 +170,11 @@ void CCrossbowBolt::Spawn( void )
 	SetMoveType( MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_CUSTOM );
 	UTIL_SetSize( this, -Vector(1,1,1), Vector(1,1,1) );
 	SetSolid( SOLID_BBOX );
+	#ifdef blah
+	SetGravity( sv_gravity.GetFloat() / 1200);
+	#else
 	SetGravity( 0.05f );
+	#endif
 	
 	// Make sure we're updated if we're underwater
 	UpdateWaterState();
@@ -647,6 +654,20 @@ void CWeaponCrossbow::FireBolt( void )
 
 	QAngle angAiming;
 	VectorAngles( vecAiming, angAiming );
+	
+	#ifdef blah
+	#ifdef square
+	angAiming.x += ((rand() % 250) / 100.0) * (rand() % 2 == 1 ? -1 : 1);
+	angAiming.y += ((rand() % 250) / 100.0) * (rand() % 2 == 1 ? -1 : 1);
+	#else
+	float RandomAngle = (rand() % 360);
+	float RandMagnitudeX = ((rand() % 175) / 100.0);
+	float RandMagnitudeY = ((rand() % 175) / 100.0);
+	angAiming.x += (RandMagnitudeX)*cos(RandAngle);
+	angAiming.y += (RandMagnitudeY)*sin(RandAngle);
+	#endif
+	AngleVectors(angAiming, &vecAiming);
+	#endif
 
 	CCrossbowBolt *pBolt = CCrossbowBolt::BoltCreate( vecSrc, angAiming, GetHL2MPWpnData().m_iPlayerDamage, pOwner );
 
@@ -661,7 +682,9 @@ void CWeaponCrossbow::FireBolt( void )
 
 #endif
 
+	//#ifndef blah
 	m_iClip1--;
+	//#endif
 
 	pOwner->ViewPunch( QAngle( -2, 0, 0 ) );
 
@@ -676,7 +699,11 @@ void CWeaponCrossbow::FireBolt( void )
 		pOwner->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 	}
 
+	#ifndef blah
 	m_flNextPrimaryAttack = m_flNextSecondaryAttack	= gpGlobals->curtime + 0.75;
+	#else
+	m_flNextPrimaryAttack = m_flNextSecondaryAttack	= gpGlobals->curtime + 0.15;
+	#endif
 
 	DoLoadEffect();
 	SetChargerState( CHARGER_STATE_DISCHARGE );

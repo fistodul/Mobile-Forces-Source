@@ -2,7 +2,7 @@
 //sv_pure -1
 sv_unlockedchapters 99
 jpeg_quality 100
-//cl_forcepreload 1
+cl_forcepreload 1
 r_fastzreject -1
 r_lod -2 // -8
 //mat_parallaxmap 1

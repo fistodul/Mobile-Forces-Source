@@ -58,6 +58,10 @@ public:
 	void	AccelerateThink( void );
 	void	AugerThink( void );
 	void	IgniteThink( void );
+	#ifdef blah
+	// Create a dumb think method. This should make it so the rpg obeys gravity.
+    void    DumbThink( void );
+	#endif
 	void	SeekThink( void );
 	void	DumbFire( void );
 	void	SetGracePeriod( float flGracePeriod );

@@ -280,7 +280,10 @@ void CWeaponMiniGun::ItemPostFrame( void )
   if ( pOwner->m_nButtons & IN_ATTACK )
   {
 	//This epic line makes the increasing happen xD
-	ROF = ROF + 1;
+	if ( ROF <= 2990 )
+	{
+	ROF = ROF + 10;
+	}
     if (m_flAttackEnds<gpGlobals->curtime)
 	{
 	ROF = def_ROF;
