@@ -1,11 +1,3 @@
-ai_allymanager.cpp 
-ai_basenpc.cpp 
-ai_basenpc.h 
-ai_basenpc_schedule.cpp 
-ai_behavior_actbusy.cpp 
-ai_behavior_fear.cpp 
-ai_behavior_follow.cpp 
-ai_behavior_lead.cpp 
 ai_behavior_passenger.cpp 
 ai_behavior_passenger.h 
 ai_behavior_standoff.cpp 
@@ -183,6 +175,10 @@ weapon_slam.cpp
 weapon_striderbuster.cpp 
 
 // Important Shit:
+Vector vNearestPlayerPos = UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin())->GetAbsOrigin();
+if ( !ppAIs[i]->IsInPlayerSquad() && !UTIL_FindClientInPVS( ppAIs[i]->edict() ) && ( ( ppAIs[i]->GetAbsOrigin() - vNearestPlayerPos ).LengthSqr() > 150*12 || fabsf( ppAIs[i]->GetAbsOrigin().z - vNearestPlayerPos.z ) > 192 ) )
+{
+}
 // http://articles.thewavelength.net/682/
 // http://articles.thewavelength.net/710/
 // http://articles.thewavelength.net/680
