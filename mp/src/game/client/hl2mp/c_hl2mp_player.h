@@ -65,6 +65,9 @@ public:
 	virtual void CalcView( Vector &eyeOrigin, QAngle &eyeAngles, float &zNear, float &zFar, float &fov );
 	virtual const QAngle& EyeAngles( void );
 
+	#ifdef SecobMod__USE_PLAYERCLASSES
+		CNetworkVar(int, m_iClientClass);
+	#endif //SecobMod__USE_PLAYERCLASSES
 	
 	bool	CanSprint( void );
 	void	StartSprinting( void );
@@ -83,6 +86,7 @@ public:
 	void StartWalking( void );
 	void StopWalking( void );
 	bool IsWalking( void ) { return m_fIsWalking; }
+	void GetName( void );
 
 	virtual void PostThink( void );
 
