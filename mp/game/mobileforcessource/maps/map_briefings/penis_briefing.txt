@@ -32,9 +32,9 @@ a:hover {
 </head>
 <body scroll="no">
 <pre>
-This is a epic briefing lol
+This is an epic briefing lol
 
-this is the start of it... you joined the military academy, now you have to pick a squad xD
+this is the start of it... you joined the military academy, now you have to pick a squad
 
 mapName_briefing.txt
 so:

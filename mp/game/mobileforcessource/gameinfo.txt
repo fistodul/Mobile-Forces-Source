@@ -89,6 +89,9 @@
 			// Where the game's binaries are
 			gamebin				hl2mp/bin
 
+			//game+mod			|all_source_engine_paths|hl2mp
+			//Game				|gameinfo_path|.
+
 			// Last, mount in shared HL2 loose files
 			Game				|all_source_engine_paths|hl2mp
 			Game				|all_source_engine_paths|hl2

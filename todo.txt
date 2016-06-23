@@ -1,8 +1,4 @@
 Filip:
-activitylist.cpp 
-ai_activity.cpp 
-ai_activity.h 
-ai_allymanager.cpp 
 ai_basenpc.cpp 
 ai_basenpc.h 
 ai_basenpc_schedule.cpp 
