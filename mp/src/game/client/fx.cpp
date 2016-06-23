@@ -228,11 +228,6 @@ void FX_MuzzleEffect(
 		pParticle->m_flDieTime		= /*bOneFrame ? 0.0001f : */0.1f;
 
 		pParticle->m_vecVelocity.Init();
-		#ifdef css_muzzle_tweaks
-		C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-		Vector velocity = pPlayer->GetLocalVelocity();
-		pParticle->m_vecVelocity += velocity;
-		#endif
 
 		if ( !pFlashColor )
 		{

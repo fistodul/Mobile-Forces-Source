@@ -1,6 +1,6 @@
 /*$ preserve start $*/
 /* ========================================================================================== */
-/* FMOD Ex - DSP header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.      */
+/* FMOD Ex - DSP header file. Copyright (c), Firelight Technologies Pty, Ltd. 2004-2016.      */
 /*                                                                                            */
 /* Use this header if you are interested in delving deeper into the FMOD software mixing /    */
 /* DSP engine.  In this header you can find parameter structures for FMOD system reigstered   */
@@ -144,7 +144,7 @@ namespace FMOD
         public DSP_SETPOSITIONCALLBACK     setposition;        /* [in] Setposition callback.  This is called if the unit wants to update its position info but not process data.  Can be null. */
 
         public int                         numparameters;      /* [in] Number of parameters used in this filter.  The user finds this with DSP::getNumParameters */
-        public DSP_PARAMETERDESC[]         paramdesc;          /* [in] Variable number of parameter structures. */
+        public IntPtr                      paramdesc;          /* [in] Variable number of parameter structures. */
         public DSP_SETPARAMCALLBACK        setparameter;       /* [in] This is called when the user calls DSP::setParameter.  Can be null. */
         public DSP_GETPARAMCALLBACK        getparameter;       /* [in] This is called when the user calls DSP::getParameter.  Can be null. */
         public DSP_DIALOGCALLBACK          config;             /* [in] This is called when the user calls DSP::showConfigDialog.  Can be used to display a dialog to configure the filter.  Can be null. */

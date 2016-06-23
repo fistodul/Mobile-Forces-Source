@@ -126,23 +126,12 @@ protected:
 		{
 			CBaseEntity *pThrower = pGrenade->GetThrower();
 			CBaseEntity *pOriginalThrower = pGrenade->GetOriginalThrower();
-			
-			#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
-				CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-			#endif //SecobMod__Enable_Fixed_Multiplayer_AI
-			
+			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 			// check if player was most recent thrower, but the victim was the original thrower
-			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-				if ( pThrower->IsPlayer() && ( pOriginalThrower == pVictim ) )
-				{
-					IncrementCount();
-				}	
-			#else
-				if ( ( pPlayer == pThrower ) && ( pOriginalThrower == pVictim ) )
-				{
-					IncrementCount();
-				}
-			#endif //SecobMod__Enable_Fixed_Multiplayer_AI				
+			if ( ( pPlayer == pThrower ) && ( pOriginalThrower == pVictim ) )
+			{
+				IncrementCount();
+			}				
 		}			
 	}
 };

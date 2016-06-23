@@ -163,7 +163,7 @@ namespace programmer_sound
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 21;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // startEvent

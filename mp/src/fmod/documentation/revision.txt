@@ -1,7 +1,7 @@
 
 ===============================================================================
                            REVISION HISTORY : FMOD Ex
-             Copyright (c) Firelight Technologies, Pty, Ltd, 2004-2015
+             Copyright (c) Firelight Technologies, Pty, Ltd, 2004-2016
                               http://www.fmod.org
 ===============================================================================
               + Added feature or noticeable improvement
@@ -10,7 +10,146 @@
               ! Important - Take note!
 ===============================================================================
 
-13/01/15 4.44.50 - Stable branch update (build 61168)
+20/01/16 4.44.61 - Stable branch update (build 71641)
+----------------------------------------------------
+
+!- Fixed bug if streams start virtual, they may not come back as audible.  
+   Introduced in 4.44.55.
+
+- Fix 3 or 7 channel sounds being silent in stereo output speaker mode.
+- Mac - Fix crash with filenames > 255 characters.
+
+* Xbox One - Now built with November 2015 XDK.
+* iOS - Now built with SDK 9.2 (Xcode 7.2).
+
+05/01/16 4.44.60 - Stable branch update (build 71162)
+----------------------------------------------------
+
+- Fix rare crash if using DSP::release on a DSP that was played with 
+  System::playDSP
+- Fix Sound::getOpenState returning FMOD_OPENSTATE_READY when a sounded ended, 
+  when it should have returned FMOD_OPENSTATE_PLAYING for a bit longer, which 
+  meant Sound::release could stall.
+- PS Vita - Fixed potential crash due to channel reuse if calling setPosition
+            on hardware channels. Issue was introduced in 4.44.55.
+- Xbox One - Fixed rare stall when playing XMA streams and
+             compressed samples at the same time.
+
+12/11/15 4.44.59 - Stable branch update (build 69790)
+----------------------------------------------------
+
+- Mac - Fixed issue preventing FMOD Ex dylib from being accepted into the App
+        Store due to missing LC_VERSION_MIN_MACOSX. We now build with a modern
+        toolchain which causes the deprecation of PPC support.
+-       Fix crash with invalid .mp3 files.
+-       Fixed stereo sounds playing in 3D in quad/surround speaker modes, not being 
+        audible when behind the listener.
+
+* iOS - Now built with SDK 9.1 (Xcode 7.1).
+* Mac - Now built with SDK 10.11 (Xcode 7.1).
+* Android - Now built with NDK r10e.
+* PS Vita - Now built with SDK 3.550.
+
+20/10/15 4.44.58 - Stable branch update (build 69027)
+----------------------------------------------------
+
+- Fix FMOD_DSP_TYPE_PITCHSHIFTER setParameter crash.
+- WinStore - Fix crashes that can occur on startup or shutdown.
+- WinStore - Fix occasional crashes on Windows 10.
+- FSBankEx - Increased max PCM encoder channels from 15 to 16.
+
+- Event API - Fix rare error releasing a streamed bank.
+
+* PS4 - Now built with SDK 3.008.041
+* PS3 - Now built with SDK 475.001.
+
+
+21/09/15 4.44.57 - Stable branch update (build 68140)
+----------------------------------------------------
+- iOS - Fixed error creating the file thread on iOS 9.0.
+
+- Event API - Increase sound bank entry limit for large projects (was returning
+  FMOD_ERR_INTERNAL)
+- Event API - Fix hang if running out of event queue loading slots.   Bug 
+  introduced in 4.44.50.
+
+* Xbox One - Now built with August 2015 XDK.
+* iOS - Now built with SDK 9.0 (Xcode 7.0).
+
+05/08/15 4.44.56 - Stable branch update (build 66571)
+----------------------------------------------------
+
+- Win - Fix audio pops on initialisation when using WASAPI output.
+- Fix tag UTF8 strings not being null terminated properly leading to string 
+  overflows.
+
+- Event API - Fix potential crash if using random sound defs with 'dont play' 
+  entries.
+
+07/07/15 4.44.55 - Stable branch update (build 65561)
+----------------------------------------------------
+
++ 3DS - Added support for microphone recording.
+
+- Fixed MIDI playback not correctly handling CC1 (mod wheel).
+- De-clicked echo when changing delay length.
+
+- PS Vita - Fixed rare hardware channel leak when performing Channel::setPosition
+            for a stream opened as FMOD_NONBLOCKING.
+
+* Xbox One - Now built with May 2015 QFE 1 XDK.
+* WiiU - Now built with SDK 2.12.13.
+* 3DS - Now built with SDK 11.1.1.
+
+25/05/15 4.44.54 - Stable branch update
+----------------------------------------------------
+
+- Fixed invalid memory access when loading an incorrectly formatted or truncated 
+  IMA ADPCM wav file using FMOD_OPENMEMORY_POINT and FMOD_CREATECOMPRESSEDSAMPLE.
+
+- PS Vita - Fixed potential crackling when the game is under load.
+
+* Xbox One - Now built with April 2015 XDK.
+
+07/05/15 4.44.53 - Stable branch update
+----------------------------------------------------
+
+- Event API - fix Event::setMute not unmuting if muted before playback.
+- PS4 - Fix issues in AT9 compressed channels with non start to end loop points.
+- Linux - Fixed potential hang when releasing a starving net-stream.
+
+* PS Vita - Maximum hardware channels is now 64 instead of 32.
+
+1/04/15 4.44.52 - Stable branch update
+----------------------------------------------------
+
+- Fixed DSP effects being fed a single mix of the wrong channel count when sounds
+  come to a natural end. Depending on the DSP, this can sound like a pop.
+
+- Xbox One - Fixed rare hang when decoding small XMA compressed audio.
+
+- Event API - Fix FMOD_EVENT_CALLBACKTYPE_SOUNDDEF_END not triggering on one-shot
+  sounds.
+  
+- C# - Fix ADVANCEDSETTINGS and DSP_DESCRIPTION structs.
+  
+* Increased maximum 3d listeners to 6.
+* PS3 - Now built with SDK 470.001.
+
+16/03/15 4.44.51 - Stable branch update
+----------------------------------------------------
+
++ Xbox One - Added access to 7th CPU core.
+
+- Fix crash with playDSP and Channel::stop when used with a 3d Reverb sphere.
+  Issue was introduced in 4.44.49
+- Fix rare crash with Sound::release if a nonblocking setPosition is in 
+  process and it is an FSB sound.
+- Xbox One - Fix XMA compressed channels not respecting setDelay calls.
+
+* Xbox One - Now built with February 2015 XDK.
+
+13/01/15 4.44.50 - Stable branch update
 ----------------------------------------------------
 
 + PS4 - Allow System::setSpeakerMode(FMOD_SPEAKERMODE_STEREO) to be called to

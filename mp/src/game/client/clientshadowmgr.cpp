@@ -853,17 +853,7 @@ private:
 	void RemoveShadowFromDirtyList( ClientShadowHandle_t handle );
 
 	// NOTE: this will ONLY return SHADOWS_NONE, SHADOWS_SIMPLE, or SHADOW_RENDER_TO_TEXTURE.
-	#ifdef Grass_Clusters
-	public:
-	ShadowHandle_t GetShadowHandle( ClientShadowHandle_t clienthandle ){ return m_Shadows[ clienthandle ].m_ShadowHandle; };
-	int GetNumShadowDepthtextures(){ return m_DepthTextureCache.Count(); };
-	CTextureReference GetShadowDepthTex( int num ){ return m_DepthTextureCache[num]; };
-
 	ShadowType_t GetActualShadowCastType( ClientShadowHandle_t handle ) const;
-	private:
-	#else
-	ShadowType_t GetActualShadowCastType( ClientShadowHandle_t handle ) const;
-	#endif
 	ShadowType_t GetActualShadowCastType( IClientRenderable *pRenderable ) const;
 
 	// Builds a simple blobby shadow
@@ -1300,10 +1290,9 @@ bool CClientShadowMgr::Init()
 
 	SetShadowBlobbyCutoffArea( 0.005 );
 
-	//bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
-	//m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
-	m_nMaxDepthTextureShadows = 4; // fuck you and your limits xD
-	
+	bool bTools = CommandLine()->CheckParm( "-tools" ) != NULL;
+	m_nMaxDepthTextureShadows = bTools ? 4 : 1;	// Just one shadow depth texture in games, more in tools
+
 	bool bLowEnd = ( g_pMaterialSystemHardwareConfig->GetDXSupportLevel() < 80 );
 
 	if ( !bLowEnd && r_shadowrendertotexture.GetBool() )
@@ -1813,6 +1802,9 @@ ClientShadowHandle_t CClientShadowMgr::CreateProjectedTexture( ClientEntityHandl
 	if( !( flags & SHADOW_FLAGS_FLASHLIGHT ) )
 	{
 		IClientRenderable *pRenderable = ClientEntityList().GetClientRenderableFromHandle( entity );
+		if ( !pRenderable )
+			return m_Shadows.InvalidIndex();
+
 		int modelType = modelinfo->GetModelType( pRenderable->GetModel() );
 		if (modelType == mod_brush)
 		{
@@ -2634,13 +2626,6 @@ void CClientShadowMgr::BuildFlashlight( ClientShadowHandle_t handle )
 
 	VPROF_BUDGET( "CClientShadowMgr::BuildFlashlight", VPROF_BUDGETGROUP_SHADOW_DEPTH_TEXTURING );
 
-	// Don't project the flashlight if the frustum AABB is not in our view
-	Vector mins, maxs;
-	CalculateAABBFromProjectionMatrix(shadow.m_WorldToShadow, &mins, &maxs);
- 
-	if(engine->CullBox(mins, maxs))
-		return;
-	
 	bool bLightModels = r_flashlightmodels.GetBool();
 	bool bLightSpecificEntity = shadow.m_hTargetEntity.Get() != NULL;
 	bool bLightWorld = ( shadow.m_Flags & SHADOW_FLAGS_LIGHT_WORLD ) != 0;
@@ -3867,7 +3852,7 @@ int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, i
 			continue;
 
 		// Calculate an AABB around the shadow frustum
-		/*Vector vecAbsMins, vecAbsMaxs;
+		Vector vecAbsMins, vecAbsMaxs;
 		CalculateAABBFromProjectionMatrix( shadow.m_WorldToShadow, &vecAbsMins, &vecAbsMaxs );
 
 		Frustum_t viewFrustum;
@@ -3879,7 +3864,7 @@ int CClientShadowMgr::BuildActiveShadowDepthList( const CViewSetup &viewSetup, i
 		{
 			shadowmgr->SetFlashlightDepthTexture( shadow.m_ShadowHandle, NULL, 0 );
 			continue;
-		}*/
+		}
 
 		if ( nActiveDepthShadowCount >= nMaxDepthShadows )
 		{

@@ -1,6 +1,6 @@
 /*===============================================================================================
  Load Event Data Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  Demonstrates basic loading and unloading of event data per event
 ===============================================================================================*/
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     int                   key;
 
     printf("======================================================================\n");
-    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("==============================-------=================================\n");
     printf("This demonstrates loading and unloading of event data per event and\n");
     printf("per group.\n");

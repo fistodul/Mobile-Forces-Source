@@ -2,7 +2,7 @@
 
 /* ============================================================================================ */
 /* FMOD Ex - Main C/C++ event/data driven system header file.                                   */
-/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2014.                                   */
+/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2016.                                   */
 /*                                                                                              */
 /* This header is the base header for all other FMOD EventSystem headers. If you are            */
 /* programming in C use this exclusively, or if you are programming C++ use this in             */
@@ -21,7 +21,7 @@
     0xaaaabbcc -> aaaa = major version number.  bb = minor version number.  cc = development version number.
 */
 
-#define FMOD_EVENT_VERSION 0x00044450
+#define FMOD_EVENT_VERSION    0x00044461
 
 /*
     FMOD event types

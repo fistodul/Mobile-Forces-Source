@@ -18,9 +18,6 @@
 #include "ndebugoverlay.h"
 #include "ai_senses.h"
 
-//SecobMod__MiscFixes: Here we include the hl2mp gamerules so that calls to darkness mode work. Calls to HL2GameRules are also changed to HL2MPRules in this file for darkness mode to work.
-#include "hl2mp_gamerules.h"
-
 #ifdef HL2_EPISODIC
 	#include "info_darknessmode_lightsource.h"
 #endif
@@ -2133,28 +2130,14 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 		return;
 	
 	CBaseEntity *pGoalEntity = GetGoalEntity();
-	
-	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-		if ( !pGoalEntity ) 
+	if ( !pGoalEntity && AI_IsSinglePlayer() )
+	{
+		if ( pAI->IRelationType(UTIL_GetLocalPlayer()) == D_LI )
 		{
-			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin()); 
-			
-			if ( pAI->IRelationType(pPlayer) == D_LI ) 
-			{
-				pGoalEntity = pPlayer; 
-				SetGoalEntity( pGoalEntity );
-			}
+			pGoalEntity = UTIL_GetLocalPlayer();
+			SetGoalEntity( pGoalEntity );
 		}
-	#else
-		if ( !pGoalEntity && AI_IsSinglePlayer() )
-		{
-			if ( pAI->IRelationType(UTIL_GetLocalPlayer()) == D_LI )
-			{
-				pGoalEntity = UTIL_GetLocalPlayer();
-				SetGoalEntity( pGoalEntity );
-			}	
-		}
-	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+	}
 
 	if ( pGoalEntity )
 		pBehavior->SetFollowGoal( this );

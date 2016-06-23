@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"mobileforcessource" [!$SOURCESDK]
+$Macro GAMENAME 	"hl2mp" [!$SOURCESDK]
 $Macro GAMENAME 	"mobileforcessource" [$SOURCESDK]
 
 $Include "$SRCDIR\game\client\client_base.vpc"
@@ -116,22 +116,23 @@ $Project "Client (HL2MP)"
 
 		$Folder	"MFS"
 		{
-		$File	"hl2mp\fmod_manager.cpp"
-		$File	"hl2mp\fmod_manager.h"
-		$File	"hl2mp\pm.cpp"
-		//$File	"hl2mp\ui\hud_level.cpp"
-		//$File	"$SRCDIR\game\shared\hl2mp\myconvars.cpp"
-		//$File	"$SRCDIR\game\shared\hl2mp\myconvars.h"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_portablehealthkit.cpp"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_troll.cpp"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_dualies.cpp"
-		$File	"hl2\hud_tasklist.cpp"
-		$File	"hl2\hud_tasklist.h"
-		$File	"cloakproxy.cpp"
-		$File	"hud_hitmaker.cpp"
-		$File	"hud_hitmaker.h"
-		$File	"vgui_keypad.cpp"
-		$File	"vgui_keypad.h"
+		$File	"mfs\fmod_manager.cpp"
+		$File	"mfs\fmod_manager.h"
+		$File	"mfs\pm.cpp"
+		//$File	"mfs\ui\hud_level.cpp"
+		//$File	"$SRCDIR\game\shared\mfs\myconvars.cpp"
+		//$File	"$SRCDIR\game\shared\mfs\myconvars.h"
+		$File	"$SRCDIR\game\shared\mfs\weapon_portablehealthkit.cpp"
+		$File	"$SRCDIR\game\shared\mfs\weapon_troll.cpp"
+		$File	"$SRCDIR\game\shared\mfs\weapon_dualies.cpp"
+		$File	"mfs\hud_tasklist.cpp"
+		$File	"mfs\hud_tasklist.h"
+		$File	"mfs\cloakproxy.cpp"
+		$File	"mfs\hud_hitmaker.cpp"
+		$File	"mfs\hud_hitmaker.h"
+		$File	"mfs\vgui_keypad.cpp"
+		$File	"mfs\vgui_keypad.h"
+		
 		$Folder	"Secobmod"
 		{
 		$File	"secobmod\c_vehicle_passenger_seat.cpp"

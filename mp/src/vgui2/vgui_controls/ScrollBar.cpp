@@ -399,7 +399,7 @@ void ScrollBar::SetButton(Button *button, int index)
 {
 	if(_button[index]!=null)
 	{
-		_button[index]->DeletePanel();
+		_button[index]->SetParent((Panel *)NULL);
 	}
 	_button[index]=button;
 	_button[index]->SetParent(this);
@@ -427,7 +427,7 @@ void ScrollBar::SetSlider(ScrollBarSlider *slider)
 {
 	if(_slider!=null)
 	{
-		_slider->DeletePanel();
+		_slider->SetParent((Panel *)NULL);
 	}
 	_slider=slider;
 	_slider->AddActionSignalTarget(this);
@@ -625,7 +625,7 @@ void ScrollBar::UseImages( const char *pszUpArrow, const char *pszDownArrow, con
 	}
 	else if ( m_pUpArrow )
 	{
-		m_pUpArrow->DeletePanel();
+		m_pUpArrow->MarkForDeletion();
 		m_pUpArrow = NULL;
 	}
 
@@ -648,7 +648,7 @@ void ScrollBar::UseImages( const char *pszUpArrow, const char *pszDownArrow, con
 	}
 	else if ( m_pDownArrow )
 	{
-		m_pDownArrow->DeletePanel();
+		m_pDownArrow->MarkForDeletion();
 		m_pDownArrow = NULL;
 	}
 
@@ -669,7 +669,7 @@ void ScrollBar::UseImages( const char *pszUpArrow, const char *pszDownArrow, con
 	}
 	else if ( m_pLine )
 	{
-		m_pLine->DeletePanel();
+		m_pLine->MarkForDeletion();
 		m_pLine = NULL;
 	}
 
@@ -690,7 +690,7 @@ void ScrollBar::UseImages( const char *pszUpArrow, const char *pszDownArrow, con
 	}
 	else if ( m_pBox )
 	{
-		m_pBox->DeletePanel();
+		m_pBox->MarkForDeletion();
 		m_pBox = NULL;
 	}
 

@@ -43,9 +43,6 @@
 #include "NextBot/NextBotManager.h"
 #endif
 
-//SecobMod__MiscFixes: Here we include the hl2mp gamerules so that calls to darkness mode work. We also change any calls to HL2GameRules to HL2MPRules as required for darkness mode to work.
-#include "hl2mp_gamerules.h"
-
 #ifdef HL2_DLL
 #include "weapon_physcannon.h"
 #include "hl2_gamerules.h"
@@ -71,11 +68,6 @@ ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
 
 ConVar nb_last_area_update_tolerance( "nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area" ); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
 
-#ifdef cloak
-ConVar player_cloak_custom( "player_cloak_custom", "0", FCVAR_CHEAT, "Enable cloak factor modification" );
-ConVar player_cloak_factor( "player_cloak_factor", "0.0", FCVAR_CHEAT, "Cloak factor" );
-#endif
-
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
 #define ShouldUseVisibilityCache() ai_use_visibility_cache.GetBool()
@@ -84,12 +76,6 @@ ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
 #endif
 
 BEGIN_DATADESC( CBaseCombatCharacter )
-
-#ifdef cloak
-//Cloak variables
-DEFINE_FIELD( m_intCloakStatus, FIELD_INTEGER ),
-DEFINE_FIELD( m_floatCloakFactor, FIELD_FLOAT ),
-#endif
 
 #ifdef INVASION_DLL
 	DEFINE_FIELD( m_iPowerups, FIELD_INTEGER ),
@@ -204,11 +190,6 @@ END_SEND_TABLE();
 // This table encodes the CBaseCombatCharacter
 //-----------------------------------------------------------------------------
 IMPLEMENT_SERVERCLASS_ST(CBaseCombatCharacter, DT_BaseCombatCharacter)
-#ifdef cloak
-//Cloak data
-SendPropInt( SENDINFO( m_intCloakStatus ) ),
-SendPropFloat( SENDINFO ( m_floatCloakFactor ) ),
-#endif
 #ifdef GLOWS_ENABLE
 	SendPropBool( SENDINFO( m_bGlowEnabled ) ),
 #endif // GLOWS_ENABLE
@@ -766,10 +747,6 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 #ifdef GLOWS_ENABLE
 	m_bGlowEnabled.Set( false );
 #endif // GLOWS_ENABLE
-#ifdef cloak
-m_intCloakStatus.Set( 0 );
-m_floatCloakFactor.Set( 0.0f );
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -781,10 +758,6 @@ CBaseCombatCharacter::~CBaseCombatCharacter( void )
 {
 	ResetVisibilityCache( this );
 	ClearLastKnownArea();
-	#ifdef cloak
-	m_intCloakStatus.Set( 0 );
-	m_floatCloakFactor.Set( 0.0f );
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -793,11 +766,6 @@ CBaseCombatCharacter::~CBaseCombatCharacter( void )
 void CBaseCombatCharacter::Spawn( void )
 {
 	BaseClass::Spawn();
-	
-	//SecobMod__ChangeME! You may not want all AI having the glow effect but we have this here to prove it works!
-	/*#ifdef GLOWS_ENABLE
-	AddGlowEffect();
-	#endif //GLOWS_ENABLE*/
 	
 	SetBlocksLOS( false );
 	m_aliveTimer.Start();
@@ -1102,62 +1070,6 @@ void CBaseCombatCharacter::Weapon_FrameUpdate( void )
 	{
 		m_hActiveWeapon->Operator_FrameUpdate( this );
 	}
-	#ifdef cloak
-	//Cloak effects
-if ( !engine->IsPaused() )
-{
- if ( player_cloak_custom.GetInt() == 0 && !dynamic_cast< CBasePlayer *>(this) )
- {
-  if ( GetCloakStatus() == 1 && m_floatCloakFactor.Get() == 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() 
-   SetCloakStatus( 0 );
-  if ( GetCloakStatus() == 3 && m_floatCloakFactor.Get() == 1.0f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() >= 1.0f )
-   SetCloakStatus( 2 );
-  if ( GetCloakStatus() == 0 )
-  {
-   m_floatCloakFactor.Set( 0.0f );
-   RemoveEffects( EF_NOSHADOW );
-  }
-  if ( GetCloakStatus() == 2 )
-  {
-   m_floatCloakFactor.Set( 1.0f );
-   AddEffects( EF_NOSHADOW );
-  }
-  if ( GetCloakStatus() == 1 && m_floatCloakFactor.Get() != 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() >= 0.0f )
-  {
-   m_floatCloakFactor.Set( m_floatCloakFactor.Get() - 0.005f  );
-  }
-  if ( GetCloakStatus() == 3 && m_floatCloakFactor.Get() != 1.0f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() 
-  {
-   m_floatCloakFactor.Set( m_floatCloakFactor.Get() + 0.005f  );
-  }
- }
- 
- if ( player_cloak_custom.GetInt() == 0 && dynamic_cast< CBasePlayer *>(this) )
- {
-   if ( GetCloakStatus() == 1 && m_floatCloakFactor.Get() == 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() 
-    SetCloakStatus( 0 );
-   if ( GetCloakStatus() == 3 && m_floatCloakFactor.Get() == 0.75f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() >= 0.75f )
-    SetCloakStatus( 2 );
-   if ( GetCloakStatus() == 0 )
-    m_floatCloakFactor.Set( 0.0f );
-   if ( GetCloakStatus() == 2 )
-    m_floatCloakFactor.Set( 0.75f );
-   if ( GetCloakStatus() == 1 && m_floatCloakFactor.Get() != 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() >= 0.0f )
-   {
-    m_floatCloakFactor.Set( m_floatCloakFactor.Get() - 0.005f  );
-   }
-   if ( GetCloakStatus() == 3 && m_floatCloakFactor.Get() != 0.75f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() 
-   {
-    m_floatCloakFactor.Set( m_floatCloakFactor.Get() + 0.005f  );
-   }
- }
-
- if ( player_cloak_custom.GetInt() == 1 )
- {
-  m_floatCloakFactor = player_cloak_factor.GetFloat();
- }
-}
-#endif
 }
 
 
@@ -1619,7 +1531,7 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 
 #ifdef HL2_EPISODIC
 	// Burning corpses are server-side in episodic, if we're in darkness mode
-	if ( IsOnFire() && HL2MPRules()->IsAlyxInDarknessMode() )
+	if ( IsOnFire() && HL2GameRules()->IsAlyxInDarknessMode() )
 	{
 		CBaseEntity *pRagdoll = CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_DEBRIS );
 		FixupBurningServerRagdoll( pRagdoll );
@@ -2004,11 +1916,7 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 			{
 				// Drop enough ammo to kill 2 of me.
 				// Figure out how much damage one piece of this type of ammo does to this type of enemy.
-				#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-				float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_GetNearestPlayer(GetAbsOrigin()), this, pWeapon->GetPrimaryAmmoType() ); 
-#else
-float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType() );							
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+				float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType() );
 				pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * 2;
 			}
 		}
@@ -2372,8 +2280,8 @@ CBaseCombatWeapon *CBaseCombatCharacter::Weapon_GetWpnForAmmo( int iAmmoIndex )
 //-----------------------------------------------------------------------------
 bool CBaseCombatCharacter::Weapon_CanUse( CBaseCombatWeapon *pWeapon )
 {
-	acttable_t *pTable		= pWeapon->ActivityList();
-	int			actCount	= pWeapon->ActivityListCount();
+	int	actCount = 0;
+	acttable_t *pTable = pWeapon->ActivityList( actCount );
 
 	if( actCount < 1 )
 	{
@@ -3194,19 +3102,12 @@ void CBaseCombatCharacter::VPhysicsShadowCollision( int index, gamevcollisioneve
 	// which can occur owing to ordering issues it appears.
 	float flOtherAttackerTime = 0.0f;
 
-#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
-		if ( HL2MPRules()->MegaPhyscannonActive() == true )
-		{
-			flOtherAttackerTime = 1.0f;
-		}
-	#else
-		#if defined( HL2_DLL ) && !defined( HL2MP )
-		if ( HL2GameRules()->MegaPhyscannonActive() == true )
-		{
-			flOtherAttackerTime = 1.0f;
-		}
-		#endif // HL2_DLL && !HL2MP
-	#endif // SecobMod__ALLOW_SUPER_GRAVITY_GUN
+#if defined( HL2_DLL ) && !defined( HL2MP )
+	if ( HL2GameRules()->MegaPhyscannonActive() == true )
+	{
+		flOtherAttackerTime = 1.0f;
+	}
+#endif // HL2_DLL && !HL2MP
 
 	if ( this == pOther->HasPhysicsAttacker( flOtherAttackerTime ) )
 		return;
@@ -3373,11 +3274,7 @@ CBaseEntity *CBaseCombatCharacter::FindMissTarget( void )
 	CBaseEntity *pMissCandidates[ MAX_MISS_CANDIDATES ];
 	int numMissCandidates = 0;
 
-	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-	CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this); 
-#else
-CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 	CBaseEntity *pEnts[256];
 	Vector		radius( 100, 100, 100);
 	Vector		vecSource = GetAbsOrigin();

@@ -3,10 +3,9 @@
 // Purpose: 
 //
 //=============================================================================
-//SecobMod__IFDEF_Fixes
-//#if defined( GAME_DLL )
+#if defined( GAME_DLL )
 #include "cbase.h"
-//#endif
+#endif
 #include "ep2_gamestats.h"
 #include "tier1/utlbuffer.h"
 #include "vehicle_base.h"

@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
-                           FMOD Designer 4.44.50
+                           FMOD Designer 4.44.61
               Copyright (c) Firelight Technologies Pty, Ltd,    
-                                2004-2015
+                                2004-2016
 ----------------------------------------------------------------------------
 
                              http://www.fmod.org
@@ -25,7 +25,7 @@ FMOD End User License Agreement
 
 FMOD's names, sources, documentation and binaries contained within the 
 distributed archive are copyright © Firelight Technologies, Pty, Ltd. 
-1994-2015.
+1994-2016.
 
 The contents of the FMOD distribution archive may not be redistributed, 
 reproduced, modified, transmitted, broadcast, published or adapted in any 

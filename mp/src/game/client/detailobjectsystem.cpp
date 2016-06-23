@@ -21,9 +21,6 @@
 #include "env_detail_controller.h"
 #include "tier0/icommandline.h"
 #include "c_world.h"
-#ifdef Grass_Clusters
-#include "ShaderEditor/Grass/CGrassCluster.h"
-#endif
 
 #include "tier0/valve_minmax_off.h"
 #include <algorithm>
@@ -1474,7 +1471,7 @@ void CDetailObjectSystem::LevelInitPreEntity()
 		}
 	}
 
-	/*if ( m_DetailObjects.Count() || m_DetailSpriteDict.Count() )
+	if ( m_DetailObjects.Count() || m_DetailSpriteDict.Count() )
 	{
 		// There are detail objects in the level, so precache the material
 		PrecacheMaterial( DETAIL_SPRITE_MATERIAL );
@@ -1490,7 +1487,7 @@ void CDetailObjectSystem::LevelInitPreEntity()
 				m_DetailSpriteDictFlipped[i].m_TexUL.y *= flRatio;
 				m_DetailSpriteDictFlipped[i].m_TexLR.y *= flRatio;
 			}
-		}*/
+		}
 	}
 
 	int detailPropLightingLump;
@@ -1515,37 +1512,13 @@ void CDetailObjectSystem::LevelInitPreEntity()
 
 void CDetailObjectSystem::LevelInitPostEntity()
 {
-	/*const char *pDetailSpriteMaterial = DETAIL_SPRITE_MATERIAL;
+	const char *pDetailSpriteMaterial = DETAIL_SPRITE_MATERIAL;
 	C_World *pWorld = GetClientWorldEntity();
 	if ( pWorld && pWorld->GetDetailSpriteMaterial() && *(pWorld->GetDetailSpriteMaterial()) )
 	{
 		pDetailSpriteMaterial = pWorld->GetDetailSpriteMaterial(); 
 	}
-	m_DetailSpriteMaterial.Init( pDetailSpriteMaterial, TEXTURE_GROUP_OTHER );*/
-	if ( m_DetailObjects.Count() || m_DetailSpriteDict.Count() )
-	{
-		const char *pDetailSpriteMaterial = DETAIL_SPRITE_MATERIAL;
-		C_World *pWorld = GetClientWorldEntity();
-		if ( pWorld && pWorld->GetDetailSpriteMaterial() && *(pWorld->GetDetailSpriteMaterial()) )
-			pDetailSpriteMaterial = pWorld->GetDetailSpriteMaterial(); 
- 
-		m_DetailSpriteMaterial.Init( pDetailSpriteMaterial, TEXTURE_GROUP_OTHER );
-		PrecacheMaterial( pDetailSpriteMaterial );
-		IMaterial *pMat = m_DetailSpriteMaterial;
- 
-		// adjust for non-square textures (cropped)
-		float flRatio = pMat->GetMappingWidth() / pMat->GetMappingHeight();
-		if ( flRatio > 1.0 )
-		{
-			for( int i = 0; i<m_DetailSpriteDict.Count(); i++ )
-			{
-				m_DetailSpriteDict[i].m_TexUL.y *= flRatio;
-				m_DetailSpriteDict[i].m_TexLR.y *= flRatio;
-				m_DetailSpriteDictFlipped[i].m_TexUL.y *= flRatio;
-				m_DetailSpriteDictFlipped[i].m_TexLR.y *= flRatio;
-			}
-		}
-	}
+	m_DetailSpriteMaterial.Init( pDetailSpriteMaterial, TEXTURE_GROUP_OTHER );
 
 	if ( GetDetailController() )
 	{
@@ -1970,14 +1943,6 @@ void CDetailObjectSystem::UnserializeFastSprite( FastSpriteX4_t *pSpritex4, int 
 	pSpritex4->m_RGBColor[nSubField][3] = 255;
 
 	pSpritex4->m_pSpriteDefs[nSubField] = pSDef;
-	#ifdef Grass_Clusters
-	_grassClusterInfo clusterHint;
-	clusterHint.orig = pos;
-	clusterHint.color.Init( color[0], color[1], color[2], 1 );
-	clusterHint.uv_min = pSDef->m_TexLR;
-	clusterHint.uv_max = pSDef->m_TexUL;
-	CGrassClusterManager::GetInstance()->AddClusterHint( clusterHint );
-	#endif
 }
 
 

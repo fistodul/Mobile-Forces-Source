@@ -65,7 +65,17 @@ vgui::Panel *g_lastPanel = NULL; // used for mouseover buttons, keeps track of t
 vgui::Button *g_lastButton = NULL; // used for mouseover buttons, keeps track of the last active button
 using namespace vgui;
 
-ConVar hud_autoreloadscript("hud_autoreloadscript", "0", FCVAR_NONE, "Automatically reloads the animation script each time one is ran");
+void hud_autoreloadscript_callback( IConVar *var, const char *pOldValue, float flOldValue );
+
+ConVar hud_autoreloadscript("hud_autoreloadscript", "0", FCVAR_NONE, "Automatically reloads the animation script each time one is ran", hud_autoreloadscript_callback);
+
+void hud_autoreloadscript_callback( IConVar *var, const char *pOldValue, float flOldValue )
+{
+	if ( g_pClientMode && g_pClientMode->GetViewportAnimationController() )
+	{
+		g_pClientMode->GetViewportAnimationController()->SetAutoReloadScript( hud_autoreloadscript.GetBool() );
+	}
+}
 
 static ConVar cl_leveloverviewmarker( "cl_leveloverviewmarker", "0", FCVAR_CHEAT );
 
@@ -89,13 +99,6 @@ CON_COMMAND( hidepanel, "Hides a viewport panel <name>" )
 		return;
 		
 	 gViewPortInterface->ShowPanel( args[ 1 ], false );
-}
-
-CON_COMMAND( chooseteam, "Opens a menu for teamchoose" )
-{
- if ( !gViewPortInterface )
-  return;
- gViewPortInterface->ShowPanel( "team", true );
 }
 
 /* global helper functions
@@ -216,8 +219,6 @@ void CBaseViewport::OnScreenSizeChanged(int iOldWide, int iOldTall)
 	m_pBackGround->SetVisible( false );
 #endif
 	CreateDefaultPanels();
-	// reload again... this fixes the ammo display etc
-    ReloadScheme( NULL );
 #ifndef _XBOX
 	vgui::ipanel()->MoveToBack( m_pBackGround->GetVPanel() ); // really send it to the back 
 #endif
@@ -238,7 +239,6 @@ void CBaseViewport::CreateDefaultPanels( void )
 	AddNewPanel( CreatePanelByName( PANEL_SCOREBOARD ), "PANEL_SCOREBOARD" );
 	AddNewPanel( CreatePanelByName( PANEL_INFO ), "PANEL_INFO" );
 	AddNewPanel( CreatePanelByName( PANEL_SPECGUI ), "PANEL_SPECGUI" );
-	AddNewPanel( CreatePanelByName( PANEL_TEAM ) ); 
 #if !defined( TF_CLIENT_DLL )
 	AddNewPanel( CreatePanelByName( PANEL_SPECMENU ), "PANEL_SPECMENU" );
 	AddNewPanel( CreatePanelByName( PANEL_NAV_PROGRESS ), "PANEL_NAV_PROGRESS" );
@@ -583,11 +583,12 @@ void CBaseViewport::OnThink()
 		else
 			m_pActivePanel = NULL;
 	}
-	
-	m_pAnimController->UpdateAnimations( gpGlobals->curtime );
 
-	// check the auto-reload cvar
-	m_pAnimController->SetAutoReloadScript(hud_autoreloadscript.GetBool());
+	// TF does this in OnTick in TFViewport.  This remains to preserve old
+	// behavior in other games
+#if !defined( TF_CLIENT_DLL )
+	m_pAnimController->UpdateAnimations( gpGlobals->curtime );
+#endif
 
 	int count = m_Panels.Count();
 

@@ -66,7 +66,7 @@ public:
 	virtual void	Disable();
 	virtual void	Layout();
 
-	virtual void	ReloadScheme( void );
+	virtual void	ReloadScheme( bool flushLowLevel );
 	virtual void	OverrideView( CViewSetup *pSetup );
 	virtual bool	ShouldDrawDetailObjects( );
 	virtual bool	ShouldDrawEntity(C_BaseEntity *pEnt);
@@ -87,10 +87,6 @@ public:
 	// Input
 	virtual int		KeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding );
 	virtual int		HudElementKeyInput( int down, ButtonCode_t keynum, const char *pszCurrentBinding );
-	#ifdef Rotational_Gravity_Gun
-	// does this weapon need to override the view angles?
-	virtual bool	OverrideViewAngles( void );
-	#endif
 	virtual void	OverrideMouseInput( float *x, float *y );
 	virtual void	StartMessageMode( int iMessageModeType );
 	virtual vgui::Panel *GetMessagePanel();

@@ -1,6 +1,6 @@
 /*===============================================================================================
  Use Plugins Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to use FMODEXP.DLL and its associated plugins.
  The example lists the available plugins, and loads a new plugin that isnt normally included

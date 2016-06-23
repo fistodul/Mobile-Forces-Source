@@ -48,10 +48,8 @@ public:
 #endif
 
 private:
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 	// Rules change for the mega physgun
 	CNetworkVar( bool, m_bMegaPhysgun );
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 #ifdef CLIENT_DLL
 
@@ -77,11 +75,7 @@ private:
 	virtual void			PlayerThink( CBasePlayer *pPlayer );
 	virtual float			GetAmmoDamage( CBaseEntity *pAttacker, CBaseEntity *pVictim, int nAmmoType );
 
-	#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
-	//SecobMod__MiscFixes Here we disable this as it's been moved to hl2mp_gamerules so that calls to darkness mode work.
 	virtual bool			ShouldBurningPropsEmitLight();
-	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
-	
 public:
 
 	bool AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
@@ -90,12 +84,9 @@ public:
 	bool	NPC_ShouldDropHealth( CBasePlayer *pRecipient );
 	void	NPC_DroppedHealth( void );
 	void	NPC_DroppedGrenade( void );
-	
-	#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
-	//SecobMod__MiscFixes: Here we disable this as it's been moved to hl2mp_gamerules so that calls to darkness mode work.
+	
 	virtual bool IsAlyxInDarknessMode();
-	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 private:
 

@@ -1,6 +1,6 @@
 /*===============================================================================================
  geometry.exe main.cpp
- Copyright (c), Firelight Technologies Pty, Ltd 2005-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2005-2016.
 
  Example to show occlusion
 ===============================================================================================*/
@@ -789,7 +789,7 @@ void init(void)
     int              numdrivers;
 
     printf("==================================================================\n");
-    printf("Geometry example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Geometry example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("==================================================================\n\n");
 
     /*

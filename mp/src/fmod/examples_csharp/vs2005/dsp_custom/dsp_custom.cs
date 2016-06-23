@@ -1,6 +1,6 @@
 /*===============================================================================================
  Custom DSP Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to add a user created DSP callback to process audio data.
  A read callback is generated at runtime, and can be added anywhere in the DSP network.
@@ -102,7 +102,7 @@ namespace dsp_custom
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 11;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // exit_button

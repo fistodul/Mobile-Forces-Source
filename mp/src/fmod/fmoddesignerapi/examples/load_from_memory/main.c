@@ -1,6 +1,6 @@
 /*===============================================================================================
  Load From Memory Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  Demonstrates loading all resources from memory allocated and filled by the user.
 ===============================================================================================*/
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     FMOD_EVENT_LOADINFO load_info;
 
     printf("======================================================================\n");
-    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Load Event Data Example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("==============================-------=================================\n");
     printf("This Demonstrates loading all resources from memory allocated and filled\n");
     printf("by the user.\n");

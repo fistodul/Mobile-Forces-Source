@@ -276,7 +276,7 @@ void CGib::SpawnSpecificGibs(	CBaseEntity*	pVictim,
 	for (int i=0;i<nNumGibs;i++)
 	{
 		CGib *pGib = CREATE_ENTITY( CGib, "gib" );
-		pGib->Spawn( cModelName, flLifetime );
+		pGib->Spawn( cModelName );
 		pGib->m_nBody = i;
 		pGib->InitGib( pVictim, vMinVelocity, vMaxVelocity );
 		pGib->m_lifeTime = flLifetime;
@@ -284,12 +284,6 @@ void CGib::SpawnSpecificGibs(	CBaseEntity*	pVictim,
 		if ( pVictim != NULL )
 		{
 			pGib->SetOwnerEntity( pVictim );
-		}
-		
-		//If pVictim is on fire, ignite pVictim's gibs as well.
-		if ( pVictim->GetFlags() & FL_ONFIRE )
-		{
-			pGib->Ignite( ( flLifetime - 1 ), false );
 		}
 	}
 }

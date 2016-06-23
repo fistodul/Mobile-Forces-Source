@@ -1,6 +1,6 @@
 /*===============================================================================================
  GenerateTone Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how simply play generated tones using FMOD::System::payDSP instead of 
  manually connecting and disconnecting DSP units.
@@ -182,7 +182,7 @@ namespace generatetone
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(296, 32);
             this.label.TabIndex = 14;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timer

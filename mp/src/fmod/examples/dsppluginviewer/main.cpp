@@ -1,6 +1,6 @@
 /*===============================================================================================
  DSP Plugin Viewer Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example ....
 ===============================================================================================*/
@@ -17,7 +17,7 @@
 #include "../../api/inc/fmod.hpp"
 #include "../../api/inc/fmod_errors.h"
 
-#define TITLE  "DSP Plugin Viewer Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2015."
+#define TITLE  "DSP Plugin Viewer Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2016."
 #define GRAPHICWINDOW_WIDTH     256
 #define GRAPHICWINDOW_HEIGHT    116
 #define IDC_ACTIVEBUTTON        0x8801

@@ -1,6 +1,6 @@
 /*===============================================================================================
  PlayStream Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to simply play a stream, such as an mp3 or wav.
  The stream behaviour is achieved by specifying FMOD_CREATESTREAM in the call to 
@@ -89,7 +89,7 @@ namespace playstream
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 9;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // exit_button

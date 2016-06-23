@@ -1,6 +1,6 @@
 /*===============================================================================================
  Granular Synthesis example.
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how you can play a string of sounds together without gaps, using the setDelay
  command.
@@ -227,7 +227,7 @@ int main(int argc, char *argv[])
     
     printf("=============================================================================\n");
     printf("Granular Synthesis SetDelay example.\n");
-    printf("Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("=============================================================================\n");
     printf("\n");
     printf("TOGGLE #define USE_STREAMS ON/OFF TO SWITCH BETWEEN STREAMS/STATIC SAMPLES.\n");

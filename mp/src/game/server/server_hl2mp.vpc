@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 $Macro SRCDIR		"..\.."
-$Macro GAMENAME 	"mobileforcessource" [!$SOURCESDK]
+$Macro GAMENAME 	"hl2mp" [!$SOURCESDK]
 $Macro GAMENAME 	"mobileforcessource" [$SOURCESDK]
 
 $Include "$SRCDIR\game\server\server_base.vpc"
@@ -244,23 +244,23 @@ $Project "Server (HL2MP)"
 
 		$Folder	"MFS"
 		{
-		$File	"hl2mp\MyBlockHandler.cpp"
-		$File	"hl2mp\MyBlockHandler.h
-		$File	"hl2mp\npc_santa.cpp"
-		$File	"hl2mp\rotating_healthkit.cpp"
-		$File	"hl2mp\sdk_melong.cpp"
-		$File	"hl2mp\weapon_gauss.cpp"
-		$File	"hl2mp\weapon_gauss.h"
-		//$File	"$SRCDIR\game\shared\hl2mp\myconvars.cpp"
-		//$File	"$SRCDIR\game\shared\hl2mp\myconvars.h"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_minigun.cpp"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_portablehealthkit.cpp"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_troll.cpp"
-		$File	"$SRCDIR\game\shared\hl2mp\weapon_dualies.cpp"
-		$File	"EnvHudTasklist.cpp"
-		$File	"cloaktest.cpp"
-		$File	"point_keypad.cpp"
-		$File	"point_keypad.h"
+		$File	"mfs\MyBlockHandler.cpp"
+		$File	"mfs\MyBlockHandler.h
+		$File	"mfs\npc_santa.cpp"
+		$File	"mfs\rotating_healthkit.cpp"
+		$File	"mfs\sdk_melon.cpp"
+		$File	"mfs\weapon_gauss.cpp"
+		$File	"mfs\weapon_gauss.h"
+		//$File	"$SRCDIR\game\shared\mfs\myconvars.cpp"
+		//$File	"$SRCDIR\game\shared\mfs\myconvars.h"
+		$File	"$SRCDIR\game\shared\mfs\weapon_minigun.cpp"
+		$File	"$SRCDIR\game\shared\mfs\weapon_portablehealthkit.cpp"
+		$File	"$SRCDIR\game\shared\mfs\weapon_troll.cpp"
+		$File	"$SRCDIR\game\shared\mfs\weapon_dualies.cpp"
+		$File	"mfs\EnvHudTasklist.cpp"
+		$File	"mfs\cloaktest.cpp"
+		$File	"mfs\point_keypad.cpp"
+		$File	"mfs\point_keypad.h"
 		$Folder	"Secobmod"
 		{
 		$File	"secobmod\companioncube.cpp"

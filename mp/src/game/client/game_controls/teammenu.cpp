@@ -314,17 +314,6 @@ void CTeamMenu::LoadMapPage( const char *mapName )
 	Repaint();
 }
 
-void CTeamMenu::OnCommand( const char *command )
-{
-	if ( Q_stricmp( command, "vguicancel" ) )
-	{
-		engine->ClientCmd( const_cast<char *>( command ) );
-	}
-	Close();
-	gViewPortInterface->ShowBackGround( false );
-	BaseClass::OnCommand(command);
-}
-
 /*
 //-----------------------------------------------------------------------------
 // Purpose: sets the text on and displays the team buttons
@@ -361,6 +350,7 @@ void CTeamMenu::MakeTeamButtons(void)
 		i++;
 	}
 } 
+
 
 //-----------------------------------------------------------------------------
 // Purpose: When a team button is pressed it triggers this function to cause the player to join a team

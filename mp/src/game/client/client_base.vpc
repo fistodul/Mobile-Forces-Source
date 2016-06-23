@@ -51,7 +51,7 @@ $Configuration
 
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;..\..\fmod\api\inc;..\..\DirectX\Include"
+		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;..\..\fmod\api\inc"
 		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
@@ -63,12 +63,12 @@ $Configuration
 
 	$Linker
 	{
-		$AdditionalLibraryDirectories	"..\..\fmod\api\lib;..\..\DirectX\Lib\x86"
+		$AdditionalLibraryDirectories	"..\..\fmod\api\lib"
 		$SystemLibraries				"iconv" [$OSXALL]
 		$SystemFrameworks				"Carbon" [$OSXALL]
 		$SystemLibraries				"rt" [$LINUXALL]
 		$IgnoreImportLibrary			"TRUE"
-		$AdditionalDependencies			"$BASE winmm.lib user32.lib"	[$WIN32]
+		$AdditionalDependencies			"$BASE winmm.lib"	[$WIN32]
 		$AdditionalDependencies			"$BASE wsock32.lib Ws2_32.lib" [$BUILD_REPLAY]
 	}
 }
@@ -1254,7 +1254,8 @@ $Project
 		$ImpLib		steam_api
 		$file	"..\..\fmod\api\lib\fmodex_vc.lib"
 		
-		$Lib $LIBCOMMON/libcrypto [$POSIX]
+		$Libexternal $LIBCOMMON/libcrypto [$OSXALL]
+		$Libexternal "$SRCDIR\lib\common\$(CRYPTOPPDIR)\libcrypto" [$LINUXALL]
 
 		$ImpLib	"$LIBCOMMON\curl"	  [$OSXALL]
 
@@ -1264,7 +1265,7 @@ $Project
 		$Libexternal	libz [$LINUXALL]
 		$Libexternal "$LIBCOMMON/libcurl" [$LINUXALL]
 		$Libexternal "$LIBCOMMON/libcurlssl" [$LINUXALL]
-		$Libexternal "$LIBCOMMON/libssl" [$LINUXALL]
+		$Libexternal "$SRCDIR\lib\common\$(CRYPTOPPDIR)\libssl" [$LINUXALL]
  	}
 
 }

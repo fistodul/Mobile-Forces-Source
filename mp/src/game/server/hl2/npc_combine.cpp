@@ -376,10 +376,10 @@ void CNPC_Combine::PostNPCInit()
 	{
 		// Give a warning if a Combine Soldier is equipped with anything other than
 		// an AR2. 
-		/*if( !GetActiveWeapon() || !FClassnameIs( GetActiveWeapon(), "weapon_ar2" ) )
+		if( !GetActiveWeapon() || !FClassnameIs( GetActiveWeapon(), "weapon_ar2" ) )
 		{
 			DevWarning("**Combine Elite Soldier MUST be equipped with AR2\n");
-		}*/
+		}
 	}
 
 	BaseClass::PostNPCInit();
@@ -2320,19 +2320,7 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 	{
 		if ( pEvent->event == COMBINE_AE_BEGIN_ALTFIRE )
 		{
-			//We want it use different sounds depending of the weapon
-			if (FClassnameIs(GetActiveWeapon(), "weapon_ar2"))
-			{
-				EmitSound("Weapon_CombineGuard.Special1");
-			}
-			else if (FClassnameIs(GetActiveWeapon(), "weapon_smg1"))
-			{
-				EmitSound("Weapon_SMG1.Double"); 
-			}
-			else
-			{
-				EmitSound("Weapon_CombineGuard.Special1"); //We left this play by default
-			}
+			EmitSound( "Weapon_CombineGuard.Special1" );
 			handledEvent = true;
 		}
 		else if ( pEvent->event == COMBINE_AE_ALTFIRE )

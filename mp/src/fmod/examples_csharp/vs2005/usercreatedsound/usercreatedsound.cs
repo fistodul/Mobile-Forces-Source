@@ -1,6 +1,6 @@
 /*===============================================================================================
  User Created Sound Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how create a sound with data filled by the user.
  It shows a user created static sample, followed by a user created stream.
@@ -94,7 +94,7 @@ namespace usercreatedsound
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(264, 32);
             this.label.TabIndex = 6;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // button1

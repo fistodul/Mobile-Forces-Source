@@ -658,7 +658,6 @@ public:
 				m_hSpawnedEntities[i]->Activate();
 			}
 		}
-		pkvFile->deleteThis();
 		else
 		{
 			Msg( "Commentary: Could not find commentary data file '%s'. \n", szFullName );
@@ -840,7 +839,7 @@ void CC_CommentaryChanged( IConVar *pConVar, const char *pOldString, float flOld
 		g_CommentarySystem.SetCommentaryMode( var.GetBool() );
 	}
 }
-ConVar commentary("commentary", "0", FCVAR_ARCHIVE | FCVAR_ARCHIVE_XBOX, "Desired commentary mode state.", CC_CommentaryChanged );
+ConVar commentary( "commentary", "0", FCVAR_NONE, "Desired commentary mode state.", CC_CommentaryChanged );
 
 //-----------------------------------------------------------------------------
 // Purpose: We need to revert back any convar changes that are made by the

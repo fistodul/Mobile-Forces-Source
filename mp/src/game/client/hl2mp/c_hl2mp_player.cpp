@@ -30,11 +30,6 @@ IMPLEMENT_CLIENTCLASS_DT(C_HL2MP_Player, DT_HL2MP_Player, CHL2MP_Player)
 	RecvPropInt( RECVINFO( m_iPlayerSoundType) ),
 
 	RecvPropBool( RECVINFO( m_fIsWalking ) ),
-	
-	#ifdef SecobMod__USE_PLAYERCLASSES
-		RecvPropInt( RECVINFO( m_iClientClass)),
-	#endif //SecobMod__USE_PLAYERCLASSES
-	
 END_RECV_TABLE()
 
 BEGIN_PREDICTION_DATA( C_HL2MP_Player )
@@ -47,19 +42,6 @@ END_PREDICTION_DATA()
 
 static ConVar cl_playermodel( "cl_playermodel", "none", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_SERVER_CAN_EXECUTE, "Default Player Model");
 static ConVar cl_defaultweapon( "cl_defaultweapon", "weapon_physcannon", FCVAR_USERINFO | FCVAR_ARCHIVE, "Default Spawn Weapon");
-
-#ifdef SecobMod__FIRST_PERSON_RAGDOLL_CAMERA_ON_PLAYER_DEATH
-	static ConVar cl_fp_ragdoll ( "cl_fp_ragdoll", "1", FCVAR_ARCHIVE, "Allow first person ragdolls" );
-	static ConVar cl_fp_ragdoll_auto ( "cl_fp_ragdoll_auto", "1", FCVAR_ARCHIVE, "Autoswitch to ragdoll thirdperson-view when necessary" );
-#endif //SecobMod__FIRST_PERSON_RAGDOLL_CAMERA_ON_PLAYER_DEATH
-
-#ifdef	SecobMod__USE_PLAYERCLASSES
-#ifdef Enable_Nightvision
-#ifdef SecobMod__ENABLE_NIGHTVISION_ONLY_FOR_THE_HEAVY_CLASS
-	extern int m_iClientClass;
-#endif //SecobMod__ENABLE_NIGHTVISION_ONLY_FOR_THE_HEAVY_CLASS
-#endif
-#endif
 
 void SpawnBlood (Vector vecSpot, const Vector &vecDir, int bloodColor, float flDamage);
 
@@ -81,42 +63,6 @@ C_HL2MP_Player::C_HL2MP_Player() : m_PlayerAnimState( this ), m_iv_angEyeAngles(
 C_HL2MP_Player::~C_HL2MP_Player( void )
 {
 	ReleaseFlashlight();
-}
-
-// Hook into the convar from the engine
-ConVar name( "name", "troll" );
-void C_HL2MP_Player::GetName() //BEHOLD the function that Controls the convar that controls what name are npc's gonna reference you by
-{
-using namespace std;
-cout << "Choose Your Name( 1=Sebastian, 2=Madara Uchiha, 3=Daniel 4=Pedo Bear 5=Your Steam Name ): ";
-int epicname;
-cin >> epicname;
-if ( epicname == 1 )
-/*my*/name.SetValue( "Sebastian" );
-else if ( epicname == 2 )
-/*my*/name.SetValue( "Madara Uchiha" );
-else if ( epicname == 3 )
-/*my*/name.SetValue( "Daniel" );
-else if ( epicname == 4 )
-/*my*/name.SetValue( "Pedo Bear" );
-else if ( epicname == 5 )
-return;
-else if ( epicname == 6 )
-/*my*/name.SetValue( "Marko" );
-else if ( epicname == 6 )
-/*my*/name.SetValue( "りくどうせんいん" );
-else if ( epicname >= 9001 )
-{
-/*my*/name.SetValue( "Vegeta" );
-cout << "ITS OVER NINE THOUSAND!!!";
-}
-else if ( epicname == 0 )
-/*my*/name.SetValue( "Filip Stojanovic" );
-else if ( epicname == -1 )
-/*my*/name.SetValue( "Hashirama Senju" );
-else if ( epicname <= -2 )
-/*my*/name.SetValue( "Goku" );
-
 }
 
 int C_HL2MP_Player::GetIDTarget() const
@@ -745,35 +691,6 @@ void C_HL2MP_Player::CalcView( Vector &eyeOrigin, QAngle &eyeAngles, float &zNea
 {
 	if ( m_lifeState != LIFE_ALIVE && !IsObserver() )
 	{
-	#ifdef SecobMod__FIRST_PERSON_RAGDOLL_CAMERA_ON_PLAYER_DEATH
-		// First person ragdolls
-		if ( cl_fp_ragdoll.GetBool() && m_hRagdoll.Get() )
-		{
-			// pointer to the ragdoll
-			C_HL2MPRagdoll *pRagdoll = (C_HL2MPRagdoll*)m_hRagdoll.Get();
-
-			// gets its origin and angles
-			pRagdoll->GetAttachment( pRagdoll->LookupAttachment( "eyes" ), eyeOrigin, eyeAngles );
-			Vector vForward; 
-			AngleVectors( eyeAngles, &vForward );
-
-			if ( cl_fp_ragdoll_auto.GetBool() )
-			{
-				// DM: Don't use first person view when we are very close to something
-				trace_t tr;
-				UTIL_TraceLine( eyeOrigin, eyeOrigin + ( vForward * 5 ), MASK_ALL, pRagdoll, COLLISION_GROUP_NONE, &tr );
-
-				if ( (!(tr.fraction < 1) || (tr.endpos.DistTo(eyeOrigin) > 25)) )
-					return;
-			}
-			else
-				return;
-		}
-
-		eyeOrigin = vec3_origin;
-		eyeAngles = vec3_angle;
-#endif //SecobMod__FIRST_PERSON_RAGDOLL_CAMERA_ON_PLAYER_DEATH
-
 		Vector origin = EyePosition();			
 
 		IRagdoll *pRagdoll = GetRepresentativeRagdoll();
@@ -1066,44 +983,3 @@ void C_HL2MP_Player::PostThink( void )
 	// Store the eye angles pitch so the client can compute its animation state correctly.
 	m_angEyeAngles = EyeAngles();
 }
-
-#ifdef Enable_Nightvision
-	//SecobMod__Information: Currently set to be toggled by the 'N' key.
-	CON_COMMAND( nightvision, "Garths NightVision." )
-	{
-		//if ( hasnightvision == 0 )
-		//return;
-		C_HL2MP_Player *pPlayer = C_HL2MP_Player::GetLocalHL2MPPlayer();
-		
-	if(!pPlayer)
-	{
-		return;
-	}
-		
-	#ifdef SecobMod__USE_PLAYERCLASSES
-	#ifdef SecobMod__ENABLE_NIGHTVISION_ONLY_FOR_THE_HEAVY_CLASS
-	int ClassValue = pPlayer->m_iClientClass;
-	
-		//SecobMod__Information: Only the Heavy Class has nightvision so we don't do anything if anyone else uses the command.
-		if (ClassValue != 4)
-		{
-		return;
-		}
-	#endif
-	#endif
-		
-		if (cvar->FindVar("mat_fullbright")->GetInt() == 1)//is it on?
-		{
-		cvar->FindVar("mat_fullbright")->SetValue(0);
-		pPlayer->EmitSound( "NightVision.Off" );
-		view->SetScreenOverlayMaterial( NULL );	
-		}
-		else
-		{
-		pPlayer->EmitSound( "NightVision.On" );
-		IMaterial *pMaterial = materials->FindMaterial( "nightvision", TEXTURE_GROUP_OTHER, true );
-		view->SetScreenOverlayMaterial( pMaterial );
-		cvar->FindVar("mat_fullbright")->SetValue(1);
-		}
-	}
-#endif //Enable_Nightvision

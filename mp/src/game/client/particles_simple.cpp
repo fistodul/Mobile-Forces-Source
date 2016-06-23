@@ -225,11 +225,6 @@ CSimpleEmitter::CSimpleEmitter( const char *pDebugName ) : CParticleEffect( pDeb
 {
 	m_flNearClipMin	= 16.0f;
 	m_flNearClipMax	= 64.0f;
-	
-	#ifdef Far_Clipping
-	m_flFarClipMin = 65536;
-    m_flFarClipMax = 65536;
-	#endif
 }
 
 
@@ -255,18 +250,6 @@ void CSimpleEmitter::SetNearClip( float nearClipMin, float nearClipMax )
 	m_flNearClipMax = nearClipMax;
 }
 
-#ifdef Far_Clipping
-//-----------------------------------------------------------------------------
-// Purpose: Set the internal far clip range for this particle system
-// Input  : farClipMin - beginning of clip range
-//          farClipMax - end of clip range
-//-----------------------------------------------------------------------------
-void CSimpleEmitter::SetFarClip( float farClipMin, float farClipMax )
-{
-    m_flFarClipMin = farClipMin;
-    m_flFarClipMax = farClipMax;
-}
-#endif
 
 SimpleParticle*	CSimpleEmitter::AddSimpleParticle( 
 	PMaterialHandle hMaterial, 
@@ -413,16 +396,6 @@ void CSimpleEmitter::RenderParticles( CParticleRenderIterator *pIterator )
 		float sortKey = (int) tPos.z;
 
 		//Render it
-		#ifdef Far_Clipping
-		RenderParticle_ColorSizeAngle(
-            pIterator->GetParticleDraw(),
-            tPos,
-            UpdateColor( pParticle ),
-            UpdateAlpha( pParticle ) * GetAlphaDistanceFade( tPos, m_flNearClipMin, m_flNearClipMax, m_flFarClipMin, m_flFarClipMax ),
-            UpdateScale( pParticle ),
-            pParticle->m_flRoll
-            );
-		#else
 		RenderParticle_ColorSizeAngle(
 			pIterator->GetParticleDraw(),
 			tPos,
@@ -431,7 +404,6 @@ void CSimpleEmitter::RenderParticles( CParticleRenderIterator *pIterator )
 			UpdateScale( pParticle ),
 			pParticle->m_flRoll
 			);
-		#endif
 
 		pParticle = (const SimpleParticle *)pIterator->GetNext( sortKey );
 	}

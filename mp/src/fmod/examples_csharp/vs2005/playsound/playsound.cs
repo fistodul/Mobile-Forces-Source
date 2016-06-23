@@ -1,6 +1,6 @@
 /*===============================================================================================
  PlaySound Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to simply load and play multiple sounds.  This is about the simplest
  use of FMOD.
@@ -156,7 +156,7 @@ namespace playsound
             this.label.Name = "label";
             this.label.Size = new System.Drawing.Size(240, 32);
             this.label.TabIndex = 5;
-            this.label.Text = "Copyright (c) Firelight Technologies 2004-2015";
+            this.label.Text = "Copyright (c) Firelight Technologies 2004-2016";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PlaySound

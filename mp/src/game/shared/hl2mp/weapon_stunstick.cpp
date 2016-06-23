@@ -37,11 +37,7 @@
 extern ConVar metropolice_move_and_melee;
 
 #define	STUNSTICK_RANGE				75.0f
-#ifdef MFS
-#define	STUNSTICK_REFIRE			0.4f
-#else
 #define	STUNSTICK_REFIRE			0.8f
-#endif
 #define	STUNSTICK_BEAM_MATERIAL		"sprites/lgtning.vmt"
 #define STUNSTICK_GLOW_MATERIAL		"sprites/light_glow02_add"
 #define STUNSTICK_GLOW_MATERIAL2	"effects/blueflare1"
@@ -95,9 +91,6 @@ public:
 #ifndef CLIENT_DLL
 	void		Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 	int			WeaponMeleeAttack1Condition( float flDot, float flDist );
-#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-	bool		CanBePickedUpByNPCs( void ) { return false;	}	
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI	
 #endif
 	
 	float		GetDamageForActivity( Activity hitActivity );
@@ -160,24 +153,6 @@ PRECACHE_WEAPON_REGISTER( weapon_stunstick );
 
 acttable_t	CWeaponStunStick::m_acttable[] = 
 {
-	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_MELEE,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_MELEE,			false },
-
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_MELEE,					false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_MELEE,			false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE,	false },
-
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_MELEE,			false },
-
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_MELEE,					false },
-	{ ACT_MELEE_ATTACK1,	ACT_MELEE_ATTACK_SWING,	true }, 
-	{ ACT_IDLE_ANGRY,		ACT_IDLE_ANGRY_MELEE,	true }, 
-	#endif
-	
 	{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_SLAM, true },
 	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_MELEE,					false },
 	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_MELEE,					false },
@@ -238,11 +213,7 @@ void CWeaponStunStick::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponStunStick::GetDamageForActivity( Activity hitActivity )
 {
-	#ifdef MFS
-	return 30.0f;
-	#else
 	return 40.0f;
-	#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -385,37 +356,8 @@ void CWeaponStunStick::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseComba
 				WeaponSound( MELEE_HIT );
 
 				CBasePlayer *pPlayer = ToBasePlayer( pHurt );
-				#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-				CNPC_MetroPolice *pCop = dynamic_cast<CNPC_MetroPolice *>(pOperator); 
-				#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+
 				bool bFlashed = false;
-				
-#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-				if ( pCop != NULL && pPlayer != NULL )
-				{
-					// See if we need to knock out this target
-					if ( pCop->ShouldKnockOutTarget( pHurt ) )
-					{
-						float yawKick = random->RandomFloat( -48, -24 );
-
-						//Kick the player angles
-						pPlayer->ViewPunch( QAngle( -16, yawKick, 2 ) );
-
-						color32 white = {255,255,255,255};
-						UTIL_ScreenFade( pPlayer, white, 0.2f, 1.0f, FFADE_OUT|FFADE_PURGE|FFADE_STAYOUT );
-						bFlashed = true;
-						
-						pCop->KnockOutTarget( pHurt );
-
-						break;
-					}
-					else
-					{
-						// Notify that we've stunned a target
-						pCop->StunnedTarget( pHurt );
-					}
-				}
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 				
 				// Punch angles
 				if ( pPlayer != NULL && !(pPlayer->GetFlags() & FL_GODMODE) )
@@ -531,13 +473,9 @@ void CWeaponStunStick::Drop( const Vector &vecVelocity )
 {
 	SetStunState( false );
 
-#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-BaseClass::Drop( vecVelocity ); 
-#else
 #ifndef CLIENT_DLL
 	UTIL_Remove( this );
 #endif
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 }
 

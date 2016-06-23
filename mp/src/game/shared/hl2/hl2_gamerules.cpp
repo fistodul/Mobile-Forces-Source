@@ -32,13 +32,9 @@ REGISTER_GAMERULES_CLASS( CHalfLife2 );
 
 BEGIN_NETWORK_TABLE_NOBASE( CHalfLife2, DT_HL2GameRules )
 	#ifdef CLIENT_DLL
-		#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 		RecvPropBool( RECVINFO( m_bMegaPhysgun ) ),
-		#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	#else
-		#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 		SendPropBool( SENDINFO( m_bMegaPhysgun ) ),
-		#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	#endif
 END_NETWORK_TABLE()
 
@@ -72,9 +68,7 @@ IMPLEMENT_NETWORKCLASS_ALIASED( HalfLife2Proxy, DT_HalfLife2Proxy )
 	END_SEND_TABLE()
 #endif
 
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 ConVar  physcannon_mega_enabled( "physcannon_mega_enabled", "0", FCVAR_CHEAT | FCVAR_REPLICATED );
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 // Controls the application of the robus radius damage model.
 ConVar	sv_robust_explosions( "sv_robust_explosions","1", FCVAR_REPLICATED );
@@ -221,12 +215,9 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 #ifdef CLIENT_DLL
 #else
 
-//SecobMod__MiscFixes Here we disable this as it's been moved to hl2mp_gamerules so that calls to darkness mode work.
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 #ifdef HL2_EPISODIC
 ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REPLICATED );
 #endif // HL2_EPISODIC
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 #endif // CLIENT_DLL
 
@@ -258,9 +249,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	//-----------------------------------------------------------------------------
 	CHalfLife2::CHalfLife2()
 	{
-	#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 		m_bMegaPhysgun = false;
-	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 		
 		m_flLastHealthDropTime = 0.0f;
 		m_flLastGrenadeDropTime = 0.0f;
@@ -1337,7 +1326,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	void CHalfLife2::Think( void )
 	{
 		BaseClass::Think();
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
+
 		if( physcannon_mega_enabled.GetBool() == true )
 		{
 			m_bMegaPhysgun = true;
@@ -1347,7 +1336,6 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 			// FIXME: Is there a better place for this?
 			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
 		}
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1410,18 +1398,10 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		{
 			// A physics object has struck a player ally. Don't allow damage if it
 			// came from the player's physcannon. 
-			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-				for (int i = 1; i <= gpGlobals->maxClients; i++ )//
-				//AI Patch Removal: CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
-				{
-				CBasePlayer *pPlayer = UTIL_PlayerByIndex( i );
-				if ( !pPlayer )//AI Patch Removal
-				continue;
-			#else
-				CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);	
-				if( pPlayer )
-				{
-			#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+
+			if( pPlayer )
+			{
 				CBaseEntity *pWeapon = pPlayer->HasNamedPlayerItem("weapon_physcannon");
 
 				if( pWeapon )
@@ -1539,14 +1519,12 @@ bool CHalfLife2::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 		collisionGroup1 = COLLISION_GROUP_NPC;
 	}
 
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 	// This is only for the super physcannon
 	if ( m_bMegaPhysgun )
 	{
 		if ( collisionGroup0 == COLLISION_GROUP_INTERACTIVE_DEBRIS && collisionGroup1 == COLLISION_GROUP_PLAYER )
 			return false;
 	}
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 	if ( collisionGroup0 == HL2COLLISION_GROUP_COMBINE_BALL )
 	{
@@ -1761,8 +1739,6 @@ void CHalfLife2::LevelInitPreEntity()
 	BaseClass::LevelInitPreEntity();
 }
 
-//SecobMod__MiscFixes Here we disable this as it's been moved to hl2mp_gamerules so that calls to darkness mode work.
-#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 //-----------------------------------------------------------------------------
 // Returns whether or not Alyx cares about light levels in order to see.
 //-----------------------------------------------------------------------------
@@ -1791,7 +1767,7 @@ bool CHalfLife2::ShouldBurningPropsEmitLight()
 	return false;
 #endif // HL2_EPISODIC
 }
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+
 
 #endif//CLIENT_DLL
 

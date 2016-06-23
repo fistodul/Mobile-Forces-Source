@@ -38,7 +38,6 @@
 #include <imapoverview.h>
 #include <shareddefs.h>
 #include <igameresources.h>
-#include "c_team.h""
 
 #ifdef TF_CLIENT_DLL
 #include "tf_gamerules.h"
@@ -68,6 +67,7 @@ static const char *s_SpectatorModes[] =
 	"#Spec_Mode2",	// 	OBS_MODE_FIXED,		
 	"#Spec_Mode3",	// 	OBS_MODE_IN_EYE,	
 	"#Spec_Mode4",	// 	OBS_MODE_CHASE,		
+	"#Spec_Mode_POI",	// 	OBS_MODE_POI, PASSTIME
 	"#Spec_Mode5",	// 	OBS_MODE_ROAMING,	
 };
 
@@ -180,23 +180,6 @@ void CSpectatorMenu::PerformLayout()
 	SetSize(w,GetTall());
 }
 
-// Ms - Update team scores
-void CSpectatorGUI::UpdateScores()
-{
-    // Ms - Do team scores
-    wchar_t eltTeamScore[6], ratTeamScore[6];
-    C_Team *teamElt = GetGlobalTeam(TEAM_COMBINE);
-    C_Team *teamRat = GetGlobalTeam(TEAM_REBELS);
-
-    if (teamElt) {
-        swprintf(eltTeamScore, L"%d", teamElt->Get_Score());
-        SetLabelText("MFS_Spec_Blue_Score", eltTeamScore);
-    }
-    if (teamRat) {
-        swprintf(ratTeamScore, L"%d", teamRat->Get_Score());
-        SetLabelText("MFS_Spec_Red_Score", ratTeamScore);
-    }
-}
 
 //-----------------------------------------------------------------------------
 // Purpose: Handles changes to combo boxes
@@ -540,10 +523,6 @@ void CSpectatorGUI::OnThink()
 				gViewPortInterface->ShowPanel( PANEL_SCOREBOARD, m_bSpecScoreboard );
 			}
 		}
-	// Ms - Update the timer
-        UpdateTimer();
-        // Ms - Update team scores
-        UpdateScores();
 	}
 }
 
@@ -601,7 +580,7 @@ void CSpectatorGUI::ShowPanel(bool bShow)
 {
 	if ( bShow && !IsVisible() )
 	{
-		m_bSpecScoreboard = true;
+		m_bSpecScoreboard = false;
 	}
 	SetVisible( bShow );
 	if ( !bShow && m_bSpecScoreboard )
@@ -729,7 +708,7 @@ void CSpectatorGUI::UpdateTimer()
 {
 	wchar_t szText[ 63 ];
 
-	int timer = gpGlobals->curtime;
+	int timer = 0;
 
 	V_swprintf_safe ( szText, L"%d:%02d\n", (timer / 60), (timer % 60) );
 
@@ -828,6 +807,8 @@ CON_COMMAND_F( spec_mode, "Set spectator mode", FCVAR_CLIENTCMD_CAN_EXECUTE )
 
 				if ( mode > LAST_PLAYER_OBSERVERMODE )
 					mode = OBS_MODE_IN_EYE;
+				else if ( mode == OBS_MODE_POI ) // PASSTIME skip POI mode since hltv doesn't have the entity data required to make it work
+					mode = OBS_MODE_ROAMING;
 			}
 			
 			// handle the command clientside

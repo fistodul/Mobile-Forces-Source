@@ -1,6 +1,6 @@
 /*===============================================================================================
  Virtual Voices Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows the virtual channels of FMOD. The listener and sounce sources can be moved
  around by clicking and dragging. Sound sources will change colour depending on whether they
@@ -14,7 +14,7 @@
 #include <windows.h>
 #include "resource.h"
 
-#define TITLE           "Virtual Voices Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2015."
+#define TITLE           "Virtual Voices Example. Copyright (c), Firelight Technologies Pty, Ltd 2004-2016."
 #define NUMCHANNELS     50
 #define NUMREALCHANNELS 10
 #define WIDTH           640

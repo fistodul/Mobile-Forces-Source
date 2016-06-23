@@ -1,6 +1,6 @@
 /*===============================================================================================
   Spectrum Example
-  Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+  Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
  
   This example shows how to draw a spectrum as well as an oscilliscope of the wave data
 ===============================================================================================*/

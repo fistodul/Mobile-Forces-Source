@@ -761,9 +761,6 @@ bool CNPC_BaseZombie::ShouldBecomeTorso( const CTakeDamageInfo &info, float flDa
 //-----------------------------------------------------------------------------
 HeadcrabRelease_t CNPC_BaseZombie::ShouldReleaseHeadcrab( const CTakeDamageInfo &info, float flDamageThreshold )
 {
-#ifdef blah
-return ( m_iHealth <= 0 && m_fIsTorso && IsChopped( info ) )?RELEASE_RAGDOLL_SLICED_OFF:RELEASE_NO;
-#else
 	if ( m_iHealth <= 0 )
 	{
 		if ( info.GetDamageType() & DMG_REMOVENORAGDOLL )
@@ -803,7 +800,6 @@ return ( m_iHealth <= 0 && m_fIsTorso && IsChopped( info ) )?RELEASE_RAGDOLL_SLI
 	}
 
 	return RELEASE_NO;
-#endif
 }
 
 //-----------------------------------------------------------------------------

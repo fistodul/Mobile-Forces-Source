@@ -1,5 +1,5 @@
 /* ========================================================================================== */
-/* FMOD Event Net - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2015.   */
+/* FMOD Event Net - C# Wrapper . Copyright (c), Firelight Technologies Pty, Ltd. 2004-2016.   */
 /*                                                                                            */
 /*                                                                                            */
 /* ========================================================================================== */
@@ -16,7 +16,7 @@ namespace FMOD
     */
     public class EVENT_NET_VERSION
     {
-        public const int    number = 0x00044450;
+        public const int    number = 0x00044461;
 #if WIN64
         public const string dll    = "fmod_event_net64.dll";
 #else

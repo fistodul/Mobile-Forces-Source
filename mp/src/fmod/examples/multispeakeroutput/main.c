@@ -1,6 +1,6 @@
 /*===============================================================================================
  Multi Speaker Output Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to play sounds in multiple speakers, and also how to even assign 
  sound subchannels, such as those in a stereo sound to different individual speakers.
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     ERRCHECK(result);
 
     printf("==============================================================================\n");
-    printf("Multi Speaker Output Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Multi Speaker Output Example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("==============================================================================\n");
     printf("\n");
     switch (speakermode)

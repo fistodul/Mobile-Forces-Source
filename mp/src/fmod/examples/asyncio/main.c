@@ -1,6 +1,6 @@
 /*===============================================================================================
  Stream IO Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to play a stream and use a custom file handler that defers reads for the
  streaming part.  FMOD will allow the user to return straight away from a file read request and
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
     ERRCHECK(result);
 
     printf("====================================================================\n");
-    printf("Stream IO Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Stream IO Example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("====================================================================\n");
     printf("\n");
     printf("\n");

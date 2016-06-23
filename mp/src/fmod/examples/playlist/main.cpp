@@ -1,6 +1,6 @@
 /*===============================================================================================
  PlayList Example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to load a playlist and play the sounds in a playlist.
 ===============================================================================================*/
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     isplaylist = (soundtype == FMOD_SOUND_TYPE_PLAYLIST);
 
     printf("===================================================================\n");
-    printf("PlayList Example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("PlayList Example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("===================================================================\n");
     printf("\n");
     printf("Press 'n'     to play next sound in playlist\n");

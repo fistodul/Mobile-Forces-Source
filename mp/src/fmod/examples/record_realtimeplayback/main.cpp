@@ -1,6 +1,6 @@
 /*===============================================================================================
  Record to disk example
- Copyright (c), Firelight Technologies Pty, Ltd 2004-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2004-2016.
 
  This example shows how to record continuously, and play back the same data as closely to 
  the record cursor as possible without stuttering.
@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 
     printf("========================================================================\n");
     printf("Record with realtime playback example.\n");
-    printf("Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("\n");
     printf("Try #define LOWLATENCY to reduce latency for more modern machines!\n");
     printf("========================================================================\n");

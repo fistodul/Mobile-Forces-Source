@@ -102,42 +102,11 @@ acttable_t	CWeapon_SLAM::m_acttable[] =
 	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM,	false },
 	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_SLAM,		false },
 	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_SLAM,					false },
-#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-
-	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_SLAM,					false },
-	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_SLAM,				false },
-
-	{ ACT_MP_RUN,						ACT_HL2MP_RUN_SLAM,						false },
-	{ ACT_MP_CROUCHWALK,				ACT_HL2MP_WALK_CROUCH_SLAM,				false },
-
-	{ ACT_MP_ATTACK_STAND_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM,	false },
-	{ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE,	ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM,	false },
-
-	{ ACT_MP_RELOAD_STAND,				ACT_HL2MP_GESTURE_RELOAD_SLAM,			false },
-	{ ACT_MP_RELOAD_CROUCH,				ACT_HL2MP_GESTURE_RELOAD_SLAM,			false },
-
-	{ ACT_MP_JUMP,						ACT_HL2MP_JUMP_SLAM,					false },
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 };
 
 IMPLEMENT_ACTTABLE(CWeapon_SLAM);
 #endif
 
-#ifdef MFS
-void CWeapon_SLAM::TrollSpam( void )
-{
-#ifdef CLIENT_DLL
-if ( shouldplay == 0 )
-{
-StopSound( "Trollspam_Sound" );
-return;
-}
-
-if ( shouldplay == 1 )
-EmitSound( "Trollspam_Sound" );
-#endif
-}
-#endif
 
 void CWeapon_SLAM::Spawn( )
 {
@@ -297,12 +266,6 @@ void CWeapon_SLAM::SatchelDetonate()
 		}
 	}
 #endif
-	#ifdef MFS
-	#ifdef CLIENT_DLL
-	shouldplay = 0;
-	TrollSpam();
-	#endif
-	#endif
 	// Play sound for pressing the detonator
 	EmitSound( "Weapon_SLAM.SatchelDetonate" );
 
@@ -417,12 +380,6 @@ void CWeapon_SLAM::TripmineAttach( void )
 #endif
 
 			pOwner->RemoveAmmo( 1, m_iSecondaryAmmoType );
-			#ifdef MFS
-			#ifdef CLIENT_DLL
-			shouldplay = 1;
-			TrollSpam();
-			#endif
-			#endif
 		}
 	}
 }
@@ -541,12 +498,6 @@ void CWeapon_SLAM::SatchelThrow( void )
 
 	// Play throw sound
 	EmitSound( "Weapon_SLAM.SatchelThrow" );
-	/*#ifdef Beeping_Tripmine
-	#ifdef CLIENT_DLL
-	shouldplay = 1;
-	TrollSpam();
-	#endif
-	#endif*/
 }
 
 //-----------------------------------------------------------------------------
@@ -708,13 +659,6 @@ void CWeapon_SLAM::SLAMThink( void )
 	if ( m_flWallSwitchTime > gpGlobals->curtime )
 		 return;
 
-	#ifdef MFS
-	/*CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
-	if ( pPlayer &&  is close like 0 feet )
-	{
-	SatchelDetonate();
-	}*/
-	#endif
 
 	// If not in tripmine mode we need to check to see if we are close to
 	// a wall. If we are we go into satchel_attach mode
@@ -1086,13 +1030,6 @@ bool CWeapon_SLAM::Deploy( void )
 		}
 	}
 
-	/*#ifdef Beeping_Tripmine
-	#ifdef CLIENT_DLL
-	shouldplay = 0;
-	TrollSpam();
-	#endif
-	#endif*/
-	
 	return DefaultDeploy( (char*)GetViewModel(), (char*)GetWorldModel(), iActivity, (char*)GetAnimPrefix() );
 }
 
@@ -1112,8 +1049,4 @@ CWeapon_SLAM::CWeapon_SLAM(void)
 	m_bAttachTripmine		= false;
 	m_bNeedDetonatorDraw	= false;
 	m_bNeedDetonatorHolster	= false;
-	#ifdef MFS
-	shouldplay = 0;
-	//Slam_Weight= 0.5;
-	#endif
 }

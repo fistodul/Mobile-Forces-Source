@@ -97,17 +97,12 @@ public:
 #ifdef GLOWS_ENABLE
 	CGlowObject			*GetGlowObject( void ){ return m_pGlowEffect; }
 	virtual void		GetGlowEffectColor( float *r, float *g, float *b );
+//	void				EnableGlowEffect( float r, float g, float b );
+
+	void				SetClientSideGlowEnabled( bool bEnabled ){ m_bClientSideGlowEnabled = bEnabled; UpdateGlowEffect(); }
+	bool				IsClientSideGlowEnabled( void ){ return m_bClientSideGlowEnabled; }
 #endif // GLOWS_ENABLE
 
-#ifdef cloak
-//Cloak functions
-int    GetCloakStatus( void )    {    return m_intCloakStatus;    }
-float    GetCloakFactor( void )    {    return    m_floatCloakFactor;    }
-
-//Cloak variables
-int                m_intCloakStatus;
-float            m_floatCloakFactor
-#endif
 public:
 
 	float			m_flNextAttack;
@@ -130,7 +125,8 @@ private:
 	CHandle< C_BaseCombatWeapon > m_hActiveWeapon;
 
 #ifdef GLOWS_ENABLE
-	bool				m_bGlowEnabled;
+	bool				m_bClientSideGlowEnabled;	// client-side only value used for spectator
+	bool				m_bGlowEnabled;				// networked value
 	bool				m_bOldGlowEnabled;
 	CGlowObject			*m_pGlowEffect;
 #endif // GLOWS_ENABLE

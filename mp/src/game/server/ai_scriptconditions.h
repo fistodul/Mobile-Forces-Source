@@ -38,10 +38,6 @@ public:
 	{
 		if ( m_distSq != 0 )
 		{
-			////SecobMod__Information: To prevent the code crashing if pEntity1 is NULL, return false.
-             if (pEntity1 == NULL)
-			 return false;
-			 
 			float distSq = ( pEntity1->GetAbsOrigin() - pEntity2->GetAbsOrigin() ).LengthSqr();
 			bool fInside = ( distSq < m_distSq );
 

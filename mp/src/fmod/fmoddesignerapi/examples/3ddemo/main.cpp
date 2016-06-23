@@ -1,6 +1,6 @@
 /*===============================================================================================
  3D Demo Example
- Copyright (c), Firelight Technologies Pty, Ltd 2005-2015.
+ Copyright (c), Firelight Technologies Pty, Ltd 2005-2016.
 
  Example to show occlusion
 ===============================================================================================*/
@@ -1390,7 +1390,7 @@ void init(void)
     FMOD_SPEAKERMODE speakermode;
 
     printf("==================================================================\n");
-    printf("3D example.  Copyright (c) Firelight Technologies 2004-2015.\n");
+    printf("3D example.  Copyright (c) Firelight Technologies 2004-2016.\n");
     printf("==================================================================\n\n");
 
     result = FMOD::EventSystem_Create(&fmodEventSystem);
