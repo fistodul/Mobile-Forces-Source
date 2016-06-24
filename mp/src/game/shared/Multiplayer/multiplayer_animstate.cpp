@@ -829,6 +829,7 @@ bool CMultiPlayerAnimState::HandleDucking( Activity &idealActivity )
 	return false;
 }
 
+#ifdef SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : &idealActivity - 
@@ -836,32 +837,19 @@ bool CMultiPlayerAnimState::HandleDucking( Activity &idealActivity )
 //-----------------------------------------------------------------------------
 bool CMultiPlayerAnimState::HandleSwimming( Activity &idealActivity )
 {
-	if ( GetBasePlayer()->GetWaterLevel() >= WL_Waist )
+	if ( GetBasePlayer()->IsInAVehicle())
 	{
-		if ( m_bFirstSwimFrame )
 		{
-			// Reset the animation.
-			RestartMainSequence();	
-			m_bFirstSwimFrame = false;
+		//SecobMod__Information: Once you have created your custom player animations, set sequences in the .qc file and remove/replace the ACT idle below.
+		idealActivity = ACT_MP_CROUCH_IDLE; //ACT_HL2MP_SIT_IN_VEHICLE;
 		}
-
-		idealActivity = ACT_MP_SWIM;		
-		m_bInSwim = true;
+		
 		return true;
 	}
-	else
-	{
-		m_bInSwim = false;
-
-		if ( !m_bFirstSwimFrame )
-		{
-			m_bFirstSwimFrame = true;
-		}
-	}
-	
 	return false;
 }
-
+#endif //SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
+	
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *idealActivity - 
@@ -922,7 +910,12 @@ Activity CMultiPlayerAnimState::CalcMainActivity()
 
 	if ( HandleJumping( idealActivity ) || 
 		HandleDucking( idealActivity ) || 
-		HandleSwimming( idealActivity ) || 
+		HandleSwimming( idealActivity ) ||
+
+		#ifdef SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
+			HandleVehicle( idealActivity ) || 
+		#endif //SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
+		
 		HandleDying( idealActivity ) )
 	{
 		// intentionally blank
