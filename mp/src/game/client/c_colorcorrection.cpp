@@ -122,6 +122,7 @@ void C_ColorCorrection::ClientThink()
 		return;
 	}
 
+	//SecobMod_FixMe Get Nearest player?
 	C_BaseEntity *pPlayer = C_BasePlayer::GetLocalPlayer();
 	if( !pPlayer )
 		return;

@@ -21,9 +21,9 @@ Mobile-Forces-Source
 	|	|>>>>shared(has files that are shared betwean the client and server, lots of voodoo 
 	|		|>>>>hl2dm(shared hl2dm code, the voodoo that that comes with the multiplayer base 
 	|>>>>materialsystem 
-		|>>>>stdshaders 
-			| 
-			>>>>buildmfsshaders.bat - Used to compile shaders(edit it to the correct paths) 
+	|	|>>>>stdshaders 
+	|		| 
+	|		>>>>buildmfsshaders.bat - Used to compile shaders(edit it to the correct paths) 
 	|>>>>createallprojects/.bat - Used to create the game solution 
 	|>>>>creategameprojects/.bat - Used to create the solution for everything that can be modded 
 there are lots of more folders but im lazy to write now :P 
