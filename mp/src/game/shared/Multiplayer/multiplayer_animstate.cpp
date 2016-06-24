@@ -832,10 +832,10 @@ bool CMultiPlayerAnimState::HandleDucking( Activity &idealActivity )
 #ifdef SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
 //-----------------------------------------------------------------------------
 // Purpose: 
-// Input  : &idealActivity - 
+// Input  : *idealActivity - 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CMultiPlayerAnimState::HandleSwimming( Activity &idealActivity )
+bool CMultiPlayerAnimState::HandleVehicle( Activity &idealActivity )
 {
 	if ( GetBasePlayer()->IsInAVehicle())
 	{
@@ -849,7 +849,40 @@ bool CMultiPlayerAnimState::HandleSwimming( Activity &idealActivity )
 	return false;
 }
 #endif //SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : &idealActivity - 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CMultiPlayerAnimState::HandleSwimming( Activity &idealActivity )
+{
+	if ( GetBasePlayer()->GetWaterLevel() >= WL_Waist )
+	{
+		if ( m_bFirstSwimFrame )
+		{
+			// Reset the animation.
+			RestartMainSequence();	
+			m_bFirstSwimFrame = false;
+		}
+
+		idealActivity = ACT_MP_SWIM;		
+		m_bInSwim = true;
+		return true;
+	}
+	else
+	{
+		m_bInSwim = false;
+
+		if ( !m_bFirstSwimFrame )
+		{
+			m_bFirstSwimFrame = true;
+		}
+	}
 	
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Input  : *idealActivity - 
@@ -910,8 +943,8 @@ Activity CMultiPlayerAnimState::CalcMainActivity()
 
 	if ( HandleJumping( idealActivity ) || 
 		HandleDucking( idealActivity ) || 
-		HandleSwimming( idealActivity ) ||
-
+		HandleSwimming( idealActivity ) || 
+		
 		#ifdef SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
 			HandleVehicle( idealActivity ) || 
 		#endif //SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
