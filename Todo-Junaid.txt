@@ -1,15 +1,3 @@
-in_main.cpp 
-item_battery.cpp 
-item_dynamic_resupply.cpp 
-item_suit.cpp 
-iviewrender.h 
-logicentities.cpp 
-maprules.cpp 
-message_entity.cpp 
-monstermaker.cpp 
-movevars_shared.cpp 
-multiplay_gamerules.cpp 
-multiplayer_animstate.cpp 
 multiplayer_animstate.h 
 npc_advisor.cpp 
 npc_alyx_episodic.cpp 
