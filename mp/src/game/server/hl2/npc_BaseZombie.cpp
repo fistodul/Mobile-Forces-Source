@@ -48,6 +48,7 @@
 #include "ammodef.h"
 #include "vehicle_base.h"
  
+ //SecobMod__MiscFixes: Here we include the hl2mp gamerules so that calls to darkness mode work and also in the file change darkness mode HL2GameRules to HL2MPRules.
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 

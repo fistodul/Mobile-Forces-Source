@@ -424,3 +424,4 @@ CCitizenResponseSystem	*GetCitizenResponse();
 //-----------------------------------------------------------------------------
 
 #endif	//NPC_CITIZEN_H
+

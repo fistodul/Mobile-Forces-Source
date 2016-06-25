@@ -37,6 +37,9 @@
 #include "weapon_flaregun.h"
 #include "env_debughistory.h"
 
+//SecobMod__MiscFixes: Here we include the hl2mp gamerules so that calls to darkness mode work. Also many instances of HL2GameRules are now set to HL2MPRules in this file.
+#include "hl2mp_gamerules.h"
+
 extern Vector PointOnLineNearestPoint(const Vector& vStartPos, const Vector& vEndPos, const Vector& vPoint);
 
 // memdbgon must be the last include file in a .cpp file!!!

@@ -16,6 +16,7 @@
 #include "fmtstr.h"
 #include "physics_prop_ragdoll.h"
 
+////SecobMod__IFDEF_Info: If we don't comment these out, then the code doesn't compile.
 #define HINGE_NOTIFY HL2_EPISODIC
 #if HINGE_NOTIFY
 #include "physconstraint_sounds.h"
@@ -573,6 +574,7 @@ void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 		{
 			Warning("Bogus constraint %s (attaches ENTITY NOT FOUND:%s to %s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
 #ifdef HL2_EPISODIC
+//SecobMod__Information: Added in these to prevent hl2/ep1 maps from having NULL physics constraints.
 			info.pObjects[0] = info.pObjects[1] = NULL;
 			return;
 #endif	// HL2_EPISODIC
@@ -586,6 +588,7 @@ void CPhysConstraint::GetConstraintObjects( hl_constraint_info_t &info )
 		{
 			Warning("Bogus constraint %s (attaches %s to ENTITY NOT FOUND:%s)\n", GetDebugName(), STRING(m_nameAttach1), STRING(m_nameAttach2));
 #ifdef HL2_EPISODIC
+//SecobMod__Information: Added in these to prevent hl2/ep1 maps from having NULL physics constraints.
 			info.pObjects[0] = info.pObjects[1] = NULL;
 			return;
 #endif	// HL2_EPISODIC

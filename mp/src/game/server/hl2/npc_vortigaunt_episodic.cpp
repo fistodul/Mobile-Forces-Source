@@ -3408,3 +3408,4 @@ void CFleshEffectTarget::InputSetRadius( inputdata_t &inputData )
 }
 
 #endif // HL2_EPISODIC
+

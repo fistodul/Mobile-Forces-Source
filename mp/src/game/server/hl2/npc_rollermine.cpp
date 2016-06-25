@@ -1865,8 +1865,13 @@ float CNPC_RollerMine::GetAttackDamageScale( CBaseEntity *pVictim )
 		
 		if ( pVictim->MyNPCPointer() )
 		{
-			// If we don't hate the player, we're immune
-			CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+						// If we don't hate the player, we're immune
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin()); 
+#else
+CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+
 			if ( pPlayer && pVictim->MyNPCPointer()->IRelationType( pPlayer ) != D_HT )
 				return 0.0;
 		}
@@ -3033,3 +3038,4 @@ AI_BEGIN_CUSTOM_NPC( npc_rollermine, CNPC_RollerMine )
 	);
 
 AI_END_CUSTOM_NPC()
+
