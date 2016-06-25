@@ -96,6 +96,11 @@
 			Game				|all_source_engine_paths|hl2mp
 			Game				|all_source_engine_paths|hl2
 			platform			|all_source_engine_paths|platform
+
+			//Portal1
+			game "|gameinfo_path|..\..\common\Portal\portal"
+			game "|gameinfo_path|..\..\common\Portal\portal\portal_pak.vpk"
+
 		}
 	}
 }

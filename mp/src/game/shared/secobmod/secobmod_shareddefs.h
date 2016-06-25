@@ -39,7 +39,7 @@
 #define css_muzzle_tweaks // https://developer.valvesoftware.com/wiki/Importing_CSS_Weapons_Into_HL2
 //#define Realistic_Rain_Splashes // https://developer.valvesoftware.com/wiki/Rain_splashes
 #define blah // basically i was bored so i did this xd
-#define ARGG // Rotational Gravity Gun
+#define MFS_MOTD // if map briefings are enabled this will load the MOTD if no map briefing is found
 
 /*****************/
 /* Base Defines. */
