@@ -2050,3 +2050,4 @@ AI_BEGIN_CUSTOM_NPC( npc_advisor, CNPC_Advisor )
 
 AI_END_CUSTOM_NPC()
 #endif
+

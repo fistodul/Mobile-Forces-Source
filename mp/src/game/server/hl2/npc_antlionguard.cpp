@@ -46,6 +46,13 @@ ConVar	g_debug_antlionguard( "g_debug_antlionguard", "0" );
 ConVar	sk_antlionguard_dmg_charge( "sk_antlionguard_dmg_charge", "0" );
 ConVar	sk_antlionguard_dmg_shove( "sk_antlionguard_dmg_shove", "0" );
 
+//SecobMod__IFDEF_Fixes
+#ifdef HL2_EPISODIC
+// When enabled, add code to have the antlion bleed profusely as it is badly injured.
+#define ANTLIONGUARD_BLOOD_EFFECTS 2
+ConVar	g_antlionguard_hemorrhage( "g_antlionguard_hemorrhage", "1", FCVAR_NONE, "If 1, guard will emit a bleeding particle effect when wounded." );
+#endif
+
 #if HL2_EPISODIC
 // When enabled, add code to have the antlion bleed profusely as it is badly injured.
 #define ANTLIONGUARD_BLOOD_EFFECTS 2
@@ -84,6 +91,7 @@ ConVar	g_antlionguard_hemorrhage( "g_antlionguard_hemorrhage", "1", FCVAR_NONE, 
 #define	ANTLIONGUARD_FOV_NORMAL			-0.4f
 
 // cavern guard's poisoning behavior
+//SSecobMod__MiscFixes
 #if HL2_EPISODIC
 #define ANTLIONGUARD_POISON_TO			12 // we only poison Gordon down to twelve to give him a chance to regen up to 20 by the next charge
 #endif
@@ -1603,7 +1611,11 @@ public:
 // Input  : bHeavy - Larger back hoof is considered a "heavy" step
 //-----------------------------------------------------------------------------
 void CNPC_AntlionGuard::Footstep( bool bHeavy )
+<<<<<<< HEAD
 {
+=======
+
+>>>>>>> origin/master
 	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
 	#else

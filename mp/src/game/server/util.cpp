@@ -639,6 +639,7 @@ CBasePlayer* UTIL_PlayerByUserId( int userID )
 //
 // Return the local player.
 // If this is a multiplayer game, return NULL.
+<<<<<<< HEAD
 // 
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 CBasePlayer *UTIL_GetLocalPlayer( void )
@@ -734,6 +735,11 @@ CBasePlayer *UTIL_GetNearestVisiblePlayer( CBaseEntity *pLooker, int mask )
 	return pNearest; 
 }
 #else
+=======
+//
+
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+>>>>>>> origin/master
 CBasePlayer *UTIL_GetLocalPlayer( void )
 {
 	if ( gpGlobals->maxClients > 1 )
@@ -750,7 +756,12 @@ CBasePlayer *UTIL_GetLocalPlayer( void )
 		return NULL;
 	}
 
-	return UTIL_PlayerByIndex( 1 );
+//SecobMod__Information: This is a new function designed to get the nearest player to a player that called the command, this is used for our respawn where killed code to try and respawn at a near-by player.
+CBasePlayer *UTIL_GetOtherNearestPlayer( const Vector &origin )
+{
+// End of copied and pasted code.                                    //SecobMod__Information: See the following Null Pointer line.
+	float distToOtherNearest = 128.0f; //SecobMod__Information: We don't want the OtherNearest player to be the player that called this function.
+	CBasePlayer *pOtherNearest = NULL;
 }
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
 

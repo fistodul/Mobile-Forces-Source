@@ -282,3 +282,4 @@ void CPropThumper::InputEnable( inputdata_t &inputdata )
 		m_hRepellantEnt->AcceptInput( "Enable", this, this, emptyVariant, 0 );
 	}
 }
+
