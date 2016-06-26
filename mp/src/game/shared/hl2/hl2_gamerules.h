@@ -89,8 +89,7 @@ public:
 	bool	NPC_ShouldDropGrenade( CBasePlayer *pRecipient );
 	bool	NPC_ShouldDropHealth( CBasePlayer *pRecipient );
 	void	NPC_DroppedHealth( void );
-	void	NPC_DroppedGrenade( void )
-	;
+	void	NPC_DroppedGrenade( void );
 	#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI

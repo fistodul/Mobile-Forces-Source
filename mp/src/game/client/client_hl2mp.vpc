@@ -132,6 +132,8 @@ $Project "Client (HL2MP)"
 		$File	"mfs\hud_hitmaker.h"
 		$File	"mfs\vgui_keypad.cpp"
 		$File	"mfs\vgui_keypad.h"
+		$File	"mfs\credits.cpp"
+		$File	"mfs\credits.h"
 		
 		$Folder	"Secobmod"
 		{
