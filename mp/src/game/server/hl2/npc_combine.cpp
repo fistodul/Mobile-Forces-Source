@@ -756,7 +756,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 	case TASK_COMBINE_SIGNAL_BEST_SOUND:
 		if( IsInSquad() && GetSquad()->NumMembers() > 1 )
 		{
-			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+		#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this); 
 		#else
 			CBasePlayer *pPlayer = AI_GetSinglePlayer();

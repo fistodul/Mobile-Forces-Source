@@ -34,11 +34,7 @@
 #include "decals.h"
 
 //SecobMod__MiscFixes: Here we include the hl2mp gamerules so that calls to darkness mode work.
-<<<<<<< HEAD
 #include "hl2mp_gamerules.h"
-=======
-#include "hl2_gamerules.h"
->>>>>>> origin/master
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1312,13 +1308,8 @@ void CBaseHeadcrab::JumpFromCanister()
 void CBaseHeadcrab::DropFromCeiling( void )
 {
 #ifdef HL2_EPISODIC
-<<<<<<< HEAD
-//SecobMod__MiscFixes HL2GameRules as opposed to singleplayer HL2MPRules.
-	if ( HL2MPRules()->IsAlyxInDarknessMode() )
-=======
 //SecobMod__MiscFixes HL2MPRules as opposed to singleplayer HL2GameRules.
-	if ( HL2GameRules()->IsAlyxInDarknessMode() )
->>>>>>> origin/master
+	if ( HL2MPRules()->IsAlyxInDarknessMode() )
 	{
 		if ( IsHangingFromCeiling() )
 		{
@@ -1334,17 +1325,10 @@ void CBaseHeadcrab::DropFromCeiling( void )
 				{
 					SetSchedule( SCHED_HEADCRAB_CEILING_DROP );
 
-<<<<<<< HEAD
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 					CBaseEntity *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin()); 
 #else
-					CBaseEntity *pPlayer = AI_GetSinglePlayer();
-=======
-					#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-					CBaseEntity *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin()); 
-#else
 CBaseEntity *pPlayer = AI_GetSinglePlayer();
->>>>>>> origin/master
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 					if ( pPlayer )
@@ -3379,7 +3363,7 @@ void CBlackHeadcrab::Panic( float flDuration )
 }
 
 
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 //-----------------------------------------------------------------------------
 // Purpose: Black headcrabs have 360-degree vision when they are in the ambush
 //			schedule. This is because they ignore sounds when in ambush, and
