@@ -8,7 +8,7 @@
 #else
 	#include "hl2mp_player.h"
 	#include "te_effect_dispatch.h"
-	//#include "PHK_PHK.h"
+	#include "grenade_frag.h"
 #endif
 
 #include "weapon_ar2.h"
@@ -18,22 +18,16 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define PHK_TIMER	2.5f //Seconds
-
 #define PHK_PAUSED_NO			0
 #define PHK_PAUSED_PRIMARY		1
 #define PHK_PAUSED_SECONDARY	2
-
-#define PHK_RADIUS	4.0f // inches
-
-#define PHK_DAMAGE_RADIUS 250.0f
 
 #ifdef CLIENT_DLL
 #define CWeaponPHK C_WeaponPHK
 #endif
 
-ConVar sk_portable_healthkit_health( "sk_portable_healthkit_health", "100", FCVAR_REPLICATED | FCVAR_CHEAT, "It sets ur Health to this value after u use it xD" );
-ConVar sk_max_healthkit( "sk_max_healthkit", "1", FCVAR_REPLICATED | FCVAR_CHEAT, "The max ammo for this PHK :P" );
+ConVar sk_healthkit_health( "sk_healthkit_health", "100", FCVAR_REPLICATED | FCVAR_CHEAT, "It gives this much health after u use it xD" );
+ConVar sk_healthkit_max( "sk_healthkit_max", "1", FCVAR_REPLICATED | FCVAR_CHEAT, "Didn't hardcode to 1 only for cheating tbh" );
 
 //-----------------------------------------------------------------------------
 // PHKmentation PHKs
@@ -64,22 +58,8 @@ public:
 
 	void	ThrowPHK( CBasePlayer *pPlayer );
 	bool	IsPrimed( bool ) { return ( m_AttackPaused != 0 );	}
-	
-/*#ifdef GAME_DLL
-	void IncrementHealth( int nCount )
-	{ 
-	m_iHealth += nCount;
-	if (m_iMaxHealth > 0 && m_iHealth > m_iMaxHealth)
-		m_iHealth = m_iMaxHealth;
-	}
-#endif*/
 
 private:
-
-	void	RollPHK( CBasePlayer *pPlayer );
-	void	LobPHK( CBasePlayer *pPlayer );
-	// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
-	void	CheckThrowPosition( CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc );
 
 	CNetworkVar( bool,	m_bRedraw );	//Draw the weapon again after throwing a PHK
 	
@@ -106,7 +86,7 @@ acttable_t	CWeaponPHK::m_acttable[] =
 	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_GRENADE,					false },
 
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
-{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_SLAM, true }, 
+	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_SLAM, true }, 
 
 	{ ACT_MP_STAND_IDLE,				ACT_HL2MP_IDLE_GRENADE,					false },
 	{ ACT_MP_CROUCH_IDLE,				ACT_HL2MP_IDLE_CROUCH_GRENADE,			false },
@@ -153,8 +133,8 @@ BEGIN_PREDICTION_DATA( CWeaponPHK )
 END_PREDICTION_DATA()
 #endif
 
-LINK_ENTITY_TO_CLASS( weapon_portablehealthkit, CWeaponPHK );
-PRECACHE_WEAPON_REGISTER(weapon_portablehealthkit);
+LINK_ENTITY_TO_CLASS( weapon_healthkit, CWeaponPHK );
+PRECACHE_WEAPON_REGISTER(weapon_healthkit);
 
 CWeaponPHK::CWeaponPHK( void ) :
 	CBaseHL2MPCombatWeapon()
@@ -172,7 +152,7 @@ void CWeaponPHK::Precache( void )
 {
 	BaseClass::Precache();
 
-	//PrecacheScriptSound( "WeaponPHK.Use" );
+	PrecacheScriptSound( "HealthVial.Touch" );
 }
 
 #ifndef CLIENT_DLL
@@ -199,13 +179,13 @@ void CWeaponPHK::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChara
 			break;
 
 		case EVENT_WEAPON_THROW2:
-			RollPHK( pOwner );
+			ThrowPHK( pOwner );
 			DecrementAmmo( pOwner );
 			fThrewPHK = true;
 			break;
 
 		case EVENT_WEAPON_THROW3:
-			LobPHK( pOwner );
+			ThrowPHK( pOwner );
 			DecrementAmmo( pOwner );
 			fThrewPHK = true;
 			break;
@@ -221,24 +201,6 @@ void CWeaponPHK::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChara
 		m_flNextPrimaryAttack	= gpGlobals->curtime + RETHROW_DELAY;
 		m_flNextSecondaryAttack	= gpGlobals->curtime + RETHROW_DELAY;
 		m_flTimeWeaponIdle = FLT_MAX; //NOTE: This is set once the animation has finished up!
-/*#ifdef SecobMod__Enable_Fixed_Multiplayer_AI		
-		// Make a sound designed to scare snipers back into their holes!
-		CBaseCombatCharacter *pOwner = GetOwner();
-
-		if( pOwner )
-		{
-			Vector vecSrc = pOwner->Weapon_ShootPosition();
-			Vector	vecDir;
-
-			AngleVectors( pOwner->EyeAngles(), &vecDir );
-
-			trace_t tr;
-
-			UTIL_TraceLine( vecSrc, vecSrc + vecDir * 1024, MASK_SOLID_BRUSHONLY, pOwner, COLLISION_GROUP_NONE, &tr );
-
-			CSoundEnt::InsertSound( SOUND_DANGER_SNIPERONLY, tr.endpos, 384, 0.2, pOwner );
-		}
-#endif //SecobMod__Enable_Fixed_Multiplayer_AI*/
 	}
 }
 
@@ -322,7 +284,7 @@ void CWeaponPHK::SecondaryAttack( void )
 	m_flTimeWeaponIdle = FLT_MAX;
 	m_flNextSecondaryAttack	= FLT_MAX;
 
-	// If I'm now out of ammo, switch away
+	// Bitch u dont have ammo
 	if ( !HasPrimaryAmmo() )
 	{
 		pPlayer->SwitchToNextBestWeapon( this );
@@ -344,7 +306,7 @@ void CWeaponPHK::PrimaryAttack( void )
 		return;
 	}
 
-	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );;
+	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 
 	if ( !pPlayer )
 		return;
@@ -358,7 +320,7 @@ void CWeaponPHK::PrimaryAttack( void )
 	m_flTimeWeaponIdle = FLT_MAX;
 	m_flNextPrimaryAttack = FLT_MAX;
 
-	// If I'm now out of ammo, switch away
+	// Bitch u dont have ammo
 	if ( !HasPrimaryAmmo() )
 	{
 		pPlayer->SwitchToNextBestWeapon( this );
@@ -431,21 +393,7 @@ void CWeaponPHK::ItemPostFrame( void )
 	}
 }
 
-	// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
-void CWeaponPHK::CheckThrowPosition( CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc )
-{
-	trace_t tr;
-
-	UTIL_TraceHull( vecEye, vecSrc, -Vector(PHK_RADIUS+2,PHK_RADIUS+2,PHK_RADIUS+2), Vector(PHK_RADIUS+2,PHK_RADIUS+2,PHK_RADIUS+2), 
-		pPlayer->PhysicsSolidMaskForEntity(), pPlayer, pPlayer->GetCollisionGroup(), &tr );
-	
-	if ( tr.DidHit() )
-	{
-		vecSrc = tr.endpos;
-	}
-}
-
-void DropPrimedPHKPHK( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pPHK )
+void DropPrimedPHK( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pPHK )
 {
 	CWeaponPHK *pWeaponPHK = dynamic_cast<CWeaponPHK*>( pPHK );
 
@@ -462,173 +410,22 @@ void DropPrimedPHKPHK( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pPHK )
 //-----------------------------------------------------------------------------
 void CWeaponPHK::ThrowPHK( CBasePlayer *pPlayer )
 {
-if ( m_iHealth == 100 )
+//CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
+
+if ( pPlayer->GetHealth() == pPlayer->GetMaxHealth() )
 return;
-#ifndef CLIENT_DLL
-	/*Vector	vecEye = pPlayer->EyePosition();
-	Vector	vForward, vRight;
 
-	pPlayer->EyeVectors( &vForward, &vRight, NULL );
-	Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f;
-	CheckThrowPosition( pPlayer, vecEye, vecSrc );
-//	vForward[0] += 0.1f;
-	vForward[2] += 0.1f;
-
-	Vector vecThrow;
-	pPlayer->GetVelocity( &vecThrow, NULL );
-	vecThrow += vForward * 1200;
-	CBasePHK *pPHK = PHKPHK_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(600,random->RandomInt(-1200,1200),0), pPlayer, PHK_TIMER, false );
-
-	if ( pPHK )
-	{
-		if ( pPlayer && pPlayer->m_lifeState != LIFE_ALIVE )
-		{
-			pPlayer->GetVelocity( &vecThrow, NULL );
-
-			IPhysicsObject *pPhysicsObject = pPHK->VPhysicsGetObject();
-			if ( pPhysicsObject )
-			{
-				pPhysicsObject->SetVelocity( &vecThrow, NULL );
-			}
-		}
-		
-		pPHK->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
-		pPHK->SetDamageRadius( PHK_DAMAGE_RADIUS );
-	}*/
-#endif
-	/*#ifdef GAME_DLL
-	SetHealthValue( sk_portable_healthkit_health.GetInt() )
-	#endif*/
-	//pPlayer->SetHealth( sk_portable_healthkit_health.GetInt());
-	#ifdef GAME_DLL
-	//IncrementHealth ( sk_portable_healthkit_health.GetInt());
+	/*#ifndef CLIENT_DLL
 	if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
-	{
-	pPlayer->TakeHealth( sk_portable_healthkit_health.GetInt(), DMG_GENERIC );
-	}
-	#endif
-	EmitSound( "HealthVial.Touch" ); // Play HealthVial.Touch
+	{*/
+	pPlayer->TakeHealth( sk_healthkit_health.GetInt(), DMG_GENERIC );
+	//}
+	//#endif
 
 	m_bRedraw = true;
-
-	WeaponSound( SINGLE );
-	
-	// player "shoot" animation
-	pPlayer->SetAnimation( PLAYER_ATTACK1 );
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-// Input  : *pPlayer - 
-//-----------------------------------------------------------------------------
-void CWeaponPHK::LobPHK( CBasePlayer *pPlayer )
-{
-if ( m_iHealth == 100 )
-return;
-#ifndef CLIENT_DLL
-	/*Vector	vecEye = pPlayer->EyePosition();
-	Vector	vForward, vRight;
-
-	pPlayer->EyeVectors( &vForward, &vRight, NULL );
-	Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector( 0, 0, -8 );
-	CheckThrowPosition( pPlayer, vecEye, vecSrc );
-	
-	Vector vecThrow;
-	pPlayer->GetVelocity( &vecThrow, NULL );
-	vecThrow += vForward * 350 + Vector( 0, 0, 50 );
-	CBasePHK *pPHK = PHKPHK_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(200,random->RandomInt(-600,600),0), pPlayer, PHK_TIMER, false );
-
-	if ( pPHK )
-	{
-		pPHK->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
-		pPHK->SetDamageRadius( PHK_DAMAGE_RADIUS );
-	}*/
-#endif
-	/*#ifdef GAME_DLL
-	SetHealthValue( sk_portable_healthkit_health.GetInt() )
-	#endif*/
-	//pPlayer->SetHealth( sk_portable_healthkit_health.GetInt());
-	#ifdef GAME_DLL
-	//IncrementHealth ( sk_portable_healthkit_health.GetInt());
-	if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
-	{
-	pPlayer->TakeHealth( sk_portable_healthkit_health.GetInt(), DMG_GENERIC );
-	}
-	#endif
-	EmitSound( "HealthVial.Touch" ); // Play HealthVial.Touch
-
-	WeaponSound( WPN_DOUBLE );
-
-	// player "shoot" animation
-	pPlayer->SetAnimation( PLAYER_ATTACK1 );
-
-	m_bRedraw = true;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: 
-// Input  : *pPlayer - 
-//-----------------------------------------------------------------------------
-void CWeaponPHK::RollPHK( CBasePlayer *pPlayer )
-{
-if ( m_iHealth == 100 )
-return;
-#ifndef CLIENT_DLL
-	// BUGBUG: Hardcoded PHK width of 4 - better not change the model :)
-	/*Vector vecSrc;
-	pPlayer->CollisionProp()->NormalizedToWorldSpace( Vector( 0.5f, 0.5f, 0.0f ), &vecSrc );
-	vecSrc.z += PHK_RADIUS;
-
-	Vector vecFacing = pPlayer->BodyDirection2D( );
-	// no up/down direction
-	vecFacing.z = 0;
-	VectorNormalize( vecFacing );
-	trace_t tr;
-	UTIL_TraceLine( vecSrc, vecSrc - Vector(0,0,16), MASK_PLAYERSOLID, pPlayer, COLLISION_GROUP_NONE, &tr );
-	if ( tr.fraction != 1.0 )
-	{
-		// compute forward vec parallel to floor plane and roll PHK along that
-		Vector tangent;
-		CrossProduct( vecFacing, tr.plane.normal, tangent );
-		CrossProduct( tr.plane.normal, tangent, vecFacing );
-	}
-	vecSrc += (vecFacing * 18.0);
-	CheckThrowPosition( pPlayer, pPlayer->WorldSpaceCenter(), vecSrc );
-
-	Vector vecThrow;
-	pPlayer->GetVelocity( &vecThrow, NULL );
-	vecThrow += vecFacing * 700;
-	// put it on its side
-	QAngle orientation(0,pPlayer->GetLocalAngles().y,-90);
-	// roll it
-	AngularImpulse rotSpeed(0,0,720);
-	CBasePHK *pPHK = PHKPHK_Create( vecSrc, orientation, vecThrow, rotSpeed, pPlayer, PHK_TIMER, false );
-
-	if ( pPHK )
-	{
-		pPHK->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
-		pPHK->SetDamageRadius( PHK_DAMAGE_RADIUS );
-	}*/
-#endif
-	/*#ifdef GAME_DLL
-	SetHealthValue( sk_portable_healthkit_health.GetInt() )
-	#endif*/
-	#ifdef GAME_DLL
-	//IncrementHealth ( sk_portable_healthkit_health.GetInt());
-	if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
-	{
-	pPlayer->TakeHealth( sk_portable_healthkit_health.GetInt(), DMG_GENERIC );
-	}
-	#endif
-	//pPlayer->SetHealth( sk_portable_healthkit_health.GetInt());
-	//pEntity->TakeHealth( 20, DMG_GENERIC ); // Damage 20 health under generic reason
-	EmitSound( "HealthVial.Touch" ); // Play HealthVial.Touch
 
 	WeaponSound( SPECIAL1 );
-
+	
 	// player "shoot" animation
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
-
-	m_bRedraw = true;
 }
-

@@ -1,7 +1,0 @@
-// mp3 database, automatically generated
-songs
-{
-}
-directories
-{
-}

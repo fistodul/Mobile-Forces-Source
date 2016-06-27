@@ -4,7 +4,7 @@
 //
 //=============================================================================
 //SecobMod__IFDEF_Fixes
-#//if defined( GAME_DLL )
+//#if defined( GAME_DLL )
 #include "cbase.h"
 //#endif
 #include "ep2_gamestats.h"

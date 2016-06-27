@@ -26,7 +26,7 @@
 #define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
 #define SOURCE_2013 // Some shit for source shader editor XD... Do change to 2007 if using swarm/2007 sdk xD
-#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
+//#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
 //#define Testing // SuperPowers xD
 //#define Auto-Testing // Instead of Needing to manually powerup(call the SuperPowers function and everything connected to it) this will automatically call it as a part of PostThink
 #define hitmarkers // it enables battlefield style hitmarkers :P
@@ -55,7 +55,7 @@
 #define SecobMod__SHOW_GAME_MESSAGES_TO_ALL //Allow all players to see env_messages. Very useful for end-game strings as used in HL2.
 #define SecobMod__ALLOW_SUPER_GRAVITY_GUN //Allows Super Gravity Gun. Mostly coded by Kave.
 #define SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS //Allow automatic level changes if all players are in the transition zone (percentage can be modified).
-#define SecobMod__SAVERESTORE //Carries over loadouts from map to map. Only works if MULTIPLAYER_LEVEL_TRANSITIONS are enabled.
+//#define SecobMod__SAVERESTORE //Carries over loadouts from map to map. Only works if MULTIPLAYER_LEVEL_TRANSITIONS are enabled.
 #define SecobMod__FIX_VEHICLE_PLAYER_CAMERA_JUDDER //Vehicle view judder removed. ESSENTIAL if you use vehicles anywhere in your mod.
 #define SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES //Shows the player model in vehicles (add your own animations-currently we just crouch).
 
@@ -84,10 +84,10 @@
 //#define SecobMod__ENABLE_NIGHTVISION_ONLY_FOR_THE_HEAVY_CLASS //Give only the heavy class nightvision (use the 'N' key to toggle on/off), it needs the playerclasses definition too
 #define SecobMod__PLAYERS_CAN_PICKUP_OBJECTS //Players can pickup objects with their hands.
 #define SecobMod__CAN_SPRINT_WITHOUT_SUIT //Players can sprint without the HEV suit.
-//#define SecobMod__HAS_AMMO_REGARDLESS_OF_SUIT //Players have an ammo count.
+#define SecobMod__HAS_AMMO_REGARDLESS_OF_SUIT //Players have an ammo count.
 //#define SecobMod__HAS_BATTERY_REGARDLESS_OF_SUIT //Players have battery charge.
 #define SecobMod__HAS_DAMAGE_INDICATOR_REGARDLESS_OF_SUIT //Players see damage indication.
-//#define SecobMod__HAS_HEALTH_REGARDLESS_OF_SUIT //Players have health hud.
+#define SecobMod__HAS_HEALTH_REGARDLESS_OF_SUIT //Players have health hud.
 //#define SecobMod__HAS_HUD_LOCATOR_REGARDLESS_OF_SUIT //Players can see the location of the ep2 jalopy.
 //#define SecobMod__HAS_NEUROTOXIN_INDICATOR_REGARDLESS_OF_SUIT //Players are cured against poison.
 //#define SecobMod__HAS_ZOOM_VIEW_FUNCTION_REGARDLESS_OF_SUIT //Players can zoom.
@@ -97,8 +97,8 @@
 #define SecobMod__HAS_POWER_INDICATOR_REGARDLESS_OF_SUIT //Shows sprint etc meter
 #define SecobMod__HAS_FLASHLIGHT_REGARDLESS_OF_SUIT //Enables the flashlight except HL2 DM overrides disabling this and provides the flashlight anyway.
 #define SecobMod__HAS_GEIGER_COUNTER_REGARDLESS_OF_SUIT //Allows you to detect toxic areas.
-//#define SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS //The glowing outline that you see used in L4D (Left4Dead).
-//#define GLOWS_ENABLE //Use this to enable Valve's glow code for use with the above (both defines are required).
+#define SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS //The glowing outline that you see used in L4D (Left4Dead).
+#define GLOWS_ENABLE //Use this to enable Valve's glow code for use with the above (both defines are required).
 
 /**********************/
 /* Map Enhancements. */

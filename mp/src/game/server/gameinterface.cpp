@@ -2104,8 +2104,9 @@ void CServerGameDLL::LoadMessageOfTheDay()
 			LoadMessageOfTheDay();
 			return;
 			}
-		#endif
+		#else
 			return;
+		#endif
 		
 			filesystem->Read( data, length, hFile );
 		
@@ -2119,8 +2120,9 @@ void CServerGameDLL::LoadMessageOfTheDay()
 			LoadMessageOfTheDay();
 			return;
 			}
-		#endif
+		#else
 			return;
+		#endif
 		
 			filesystem->Read( data, length, hFile );
 			filesystem->Close( hFile );

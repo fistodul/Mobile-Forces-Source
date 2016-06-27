@@ -13,17 +13,16 @@ WeaponData
 	"default_clip"			"1"
 	"default_clip2"			"-1"
 
-	"primary_ammo"			"Portable_healthkit"
+	"primary_ammo"			"healthkit"
 	"secondary_ammo"		"None"
 
 	"weight"				"1"
-	"item_flags"			"0"
-	//"damage"			"0"
+	"item_flags"			"18"
 
 	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
 	SoundData
 	{
-		"special1"		"WeaponFrag.Roll"
+		"special1"		"HealthVial.Touch"
 		"double_shot"	"common/null.wav"
 		"single_shot"	"common/null.wav"
 	}

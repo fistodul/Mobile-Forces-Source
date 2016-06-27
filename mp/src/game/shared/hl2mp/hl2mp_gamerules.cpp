@@ -202,8 +202,8 @@ char *sTeamNames[] =
 {
 	"Unassigned",
 	"Spectator",
-	"Combine",
-	"Rebels",
+	"Blue",
+	"Red",
 };
 
 CHL2MPRules::CHL2MPRules()
@@ -911,9 +911,9 @@ const char *CHL2MPRules::GetGameDescription( void )
 { 
 	//SecobMod__Information: Community fix provided by Alters. Change this to reflect in the game.
 	if ( IsTeamplay() )
-	return "Source Engine Co-Operative Base Modification - Team Game."; //SecobMod__ChangeME! 
+	return "Squad Deathmatch."; //SecobMod__ChangeME! 
 
-	return "Source Engine Co-Operative Base Modification - Game."; //SecobMod__ChangeME! 
+	return "Deathmatch"; //SecobMod__ChangeME! 
 } 
 
 bool CHL2MPRules::IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer )
@@ -1148,7 +1148,8 @@ CAmmoDef *GetAmmoDef()
 			def.AddAmmoType("SMG1_Grenade",		DMG_BURN,					TRACER_NONE,			0,			0,			3,			0,							0 );
 			def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			0,			0,			5,			0,							0 );
 		#endif //SecobMod__Enable_Fixed_Multiplayer_AI
-			def.AddAmmoType("slam",				DMG_BURN,					TRACER_NONE,			0,			0,			5,			0,							0 );
+			def.AddAmmoType("slam",				DMG_BURN,					TRACER_NONE,			0,			0,			6,			0,							0 );
+			def.AddAmmoType("healthkit",				DMG_GENERIC,					TRACER_NONE,			0,			0,			sk_healthkit_max,			0,							0 );
 	}
 
 	return &def;
