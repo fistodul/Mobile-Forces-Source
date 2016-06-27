@@ -1057,7 +1057,6 @@ void CNPC_Barnacle::LiftNPC( float flBiteZOffset )
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // Purpose: Lift the prey stuck to our tongue up towards our mouth
 //-----------------------------------------------------------------------------
