@@ -793,9 +793,15 @@ void CNPC_FloorTurret::DryFire( void )
 //SecobMod__Information: Set Portal changes for turrets.
 	if (IsPortalTurret())
 	{
+	EmitSound( "NPC_FloorTurret.TalkActive" );
+	EmitSound( "NPC_FloorTurret.TalkDeploy" );
+	}
+	else
+	{
 	EmitSound( "NPC_FloorTurret.DryFire");
 	EmitSound( "NPC_FloorTurret.Activate" );
-
+	}
+	
  	if ( RandomFloat( 0, 1 ) > 0.5 )
 	{
 		m_flShotTime = gpGlobals->curtime + random->RandomFloat( 1, 2.5 );
@@ -1449,7 +1455,7 @@ void CNPC_FloorTurret::TippedThink( void )
 			m_bActive		= false;
 			m_flLastSight	= 0;
 
-			SetActivity( (Activity) ACT_FLOOR_TURRET_CLOSED_IDLE )
+			SetActivity( (Activity) ACT_FLOOR_TURRET_CLOSED_IDLE );
 
 			// Don't need to store last NPC anymore, because I've been knocked over
 			if ( m_hLastNPCToKickMe )
