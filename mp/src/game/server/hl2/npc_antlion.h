@@ -235,9 +235,10 @@ private:
 		void DoPoisonBurst();
 	#endif
 	
-#if HL2_EPISODIC
+		//Secobmod
+/*#ifdef HL2_EPISODIC
 	void DoPoisonBurst();
-#endif
+#endif*/
 
 	float	m_flIdleDelay;
 	float	m_flBurrowTime;
@@ -288,10 +289,6 @@ private:
 	#ifdef HL2_EPISODIC
 		bool		m_bHasDoneAirAttack;  ///< only allowed to apply this damage once per glide
 	#endif
-	
-#if HL2_EPISODIC
-	bool		m_bHasDoneAirAttack;  ///< only allowed to apply this damage once per glide
-#endif
 
 	bool		m_bForcedStuckJump;
 	int			m_nBodyBone;

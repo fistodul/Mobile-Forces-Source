@@ -68,6 +68,9 @@ ConVar r_sequence_debug( "r_sequence_debug", "" );
 
 // If an NPC is moving faster than this, he should play the running footstep sound
 const float RUN_SPEED_ESTIMATE_SQR = 150.0f * 150.0f;
+#ifdef Fading_Ragdolls
+ConVar Ragdoll_Fade_Out_Delay("Ragdoll_Fade_Out_Delay", "10", FCVAR_CHEAT, "Changes the amount of time after which ragdolls fade lol");
+#endif
 
 // Removed macro used by shared code stuff
 #if defined( CBaseAnimating )
@@ -299,6 +302,9 @@ C_ClientRagdoll::C_ClientRagdoll( bool bRestoring )
 	{
 		m_pRagdoll = new CRagdoll;
 	}
+	#ifdef Fading_Ragdolls
+	m_flFadeOutDelay = gpGlobals->curtime + Ragdoll_Fade_Out_Delay.GetInt();
+	#endif
 }
 
 void C_ClientRagdoll::OnSave( void )
@@ -579,6 +585,10 @@ void C_ClientRagdoll::ClientThink( void )
 	HandleAnimatedFriction();
 
 	FadeOut();
+	#ifdef Fading_Ragdolls
+	if ( gpGlobals->curtime >= m_flFadeOutDelay )
+	SUB_Remove();
+	#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -3385,6 +3395,26 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 		//FIXME: We should really use a named attachment for this
 		if ( m_Attachments.Count() > 0 )
 		{
+			#ifdef muzzlelightning
+			Vector vAttachment, vAng;
+			QAngle angles;
+//#ifdef SOURCE_2013
+            GetAttachment( 1, vAttachment, angles ); // set 1 instead "attachment"
+/*#else
+            GetAttachment( attachment, vAttachment, angles );
+#endif*/
+			AngleVectors( angles, &vAng );
+			vAttachment += vAng * 2;
+ 
+			dlight_t *dl = effects->CL_AllocDlight ( index );
+			dl->origin = vAttachment;
+			dl->color.r = 231;
+			dl->color.g = 219;
+			dl->color.b = 14;
+			dl->die = gpGlobals->curtime + 0.05f;
+			dl->radius = random->RandomFloat( 245.0f, 256.0f );
+			dl->decay = 512.0f;
+			#else
 			Vector vAttachment;
 			QAngle dummyAngles;
 			GetAttachment( 1, vAttachment, dummyAngles );
@@ -3399,6 +3429,7 @@ void C_BaseAnimating::ProcessMuzzleFlashEvent()
 			el->color.g = 192;
 			el->color.b = 64;
 			el->color.exponent = 5;
+			#endif
 		}
 	}
 }
@@ -4180,10 +4211,27 @@ void C_BaseAnimating::FireObsoleteEvent( const Vector& origin, const QAngle& ang
 
 			if ( iAttachment != -1 && m_Attachments.Count() > iAttachment )
 			{
+				#ifdef css_muzzle_tweaks
+				if ( input->CAM_IsThirdPerson() )
+ 				{
+ 					C_BaseCombatWeapon *pWeapon = GetActiveWeapon();
+ 					pWeapon->GetAttachment( iAttachment+1, attachOrigin, attachAngles );
+ 				}
+ 				else
+ 				{
+ 					C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
+ 					CBaseViewModel *vm = pPlayer->GetViewModel();
+ 					vm->GetAttachment( iAttachment+1, attachOrigin, attachAngles );
+ 					engine->GetViewAngles( attachAngles );
+ 				}
+ 				g_pEffects->MuzzleFlash( attachOrigin, attachAngles, 1.0, MUZZLEFLASH_TYPE_DEFAULT );
+				#else
 				GetAttachment( iAttachment+1, attachOrigin, attachAngles );
 				int entId = render->GetViewEntity();
 				ClientEntityHandle_t hEntity = ClientEntityList().EntIndexToHandle( entId );
 				tempents->MuzzleFlash( attachOrigin, attachAngles, atoi( options ), hEntity, bFirstPerson );
+				#endif
+				
 			}
 		}
 		break;

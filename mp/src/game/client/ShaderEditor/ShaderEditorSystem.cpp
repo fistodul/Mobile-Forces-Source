@@ -8,6 +8,7 @@
 // ******************************************************
 
 #include "cbase.h"
+#ifdef SSE
 #include "client_factorylist.h"
 #include "ShaderEditor/IVShaderEditor.h"
 #include "ShaderEditor/SEdit_ModelRender.h"
@@ -80,15 +81,14 @@ bool ShaderEditorHandler::Init()
 #endif
 
 	char modulePath[MAX_PATH*4];
-//SecobMod__Information Filip: I changed the order here cuz it crapped errors lol and basically i dont think we need the SOURCE_2013 define anymore but i left it in for the lolz XD
-#ifdef SOURCE_2007
-Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2007.dll\0", engine->GetGameDirectory() );
-#elif SWARM_DLL
+#ifdef SWARM_DLL
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_swarm.dll\0", engine->GetGameDirectory() );
 #elif SOURCE_2006
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2006.dll\0", engine->GetGameDirectory() );
-#else
+#elif SOURCE_2013
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2013.dll\0", engine->GetGameDirectory() );
+#else
+	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2007.dll\0", engine->GetGameDirectory() );
 #endif
 	shaderEditorModule = Sys_LoadModule( modulePath );
 	if ( shaderEditorModule )
@@ -1627,4 +1627,5 @@ void ShaderEditorHandler::RegisterViewRenderCallbacks()
 	shaderEdit->LockViewRenderCallbacks();
 }
 
+#endif
 #endif

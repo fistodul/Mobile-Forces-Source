@@ -35,6 +35,11 @@
 #include "gameinterface.h"
 #include "ilagcompensationmanager.h"
 
+
+#ifdef SecobMod__SAVERESTORE
+#include "hl2mp_player.h"
+#endif //SecobMod__SAVERESTORE
+
 #ifdef HL2_DLL
 #include "hl2_player.h"
 #endif
@@ -51,6 +56,11 @@ CUtlVector< CHandle<CTriggerMultiple> >	g_hWeaponFireTriggers;
 
 extern CServerGameDLL	g_ServerGameDLL;
 extern bool				g_fGameOver;
+
+#ifdef SecobMod__SAVERESTORE
+extern bool Transitioned;
+#endif //SecobMod__SAVERESTORE
+
 ConVar showtriggers( "showtriggers", "0", FCVAR_CHEAT, "Shows trigger brushes" );
 
 bool IsTriggerClass( CBaseEntity *pEntity );
@@ -1587,6 +1597,11 @@ void CChangeLevel::WarnAboutActiveLead( void )
 	}
 }
 
+#ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+extern ConVar mp_transition_players_percent;
+extern ConVar sv_transitions;
+#endif SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+
 void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 {
 	CBaseEntity	*pLandmark;
@@ -1594,9 +1609,57 @@ void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 
 	Assert(!FStrEq(m_szMapName, ""));
 
+#ifndef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 	// Don't work in deathmatch
 	if ( g_pGameRules->IsDeathmatch() )
 		return;
+#endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+
+#ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+	CBasePlayer *pPlayer = (pActivator && pActivator->IsPlayer()) ? ToBasePlayer(pActivator) : UTIL_GetLocalPlayer(); //SecobMod__Information Get all the players who activate our multiplayer transition.
+	if (!pPlayer)
+		return;
+
+
+	pPlayer->m_bTransition = true;
+
+	if (mp_transition_players_percent.GetInt() > 0)
+	{
+		int totalPlayers = 0;
+		int transitionPlayers = 0;
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		{
+			CBasePlayer* pPlayer = UTIL_PlayerByIndex(i);
+			if (pPlayer && pPlayer->IsAlive())
+			{
+				totalPlayers++;
+				if (pPlayer->m_bTransition)
+					transitionPlayers++;
+			}
+		}
+
+		if (((int)(transitionPlayers / totalPlayers * 100)) < mp_transition_players_percent.GetInt())
+		{
+			Msg("Transitions: Not enough players to trigger level change\n");
+			return;
+		}
+	}
+	//===================================================================================
+#ifdef SecobMod__SAVERESTORE
+	CHL2MP_Player *p2Player = (CHL2MP_Player *)UTIL_GetLocalPlayer();
+	p2Player->SaveTransitionFile();
+	Transitioned = true;
+#endif //SecobMod__SAVERESTORE
+
+	// This object will get removed in the call to engine->ChangeLevel, copy the params into "safe" memory
+	Q_strncpy(st_szNextMap, m_szMapName, sizeof(st_szNextMap));
+
+	//SecobMod__Information  Change to the next map.
+	engine->ChangeLevel(st_szNextMap, NULL);
+	//SecobMod__Information  As far as we're concerned this is where we stop the code because we just transitioned.
+	return;
+#endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
+
 
 	// Some people are firing these multiple times in a frame, disable
 	if ( m_bTouched )
@@ -1604,7 +1667,10 @@ void CChangeLevel::ChangeLevelNow( CBaseEntity *pActivator )
 
 	m_bTouched = true;
 
+	//SecobMod__Information  Code can't compile without this ifndef.
+#ifndef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 	CBaseEntity *pPlayer = (pActivator && pActivator->IsPlayer()) ? pActivator : UTIL_GetLocalPlayer();
+#endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 
 	int transitionState = InTransitionVolume(pPlayer, m_szLandmarkName);
 	if ( transitionState == TRANSITION_VOLUME_SCREENED_OUT )
@@ -2613,7 +2679,11 @@ void CTriggerSave::Touch( CBaseEntity *pOther )
 		if ( g_ServerGameDLL.m_fAutoSaveDangerousTime != 0.0f && g_ServerGameDLL.m_fAutoSaveDangerousTime >= gpGlobals->curtime )
 		{
 			// A previous dangerous auto save was waiting to become safe
-			CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 			if ( pPlayer->GetDeathTime() == 0.0f || pPlayer->GetDeathTime() > gpGlobals->curtime )
 			{
@@ -2633,7 +2703,11 @@ void CTriggerSave::Touch( CBaseEntity *pOther )
 	if ( m_fDangerousTimer != 0.0f )
 	{
 		// There's a dangerous timer. Save if we have enough hitpoints.
-		CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 		if (pPlayer && pPlayer->GetHealth() >= m_minHitPoints)
 		{
@@ -2884,7 +2958,8 @@ private:
 	int	  m_iAttachmentIndex;
 	bool  m_bSnapToGoal;
 
-#if HL2_EPISODIC
+//Secobmod__Ifdef
+#ifdef HL2_EPISODIC
 	bool  m_bInterpolatePosition;
 
 	// these are interpolation vars used for interpolating the camera over time
@@ -2901,7 +2976,8 @@ private:
 	COutputEvent m_OnEndFollow;
 };
 
-#if HL2_EPISODIC
+//SecobMod
+#ifdef HL2_EPISODIC
 const float CTriggerCamera::kflPosInterpTime = 2.0f;
 #endif
 
@@ -2926,7 +3002,7 @@ BEGIN_DATADESC( CTriggerCamera )
 	DEFINE_KEYFIELD( m_iszTargetAttachment, FIELD_STRING, "targetattachment" ),
 	DEFINE_FIELD( m_iAttachmentIndex, FIELD_INTEGER ),
 	DEFINE_FIELD( m_bSnapToGoal, FIELD_BOOLEAN ),
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	DEFINE_KEYFIELD( m_bInterpolatePosition, FIELD_BOOLEAN, "interpolatepositiontoplayer" ),
 	DEFINE_FIELD( m_vStartPos, FIELD_VECTOR ),
 	DEFINE_FIELD( m_vEndPos, FIELD_VECTOR ),
@@ -3032,13 +3108,237 @@ void CTriggerCamera::InputDisable( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+#ifdef SecobMod__MULTIPLAYER_VIEWCONTROL_CAMERAS
+void CTriggerCamera::Enable(void)
+{
+
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+
+
+		if (pPlayer == NULL)
+		{
+			//Must be a Local Server Host if we get here (i think).
+			Assert(m_hPlayer->IsPlayer());
+			pPlayer = ((CBasePlayer*)m_hPlayer.Get());
+		}
+		m_hPlayer = pPlayer;
+
+		m_state = USE_ON;
+
+		if (!m_hPlayer || !m_hPlayer->IsPlayer())
+		{
+			Msg("Not m_hPlayer or m_hPlayer isn't a player!");
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+			m_hPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+			Msg("m_hPlayer should now be the nearest player.");
+#else
+			m_hPlayer = UTIL_GetLocalPlayer();
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+
+		}
+
+		if (!m_hPlayer)
+		{
+			DispatchUpdateTransmitState();
+			Msg("Just dispatched a transmit.");
+			return;
+		}
+
+		Assert(m_hPlayer->IsPlayer());
+
+		if (m_hPlayer->IsPlayer())
+		{
+		}
+		else
+		{
+			Warning("CTriggerCamera could not find a player!\n");
+			return;
+		}
+
+		// if the player was already under control of a similar trigger, disable the previous trigger.
+	{
+		CBaseEntity *pPrevViewControl = pPlayer->GetViewEntity();
+		if (pPrevViewControl && pPrevViewControl != pPlayer)
+		{
+			CTriggerCamera *pOtherCamera = dynamic_cast<CTriggerCamera *>(pPrevViewControl);
+			if (pOtherCamera)
+			{
+				if (pOtherCamera == this)
+				{
+					// what the hell do you think you are doing?
+					Warning("Viewcontrol %s was enabled twice in a row!\n", GetDebugName());
+					return;
+				}
+				else
+				{
+					pOtherCamera->Disable();
+				}
+			}
+		}
+	}
+
+
+	m_nPlayerButtons = pPlayer->m_nButtons;
+
+
+	// Make the player invulnerable while under control of the camera.  This will prevent situations where the player dies while under camera control but cannot restart their game due to disabled player inputs.
+	m_hPlayer->m_takedamage = DAMAGE_NO;
+
+	if (HasSpawnFlags(SF_CAMERA_PLAYER_NOT_SOLID))
+	{
+		m_hPlayer->AddSolidFlags(FSOLID_NOT_SOLID);
+	}
+
+	m_flReturnTime = gpGlobals->curtime + m_flWait;
+	m_flSpeed = m_initialSpeed;
+	m_targetSpeed = m_initialSpeed;
+
+	// this pertains to view angles, not translation.
+	if (HasSpawnFlags(SF_CAMERA_PLAYER_SNAP_TO))
+	{
+		m_bSnapToGoal = true;
+	}
+
+	if (HasSpawnFlags(SF_CAMERA_PLAYER_TARGET))
+	{
+		m_hTarget = m_hPlayer;
+	}
+	else
+	{
+		m_hTarget = GetNextTarget();
+	}
+
+	// If we don't have a target, ignore the attachment / etc
+	if (m_hTarget)
+	{
+		m_iAttachmentIndex = 0;
+		if (m_iszTargetAttachment != NULL_STRING)
+		{
+			if (!m_hTarget->GetBaseAnimating())
+			{
+				Warning("%s tried to target an attachment (%s) on target %s, which has no model.\n", GetClassname(), STRING(m_iszTargetAttachment), STRING(m_hTarget->GetEntityName()));
+			}
+			else
+			{
+				m_iAttachmentIndex = m_hTarget->GetBaseAnimating()->LookupAttachment(STRING(m_iszTargetAttachment));
+				if (!m_iAttachmentIndex)
+				{
+					Warning("%s could not find attachment %s on target %s.\n", GetClassname(), STRING(m_iszTargetAttachment), STRING(m_hTarget->GetEntityName()));
+				}
+			}
+		}
+	}
+
+	if (HasSpawnFlags(SF_CAMERA_PLAYER_TAKECONTROL))
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		{
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+
+
+			if (pPlayer == NULL)
+			{
+				//Must be a Local Server Host if we get here (i think).
+				Assert(m_hPlayer->IsPlayer());
+				pPlayer = ((CBasePlayer*)m_hPlayer.Get());
+			}
+			((CBasePlayer*)m_hPlayer.Get())->EnableControl(FALSE);
+
+			if (((CBasePlayer*)m_hPlayer.Get())->FlashlightIsOn())
+			{
+				((CBasePlayer*)m_hPlayer.Get())->FlashlightTurnOff();
+			}
+
+		}
+	}
+
+	if (m_sPath != NULL_STRING)
+	{
+		m_pPath = gEntList.FindEntityByName(NULL, m_sPath, NULL, m_hPlayer);
+	}
+	else
+	{
+		m_pPath = NULL;
+	}
+
+	m_flStopTime = gpGlobals->curtime;
+	if (m_pPath)
+	{
+		if (m_pPath->m_flSpeed != 0)
+			m_targetSpeed = m_pPath->m_flSpeed;
+
+		m_flStopTime += m_pPath->GetDelay();
+	}
+
+
+	// copy over player information. If we're interpolating from
+	// the player position, do something more elaborate.
+#ifdef HL2_EPISODIC
+	if (m_bInterpolatePosition)
+	{
+		// initialize the values we'll spline between
+		m_vStartPos = m_hPlayer->EyePosition();
+		m_vEndPos = GetAbsOrigin();
+		m_flInterpStartTime = gpGlobals->curtime;
+		UTIL_SetOrigin(this, m_hPlayer->EyePosition());
+		SetLocalAngles(QAngle(m_hPlayer->GetLocalAngles().x, m_hPlayer->GetLocalAngles().y, 0));
+
+		SetAbsVelocity(vec3_origin);
+	}
+	else
+#endif
+		if (HasSpawnFlags(SF_CAMERA_PLAYER_POSITION))
+		{
+			UTIL_SetOrigin(this, m_hPlayer->EyePosition());
+			SetLocalAngles(QAngle(m_hPlayer->GetLocalAngles().x, m_hPlayer->GetLocalAngles().y, 0));
+			SetAbsVelocity(m_hPlayer->GetAbsVelocity());
+		}
+		else
+		{
+			SetAbsVelocity(vec3_origin);
+		}
+
+
+	pPlayer->SetViewEntity(this);
+
+	// Hide the player's viewmodel
+	if (pPlayer->GetActiveWeapon())
+	{
+		pPlayer->GetActiveWeapon()->AddEffects(EF_NODRAW);
+	}
+
+	// Only track if we have a target
+	if (m_hTarget)
+	{
+		// follow the player down
+		SetThink(&CTriggerCamera::FollowTarget);
+		SetNextThink(gpGlobals->curtime);
+	}
+
+	m_moveDistance = 0;
+	Move();
+
+	DispatchUpdateTransmitState();
+
+	}
+}
+#else
 void CTriggerCamera::Enable( void )
 {
 	m_state = USE_ON;
 
 	if ( !m_hPlayer || !m_hPlayer->IsPlayer() )
 	{
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+		m_hPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#else
 		m_hPlayer = UTIL_GetLocalPlayer();
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	}
 
 	if ( !m_hPlayer )
@@ -3161,7 +3461,7 @@ void CTriggerCamera::Enable( void )
 
 	// copy over player information. If we're interpolating from
 	// the player position, do something more elaborate.
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	if (m_bInterpolatePosition)
 	{
 		// initialize the values we'll spline between
@@ -3208,10 +3508,57 @@ void CTriggerCamera::Enable( void )
 
 	DispatchUpdateTransmitState();
 }
+#endif //SecobMod__MULTIPLAYER_VIEWCONTROL_CAMERAS
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+#ifdef SecobMod__MULTIPLAYER_VIEWCONTROL_CAMERAS
+void CTriggerCamera::Disable(void)
+{
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+
+		if (pPlayer == NULL)
+		{
+			//Must be a Local Server Host if we get here (i think).
+			Assert(m_hPlayer->IsPlayer());
+			pPlayer = ((CBasePlayer*)m_hPlayer.Get());
+		}
+
+		m_hPlayer = pPlayer;
+
+		if (m_hPlayer && m_hPlayer->IsAlive())
+		{
+			if (HasSpawnFlags(SF_CAMERA_PLAYER_NOT_SOLID))
+			{
+				m_hPlayer->RemoveSolidFlags(FSOLID_NOT_SOLID);
+			}
+
+			((CBasePlayer*)m_hPlayer.Get())->SetViewEntity(m_hPlayer);
+			((CBasePlayer*)m_hPlayer.Get())->EnableControl(TRUE);
+
+			// Restore the player's viewmodel
+			if (((CBasePlayer*)m_hPlayer.Get())->GetActiveWeapon())
+			{
+				((CBasePlayer*)m_hPlayer.Get())->GetActiveWeapon()->RemoveEffects(EF_NODRAW);
+			}
+		}
+
+		//return the player to previous takedamage state
+		m_hPlayer->m_takedamage = DAMAGE_YES;
+	}
+	m_state = USE_OFF;
+	m_flReturnTime = gpGlobals->curtime;
+	SetThink(NULL);
+
+	m_OnEndFollow.FireOutput(this, this); // dvsents2: what is the best name for this output?
+	SetLocalAngularVelocity(vec3_angle);
+
+	DispatchUpdateTransmitState();
+}
+#else
 void CTriggerCamera::Disable( void )
 {
 	if ( m_hPlayer && m_hPlayer->IsAlive() )
@@ -3233,6 +3580,13 @@ void CTriggerCamera::Disable( void )
 		m_hPlayer->m_takedamage = m_nOldTakeDamage;
 	}
 
+	//SecobMod__MiscFixes On ep2_outland_01 the game would crash as it didn't find a player, so define them as the nearest player.
+/*#ifdef SecobMod__Enable_Fixed_Multiplayer_AI	
+	CBasePlayer *m_hPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
+	//return the player to previous takedamage state
+	m_hPlayer->m_takedamage = m_nOldTakeDamage;*/
+
 	m_state = USE_OFF;
 	m_flReturnTime = gpGlobals->curtime;
 	SetThink( NULL );
@@ -3242,6 +3596,7 @@ void CTriggerCamera::Disable( void )
 
 	DispatchUpdateTransmitState();
 }
+#endif //SecobMod__MULTIPLAYER_VIEWCONTROL_CAMERAS
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -3379,7 +3734,7 @@ void CTriggerCamera::Move()
 
 	// In vanilla HL2, the camera is either on a path, or doesn't move. In episodic
 	// we add the capacity for interpolation to the start point. 
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	if (m_pPath)
 #else
 	// Not moving on a path, return
@@ -3422,7 +3777,7 @@ void CTriggerCamera::Move()
 		float fraction = 2 * gpGlobals->frametime;
 		SetAbsVelocity( ((m_vecMoveDir * m_flSpeed) * fraction) + (GetAbsVelocity() * (1-fraction)) );
 	}
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	else if (m_bInterpolatePosition)
 	{
 		// get the interpolation parameter [0..1]
@@ -3510,7 +3865,9 @@ static void PlayCDTrack( int iTrack )
 	// manually find the single player. 
 	pClient = engine->PEntityOfEntIndex( 1 );
 
+#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 	Assert(gpGlobals->maxClients == 1);
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	
 	// Can't play if the client is not connected!
 	if ( !pClient )

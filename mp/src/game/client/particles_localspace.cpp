@@ -106,11 +106,15 @@ void CLocalSpaceEmitter::RenderParticles( CParticleRenderIterator *pIterator )
 			pIterator->GetParticleDraw(),
 			screenPos,
 			UpdateColor( pParticle ),
+		#ifdef Far_Clipping
+            UpdateAlpha( pParticle ) * GetAlphaDistanceFade( screenPos, m_flNearClipMin, m_flNearClipMax, m_flFarClipMin, m_flFarClipMax ),
+		#else
 			UpdateAlpha( pParticle ) * GetAlphaDistanceFade( screenPos, m_flNearClipMin, m_flNearClipMax ),
+		#endif
 			UpdateScale( pParticle ),
 			pParticle->m_flRoll 
 			);
-
+		
 		pParticle = (const SimpleParticle *)pIterator->GetNext( sortKey );
 	}
 }

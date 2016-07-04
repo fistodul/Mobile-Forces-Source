@@ -16,11 +16,11 @@
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 
-#define	PISTOL_FASTEST_REFIRE_TIME		0.3f
-#define	PISTOL_FASTEST_DRY_REFIRE_TIME	0.4f
+#define	Dualies_FASTEST_REFIRE_TIME		0.3f
+#define	Dualies_FASTEST_DRY_REFIRE_TIME	0.4f
 
-#define	PISTOL_ACCURACY_SHOT_PENALTY_TIME		0.2f	// Applied amount of time each shot adds to the time we must recover from
-#define	PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME	1.5f	// Maximum penalty to deal out
+#define	Dualies_ACCURACY_SHOT_PENALTY_TIME		0.2f	// Applied amount of time each shot adds to the time we must recover from
+#define	Dualies_ACCURACY_MAXIMUM_PENALTY_TIME	1.5f	// Maximum penalty to deal out
 
 #ifdef CLIENT_DLL
 #define CWeaponDualies C_WeaponDualies
@@ -61,7 +61,7 @@ public:
 
 		float ramp = RemapValClamped(	m_flAccuracyPenalty, 
 											0.0f, 
-											PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME, 
+											Dualies_ACCURACY_MAXIMUM_PENALTY_TIME, 
 											0.0f, 
 											1.0f ); 
 
@@ -108,9 +108,9 @@ private:
 	CWeaponDualies( const CWeaponDualies & );
 };
 
-IMPLEMENT_NETWORKCLASS_ALIASED( WeaponPistol, DT_WeaponPistol )
+IMPLEMENT_NETWORKCLASS_ALIASED( WeaponDualies, DT_WeaponDualies )
 
-BEGIN_NETWORK_TABLE( CWeaponDualies, DT_WeaponPistol )
+BEGIN_NETWORK_TABLE( CWeaponDualies, DT_WeaponDualies )
 #ifdef CLIENT_DLL
 	RecvPropTime( RECVINFO( m_flSoonestPrimaryAttack ) ),
 	RecvPropTime( RECVINFO( m_flLastAttackTime ) ),
@@ -133,8 +133,8 @@ BEGIN_PREDICTION_DATA( CWeaponDualies )
 END_PREDICTION_DATA()
 #endif
 
-LINK_ENTITY_TO_CLASS( weapon_pistol, CWeaponDualies );
-PRECACHE_WEAPON_REGISTER( weapon_pistol );
+LINK_ENTITY_TO_CLASS( weapon_Dualies, CWeaponDualies );
+PRECACHE_WEAPON_REGISTER( weapon_Dualies );
 
 #ifndef CLIENT_DLL
 acttable_t CWeaponDualies::m_acttable[] = 
@@ -201,7 +201,7 @@ CWeaponDualies::CWeaponDualies( void )
 
 	m_bFiresUnderwater	= true;
 	#ifdef Weighted_Weaponry
-	Pistol_Weight = 1;
+	Dualies_Weight = 1;
 	#endif
 }
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
@@ -253,7 +253,7 @@ void CWeaponDualies::DryFire( void )
 	WeaponSound( EMPTY );
 	SendWeaponAnim( ACT_VM_DRYFIRE );
 	
-	m_flSoonestPrimaryAttack	= gpGlobals->curtime + PISTOL_FASTEST_DRY_REFIRE_TIME;
+	m_flSoonestPrimaryAttack	= gpGlobals->curtime + Dualies_FASTEST_DRY_REFIRE_TIME;
 	m_flNextPrimaryAttack		= gpGlobals->curtime + SequenceDuration();
 }
 
@@ -272,7 +272,7 @@ void CWeaponDualies::PrimaryAttack()
 	}
  
 	m_flLastAttackTime = gpGlobals->curtime;
-	m_flSoonestPrimaryAttack = gpGlobals->curtime + DUALIES_FASTEST_REFIRE_TIME;
+	m_flSoonestPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
  
 	//Flipping Code -Jman
 	if ( !bFlip)
@@ -385,7 +385,7 @@ void CWeaponDualies::UpdatePenaltyTime( void )
 	if ( ( ( pOwner->m_nButtons & IN_ATTACK ) == false ) && ( m_flSoonestPrimaryAttack < gpGlobals->curtime ) )
 	{
 		m_flAccuracyPenalty -= gpGlobals->frametime;
-		m_flAccuracyPenalty = clamp( m_flAccuracyPenalty, 0.0f, PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME );
+		m_flAccuracyPenalty = clamp( m_flAccuracyPenalty, 0.0f, Dualies_ACCURACY_MAXIMUM_PENALTY_TIME );
 	}
 }
 
@@ -426,9 +426,9 @@ void CWeaponDualies::ItemPostFrame( void )
 	
 	if ( pOwner->m_nButtons & IN_ATTACK2 )
 	{
-		m_flLastAttackTime = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
-		m_flSoonestPrimaryAttack = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
-		m_flNextPrimaryAttack = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
+		m_flLastAttackTime = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
+		m_flSoonestPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
+		m_flNextPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
 	}
 
 	//Allow a refire as fast as the player can click
@@ -485,8 +485,8 @@ void CWeaponDualies::AddViewKick( void )
 
 	QAngle	viewPunch;
 
-	viewPunch.x = SharedRandomFloat( "pistolpax", 0.25f, 0.5f );
-	viewPunch.y = SharedRandomFloat( "pistolpay", -.6f, .6f );
+	viewPunch.x = SharedRandomFloat( "Dualiespax", 0.25f, 0.5f );
+	viewPunch.y = SharedRandomFloat( "Dualiespay", -.6f, .6f );
 	viewPunch.z = 0.0f;
 
 	//Add it to the view punch

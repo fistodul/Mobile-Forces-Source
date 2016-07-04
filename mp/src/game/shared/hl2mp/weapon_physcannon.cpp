@@ -120,11 +120,6 @@ extern ConVar hl2_walkspeed;
 
 #ifndef CLIENT_DLL
 
-void PhysCannonBeginUpgrade( CBaseAnimating *pAnim )
-{
-
-}
-
 #ifndef SecobMod__ALLOW_SUPER_GRAVITY_GUN
 bool PlayerHasMegaPhysCannon( void )
 {
@@ -4243,10 +4238,10 @@ float PhysCannonGetHeldObjectMass( CBaseCombatWeapon *pActiveWeapon, IPhysicsObj
 	return mass;
 }
 
-void PhysCannonBeginUpgrade( CBaseAnimating *pAnim )
+void PhysCannonBeginUpgrade(CBaseAnimating *pAnim)
 {
 #ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
-	CWeaponPhysCannon *pWeaponPhyscannon = assert_cast<	CWeaponPhysCannon* >( pAnim );
+	CWeaponPhysCannon *pWeaponPhyscannon = assert_cast<	CWeaponPhysCannon* >(pAnim);
 	pWeaponPhyscannon->BeginUpgrade();
 #endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN
 }

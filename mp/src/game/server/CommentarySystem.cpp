@@ -662,6 +662,7 @@ public:
 		{
 			Msg( "Commentary: Could not find commentary data file '%s'. \n", szFullName );
 		}
+		pkvFile->deleteThis(); // is this supposed to be here lol
 
 		engine->LockNetworkStringTables( oldLock );
 	}

@@ -270,7 +270,7 @@ public:
 	virtual void TelegraphSound( void );
 	
 //SecobMod__IFDEF_Fixes
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	virtual bool FInViewCone( CBaseEntity *pEntity );
 #endif
 

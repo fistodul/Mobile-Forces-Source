@@ -145,7 +145,7 @@ private:
 
 
 //SecobMod__IFDEF_Fixes
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 	/// Decides whether something should poison the barnacle upon eating
 	static bool IsPoisonous( CBaseEntity *pVictim );
 

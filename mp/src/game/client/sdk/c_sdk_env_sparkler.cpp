@@ -46,6 +46,10 @@ void C_Sparkler::OnDataChanged( DataUpdateType_t updateType )
 	{
 		// Creat the emitter
 		m_hEmitter = CSimpleEmitter::Create( "env_sparkler" );
+		#ifdef Far_Clipping
+		m_hEmitter->SetNearClip(32, 96);
+        m_hEmitter->SetFarClip(160, 192);
+		#endif
 
 		// Obtain a reference handle to our particle's desired material
 		if ( m_hEmitter.IsValid() )

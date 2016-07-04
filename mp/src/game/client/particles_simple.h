@@ -173,7 +173,10 @@ public:
 	virtual void	RenderParticles( CParticleRenderIterator *pIterator );
 
 	void			SetNearClip( float nearClipMin, float nearClipMax );
-
+#ifdef Far_Clipping
+	void            SetFarClip( float farClipMin, float farClipMax );
+#endif
+	
 	void			SetDrawBeforeViewModel( bool state = true );
 
 	SimpleParticle*	AddSimpleParticle( PMaterialHandle hMaterial, const Vector &vOrigin, float flDieTime=3, unsigned char uchSize=10 );
@@ -191,6 +194,10 @@ protected:
 
 	float			m_flNearClipMin;
 	float			m_flNearClipMax;
+	#ifdef Far_Clipping
+	float           m_flFarClipMin;
+    float           m_flFarClipMax;
+	#endif
 
 private:
 	CSimpleEmitter( const CSimpleEmitter & ); // not defined, not accessible

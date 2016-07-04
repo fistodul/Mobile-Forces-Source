@@ -3,6 +3,7 @@
 // Purpose:		Base combat character with no AI
 //
 //=====================================================================================//
+#ifdef HL2_EPISODIC
 
 #include "ai_baseactor.h"
 #include "npc_playercompanion.h"
@@ -287,3 +288,4 @@ private:
 	DECLARE_DATADESC();
 	DEFINE_CUSTOM_AI;
 };
+#endif

@@ -8,6 +8,8 @@
 
 #include "cbase.h"
 
+#ifdef SSE
+
 #include "vgui/iinput.h"
 #include "vgui_controls/controls.h"
 
@@ -422,3 +424,4 @@ int SEditModelRender::MaterialPicker( char ***szMat )
 
 	return numMaterials;
 }
+#endif

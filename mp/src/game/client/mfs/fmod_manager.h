@@ -1,5 +1,8 @@
 #ifndef FMOD_MANAGER_H
 #define FMOD_MANAGER_H
+
+#ifdef FMOD
+
 #ifdef _WIN32
 #pragma once
 #endif
@@ -37,4 +40,6 @@ private:
  
 extern CFMODManager* FMODManager();
  
+#endif
+
 #endif //FMOD_MANAGER_H

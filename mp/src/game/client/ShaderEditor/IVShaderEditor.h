@@ -1,6 +1,8 @@
 #ifndef IV_SHADEREDITOR
 #define IV_SHADEREDITOR
 
+#ifdef SSE
+
 #ifdef _WIN32
 #pragma once
 #endif // _WIN32
@@ -124,5 +126,7 @@ extern IVShaderEditor *shaderEdit;
 #endif // NOT SHADER_EDITOR_DLL
 
 #endif // NOT PROCSHADER_DLL
+
+#endif
 
 #endif // NOT IV_SHADEREDITOR

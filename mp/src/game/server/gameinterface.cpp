@@ -89,7 +89,7 @@
 #include "tier3/tier3.h"
 #include "serverbenchmark_base.h"
 #include "querycache.h"
-
+//#include "mfs/MyBlockHandler.h"
 
 #ifdef TF_DLL
 #include "gc_clientsystem.h"
@@ -689,6 +689,7 @@ bool CServerGameDLL::DLLInit( CreateInterfaceFn appSystemFactory,
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetCommentarySaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetEventQueueSaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->AddBlockHandler( GetAchievementSaveRestoreBlockHandler() );
+	//g_pGameSaveRestoreBlockSet->AddBlockHandler( GetMyBlockHandlerSaveRestoreBlockHandler() );
 
 	// The string system must init first + shutdown last
 	IGameSystem::Add( GameStringSystem() );
@@ -780,6 +781,7 @@ void CServerGameDLL::DLLShutdown( void )
 	g_pGameSaveRestoreBlockSet->RemoveBlockHandler( GetAISaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->RemoveBlockHandler( GetPhysSaveRestoreBlockHandler() );
 	g_pGameSaveRestoreBlockSet->RemoveBlockHandler( GetEntitySaveRestoreBlockHandler() );
+	//g_pGameSaveRestoreBlockSet->RemoveBlockHandler( GetMyBlockHandlerSaveRestoreBlockHandler() );
 
 	char *pFilename = g_TextStatsMgr.GetStatsFilename();
 	if ( !pFilename || !pFilename[0] )
@@ -813,6 +815,9 @@ void CServerGameDLL::DLLShutdown( void )
 #endif	
 
 	gameeventmanager = NULL;
+	
+	//SteamClient()->ReleaseUser( GetHSteamPipe(), GetHSteamUser() );
+	//SteamClient()->BReleaseSteamPipe( GetHSteamPipe() );
 	
 	DisconnectTier3Libraries();
 	DisconnectTier2Libraries();

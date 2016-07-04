@@ -71,6 +71,10 @@ int g_nKillCamTarget2 = 0;
 
 extern ConVar mp_forcecamera; // in gamevars_shared.h
 
+#ifdef af
+extern void FormatViewModelAttachment( Vector &vOrigin, bool bInverse );
+#endif
+
 #ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 	extern int m_iClientClass;
 #endif //SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
@@ -142,6 +146,9 @@ void RecvProxy_ObserverMode  ( const CRecvProxyData *pData, void *pStruct, void 
 
 	BEGIN_RECV_TABLE_NOBASE(CPlayerState, DT_PlayerState)
 		RecvPropInt		(RECVINFO(deadflag)),
+#ifdef FP_Fix
+		RecvPropQAngles (RECVINFO(v_angle)),
+#endif
 	END_RECV_TABLE()
 
 
@@ -1242,10 +1249,20 @@ void C_BasePlayer::UpdateFlashlight()
 
 			m_pFlashlight->TurnOn();
 		}
-
 		Vector vecForward, vecRight, vecUp;
 		EyeVectors( &vecForward, &vecRight, &vecUp );
 
+	#ifdef af
+		QAngle angLightDir;
+		Vector vecLightOrigin, vecForward, vecRight, vecUp;
+
+
+		GetViewModel()->GetAttachment( 1, vecLightOrigin, angLightDir );
+
+		::FormatViewModelAttachment( vecLightOrigin, true );
+		AngleVectors( angLightDir, &vecForward, &vecRight, &vecUp );
+	#endif
+		
 		// Update the light with the new position and direction.		
 		m_pFlashlight->UpdateLight( EyePosition(), vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
 	}

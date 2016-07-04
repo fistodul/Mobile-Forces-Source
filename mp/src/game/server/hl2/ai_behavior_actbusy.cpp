@@ -121,6 +121,7 @@ void CActBusyAnimData::LevelInitPostEntity( void )
 void CActBusyAnimData::LevelShutdownPostEntity( void )
 {
 	m_ActBusyAnims.Purge();
+	//pKVAnimData->deleteThis();
 }
 
 //-----------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 #define SHEDITMRENDER_H
 
 #include "cbase.h"
+#ifdef SSE
 #include "ShaderEditor/ISEdit_ModelRender.h"
 
 class C_BaseFlex_OverrideLod;
@@ -45,4 +46,5 @@ private:
 	int m_iNumPoseParams;
 };
 
+#endif
 #endif

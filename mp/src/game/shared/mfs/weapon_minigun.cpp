@@ -60,9 +60,9 @@ class CWeaponMiniGun : public CBaseHL2MPCombatWeapon
  
     //modify this part to control the general accuracy of the gun
  
-    virtual const Vector& GetBulletSpread( void )
+    /*virtual const Vector& GetBulletSpread( void )
     {
-      Vector cone = VECTOR_CONE_1DEGREES;
+		Vector cone = VECTOR_CONE_1DEGREES;
  
       // if you don't need stance and health dependent accuracy, you can just remove this.   
       if ( m_iStance == E_DUCK )
@@ -81,22 +81,22 @@ class CWeaponMiniGun : public CBaseHL2MPCombatWeapon
         { cone = VECTOR_CONE_10DEGREES;}
  
       //This part simlates recoil. Each successive shot will have increased spread.
-      /*if ( m_iBurst != BURST )
+      if ( m_iBurst != BURST )
       {
         for (int i = m_iBurst; i < BURST; i++)
         {
           cone += VECTOR_CONE_1DEGREES;
         }
-      }*/
+      }
  
       //This part is the zoom modifier. If in zoom, lower the bullet spread.
-      /*if (m_bInZoom)
+      if (m_bInZoom)
       {
         cone -= VECTOR_CONE_1DEGREES;
-      }*/
+      }
  
-      return cone;
-    }
+      //return cone;
+    }*/
  
     //void ToggleZoom( void );
     //void CheckZoomToggle( void );
@@ -166,7 +166,7 @@ CWeaponMiniGun::CWeaponMiniGun( void )
   m_bFiresUnderwater = false;
   m_bDelayedAttack = false;
   m_flDelayedAttackTime = 0.0f;
-  int ROF = def_ROF;
+  //int ROF = def_ROF;
   #ifdef Weighted_Weaponry
   Minigun_Weight = 5;
   #endif
@@ -423,7 +423,7 @@ void CWeaponMiniGun::GetStance( void )
   if ( pPlayer == NULL )
     { return; }
  
-  m_iStance= E_STAND;
+ /* m_iStance= E_STAND;
  
   // movement based stance
   if ( pPlayer->m_nButtons & IN_DUCK)     
@@ -447,5 +447,5 @@ void CWeaponMiniGun::GetStance( void )
   if ( pPlayer->GetHealth()<25)           
     { m_iStance= E_INJURED;}
   if ( pPlayer->GetHealth()<10)           
-    { m_iStance= E_DYING;}
+    { m_iStance= E_DYING;}*/
 }

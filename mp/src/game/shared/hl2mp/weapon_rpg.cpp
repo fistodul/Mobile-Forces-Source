@@ -153,7 +153,7 @@ class CWeaponRPG;
 //-----------------------------------------------------------------------------
 CMissile::CMissile()
 {
-	m_hRocketTrail = NULL
+	m_hRocketTrail = NULL;
 	
 	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	m_bCreateDangerSounds = false; //

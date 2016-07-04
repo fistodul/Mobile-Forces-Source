@@ -1149,7 +1149,8 @@ CAmmoDef *GetAmmoDef()
 			def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			0,			0,			5,			0,							0 );
 		#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 			def.AddAmmoType("slam",				DMG_BURN,					TRACER_NONE,			0,			0,			6,			0,							0 );
-			def.AddAmmoType("healthkit",				DMG_GENERIC,					TRACER_NONE,			0,			0,			sk_healthkit_max,			0,							0 );
+			def.AddAmmoType("healthkit",		DMG_GENERIC,				TRACER_NONE,			0,			0,			"sk_healthkit_max",			0,							0 );
+			def.AddAmmoType("Rifle", DMG_BULLET, TRACER_LINE_AND_WHIZ, 0, 0, 500, BULLET_IMPULSE(200, 1225), 0 );
 	}
 
 	return &def;

@@ -9,9 +9,13 @@
 #include "igameevents.h"
 #include "c_team_objectiveresource.h"
 
+#ifdef CLIENT_DLL
+#include "teamplayroundbased_gamerules.h"
+#endif
+
 #ifdef TF_CLIENT_DLL
 #include "tf_shareddefs.h"
-#include "teamplayroundbased_gamerules.h"
+//#include "teamplayroundbased_gamerules.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!

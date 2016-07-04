@@ -136,7 +136,6 @@ void CAI_AllyManager::CountAllies( int *pTotal, int *pMedics )
 		const Vector &	vPlayerPos = UTIL_GetLocalPlayer()->GetAbsOrigin();
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
-	const Vector &	vPlayerPos = UTIL_GetLocalPlayer()->GetAbsOrigin();
 	CAI_BaseNPC **	ppAIs 	= g_AI_Manager.AccessAIs();
 	int 			nAIs 	= g_AI_Manager.NumAIs();
 

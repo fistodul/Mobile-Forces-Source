@@ -1168,7 +1168,7 @@ bool CBaseCombatWeapon::IsViewModelSequenceFinished( void ) const
 	CBaseViewModel *vm = pOwner->GetViewModel( m_nViewModelIndex );
 	if ( vm == NULL )
 	{
-		Assert( false );
+		Assert( false ); //comment this out?
 		return false;
 	}
 

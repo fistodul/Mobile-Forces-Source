@@ -617,7 +617,7 @@ bool CNPC_Zombine::AllowedToSprint( void )
 	int iChance = SPRINT_CHANCE_VALUE;
 
 	//Secobmod FixMe ?? also changed to HL2MPRules
-	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( AI_GetSinglePlayer() );
+	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( UTIL_GetNearestPlayer(GetAbsOrigin() );
 	//CHL2MP_Player *pPlayer = dynamic_cast<CHL2MP_Player *>( UTIL_GetNearestPlayer(GetAbsOrigin() );
 
 	if ( pPlayer )

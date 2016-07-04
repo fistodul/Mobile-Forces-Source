@@ -225,6 +225,11 @@ CSimpleEmitter::CSimpleEmitter( const char *pDebugName ) : CParticleEffect( pDeb
 {
 	m_flNearClipMin	= 16.0f;
 	m_flNearClipMax	= 64.0f;
+	
+	#ifdef Far_Clipping
+	m_flFarClipMin = 65536;
+    m_flFarClipMax = 65536;
+	#endif
 }
 
 
@@ -250,6 +255,18 @@ void CSimpleEmitter::SetNearClip( float nearClipMin, float nearClipMax )
 	m_flNearClipMax = nearClipMax;
 }
 
+#ifdef Far_Clipping
+//-----------------------------------------------------------------------------
+// Purpose: Set the internal far clip range for this particle system
+// Input  : farClipMin - beginning of clip range
+//          farClipMax - end of clip range
+//-----------------------------------------------------------------------------
+void CSimpleEmitter::SetFarClip( float farClipMin, float farClipMax )
+{ 
+    m_flFarClipMin = farClipMin;
+    m_flFarClipMax = farClipMax;
+}
+#endif
 
 SimpleParticle*	CSimpleEmitter::AddSimpleParticle( 
 	PMaterialHandle hMaterial, 
@@ -400,7 +417,11 @@ void CSimpleEmitter::RenderParticles( CParticleRenderIterator *pIterator )
 			pIterator->GetParticleDraw(),
 			tPos,
 			UpdateColor( pParticle ),
+		#ifdef Far_Clipping
+			UpdateAlpha(pParticle) * GetAlphaDistanceFade(tPos, m_flNearClipMin, m_flNearClipMax, m_flFarClipMin, m_flFarClipMax),
+		#else
 			UpdateAlpha( pParticle ) * GetAlphaDistanceFade( tPos, m_flNearClipMin, m_flNearClipMax ),
+		#endif
 			UpdateScale( pParticle ),
 			pParticle->m_flRoll
 			);

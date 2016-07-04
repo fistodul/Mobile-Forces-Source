@@ -20,7 +20,7 @@
 #include "weapon_hl2mpbase_machinegun.h"
 
 #ifdef CLIENT_DLL
-#define CWeaponSMG1 C_WeaponSMG1
+#define CWeaponSMG3 C_WeaponSMG3
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -29,12 +29,12 @@
 #define SMG1_GRENADE_DAMAGE 100.0f
 #define SMG1_GRENADE_RADIUS 250.0f
 
-class CWeaponSMG1 : public CHL2MPMachineGun
+class CWeaponSMG3 : public CHL2MPMachineGun
 {
 public:
-	DECLARE_CLASS( CWeaponSMG1, CHL2MPMachineGun );
+	DECLARE_CLASS( CWeaponSMG3, CHL2MPMachineGun );
 
-	CWeaponSMG1();
+	CWeaponSMG3();
 
 	DECLARE_NETWORKCLASS(); 
 	DECLARE_PREDICTABLE();
@@ -77,22 +77,22 @@ protected:
 	float	m_flNextGrenadeCheck;
 	
 private:
-	CWeaponSMG1( const CWeaponSMG1 & );
+	CWeaponSMG3( const CWeaponSMG3 & );
 };
 
-IMPLEMENT_NETWORKCLASS_ALIASED( WeaponSMG1, DT_WeaponSMG1 )
+IMPLEMENT_NETWORKCLASS_ALIASED( WeaponSMG3, DT_WeaponSMG3 )
 
-BEGIN_NETWORK_TABLE( CWeaponSMG1, DT_WeaponSMG1 )
+BEGIN_NETWORK_TABLE( CWeaponSMG3, DT_WeaponSMG3 )
 END_NETWORK_TABLE()
 
-BEGIN_PREDICTION_DATA( CWeaponSMG1 )
+BEGIN_PREDICTION_DATA( CWeaponSMG3 )
 END_PREDICTION_DATA()
 
-LINK_ENTITY_TO_CLASS( weapon_smg1, CWeaponSMG1 );
+LINK_ENTITY_TO_CLASS( weapon_smg1, CWeaponSMG3 );
 PRECACHE_WEAPON_REGISTER(weapon_smg1);
 
 #ifndef CLIENT_DLL
-acttable_t	CWeaponSMG1::m_acttable[] = 
+acttable_t	CWeaponSMG3::m_acttable[] = 
 {
 	{ ACT_HL2MP_IDLE,					ACT_HL2MP_IDLE_SMG1,					false },
 	{ ACT_HL2MP_RUN,					ACT_HL2MP_RUN_SMG1,						false },
@@ -176,11 +176,11 @@ acttable_t	CWeaponSMG1::m_acttable[] =
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
 };
 
-IMPLEMENT_ACTTABLE(CWeaponSMG1);
+IMPLEMENT_ACTTABLE(CWeaponSMG3);
 #endif
 
 //=========================================================
-CWeaponSMG1::CWeaponSMG1( )
+CWeaponSMG3::CWeaponSMG3( )
 {
 	m_fMinRange1		= 0;// No minimum range. 
 	m_fMaxRange1		= 1400;
@@ -191,7 +191,7 @@ CWeaponSMG1::CWeaponSMG1( )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, Vector &vecShootOrigin, Vector &vecShootDir )
+void CWeaponSMG3::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, Vector &vecShootOrigin, Vector &vecShootDir )
 {
 	// FIXME: use the returned number of bullets to account for >10hz firerate
 	WeaponSoundRealtime( SINGLE_NPC );
@@ -207,7 +207,7 @@ void CWeaponSMG1::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, Vector 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::Operator_ForceNPCFire( CBaseCombatCharacter *pOperator, bool bSecondary )
+void CWeaponSMG3::Operator_ForceNPCFire( CBaseCombatCharacter *pOperator, bool bSecondary )
 {
 	// Ensure we have enough rounds in the clip
 	m_iClip1++;
@@ -222,7 +222,7 @@ void CWeaponSMG1::Operator_ForceNPCFire( CBaseCombatCharacter *pOperator, bool b
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
+void CWeaponSMG3::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator )
 {
 	switch( pEvent->event )
 	{
@@ -283,7 +283,7 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::Precache( void )
+void CWeaponSMG3::Precache( void )
 {
 #ifndef CLIENT_DLL
 	UTIL_PrecacheOther("grenade_ar2");
@@ -295,7 +295,7 @@ void CWeaponSMG1::Precache( void )
 //-----------------------------------------------------------------------------
 // Purpose: Give this weapon longer range when wielded by an ally NPC.
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::Equip( CBaseCombatCharacter *pOwner )
+void CWeaponSMG3::Equip( CBaseCombatCharacter *pOwner )
 {
 	m_fMaxRange1 = 1400;
 
@@ -306,7 +306,7 @@ void CWeaponSMG1::Equip( CBaseCombatCharacter *pOwner )
 // Purpose: 
 // Output : Activity
 //-----------------------------------------------------------------------------
-Activity CWeaponSMG1::GetPrimaryAttackActivity( void )
+Activity CWeaponSMG3::GetPrimaryAttackActivity( void )
 {
 	if ( m_nShotsFired < 2 )
 		return ACT_VM_PRIMARYATTACK;
@@ -322,7 +322,7 @@ Activity CWeaponSMG1::GetPrimaryAttackActivity( void )
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CWeaponSMG1::Reload( void )
+bool CWeaponSMG3::Reload( void )
 {
 	bool fRet;
 	float fCacheTime = m_flNextSecondaryAttack;
@@ -344,7 +344,7 @@ bool CWeaponSMG1::Reload( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::AddViewKick( void )
+void CWeaponSMG3::AddViewKick( void )
 {
 	#define	EASY_DAMPEN			0.5f
 	#define	MAX_VERTICAL_KICK	1.0f	//Degrees
@@ -362,7 +362,7 @@ void CWeaponSMG1::AddViewKick( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponSMG1::SecondaryAttack( void )
+void CWeaponSMG3::SecondaryAttack( void )
 {
 	// Only the player fires this way so we can cast
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
@@ -428,7 +428,7 @@ void CWeaponSMG1::SecondaryAttack( void )
 }
 
 //-----------------------------------------------------------------------------
-const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
+const WeaponProficiencyInfo_t *CWeaponSMG3::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{

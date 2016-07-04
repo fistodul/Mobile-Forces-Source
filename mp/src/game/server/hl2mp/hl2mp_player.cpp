@@ -966,11 +966,20 @@ bool CHL2MP_Player::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, co
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI*/
 
 	// If this entity hasn't been transmitted to us and acked, then don't bother lag compensating it.
-	if ( pEntityTransmitBits && !pEntityTransmitBits->Get( pPlayer->entindex() ) )
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+	if ( pEntityTransmitBits && !pEntityTransmitBits->Get( pEntity->entindex() ) )
+#else
+	if (pEntityTransmitBits && !pEntityTransmitBits->Get(pPlayer->entindex()))
+#endif
 		return false;
 
 	const Vector &vMyOrigin = GetAbsOrigin();
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
 	const Vector &vHisOrigin = pPlayer->GetAbsOrigin();
+#else
+	const Vector &vHisOrigin = pPlayer->GetAbsOrigin();
+#endif
 
 	// get max distance player could have moved within max lag compensation time, 
 	// multiply by 1.5 to to avoid "dead zones"  (sqrt(2) would be the exact value)

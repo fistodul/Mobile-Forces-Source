@@ -548,16 +548,16 @@ bool CWeaponKnife::GetStunState( void )
 //-----------------------------------------------------------------------------
 // Purpose: Get the attachment point on a viewmodel that a base weapon is using
 //-----------------------------------------------------------------------------
-bool UTIL_GetWeaponAttachment( C_BaseCombatWeapon *pWeapon, int attachmentID, Vector &absOrigin, QAngle &absAngles )
+bool UTIL_GetWeaponAttachmenta( C_BaseCombatWeapon *pWeapona, int attachmentID, Vector &absOrigin, QAngle &absAngles )
 {
 	// This is already correct in third-person
-	if ( pWeapon && pWeapon->ShouldDrawUsingViewModel() == false )
+	if ( pWeapona && pWeapona->ShouldDrawUsingViewModel() == false )
 	{
-		return pWeapon->GetAttachment( attachmentID, absOrigin, absAngles );
+		return pWeapona->GetAttachment( attachmentID, absOrigin, absAngles );
 	}
 
 	// Otherwise we need to translate the attachment to the viewmodel's version and reformat it
-	CBasePlayer *pOwner = ToBasePlayer( pWeapon->GetOwner() );
+	CBasePlayer *pOwner = ToBasePlayer( pWeapona->GetOwner() );
 	
 	if ( pOwner != NULL )
 	{
@@ -666,7 +666,7 @@ void C_WeaponKnife::ClientThink( void )
 
 			int attachment = random->RandomInt( 0, 15 );
 
-			UTIL_GetWeaponAttachment( this, attachment, vecOrigin, vecAngles );
+			UTIL_GetWeaponAttachmenta( this, attachment, vecOrigin, vecAngles );
 			::FormatViewModelAttachment( vecOrigin, false );
 
 			CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
@@ -772,7 +772,7 @@ void C_WeaponKnife::DrawThirdPersonEffects( void )
 	}
 	
 	// Draw an all encompassing glow around the entire head
-	UTIL_GetWeaponAttachment( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
+	UTIL_GetWeaponAttachmenta( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
 	DrawHalo( pMaterial, vecOrigin, scale, color );
 
 	if ( InSwing() )
@@ -784,7 +784,7 @@ void C_WeaponKnife::DrawThirdPersonEffects( void )
 		scale = random->RandomFloat( 4.0f, 6.0f );
 
 		// Draw an all encompassing glow around the entire head
-		UTIL_GetWeaponAttachment( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
+		UTIL_GetWeaponAttachmenta( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
 		DrawHalo( pMaterial, vecOrigin, scale, color );
 
 		// Update our effects
@@ -871,7 +871,7 @@ void C_WeaponKnife::DrawFirstPersonEffects( void )
 	if ( color[0] > 0.0f )
 	{
 		// Draw an all encompassing glow around the entire head
-		UTIL_GetWeaponAttachment( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
+		UTIL_GetWeaponAttachmenta( this, m_BeamCenterAttachment, vecOrigin, vecAngles );
 		DrawHalo( pMaterial, vecOrigin, scale, color );
 	}
 
@@ -891,7 +891,7 @@ void C_WeaponKnife::DrawFirstPersonEffects( void )
 
 		if ( color[0] > 0.0f )
 		{
-			UTIL_GetWeaponAttachment( this, i, vecOrigin, vecAngles );
+			UTIL_GetWeaponAttachmenta( this, i, vecOrigin, vecAngles );
 			DrawHalo( pMaterial, vecOrigin, scale, color );
 		}
 	}

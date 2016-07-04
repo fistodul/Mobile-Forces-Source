@@ -13,7 +13,7 @@
 // Ready restart
 ConVar mp_readyrestart(
 							"mp_readyrestart", 
-							"0", 
+							"1", 
 							FCVAR_GAMEDLL,
 							"If non-zero, game will restart once each player gives the ready signal" );
 

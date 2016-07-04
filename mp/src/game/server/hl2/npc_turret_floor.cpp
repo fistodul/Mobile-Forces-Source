@@ -243,7 +243,6 @@ void CNPC_FloorTurret::Precache( void )
 	#else
 	pModelName = ( pModelName && pModelName[ 0 ] != '\0' ) ? pModelName : FLOOR_TURRET_MODEL;
 	PrecacheModel( pModelName );
-	}
 	#endif //SecobMod__ENABLE_PORTAL_ITEMS
 	
 	

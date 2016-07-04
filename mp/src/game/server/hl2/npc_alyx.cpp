@@ -10,6 +10,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifndef HL2_EPISODIC
 #include "npcevent.h"
 #include "ai_basenpc.h"
 #include "ai_hull.h"
@@ -269,4 +270,4 @@ AI_BEGIN_CUSTOM_NPC( npc_alyx, CNPC_Alyx )
 	DECLARE_ANIMEVENT( AE_ALYX_EMPTOOL_SEQUENCE )
 
 AI_END_CUSTOM_NPC()
-
+#endif

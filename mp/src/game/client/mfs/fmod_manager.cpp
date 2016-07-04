@@ -1,4 +1,7 @@
 #include "cbase.h"
+
+#ifdef FMOD
+
 #include "fmod_manager.h"
 
 using namespace FMOD;
@@ -226,3 +229,5 @@ void CFMODManager::TransitionAmbientSounds( const char* pathToFileFromSoundsFold
 	m_bShouldTransition = true;
 	m_bFadeIn = true;
 }
+
+#endif

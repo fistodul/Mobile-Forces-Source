@@ -244,6 +244,7 @@ public:
 					pkvCamera = pkvCamera->GetNextKey();
 				}
 			}
+			pkvMapCameras->deleteThis(); // sure hope this shit is supposed to be here
 
 			if ( !g_iDevShotCameraCount )
 			{

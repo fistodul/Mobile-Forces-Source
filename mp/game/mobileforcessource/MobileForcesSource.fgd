@@ -79,22 +79,6 @@
   input DisplayText(string) : "Display this message text."
 ]
 //input Use(void) : "Equip player"
-@PointClass base(Targetname) = AVIMaterial : "Material to play AVIs"
-[
-	spawnflags(Flags) = 
-	[
-		1 : "Play  movie immediately" : 0
-		2 : "Loop movie" : 1
-	]
-
-	input Play(void) : "Starts the movie."
-	input Pause(void) : "Pauses the movie."
-	input Stop(void) : "Stops the movie."
-	input AdvanceFrame(void) : "Advances a frame"
-	input SetMovie(string) : "Sets the movie to be the file"
-	TextureName(string) : "Texture name" : "" : "The name of the texture this movie will be drawn to (no leading slash)"
-	MovieName(string) : "Movie name" : "" : "The name of the movie this entity will play (absolute path)"
-]
 @PointClass base(Targetname) = my_logical_entity : "Tutorial logical entity."
 [
 	threshold(integer) : "Threshold" : 1 : "Threshold value."
@@ -166,26 +150,6 @@
 	input Task3Urgency(integer) : "Set task 3 urgency (0-4)"
 	input Task4Urgency(integer) : "Set task 4 urgency (0-4)"
 ]
-@PointClass base(Targetname) = env_flash : "Manages flash UI."
- [
-	file(string) : "File Name" : "" : "Path to flash file (e.g. flash\ui\title.swf)"
-	x(integer) : "X Position" : 0 : "Distance from the left of the screen"
-	y(integer) : "Y Position" : 0 : "Distance from the top of the screen"
-	width(integer) : "Width" : -1 : "Width. Use -1 to auto-detect"
-	height(integer) : "Height" : -1 : "Height. Use -1 to auto-detect"
-	blend(integer) : "Blending" : 1 : "Enables alpha blending (similar to photoshop's Screen blend mode), where black colors are made transparent"
- 
-	// Inputs
-	input RenderFlashMovie(void) : "Loads and renders the SWF flash movie"
-	input StopMovie(void) : "Stops any playing SWF flash movie"
-	input StartMovie(void) : "Stops any playing SWF flash movie"
- 
-	// Outputs
-	output OnFSCommand1(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand1');"
-	output OnFSCommand2(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand2');"
-	output OnFSCommand3(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand3');"
-	output OnFSCommand4(void) : "Called whenever the Flash ActionScript uses fscommand('OnFSCommand4');"
- ]
 @PointClass base(BasePropPhysics, RenderFields) studioprop() sphere(radius) = prop_sphere : "Creates a perfect sphere."
 [
 	radius(float) : "Radius" : 12 : ""
@@ -194,28 +158,9 @@
 	"Our method of multiplayer passenger vehicles."
 [
 ]
-@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_assaulter :
-	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
-	"info_player_assaulter entities may be placed in a map."
-[
-]
- 
-@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_supporter :
-	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
-	"info_player_supporter entities may be placed in a map."
-[
-]
- 
- 
-@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_medic :
-	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
-	"info_player_medic entities may be placed in a map."
-[
-]
- 
-@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_heavy :
-	"This entity indicates the position and facing direction at which the player will spawn during a player classes map. Any number of "+
-	"info_player_heavy entities may be placed in a map."
+@PointClass base(PlayerClass, Angles) studio("models/editor/playerstart.mdl") = info_player_god :
+	"This entity indicates the position and facing direction at which the god player will spawn during a god map. Any number of "+
+	"info_player_god entities may be placed in a map."
 [
 ]
  

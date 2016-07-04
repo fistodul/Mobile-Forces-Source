@@ -81,7 +81,7 @@
 // Projective textures
 #include "C_Env_Projected_Texture.h"
 
-#ifdef SOURCE_2013 //sure hope this aint defined even without my define
+#ifdef SSE
 #include "ShaderEditor/ShaderEditorSystem.h"
 #endif
 
@@ -1367,7 +1367,7 @@ void CViewRender::ViewDrawScene( bool bDrew3dSkybox, SkyboxVisibility_t nSkyboxV
 
 	DrawWorldAndEntities( drawSkybox, view, nClearFlags, pCustomVisibility );
 	
-	#ifdef SOURCE_2013
+	#ifdef SSE
 	VisibleFogVolumeInfo_t fogVolumeInfo;
 	render->GetVisibleFogVolume( view.origin, &fogVolumeInfo );
 	WaterRenderInfo_t info;
@@ -2001,7 +2001,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		if ( ( bDrew3dSkybox = pSkyView->Setup( view, &nClearFlags, &nSkyboxVisible ) ) != false )
 		{
 			AddViewToScene( pSkyView );
-			#ifdef SOURCE_2013
+			#ifdef SSE
 			g_ShaderEditorSystem->UpdateSkymask();
 			#endif
 		}
@@ -2061,7 +2061,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		// Now actually draw the viewmodel
 		DrawViewModels( view, whatToDraw & RENDERVIEW_DRAWVIEWMODEL );
 		
-		#ifdef SOURCE_2013
+		#ifdef SSE
 		g_ShaderEditorSystem->UpdateSkymask( bDrew3dSkybox );
 		#endif
 
@@ -2102,7 +2102,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 			pRenderContext.SafeRelease();
 		}
 		
-		#ifdef SOURCE_2013
+		#ifdef SSE
 		g_ShaderEditorSystem->CustomPostRender();
 		#endif
 
@@ -4017,10 +4017,11 @@ void CRendering3dView::DrawOpaqueRenderables( ERenderDepthMode DepthMode )
 			RopeManager()->DrawRenderCache( bShadowDepth );
 			g_pParticleSystemMgr->DrawRenderCache( bShadowDepth );
 			#ifdef Grass_Clusters
-			#ifdef SOURCE_2013
+			//#ifdef SOURCE_2013
 			CGrassClusterManager::GetInstance()->RenderClusters( DepthMode == DEPTH_MODE_SHADOW );
-			#else
+			/*#else
 			CGrassClusterManager::GetInstance()->RenderClusters( bShadowDepth );
+			#endif*/
 			#endif
 
 			return;

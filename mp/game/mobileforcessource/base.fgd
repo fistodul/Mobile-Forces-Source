@@ -28,6 +28,7 @@
 [
 	model(studio) : "World Model"
 	skin(integer) : "Skin" : 0 : "Some models have multiple versions of their textures, called skins. Set this to a number other than 0 to use that skin instead of the default."
+	modelscale(float) : "Model Scale" : "1.0" : "A multiplier for the size of the model."
 
 	disableshadows(choices) : "Disable Shadows" : 0 : "Used to disable dynamic shadows on this entity." =
 	[
@@ -40,6 +41,7 @@
 	input DisableShadow(void) : "Turn shadow off."
 	input EnableShadow(void) : "Turn shadow on."
 	input AlternativeSorting(bool) : "Used to attempt to fix sorting problems when rendering. True activates, false deactivates"
+	input SetModelScale(string) : "Takes two values separated by a space. The first is the target model scale. The second value is the number of seconds the change in scale will be spread over."
 
 	// Outputs
 	output OnIgnite(void) : "Fired when this object catches fire."
@@ -808,6 +810,9 @@
 	output OnStartTouchAll(void) : "Fired when an entity starts touching this trigger, and no other entities are touching it. Only entities that passed this trigger's filters are considered."
 	output OnEndTouch(void) : "Fired when an entity stops touching this trigger. Only entities that passed this trigger's filters will cause this output to fire."
 	output OnEndTouchAll(void) : "Fires when an entity stops touching this trigger, and no other entities are touching it. Only entities that passed this trigger's filters are considered."
+
+	// Inputs
+	input DisableAndEndTouch(void) : "Disables this trigger and calls EndTouch on all currently-touching entities."
 ]
 
 @BaseClass = worldbase
@@ -2439,6 +2444,12 @@
 	[
 		1 :  "Start On" : 1
 		2 :  "No Dynamic Light" : 1
+	]
+
+	IgnoreSolid(choices) : "Ignore Solid" : 0 : "If set, this spotlight won't trace for solids." =
+	[
+		0 : "No"
+		1 : "Yes"
 	]
 
 	spotlightlength(integer) : "Spotlight Length" : 500 : "Length of the spotlight beam."
@@ -5315,6 +5326,13 @@
 		0 : "No"
 		1 : "Yes"
 	]
+	generatelightmaps(choices) : "Generate (and use) lightmaps for this static prop" : 0 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	lightmapresolutionx(integer) : "Lightmap Resolution X" : 32 : "The resolution of the generated lightmap in the X (or U) direction (only used if Generate Lightmaps is Yes) "
+	lightmapresolutiony(integer) : "Lightmap Resolution Y" : 32 : "The resolution of the generated lightmap in the Y (or V) direction (only used if Generate Lightmaps is Yes) "
 ]
 
 @BaseClass = BaseFadeProp
@@ -6217,6 +6235,13 @@
 	]
 ]
 
+@SolidClass base(Trigger) = trigger_teleport_relative : 
+	"A trigger volume that teleports entities that touch it. Entities are teleported by Offset from their current position. Useful to get " +
+	"objects out of situations where levels or entities suddenly appear interseting with them."
+[
+	teleportoffset(vector) : "Offset (X Y Z)" : "0 0 0" : "The offset (in World-Space Coordinates X Y Z) to teleport the entity when the trigger is touched."
+]
+
 @SolidClass base(Targetname) = trigger_transition : 
 	"A volume that's used to control which entities go through the level transition. Create one or more trigger_transitions and "+
 	"give them the same name as the changelevel landmark. Any entities within the trigger_transition(s) will go to the next map."+
@@ -6542,4 +6567,13 @@
 	parm8(instance_parm) : "Parm" : : "This is a parameter.  It goes in the form of $variable type."
 	parm9(instance_parm) : "Parm" : : "This is a parameter.  It goes in the form of $variable type."
 	parm10(instance_parm) : "Parm" : : "This is a parameter.  It goes in the form of $variable type."
+]
+
+@SolidClass base(Trigger) = trigger_apply_impulse : 
+	"A trigger that adds impulse to touching entities."
+[
+	impulse_dir(angle) : "Impulse Direction (Pitch Yaw Roll)" : "0 0 0" : "Angles indicating the direction to push touching entities."
+	force(float) : "Impulse Force" : "300" : ""
+
+	input ApplyImpulse(void)  : "Apply impulse to touching entities"
 ]

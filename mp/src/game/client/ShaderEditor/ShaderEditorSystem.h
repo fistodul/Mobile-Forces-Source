@@ -3,6 +3,8 @@
 
 #include "cbase.h"
 
+#ifdef SSE
+
 #include "datacache/imdlcache.h"
 
 #include "iviewrender.h"
@@ -56,4 +58,5 @@ private:
 extern ShaderEditorHandler *g_ShaderEditorSystem;
 
 
+#endif
 #endif

@@ -10,36 +10,29 @@
 #define HL2_EPISODIC //Choose Episode 2 code for preference. Disabling this means you must exclude all episodic cpp/h files from your project.
 
 /*****************/
-/* PP.			*/
-/*****************/
-#define PP // Project Purity specific Changes()
-
-/*****************/
 /* MFS.			*/
 /*****************/
-//Filip: I honestly dont know why would someone Disable General Fixes so why da fck are fix defines even here xD
+//#define FMOD // http://www.fmod.org
 #define MFS // MF Specific changes :P(Not having the RPG Laser guiding turned on by default, beeping tripmines :P, Exploding on touch tripmines, weighted weaponry, Exploding_Vehicles, Loadouts, Picking Teams)
-#define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
-#define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
-#define Rotational_Gravity_Gun // Well Basically it lets u rotate shit with the gravity gun :P
-#define DARKEN_SCREEN_ON_PLAYER_DEATH // It basically makes everything darker after u die :P(wow realistic xD)
-#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
+//#define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
+//#define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
+//#define Rotational_Gravity_Gun // Well Basically it lets u rotate shit with the gravity gun :P
+//#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
-#define SOURCE_2013 // Some shit for source shader editor XD... Do change to 2007 if using swarm/2007 sdk xD
+//#define SSE // Source shader editor
 //#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
-//#define Testing // SuperPowers xD
-//#define Auto-Testing // Instead of Needing to manually powerup(call the SuperPowers function and everything connected to it) this will automatically call it as a part of PostThink
-#define hitmarkers // it enables battlefield style hitmarkers :P
+//#define hitmarkers // it enables battlefield style hitmarkers :P
 #define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them
-#define TaskList // lets u use a vgui task list :P
-#define cloak // allows use of a magical cloak xD
+//#define TaskList // lets u use a vgui task list :P
+//#define cloak // allows use of a magical cloak xD
 #define Far_Clipping // fades particles when u get far away from them
-#define viewmodelshadow // by default Shadow receiving is disabled on various types of rendables... this makes the shadows cast upon the view model
-#define af // add's flashlights on viewmodels, well it kind of makes a visible change so i guess it rly should be a define XD
+#define viewmodelshadow // https://developer.valvesoftware.com/wiki/Env_projectedtexture/fixes
+//#define af // add's flashlights on viewmodels, http://forums.steampowered.com/forums/showthread.php?t=848105
 #define css_muzzle_tweaks // https://developer.valvesoftware.com/wiki/Importing_CSS_Weapons_Into_HL2
 //#define Realistic_Rain_Splashes // https://developer.valvesoftware.com/wiki/Rain_splashes
-#define blah // basically i was bored so i did this xd
 #define MFS_MOTD // if map briefings are enabled this will load the MOTD if no map briefing is found
+//#define Dynamic_shadow // https://developer.valvesoftware.com/wiki/Dynamic_RTT_shadow_angles_in_Source_2007 (is this already present in 2013?)
+//#define FP_Fix // https://developer.valvesoftware.com/wiki/First_Person_Fix
 
 /*****************/
 /* Base Defines. */
@@ -120,7 +113,7 @@
 /* Experimental Enhancements. */
 /******************************/
 #define SecobMod__ENABLE_IN_TESTING_ITEMS //Enables buggy test items again, such as the Portal gun. Make sure you have Portal installed, and the portal items line enabled.
-#define SecobMod__ENABLE_PORTAL_ITEMS //Currently it likes to crash alot!.
+//#define SecobMod__ENABLE_PORTAL_ITEMS //Currently it likes to crash alot!.
 
 /******************/
 /* SDK Bug Fixes. */

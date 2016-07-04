@@ -69,6 +69,13 @@ DESCRIPTION SERVER_OPTIONS
 		{ "0" }
 	}
 
+	"mp_teams_unbalance_limit"
+	{
+		"#MFS_Balance"
+		{ NUMBER 0 -1 }
+		{ "2" }
+	}
+	
 	"mp_timelimit"
 	{
 		"#Valve_Time_Limit"
@@ -196,7 +203,7 @@ DESCRIPTION SERVER_OPTIONS
 			"Epic Server" "600"
 			"Insane" "750"
 		}
-		{ "300" }
+		{ "250" }
 	}
 
 	"rate"
@@ -235,6 +242,18 @@ VERSION 1.0
 
 DESCRIPTION INFO_OPTIONS
 {
+	"cl_team"
+	{
+		"preffered team"
+		{
+		LIST
+		"Random" "default"
+		"Blue" "blue"
+		"Red" "red"
+		}
+		{ "0" }
+		
+	}
 	"r_drawviewmodel" //the convar
 	{
 		"Draw the viewmodel"  //the description
@@ -251,7 +270,8 @@ DESCRIPTION INFO_OPTIONS
 	
 	"mat_dxlevel"
 	{
-	"mat_dxlevel, advanced users only pls xD(default value is 90)"
+		"mat_dxlevel, advanced users only pls xD(default value is 90)"
+		{
 		LIST
 		"70" "70"
 		"80" "80"
@@ -259,6 +279,7 @@ DESCRIPTION INFO_OPTIONS
 		"90" "90"
 		"95" "95"
 		"98" "98"
+		}
 	}
 	
 	"mat_clipz"

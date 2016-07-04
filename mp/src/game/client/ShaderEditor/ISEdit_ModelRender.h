@@ -1,6 +1,8 @@
 #ifndef IV_SHADEREDITOR_MRENDER
 #define IV_SHADEREDITOR_MRENDER
 
+#ifdef SSE
+
 #ifdef _WIN32
 #pragma once
 #endif // _WIN32
@@ -38,4 +40,5 @@ class SEditModelRender;
 extern SEditModelRender *sEditMRender;
 #endif
 
+#endif
 #endif

@@ -48,6 +48,10 @@ private:
 	CBeam		*m_pBeam;
 	Vector		m_posOwner;
 	Vector		m_angleOwner;
+	
+	const CBaseEntity* m_pAttachedObject;
+    Vector m_vecOldPosAttachedObject;
+    QAngle m_vecOldAngAttachedObject;
 
 	DECLARE_DATADESC();
 };

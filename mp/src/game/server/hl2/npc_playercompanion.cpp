@@ -123,8 +123,8 @@ BEGIN_DATADESC( CNPC_PlayerCompanion )
 	DEFINE_INPUTFUNC( FIELD_VOID, "EnableWeaponPickup", InputEnableWeaponPickup ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "DisableWeaponPickup", InputDisableWeaponPickup ),
 
-
-#if HL2_EPISODIC
+//SecobMod
+#ifdef HL2_EPISODIC
 	DEFINE_INPUTFUNC( FIELD_VOID, "ClearAllOutputs", InputClearAllOuputs ),
 #endif
 
@@ -3695,7 +3695,7 @@ void CNPC_PlayerCompanion::InputGiveWeapon( inputdata_t &inputdata )
 	}
 }
 
-#if HL2_EPISODIC
+#ifdef HL2_EPISODIC
 //------------------------------------------------------------------------------
 // Purpose: Delete all outputs from this NPC.
 //------------------------------------------------------------------------------

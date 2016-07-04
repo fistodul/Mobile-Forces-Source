@@ -415,12 +415,12 @@ void CWeaponPHK::ThrowPHK( CBasePlayer *pPlayer )
 if ( pPlayer->GetHealth() == pPlayer->GetMaxHealth() )
 return;
 
-	/*#ifndef CLIENT_DLL
-	if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
-	{*/
+	#ifndef CLIENT_DLL
+	//if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
+	//{
 	pPlayer->TakeHealth( sk_healthkit_health.GetInt(), DMG_GENERIC );
 	//}
-	//#endif
+	#endif
 
 	m_bRedraw = true;
 

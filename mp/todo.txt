@@ -1,0 +1,93 @@
+// Important Shit:
+Vector vNearestPlayerPos = UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin())->GetAbsOrigin();
+if ( !ppAIs[i]->IsInPlayerSquad() && !UTIL_FindClientInPVS( ppAIs[i]->edict() ) && ( ( ppAIs[i]->GetAbsOrigin() - vNearestPlayerPos ).LengthSqr() > 150*12 || fabsf( ppAIs[i]->GetAbsOrigin().z - vNearestPlayerPos.z ) > 192 ) )
+{
+}
+https://developer.valvesoftware.com/wiki/Rear_View_Mirror
+// http://articles.thewavelength.net/682/
+// http://articles.thewavelength.net/710/
+// http://articles.thewavelength.net/680
+// https://developer.valvesoftware.com/wiki/Creating_an_NPC (add the troll)
+// https://developer.valvesoftware.com/wiki/VGUI_HTML_Screen_In_Orange_Box
+// https://developer.valvesoftware.com/wiki/SDK_Known_Issues_List
+// https://developer.valvesoftware.com/wiki/Duck_Jump_Fix
+// https://developer.valvesoftware.com/wiki/Adding_an_experience_system
+https://developer.valvesoftware.com/wiki/Authoring_a_Model_Entity
+https://developer.valvesoftware.com/wiki/Particle_Muzzle_Flash
+https://developer.valvesoftware.com/wiki/Rain_splashes (make particle)
+implement some stuff from al.txt as default values
+// Not so important shit XD:
+// http://forums.steampowered.com/forums/showthread.php?t=3129924
+// http://forums.steamgames.com/forums/showthread.php?t=1935224 ( https://developer.valvesoftware.com/wiki/Adding_an_inventory )
+// https://developer.valvesoftware.com/wiki/Category:Particle_System
+// https://developer.valvesoftware.com/wiki/Creating_a_Roundtimer
+// https://developer.valvesoftware.com/wiki/Interactive_Ingame_VGUI_Panels<Fixing Screen Errors(not so important cuz it might be outdated, makes stuff broken)
+// https://developer.valvesoftware.com/wiki/Resetting_the_Map
+// https://developer.valvesoftware.com/wiki/Last_Man_Standing_Gametype
+// https://developer.valvesoftware.com/wiki/Hud_AngleSplit
+// https://developer.valvesoftware.com/wiki/CHudFadingObject
+// https://developer.valvesoftware.com/wiki/CAreaPortalOneWay
+// https://developer.valvesoftware.com/wiki/Multi_phys
+// https://developer.valvesoftware.com/wiki/Manual_shotgun_pumping
+// https://developer.valvesoftware.com/wiki/Make_an_NPC_move_somewhere
+// http://forums.steampowered.com/forums/showthread.php?t=3196927
+// http://forums.steampowered.com/forums/showthread.php?t=3025423
+// https://developer.valvesoftware.com/wiki/Gibs
+// https://developer.valvesoftware.com/wiki/Models_on_VGUI_Panels
+// http://forums.steampowered.com/forums/showthread.php?t=3106997
+DrawBeamQuadratic( points[0], points[1], points[2], 12, color, scrollOffset ); <Physgun Beam? :O
+first comment out the client side beam code as it doesnt work.
+and then in
+Quote:
+CWeaponGravityGun::EffectUpdate
+add
+Quote:
+if ( distance > 39 )
+{
+CBaseEntity *pEnt = GetBeamEntity();
+CBeam *pBeam = CBeam::BeamCreate( PHYSGUN_BEAM_SPRITE, 4 );
+pBeam->PointEntInit( end, pEnt );
+pBeam->SetEndAttachment( 1 );
+pBeam->SetBrightness( 255 );
+
+if (m_glueTouching)
+{
+//pBeam->SetColor( 255, 0, 0 );
+}
+
+pBeam->RelinkBeam();
+pBeam->LiveForTime( 0.000001f );
+
+}
+Vector vecPlayerCenter = UTIL_GetLocalPlayer()->WorldSpaceCenter();
+and looking at the jeep code and the leak source code it is nearly the same so this could of been done if you copy some jeep code and shove it in the weapon code this is just a cleaner version as it was coded by Valve also its only the physgun, hopwire, CGuard and some more that are still in the source code.
+engine->GetClientSteamID(UTIL_GetCommandClient()->edict())->ConvertToUint64();
+char botname[ 64 ];
+	
+	if(steamapicontext && steamapicontext->SteamFriends() || steamapicontext->SteamUtils() || g_pGameRules->IsMultiplayer())
+	{
+		CBaseMultiplayerPlayer *Me = static_cast<CBaseMultiplayerPlayer*>(UTIL_PlayerByIndex( 1 ));
+		if(Me)
+		{
+			//CSteamID steamIDForPlayer;
+			CSteamID steamID( Me->GetSteamIDAsUInt64(), 1, steamapicontext->SteamUtils()->GetConnectedUniverse(), k_EAccountTypeIndividual );
+			Msg("%s: %i\n", UTIL_PlayerByIndex( 1 )->GetPlayerName(), Me->GetSteamIDAsUInt64());
+
+			Q_strcpy(botname, steamapicontext->SteamFriends()->GetFriendPersonaName(steamapicontext->SteamFriends()->GetFriendFromSourceByIndex(steamID, 1)));
+		}
+	}
+	if(!stricmp("",botname) || botname == NULL)
+	{
+		Q_snprintf( botname, sizeof( botname ), "Bot%02i", BotNumber );
+	}
+
+steamapicontext->SteamFriends()->GetFriendPersonaName(steamapicontext->SteamFriends()->GetFriendFromSourceByIndex(steamID, 1)));
+// Optimize the materials with
+//=>dx90_20b
+//{
+//HD shit and stuff that is targeted at matrix pc's lol
+//}
+//<dx90
+//{
+//Lower the quality to get performance xD
+//}

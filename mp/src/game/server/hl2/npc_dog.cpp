@@ -346,8 +346,6 @@ void CNPC_Dog::SetPlayerAvoidState( void )
 			CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
 		#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
-		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
-
 		if ( pLocalPlayer )
 		{
 			vWorldMins = WorldAlignMins();

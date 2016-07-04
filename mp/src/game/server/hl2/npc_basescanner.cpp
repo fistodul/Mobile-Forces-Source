@@ -1303,7 +1303,6 @@ void CNPC_BaseScanner::DiveBombSoundThink()
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI	
 	
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	if ( pPlayer )
 	{
 		Vector vecDelta;
