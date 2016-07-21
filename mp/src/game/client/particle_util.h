@@ -401,13 +401,13 @@ inline void RenderParticle_ColorSizeAngles(
 }
 
 #ifdef Far_Clipping
-// If you can find a MAX_VIEW_DISTANCE or something, maybe use that instead of 65536.
+// If you can find a MAX_VIEW_DISTANCE(cl_maxrenderable_dist 3000) or something, maybe use that instead of 65536.
 inline float GetAlphaDistanceFade(
     const Vector &pos,
     const float fadeNearMin,
     const float fadeNearMax,
-    const float fadeFarMin = 65536,
-    const float fadeFarMax = 65536)
+    const float fadeFarMin = 4096,
+    const float fadeFarMax = 4096)
 {
     if ( -pos.z < fadeNearMin || -pos.z > fadeFarMax )
     {

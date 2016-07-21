@@ -123,7 +123,6 @@ acttable_t	CWeapon_SLAM::m_acttable[] =
 IMPLEMENT_ACTTABLE(CWeapon_SLAM);
 #endif
 
-
 void CWeapon_SLAM::Spawn( )
 {
 	BaseClass::Spawn();
@@ -676,7 +675,6 @@ void CWeapon_SLAM::SLAMThink( void )
 	if ( m_flWallSwitchTime > gpGlobals->curtime )
 		 return;
 
-
 	// If not in tripmine mode we need to check to see if we are close to
 	// a wall. If we are we go into satchel_attach mode
 	CBaseCombatCharacter *pOwner  = GetOwner();
@@ -1066,4 +1064,7 @@ CWeapon_SLAM::CWeapon_SLAM(void)
 	m_bAttachTripmine		= false;
 	m_bNeedDetonatorDraw	= false;
 	m_bNeedDetonatorHolster	= false;
+	#ifdef MFS
+	//Slam_Weight= 0.5;
+	#endif
 }

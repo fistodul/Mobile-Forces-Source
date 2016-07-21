@@ -438,6 +438,32 @@ void CAPCController::TrackTarget( void )
 					m_OnFireAtTarget.Set(forward, this, this);		// tell apc to fire rockets, and what direction
 				}
 			}
+			else if (pVehicle->ClassifyPassenger(pPlayer, CLASS_PLAYER_RED) == CLASS_PLAYER_RED)
+			{
+				if (!m_bFireDelayed)
+				{
+					m_bFireDelayed = true;
+					m_flFiringDelay = gpGlobals->curtime + 1.5;	// setup delay time before we start firing
+					return;
+				}
+				if (gpGlobals->curtime > m_flFiringDelay)
+				{
+					m_OnFireAtTarget.Set(forward, this, this);		// tell apc to fire rockets, and what direction
+				}
+			}
+			else if (pVehicle->ClassifyPassenger(pPlayer, CLASS_PLAYER_BLUE) == CLASS_PLAYER_BLUE)
+			{
+				if (!m_bFireDelayed)
+				{
+					m_bFireDelayed = true;
+					m_flFiringDelay = gpGlobals->curtime + 1.5;	// setup delay time before we start firing
+					return;
+				}
+				if (gpGlobals->curtime > m_flFiringDelay)
+				{
+					m_OnFireAtTarget.Set(forward, this, this);		// tell apc to fire rockets, and what direction
+				}
+			}
 		}
 	}
 	else

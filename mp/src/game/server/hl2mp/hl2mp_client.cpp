@@ -136,8 +136,8 @@ pPlayer->Spawn();
   //SecobMod__ChangeME!
   //SecobMod__FixMe For whatever reason the new secobmod won't find the cfg file after a map change unless we hard code the file path. Maybe someone with better filesystem knowledge can fix this back
   // to how it used to be (just cfg/transition.cfg). Probably to do with mounting other content in the gameinfo.txt search paths (well that's my guess at least).
-  KeyValues *pkvTransitionRestoreFile = new KeyValues( "C:/Program Files/Steam/SteamApps/sourcemods/mod_hl2mp/cfg/transition.cfg" );
-   if ( pkvTransitionRestoreFile->LoadFromFile( filesystem, "C:/Program Files/Steam/SteamApps/sourcemods/mod_hl2mp/cfg/transition.cfg" ) )
+  KeyValues *pkvTransitionRestoreFile = new KeyValues( "C:/Program Files/Steam/SteamApps/sourcemods/mobileforcessource/cfg/transition.cfg" );
+   if ( pkvTransitionRestoreFile->LoadFromFile( filesystem, "C:/Program Files/Steam/SteamApps/sourcemods/mobileforcessource/cfg/transition.cfg" ) )
    {
       while ( pkvTransitionRestoreFile )
       {
@@ -1108,7 +1108,7 @@ const char *GetGameDescription()
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
-		return "Half-Life 2 Deathmatch";
+		return "Mobile Forces Source";
 }
 
 //-----------------------------------------------------------------------------

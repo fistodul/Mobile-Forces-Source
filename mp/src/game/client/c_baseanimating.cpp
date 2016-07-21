@@ -69,7 +69,7 @@ ConVar r_sequence_debug( "r_sequence_debug", "" );
 // If an NPC is moving faster than this, he should play the running footstep sound
 const float RUN_SPEED_ESTIMATE_SQR = 150.0f * 150.0f;
 #ifdef Fading_Ragdolls
-ConVar Ragdoll_Fade_Out_Delay("Ragdoll_Fade_Out_Delay", "10", FCVAR_CHEAT, "Changes the amount of time after which ragdolls fade lol");
+ConVar Ragdoll_Fade_Out_Delay("Ragdoll_Fade_Out_Delay", "3", FCVAR_CHEAT | FCVAR_REPLICATED, "Changes the amount of time after which ragdolls fade lol");
 #endif
 
 // Removed macro used by shared code stuff

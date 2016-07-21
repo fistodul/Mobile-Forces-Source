@@ -862,10 +862,10 @@ private:
 
 	int					DetermineSimulationTicks( void );
 	void				AdjustPlayerTimeBase( int simulation_ticks );
-	float			m_fTimeLastHurt;
 
 public:
-	
+
+	float			m_fTimeLastHurt;
 	// How long since this player last interacted with something the game considers an objective/target/goal
 	float				GetTimeSinceLastObjective( void ) const { return ( m_flLastObjectiveTime == -1.f ) ? 999.f : gpGlobals->curtime - m_flLastObjectiveTime; }
 	void				SetLastObjectiveTime( float flTime ) { m_flLastObjectiveTime = flTime; }

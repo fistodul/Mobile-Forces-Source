@@ -975,6 +975,30 @@ void CNPC_MetroPolice::AnnounceEnemyType( CBaseEntity *pEnemy )
 					pSentenceName = "METROPOLICE_MONST_PLAYER";
 				}
 			}
+		case CLASS_PLAYER_RED:
+		{
+			CBasePlayer *pPlayer = assert_cast<CBasePlayer*>(pEnemy);
+			if (pPlayer && pPlayer->IsInAVehicle())
+			{
+				pSentenceName = "METROPOLICE_MONST_PLAYER_VEHICLE";
+			}
+			else
+			{
+				pSentenceName = "METROPOLICE_MONST_PLAYER";
+			}
+		}
+		case CLASS_PLAYER_BLUE:
+		{
+			CBasePlayer *pPlayer = assert_cast<CBasePlayer*>(pEnemy);
+			if (pPlayer && pPlayer->IsInAVehicle())
+			{
+				pSentenceName = "METROPOLICE_MONST_PLAYER_VEHICLE";
+			}
+			else
+			{
+				pSentenceName = "METROPOLICE_MONST_PLAYER";
+			}
+		}
 			break;
 
 		case CLASS_PLAYER_ALLY:
@@ -1028,6 +1052,12 @@ void CNPC_MetroPolice::AnnounceEnemyKill( CBaseEntity *pEnemy )
 	switch ( pEnemy->Classify() )
 	{
 	case CLASS_PLAYER:
+		pSentenceName = "METROPOLICE_KILL_PLAYER";
+		break;
+	case CLASS_PLAYER_RED:
+		pSentenceName = "METROPOLICE_KILL_PLAYER";
+		break;
+	case CLASS_PLAYER_BLUE:
 		pSentenceName = "METROPOLICE_KILL_PLAYER";
 		break;
 

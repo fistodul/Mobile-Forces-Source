@@ -125,10 +125,6 @@
 #include "client_virtualreality.h"
 #include "mumble.h"
 
-#ifdef FMOD
-#include "mfs/fmod_manager.h"
-#endif
-
 // NVNT includes
 #include "hud_macros.h"
 #include "haptics/ihaptics.h"
@@ -1046,10 +1042,6 @@ int CHLClient::Init( CreateInterfaceFn appSystemFactory, CreateInterfaceFn physi
 		return false;
 
 	g_pClientMode->Enable();
-	#ifdef FMOD
-	// FMOD - Start 'er up!
-	FMODManager()->InitFMOD();
-	#endif
 
 	if ( !view )
 	{
@@ -1195,10 +1187,6 @@ void CHLClient::Shutdown( void )
 
 	g_pClientMode->Disable();
 	g_pClientMode->Shutdown();
-	#ifdef FMOD
-	// FMOD - Shut us down
-	FMODManager()->ExitFMOD();
-	#endif
 
 	input->Shutdown_All();
 	C_BaseTempEntity::ClearDynamicTempEnts();
@@ -1509,11 +1497,6 @@ void CHLClient::View_Render( vrect_t *rect )
 	// UNDONE: This gets hit at startup sometimes, investigate - will cause NaNs in calcs inside Render()
 	if ( rect->width == 0 || rect->height == 0 )
 		return;
-
-	#ifdef FMOD
-	// S:O - Think about fading ambient sounds if necessary
-	FMODManager()->FadeThink();
-	#endif
 	
 	view->Render( rect );
 	UpdatePerfStats();
@@ -1771,11 +1754,6 @@ void CHLClient::LevelShutdown( void )
 	// Shutdown the ragdoll recorder
 	CReplayRagdollRecorder::Instance().Shutdown();
 	CReplayRagdollCache::Instance().Shutdown();
-#endif
-
-#ifdef FMOD
-// S:O - Stop all FMOD sounds when exiting to the main menu
-FMODManager()->StopAmbientSound( false );
 #endif
 
 }

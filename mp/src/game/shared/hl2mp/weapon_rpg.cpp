@@ -39,7 +39,11 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef MFS
+#define	RPG_SPEED	800
+#else
 #define	RPG_SPEED	1500
+#endif
 
 #ifndef CLIENT_DLL
 const char *g_pLaserDotThink = "LaserThinkContext";
@@ -1387,7 +1391,7 @@ void CAPCMissile::ComputeActualDotPosition( CLaserDot *pLaserDot, Vector *pActua
 
 #define	RPG_BEAM_SPRITE		"effects/laser1.vmt"
 #define	RPG_BEAM_SPRITE_NOZ	"effects/laser1_noz.vmt"
-#define	RPG_LASER_SPRITE	"sprites/redglow1"
+#define	RPG_LASER_SPRITE	"sprites/redglow1.vmt"
 
 //=============================================================================
 // RPG
@@ -1496,7 +1500,11 @@ CWeaponRPG::CWeaponRPG()
 {
 	m_bReloadsSingly = true;
 	m_bInitialStateUpdate= false;
+	#ifdef MFS
+	m_bHideGuiding = true;
+	#else
 	m_bHideGuiding = false;
+	#endif
 	m_bGuiding = false;
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 m_hMissile = NULL;
@@ -1783,7 +1791,9 @@ void CWeaponRPG::SuppressGuiding( bool state )
 
 	if ( m_hLaserDot == NULL )
 	{
+		#ifndef MFS
 		StartGuiding();
+		#endif
 
 		//STILL!?
 		if ( m_hLaserDot == NULL )
@@ -1808,7 +1818,11 @@ void CWeaponRPG::SuppressGuiding( bool state )
 //-----------------------------------------------------------------------------
 bool CWeaponRPG::Lower( void )
 {
+#ifdef MFS
+	if (m_hMissile != NULL && IsGuiding())
+#else
 	if ( m_hMissile != NULL )
+#endif
 		return false;
 
 	return BaseClass::Lower();
@@ -1844,7 +1858,11 @@ void CWeaponRPG::ItemPostFrame( void )
 	}
 	else
 	{
+	/*#ifdef MFS
+		SuppressGuiding();
+	#else*/
 		SuppressGuiding( false );
+	//#endif
 	}
 
 	//Move the laser
@@ -2148,6 +2166,10 @@ bool CWeaponRPG::Reload( void )
 
 	if ( pOwner->GetAmmoCount(m_iPrimaryAmmoType) <= 0 )
 		return false;
+#ifdef MFS
+	if (pOwner->GetActiveWeapon() != this)
+		return false;
+#endif
 
 	WeaponSound( RELOAD );
 	

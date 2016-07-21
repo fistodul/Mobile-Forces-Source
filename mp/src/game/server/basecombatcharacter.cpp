@@ -238,6 +238,8 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 		 myClass == CLASS_COMBINE			||
 		 myClass == CLASS_CONSCRIPT			||
 		 myClass == CLASS_METROPOLICE		||
+		 myClass == CLASS_PLAYER_RED ||
+		 myClass == CLASS_PLAYER_BLUE ||
 		 myClass == CLASS_PLAYER )	
 		 return true;
 
@@ -254,6 +256,14 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 #elif defined( CSPORT_DLL )
 	Class_T myClass = Classify();
 	if (	 myClass == CLASS_PLAYER )	
+	{
+		return true;
+	}
+	if (myClass == CLASS_PLAYER_RED)
+	{
+		return true;
+	}
+	if (myClass == CLASS_PLAYER_BLUE)
 	{
 		return true;
 	}
@@ -771,9 +781,9 @@ void CBaseCombatCharacter::Spawn( void )
 	BaseClass::Spawn();
 	
 	//SecobMod__ChangeME! You may not want all AI having the glow effect but we have this here to prove it works!
-	#ifdef SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS
+	/*#ifdef SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS
 	AddGlowEffect();
-	#endif //SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS
+	#endif //SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS*/
 	
 	SetBlocksLOS( false );
 	m_aliveTimer.Start();

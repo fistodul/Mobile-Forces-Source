@@ -9,19 +9,22 @@ WeaponData
 	"anim_prefix"			"smg2"
 	"bucket"				"5"
 	"bucket_position"		"2"
+	"bucket_360"			"1"
+	"bucket_position_360"	"0"
 
-	"clip_size"				"45"
+	"clip_size"				"50"
 	"clip2_size"			"-1"
 
-	"default_clip"			"45"
+	"default_clip"			"100"
 	"default_clip2"			"-1"
 
-	"primary_ammo"			"SMG1"
+	"primary_ammo"			"Extinguisher"
 	"secondary_ammo"		""
 
 	"weight"				"3"
+	"rumble"			"3"
 	"item_flags"			"0"
-	"damage"			"0"
+	//"damage"			"0"
 
 	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
 	SoundData
@@ -48,6 +51,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"a"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"a"
 		}
 		"ammo"

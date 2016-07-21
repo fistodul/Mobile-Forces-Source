@@ -43,6 +43,17 @@ event LevelInit
 {
 }
 
+event WeaponHighlight
+{
+	Animate HudWeaponSelection		Blur		"7"			Linear		0.0	0.0 
+	Animate HudWeaponSelection		Blur		"0"			Deaccel		0.01	0.75 
+
+	Animate HudWeaponSelection		SelectedBoxColor	"250 220 0 80"	Linear	0.0		0.01
+	Animate HudWeaponSelection		SelectedBoxColor	"BgColor"		Deaccel	0.1		1.5
+	Animate HudWeaponSelection		SelectedFgColor		"BrightFg"		Linear	0.0		0.1
+	Animate HudWeaponSelection		SelectedFgColor		"FgColor"		Linear	5.0		1.5
+}
+
 event FadeOutTeamLine
 {
 	// make the display visible
@@ -62,7 +73,8 @@ event OpenWeaponSelectionMenu
 	StopEvent FadeOutWeaponSelectionMenu	0.0
 
 	// make the display visible
-	Animate HudWeaponSelection Alpha 		"128"		Linear 0.0 0.1
+	Animate HudWeaponSelection Alpha 		"128"		Linear 0.0 0.1	[$WIN32]
+	Animate HudWeaponSelection Alpha 		"192"		Linear 0.0 0.1	[$X360]
 	Animate HudWeaponSelection SelectionAlpha 	"255"		Linear 0.0 0.1
 	Animate HudWeaponSelection FgColor		"FgColor"	Linear 0.0 0.1
 	Animate HudWeaponSelection TextColor		"BrightFg"	Linear 0.0 0.1
@@ -116,8 +128,10 @@ event SuitAuxPowerIncreasedAbove25
 event SuitAuxPowerNoItemsActive
 {
 	// resize the aux power to be the smallest size
-	Animate HudSuitPower Size			"102 26"			Linear 0.0 0.4
-	Animate HudSuitPower Position		"16 400"			Linear 0.0 0.4
+	Animate HudSuitPower Size			"102 26"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Position		"16 400"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Size			"102 32"			Linear 0.0 0.4	[$X360]
+	Animate HudSuitPower Position		"48 378"			Linear 0.0 0.4	[$X360]
 //	Animate HudSuitPower text_xpos		"8"					Linear 0.0 0.4
 //	Animate HudSuitPower text_ypos		"15"				Linear 0.0 0.4
 }
@@ -125,22 +139,28 @@ event SuitAuxPowerNoItemsActive
 event SuitAuxPowerOneItemActive
 {
 	// resize the aux power to fit one item
-	Animate HudSuitPower Size			"102 36"			Linear 0.0 0.4
-	Animate HudSuitPower Position		"16 390"			Linear 0.0 0.4
+	Animate HudSuitPower Size			"102 36"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Position		"16 390"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Size			"102 42"			Linear 0.0 0.4	[$X360]
+	Animate HudSuitPower Position		"48 368"			Linear 0.0 0.4	[$X360]
 }
 
 event SuitAuxPowerTwoItemsActive
 {
 	// resize the aux power to fit two items
-	Animate HudSuitPower Size			"102 46"			Linear 0.0 0.4
-	Animate HudSuitPower Position		"16 380"			Linear 0.0 0.4
+	Animate HudSuitPower Size			"102 46"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Position		"16 380"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Size			"102 52"			Linear 0.0 0.4	[$X360]
+	Animate HudSuitPower Position		"48 358"			Linear 0.0 0.4	[$X360]
 }
 
 event SuitAuxPowerThreeItemsActive
 {
 	// resize the aux power to fit three items
-	Animate HudSuitPower Size			"102 56"			Linear 0.0 0.4
-	Animate HudSuitPower Position		"16 370"			Linear 0.0 0.4
+	Animate HudSuitPower Size			"102 56"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Position		"16 370"			Linear 0.0 0.4	[$WIN32]
+	Animate HudSuitPower Size			"102 62"			Linear 0.0 0.4	[$X360]
+	Animate HudSuitPower Position		"48 348"			Linear 0.0 0.4	[$X360]
 }
 
 event SuitFlashlightOn
@@ -501,17 +521,27 @@ event WeaponChanged
 }
 
 // ran if we just changed to a weapon that needs clip ammo
-event WeaponUsesClips
+event WeaponUsesClips	[$WIN32]
 {
 	Animate HudAmmo		Position	"r150 432"	Deaccel	0.0		0.4
 	Animate HudAmmo		Size		"132 36"	Deaccel	0.0		0.4
 }
+event WeaponUsesClips	[$X360]
+{
+	Animate HudAmmo		Position	"r208 416"	Deaccel	0.001	0.4
+	Animate HudAmmo		Size		"160 36"	Deaccel	0.0		0.4
+}
 
 // ran if we just changed to a weapon that does not use clip ammo
-event WeaponDoesNotUseClips
+event WeaponDoesNotUseClips	[$WIN32]
 {
 	Animate HudAmmo		Position	"r118 432"	Deaccel	0.0		0.4
 	Animate HudAmmo		Size		"100 36"	Deaccel	0.0		0.4
+}
+event WeaponDoesNotUseClips	[$X360]
+{
+	Animate HudAmmo		Position	"r175 416"	Deaccel	0.0		0.4
+	Animate HudAmmo		Size		"125 36"	Deaccel	0.0		0.4
 }
 
 event WeaponUsesSecondaryAmmo
@@ -526,8 +556,10 @@ event WeaponUsesSecondaryAmmo
 	Animate HudAmmoSecondary	FgColor		"FgColor"		Linear	0.2		1.5
 	Animate HudAmmoSecondary	Alpha		255		Linear	0.0		0.1
 
-	Animate HudAmmo		Position	"r222 432"	Deaccel	0.0		0.5
-	Animate HudAmmo		Size		"132 36"	Deaccel	0.0		0.4
+	Animate HudAmmo		Position	"r222 432"	Deaccel	0.0		0.5	[$WIN32]
+	Animate HudAmmo		Size		"132 36"	Deaccel	0.0		0.4	[$WIN32]
+	Animate HudAmmo		Position	"r279 416"	Deaccel	0.0		0.5	[$X360]
+	Animate HudAmmo		Size		"155 36"	Deaccel	0.0		0.4	[$X360]
 }
 
 event WeaponDoesNotUseSecondaryAmmo
@@ -565,6 +597,29 @@ event HintMessageShow
 event HintMessageHide
 {
 	Animate HudHintDisplay Alpha	0 Linear 0.0 0.5
+}
+
+event KeyHintMessageShow
+{
+	StopPanelAnimations HudHintKeyDisplay	0.0
+
+	// show the hints
+	Animate HudHintKeyDisplay Alpha	255 Linear 0.0 0.5
+
+	// flash text
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 0.0 0.01
+	Animate HudHintKeyDisplay FgColor	"255 220 0 255" Linear 0.5 0.2
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 0.7 0.2
+	Animate HudHintKeyDisplay FgColor	"255 220 0 255" Linear 1.5 0.2
+	Animate HudHintKeyDisplay FgColor	"FgColor" 	Linear 1.7 0.2
+
+	// hide the panel after a while	
+	Animate HudHintKeyDisplay Alpha	0 Linear 12.0 1.0
+}
+
+event KeyHintMessageHide
+{
+	Animate HudHintKeyDisplay Alpha	0 Linear 0.0 0.5
 }
 
 event SquadMemberAdded
@@ -637,6 +692,163 @@ event PoisonPulse
 event PoisonLoop
 {
 	RunEvent PoisonPulse 0.0
+}
+
+// Commentary hud element
+event ShowCommentary
+{
+	StopEvent	HideCommentary 0.0
+	Animate 	HudCommentary 	Alpha	255 Linear 0.0 0.5
+}
+
+event HideCommentary
+{
+	StopEvent	ShowCommentary 0.0
+	Animate 	HudCommentary 	Alpha	0 Linear 0.0 0.5
+}
+
+// Voting
+event PulseOption1
+{
+	Animate		Option2Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		Option1Background_Selected	Alpha	255 Linear	0.0 0.001
+	Animate		Option1Background_Selected	Alpha	128	Linear	0.5 1.5
+	
+	Animate		YesLeftLabel	Alpha	0	Linear	1.25 1.7
+	Animate		YesIcon			Alpha	0	Linear	1.25 1.7
+	Animate		YesRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		NoLeftLabel		Alpha	0	Linear	1.25 1.7
+	Animate		NoIcon			Alpha	0	Linear	1.25 1.7
+	Animate		NoRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		LabelOption2	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption3	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption4	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption5	Alpha	60	Linear	1.25 1.7
+}
+
+event PulseOption2
+{
+	Animate		Option1Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		Option2Background_Selected	Alpha	255 Linear	0.0 0.001
+	Animate		Option2Background_Selected	Alpha	128	Linear	0.5 1.5
+	
+	Animate		YesLeftLabel	Alpha	0	Linear	1.25 1.7
+	Animate		YesIcon			Alpha	0	Linear	1.25 1.7
+	Animate		YesRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		NoLeftLabel		Alpha	0	Linear	1.25 1.7
+	Animate		NoIcon			Alpha	0	Linear	1.25 1.7
+	Animate		NoRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		LabelOption1	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption3	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption4	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption5	Alpha	60	Linear	1.25 1.7
+}
+
+event PulseOption3
+{
+	Animate		Option1Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option2Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		Option3Background_Selected	Alpha	255 Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	128	Linear	0.5 1.5
+	
+	Animate		YesLeftLabel	Alpha	0	Linear	1.25 1.7
+	Animate		YesIcon			Alpha	0	Linear	1.25 1.7
+	Animate		YesRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		NoLeftLabel		Alpha	0	Linear	1.25 1.7
+	Animate		NoIcon			Alpha	0	Linear	1.25 1.7
+	Animate		NoRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		LabelOption1	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption2	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption4	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption5	Alpha	60	Linear	1.25 1.7
+}
+
+event PulseOption4
+{
+	Animate		Option1Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option2Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		Option4Background_Selected	Alpha	255 Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	128	Linear	0.5 1.5
+	
+	Animate		YesLeftLabel	Alpha	0	Linear	1.25 1.7
+	Animate		YesIcon			Alpha	0	Linear	1.25 1.7
+	Animate		YesRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		NoLeftLabel		Alpha	0	Linear	1.25 1.7
+	Animate		NoIcon			Alpha	0	Linear	1.25 1.7
+	Animate		NoRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		LabelOption1	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption2	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption3	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption5	Alpha	60	Linear	1.25 1.7
+}
+
+event PulseOption5
+{
+	Animate		Option1Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option2Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		Option5Background_Selected	Alpha	255 Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	128	Linear	0.5 1.5
+	
+	Animate		YesLeftLabel	Alpha	0	Linear	1.25 1.7
+	Animate		YesIcon			Alpha	0	Linear	1.25 1.7
+	Animate		YesRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		NoLeftLabel		Alpha	0	Linear	1.25 1.7
+	Animate		NoIcon			Alpha	0	Linear	1.25 1.7
+	Animate		NoRightLabel	Alpha	0	Linear	1.25 1.7
+	
+	Animate		LabelOption1	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption2	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption3	Alpha	60	Linear	1.25 1.7
+	Animate		LabelOption4	Alpha	60	Linear	1.25 1.7
+}
+
+event HideVoteBackgrounds
+{
+	Animate		Option1Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option2Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option3Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option4Background_Selected	Alpha	0	Linear	0.0 0.001
+	Animate		Option5Background_Selected	Alpha	0	Linear	0.0 0.001
+	
+	Animate		YesLeftLabel	Alpha	255 Linear	0.0 0.001
+	Animate		YesIcon			Alpha	255 Linear	0.0 0.001
+	Animate		YesRightLabel	Alpha	255 Linear	0.0 0.001
+	
+	Animate		NoLeftLabel		Alpha	255 Linear	0.0 0.001
+	Animate		NoIcon			Alpha	255 Linear	0.0 0.001
+	Animate		NoRightLabel	Alpha	255 Linear	0.0 0.001
+	
+	Animate		LabelOption1	Alpha	255 Linear	0.0 0.001
+	Animate		LabelOption2	Alpha	255 Linear	0.0 0.001
+	Animate		LabelOption3	Alpha	255 Linear	0.0 0.001
+	Animate		LabelOption4	Alpha	255 Linear	0.0 0.001
+	Animate		LabelOption5	Alpha	255 Linear	0.0 0.001
 }
 
 event MapOff

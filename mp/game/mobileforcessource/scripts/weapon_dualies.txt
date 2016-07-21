@@ -3,20 +3,23 @@
 WeaponData
 {
 	// Weapon data is loaded by both the Game and Client DLLs.
-	"printname"	"#HL2_Pistol"
+	"printname"	"#MFS_Dualies"
 	"viewmodel"			"models/weapons/v_pist_elite.mdl"
 	"playermodel"		"models/weapons/w_pist_elite.mdl"
 	"anim_prefix"		"pistol"
 	"bucket"			"1"
 	"bucket_position"	"2"
+	"bucket_360"			"0"
+	"bucket_position_360"	"0"
 
-	"clip_size"			"5"
+	"clip_size"			"16"
 	"primary_ammo"		"Pistol"
 	"secondary_ammo"	"None"
 
 	"weight"			"2"
+	"rumble"		"1"
 	"item_flags"			"0"
-	"damage"			"20"
+	//"damage"			"20"
 
 	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
 	SoundData
@@ -43,6 +46,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"d"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"d"
 		}
 		"ammo"

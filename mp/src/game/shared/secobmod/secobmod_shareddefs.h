@@ -12,7 +12,6 @@
 /*****************/
 /* MFS.			*/
 /*****************/
-//#define FMOD // http://www.fmod.org
 #define MFS // MF Specific changes :P(Not having the RPG Laser guiding turned on by default, beeping tripmines :P, Exploding on touch tripmines, weighted weaponry, Exploding_Vehicles, Loadouts, Picking Teams)
 //#define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
 //#define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
@@ -30,7 +29,7 @@
 //#define af // add's flashlights on viewmodels, http://forums.steampowered.com/forums/showthread.php?t=848105
 #define css_muzzle_tweaks // https://developer.valvesoftware.com/wiki/Importing_CSS_Weapons_Into_HL2
 //#define Realistic_Rain_Splashes // https://developer.valvesoftware.com/wiki/Rain_splashes
-#define MFS_MOTD // if map briefings are enabled this will load the MOTD if no map briefing is found
+//#define MFS_MOTD // if map briefings are enabled this will load the MOTD if no map briefing is found
 //#define Dynamic_shadow // https://developer.valvesoftware.com/wiki/Dynamic_RTT_shadow_angles_in_Source_2007 (is this already present in 2013?)
 //#define FP_Fix // https://developer.valvesoftware.com/wiki/First_Person_Fix
 
@@ -113,7 +112,7 @@
 /* Experimental Enhancements. */
 /******************************/
 #define SecobMod__ENABLE_IN_TESTING_ITEMS //Enables buggy test items again, such as the Portal gun. Make sure you have Portal installed, and the portal items line enabled.
-//#define SecobMod__ENABLE_PORTAL_ITEMS //Currently it likes to crash alot!.
+#define SecobMod__ENABLE_PORTAL_ITEMS //Currently it likes to crash alot!.
 
 /******************/
 /* SDK Bug Fixes. */

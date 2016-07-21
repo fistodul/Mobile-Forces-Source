@@ -28,7 +28,7 @@ Resource/GameLogo.res
 		tall		100
 		visible		1
 		enabled		1
-		image		../MFS_Logo
+		image		../../MFS_Logo
 		scaleImage	1		
 	}
 }

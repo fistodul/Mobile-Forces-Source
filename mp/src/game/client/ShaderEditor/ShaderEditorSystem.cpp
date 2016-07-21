@@ -85,10 +85,10 @@ bool ShaderEditorHandler::Init()
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_swarm.dll\0", engine->GetGameDirectory() );
 #elif SOURCE_2006
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2006.dll\0", engine->GetGameDirectory() );
-#elif SOURCE_2013
-	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2013.dll\0", engine->GetGameDirectory() );
-#else
+#elif SOURCE_2007
 	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2007.dll\0", engine->GetGameDirectory() );
+#else
+	Q_snprintf( modulePath, sizeof( modulePath ), "%s/bin/shadereditor_2013.dll\0", engine->GetGameDirectory() );
 #endif
 	shaderEditorModule = Sys_LoadModule( modulePath );
 	if ( shaderEditorModule )

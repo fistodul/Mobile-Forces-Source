@@ -173,18 +173,24 @@ void CWeaponPHK::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChara
 			break;
 
 		case EVENT_WEAPON_THROW:
+		if ( pOwner->GetHealth() == pOwner->GetMaxHealth() )
+		break;
 			ThrowPHK( pOwner );
 			DecrementAmmo( pOwner );
 			fThrewPHK = true;
 			break;
 
 		case EVENT_WEAPON_THROW2:
+		if ( pOwner->GetHealth() == pOwner->GetMaxHealth() )
+		break;
 			ThrowPHK( pOwner );
 			DecrementAmmo( pOwner );
 			fThrewPHK = true;
 			break;
 
 		case EVENT_WEAPON_THROW3:
+		if ( pOwner->GetHealth() == pOwner->GetMaxHealth() )
+		break;
 			ThrowPHK( pOwner );
 			DecrementAmmo( pOwner );
 			fThrewPHK = true;
@@ -399,6 +405,8 @@ void DropPrimedPHK( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pPHK )
 
 	if ( pWeaponPHK )
 	{
+		if ( pPlayer->GetHealth() == pPlayer->GetMaxHealth() )
+		return;
 		pWeaponPHK->ThrowPHK( pPlayer );
 		pWeaponPHK->DecrementAmmo( pPlayer );
 	}
@@ -410,16 +418,8 @@ void DropPrimedPHK( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pPHK )
 //-----------------------------------------------------------------------------
 void CWeaponPHK::ThrowPHK( CBasePlayer *pPlayer )
 {
-//CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
-
-if ( pPlayer->GetHealth() == pPlayer->GetMaxHealth() )
-return;
-
 	#ifndef CLIENT_DLL
-	//if ( pPlayer && pPlayer->GetHealth() < pPlayer->GetMaxHealth() ) 
-	//{
 	pPlayer->TakeHealth( sk_healthkit_health.GetInt(), DMG_GENERIC );
-	//}
 	#endif
 
 	m_bRedraw = true;

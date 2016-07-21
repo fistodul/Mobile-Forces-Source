@@ -316,10 +316,10 @@ void CNPC_SecobModportal1::ImpactTrace( trace_t *pTrace, int iDamageType, char *
 //
 // Output : 
 //-----------------------------------------------------------------------------
-/*Class_T	CNPC_SecobModportal1::Classify( void )
+Class_T	CNPC_SecobModportal1::Classify( void )
 {
 	return	CLASS_SecobModportal1;
-}*/
+}
 
 void CNPC_SecobModportal1::OnRestore( void )
 {

@@ -39,7 +39,6 @@ Project Leader: Filip Stojanovic
 Full Credits: <a href="ToggleCredits">Credits</a>
 
 Facebook: <a href="http://www.facebook.com/groups/mobileforcesandmfs/">Mobile Forces + MFS</a>
-Github: <a href="https://github.com/WorldGamers/Mobile-Forces-Source">Mobile Forces Source Repository</a>
 
 Visit the official Mobile Forces Source Website:<a href="http://world-gamers.forumotion.net">World-Gamers.forumotion.net</a>
 </pre>

@@ -46,6 +46,7 @@ END_DATADESC()
  
 ConVar sk_plr_dmg_gauss( "sk_plr_dmg_gauss", "25" );
 ConVar sk_plr_max_dmg_gauss( "sk_plr_max_dmg_gauss", "50" );
+ConVar sk_max_gauss( "sk_max_gauss",	"150"	);
  
 //-----------------------------------------------------------------------------
 // Purpose:

@@ -85,10 +85,6 @@
 ConVar autoaim_max_dist( "autoaim_max_dist", "2160" ); // 2160 = 180 feet
 ConVar autoaim_max_deflect( "autoaim_max_deflect", "0.99" );
 
-ConVar sv_regeneration ("sv_regeneration", "1", FCVAR_REPLICATED );
-ConVar sv_regeneration_wait_time ("sv_regeneration_wait_time", "1.0", FCVAR_REPLICATED );
-ConVar sv_regeneration_rate ("sv_regeneration_rate", "0.5", FCVAR_REPLICATED );
-
 #ifdef CSTRIKE_DLL
 ConVar	spec_freeze_time( "spec_freeze_time", "5.0", FCVAR_CHEAT | FCVAR_REPLICATED, "Time spend frozen in observer freeze cam." );
 ConVar	spec_freeze_traveltime( "spec_freeze_traveltime", "0.7", FCVAR_CHEAT | FCVAR_REPLICATED, "Time taken to zoom in to frame a target in observer freeze cam.", true, 0.01, false, 0 );
@@ -160,7 +156,6 @@ extern CServerGameDLL g_ServerGameDLL;
 
 extern bool		g_fDrawLines;
 int				gEvilImpulse101;
-float     m_fRegenRemander;
 
 bool gInitHUD = true;
 
@@ -341,7 +336,7 @@ BEGIN_DATADESC( CBasePlayer )
 	DEFINE_FIELD( m_iBonusChallenge, FIELD_INTEGER ),
 	DEFINE_FIELD( m_lastDamageAmount, FIELD_INTEGER ),
 	DEFINE_FIELD( m_tbdPrev, FIELD_TIME ),
-	DEFINE_FIELD( m_fTimeLastHurt, FIELD_TIME ),
+	DEFINE_FIELD(m_fTimeLastHurt, FIELD_TIME),
 	DEFINE_FIELD( m_flStepSoundTime, FIELD_FLOAT ),
 	DEFINE_ARRAY( m_szNetname, FIELD_CHARACTER, MAX_PLAYER_NAME_LENGTH ),
 
@@ -604,7 +599,6 @@ m_bTransitionTeleported = false;
 	m_szNetname[0] = '\0';
 
 	m_iHealth = 0;
-	m_fRegenRemander = 0;
 	Weapon_SetLast( NULL );
 	m_bitsDamageType = 0;
 
@@ -1464,9 +1458,9 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		OnDamagedByExplosion( info );
 	}
 
-	if ( GetHealth() < 100 )
+	if (GetHealth() < 100)
 	{
-    m_fTimeLastHurt = gpGlobals->curtime;
+		m_fTimeLastHurt = gpGlobals->curtime;
 	}
 	return fTookDamage;
 }
@@ -4837,29 +4831,6 @@ void CBasePlayer::PostThink()
 	SimulatePlayerSimulatedEntities();
 #endif
 
-// Regenerate heath
-if ( IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1) )
-{
-	// Color to overlay on the screen while the player is taking damage
-	color32 hurtScreenOverlay = {80,0,0,64};
- 
-	if ( gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat() )
-	{
-                //Regenerate based on rate, and scale it by the frametime
-		m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
- 
-		if(m_fRegenRemander >= 1)
-		{
-			TakeHealth( m_fRegenRemander, DMG_GENERIC );
-			m_fRegenRemander = 0;
-		}
-	}
-	else
-	{
-		UTIL_ScreenFade( this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN|FFADE_PURGE );
-	}	
-}
-
 }
 
 // handles touching physics objects
@@ -6349,6 +6320,46 @@ void CC_CH_CreateAirboat( void )
 }
 
 static ConCommand ch_createairboat( "ch_createairboat", CC_CH_CreateAirboat, "Spawn airboat in front of the player.", FCVAR_CHEAT );
+
+//-----------------------------------------------------------------------------
+// Create a whatever the fuck this is in front of the specified player
+//-----------------------------------------------------------------------------
+static void CreateChoreo( CBasePlayer *pPlayer )
+{
+	// Cheat to create a jeep in front of the player
+	Vector vecForward;
+	AngleVectors( pPlayer->EyeAngles(), &vecForward );
+	CBaseEntity *pJeep = ( CBaseEntity* )CreateEntityByName( "prop_vehicle_choreo_generic" );
+	if ( pJeep )
+	{
+		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector( 0,0,64 );
+		QAngle vecAngles( 0, pPlayer->GetAbsAngles().y - 90, 0 );
+		pJeep->SetAbsOrigin( vecOrigin );
+		pJeep->SetAbsAngles( vecAngles );
+		pJeep->KeyValue( "model", "models/airboat.mdl" );
+		pJeep->KeyValue( "solid", "6" );
+		pJeep->KeyValue( "targetname", "choreo" );
+		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/choreo_vehicle.txt" );
+		DispatchSpawn( pJeep );
+		pJeep->Activate();
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CC_CH_CreateChoreo( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+
+	CreateAirboat( pPlayer );
+
+}
+
+static ConCommand ch_createchoreo( "ch_createchoreo", CC_CH_CreateChoreo, "Spawn a choreo in front of the player.", FCVAR_CHEAT );
 #endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 
 

@@ -7,8 +7,8 @@ WeaponData
 	"viewmodel"				"models/ss_passenger_cube.mdl"
 	"playermodel"			"models/weapons/w_bugbait.mdl"
 	"anim_prefix"			"Grenade"
-	"bucket"				"0"
-	"bucket_position"		"3"
+	"bucket"				"6"
+	"bucket_position"		"0"
 
 	"clip_size"				"-1"
 	"primary_ammo"			"None"

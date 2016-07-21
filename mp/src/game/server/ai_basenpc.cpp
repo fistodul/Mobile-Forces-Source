@@ -7300,6 +7300,9 @@ void CAI_BaseNPC::AddRelationship( const char *pszRelationship, CBaseEntity *pAc
 			if (!stricmp("player", entityString) || !stricmp("!player", entityString))
 			{
 				AddClassRelationship( CLASS_PLAYER, disposition, priority );
+				//That might be a problem
+				AddClassRelationship(CLASS_PLAYER_RED, disposition, priority);
+				AddClassRelationship(CLASS_PLAYER_BLUE, disposition, priority);
 			}
 			// Otherwise try to create one too see if a valid classname and get class type
 			else

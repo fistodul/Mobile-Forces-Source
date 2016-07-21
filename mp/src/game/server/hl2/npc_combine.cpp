@@ -1416,6 +1416,12 @@ void CNPC_Combine::AnnounceEnemyType( CBaseEntity *pEnemy )
 	case CLASS_PLAYER:
 		pSentenceName = "COMBINE_ALERT";
 		break;
+	case CLASS_PLAYER_RED:
+		pSentenceName = "COMBINE_ALERT";
+		break;
+	case CLASS_PLAYER_BLUE:
+		pSentenceName = "COMBINE_ALERT";
+		break;
 
 	case CLASS_PLAYER_ALLY:
 	case CLASS_CITIZEN_REBEL:
@@ -1454,6 +1460,12 @@ void CNPC_Combine::AnnounceEnemyKill( CBaseEntity *pEnemy )
 	switch ( pEnemy->Classify() )
 	{
 	case CLASS_PLAYER:
+		pSentenceName = "COMBINE_PLAYER_DEAD";
+		break;
+	case CLASS_PLAYER_RED:
+		pSentenceName = "COMBINE_PLAYER_DEAD";
+		break;
+	case CLASS_PLAYER_BLUE:
 		pSentenceName = "COMBINE_PLAYER_DEAD";
 		break;
 

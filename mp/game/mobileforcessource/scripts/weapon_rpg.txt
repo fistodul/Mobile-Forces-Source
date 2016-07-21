@@ -10,15 +10,18 @@ WeaponData
 	"bucket"				"4"
 	"bucket_position"		"1"
 	"autoswitchfrom"		"1"
+	"bucket_360"			"3"
+	"bucket_position_360"	"1"
 
 	"clip_size"				"-1"
 	"clip2_size"			"-1"
-	"default_clip"			"3"
+	"default_clip"			"10"
 	"default_clip2"			"-1"
 
 	"primary_ammo"			"rpg_round"
 	"secondary_ammo"		"None"
 
+	"autoswitchto"			"0"
 	"weight"				"0"
 	"item_flags"			"0"
 	"damage"			"100"
@@ -46,6 +49,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"i"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"i"
 		}
 		"ammo"

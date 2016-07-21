@@ -548,6 +548,20 @@ Disposition_t CNPC_VehicleDriver::IRelationType(CBaseEntity *pTarget)
 			return(D_NU);
 		}
 	}
+	else if (pTarget && pTarget->Classify() == CLASS_PLAYER_RED)
+	{
+		if (GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON)
+		{
+			return(D_NU);
+		}
+	}
+	else if (pTarget && pTarget->Classify() == CLASS_PLAYER_BLUE)
+	{
+		if (GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON)
+		{
+			return(D_NU);
+		}
+	}
 
 	return(BaseClass::IRelationType(pTarget));
 }

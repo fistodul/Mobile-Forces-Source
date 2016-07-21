@@ -64,16 +64,17 @@ static const char *s_pWaitForUpgradeContext = "WaitForUpgrade";
 
 ConVar	g_debug_physcannon( "g_debug_physcannon", "0", FCVAR_REPLICATED | FCVAR_CHEAT );
 
-ConVar physcannon_minforce( "physcannon_minforce", "700", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_maxforce( "physcannon_maxforce", "1500", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_maxmass( "physcannon_maxmass", "250", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_tracelength( "physcannon_tracelength", "250", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_chargetime("physcannon_chargetime", "2", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_pullforce( "physcannon_pullforce", "4000", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_cone( "physcannon_cone", "0.97", FCVAR_REPLICATED | FCVAR_CHEAT );
-ConVar physcannon_ball_cone( "physcannon_ball_cone", "0.997", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar physcannon_minforce( "physcannon_minforce", "99999999998", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_maxforce( "physcannon_maxforce", "99999999998", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_maxmass( "physcannon_maxmass", "99999999998", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_tracelength( "physcannon_tracelength", "99999999998", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_chargetime("physcannon_chargetime", "2", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_pullforce( "physcannon_pullforce", "99999999998", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_cone( "physcannon_cone", "0.97", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
+ConVar physcannon_ball_cone( "physcannon_ball_cone", "0.997", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE );
 ConVar player_throwforce( "player_throwforce", "1000", FCVAR_REPLICATED | FCVAR_CHEAT );
 
+//Most epic loophole ever, just change this to whatever u want in-game but i'm fine with that lol
 #ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
 ConVar physcannon_mega_tracelength( "physcannon_mega_tracelength", "850" );
 ConVar physcannon_mega_pullforce( "physcannon_mega_pullforce", "8000" );

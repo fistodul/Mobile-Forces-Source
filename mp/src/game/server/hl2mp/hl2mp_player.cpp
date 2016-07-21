@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+﻿//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose:		Player for HL2.
 //
@@ -53,6 +53,16 @@ int PlayerDucking;
 int g_iLastCitizenModel = 0;
 int g_iLastCombineModel = 0;
 
+ConVar sv_regeneration("sv_regeneration", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar sv_regeneration_maxhp("sv_regeneration_maxhp", "0", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar sv_regeneration_maxarmor("sv_regeneration_maxarmor", "100", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar sv_regeneration_armor("sv_regeneration_armor", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar sv_regeneration_wait_time("sv_regeneration_wait_time", "1.0", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar sv_regeneration_rate("sv_regeneration_rate", "0.5", FCVAR_REPLICATED | FCVAR_CHEAT);
+
+float     m_fRegenRemander;
+float     m_fRegenRemanderArmor;
+
 CBaseEntity	 *g_pLastCombineSpawn = NULL;
 CBaseEntity	 *g_pLastRebelSpawn = NULL;
 extern CBaseEntity				*g_pLastSpawn;
@@ -65,6 +75,7 @@ LINK_ENTITY_TO_CLASS( player, CHL2MP_Player );
 
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
+LINK_ENTITY_TO_CLASS( info_player_god, CPointEntity );
 
 //SecobMod__Information: Here we allow each class to have their own spawn point.
 #ifdef SecobMod__USE_PLAYERCLASSES
@@ -153,6 +164,9 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
     m_bEnterObserver = false;
 	m_bReady = false;
 
+	m_fRegenRemander = 0;
+	m_fRegenRemanderArmor = 0;
+
 	BaseClass::ChangeTeam( 0 );
 	
 #ifdef SecobMod__USE_PLAYERCLASSES
@@ -215,15 +229,28 @@ void CHL2MP_Player::GiveAllItems( void )
 	CBasePlayer::GiveAmmo( 255,	"AR2" );
 	CBasePlayer::GiveAmmo( 5,	"AR2AltFire" );
 	CBasePlayer::GiveAmmo( 255,	"SMG1");
-	CBasePlayer::GiveAmmo( 1,	"smg1_grenade");
+	CBasePlayer::GiveAmmo( 3,	"smg1_grenade");
 	CBasePlayer::GiveAmmo( 255,	"Buckshot");
 	CBasePlayer::GiveAmmo( 32,	"357" );
-	CBasePlayer::GiveAmmo( 3,	"rpg_round");
+	CBasePlayer::GiveAmmo( 10,	"rpg_round");
 
-	CBasePlayer::GiveAmmo( 1,	"grenade" );
-	CBasePlayer::GiveAmmo( 2,	"slam" );
+	CBasePlayer::GiveAmmo( 6,	"grenade" );
+	CBasePlayer::GiveAmmo( 6,	"slam" );
 
+	CBasePlayer::GiveAmmo( 720,	"Rifle" );
+	CBasePlayer::GiveAmmo(	1,	"healthkit" );
+	CBasePlayer::GiveAmmo(	150,	"GaussEnergy1" );
+	CBasePlayer::GiveAmmo(	100,	"Extinguisher"	);
 	GiveNamedItem( "weapon_knife" );
+	GiveNamedItem( "weapon_smg3" );
+	GiveNamedItem( "weapon_minigun" );
+	GiveNamedItem( "weapon_healthkit" );
+	GiveNamedItem( "weapon_troll" );
+	GiveNamedItem( "weapon_gauss" );
+	GiveNamedItem( "weapon_dualies" );
+	GiveNamedItem( "weapon_portalgun" );
+	GiveNamedItem( "weapon_bugbait" );
+	
 	GiveNamedItem( "weapon_crowbar" );
 	GiveNamedItem( "weapon_stunstick" );
 	GiveNamedItem( "weapon_pistol" );
@@ -259,10 +286,16 @@ void CHL2MP_Player::GiveDefaultItems( void )
 
 	if ( GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER )
 	{
+		if ( HL2MPRules()->IsInjustice() == true )
+		GiveGoodItems();
+		else
 		GiveNamedItem( "weapon_knife" );
 	}
 	else if ( GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN )
 	{
+		if ( HL2MPRules()->IsInjustice() == true )
+		GiveEvilItems();
+		else
 		GiveNamedItem( "weapon_crowbar" );
 	}
 	
@@ -275,7 +308,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	GiveNamedItem( "weapon_physcannon" );*/
 
 	//SecobMod__Information: Still provide armour for a non-playerclass player.
-	SetArmorValue(100);
+	//SetArmorValue(100);
 	SetMaxArmorValue(200);
 	
 	const char *szDefaultWeaponName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_defaultweapon" );
@@ -293,6 +326,61 @@ void CHL2MP_Player::GiveDefaultItems( void )
 #endif //SecobMod__USE_PLAYERCLASSES
 }
 
+void CHL2MP_Player::GiveGoodItems( void )
+{
+	EquipSuit();
+
+	CBasePlayer::GiveAmmo(	1,	"healthkit" );
+	CBasePlayer::GiveAmmo(	100,	"Extinguisher"	);
+	GiveNamedItem( "weapon_healthkit" );
+	GiveNamedItem( "weapon_portalgun" );
+	GiveNamedItem( "weapon_bugbait" );
+	GiveNamedItem( "weapon_physcannon" );
+	GiveNamedItem( "weapon_troll" );
+	
+}
+void CHL2MP_Player::GiveEvilItems( void )
+{
+	EquipSuit();
+
+	CBasePlayer::GiveAmmo( 255,	"Pistol");
+	CBasePlayer::GiveAmmo( 255,	"AR2" );
+	CBasePlayer::GiveAmmo( 5,	"AR2AltFire" );
+	CBasePlayer::GiveAmmo( 255,	"SMG1");
+	CBasePlayer::GiveAmmo( 3,	"smg1_grenade");
+	CBasePlayer::GiveAmmo( 255,	"Buckshot");
+	CBasePlayer::GiveAmmo( 32,	"357" );
+	CBasePlayer::GiveAmmo( 10,	"rpg_round");
+
+	CBasePlayer::GiveAmmo( 6,	"grenade" );
+	CBasePlayer::GiveAmmo( 6,	"slam" );
+
+	CBasePlayer::GiveAmmo( 720,	"Rifle" );
+	CBasePlayer::GiveAmmo(	150,	"GaussEnergy1" );
+	GiveNamedItem( "weapon_knife" );
+	GiveNamedItem( "weapon_smg3" );
+	GiveNamedItem( "weapon_minigun" );
+	GiveNamedItem( "weapon_gauss" );
+	GiveNamedItem( "weapon_dualies" );
+	
+	GiveNamedItem( "weapon_crowbar" );
+	GiveNamedItem( "weapon_stunstick" );
+	GiveNamedItem( "weapon_pistol" );
+	GiveNamedItem( "weapon_357" );
+
+	GiveNamedItem( "weapon_smg1" );
+	GiveNamedItem( "weapon_ar2" );
+	
+	GiveNamedItem( "weapon_shotgun" );
+	GiveNamedItem( "weapon_frag" );
+	
+	GiveNamedItem( "weapon_crossbow" );
+	
+	GiveNamedItem( "weapon_rpg" );
+
+	GiveNamedItem( "weapon_slam" );
+	
+}
 void CHL2MP_Player::PickDefaultSpawnTeam( void )
 {
 	if ( GetTeamNumber() == 0 )
@@ -326,17 +414,35 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 			}
 			else
 			{
-				if ( pCombine->GetNumPlayers() > pRebels->GetNumPlayers() )
+				if (HL2MPRules()->IsInjustice() == true)
 				{
-					ChangeTeam( TEAM_REBELS );
-				}
-				else if ( pCombine->GetNumPlayers() < pRebels->GetNumPlayers() )
-				{
-					ChangeTeam( TEAM_COMBINE );
+					if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
+					{
+						ChangeTeam(TEAM_REBELS);
+					}
+					else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
+					{
+						ChangeTeam(TEAM_COMBINE);
+					}
+					else
+					{
+						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+					}
 				}
 				else
 				{
-					ChangeTeam( random->RandomInt( TEAM_COMBINE, TEAM_REBELS ) );
+					if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+					{
+						ChangeTeam(TEAM_REBELS);
+					}
+					else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+					{
+						ChangeTeam(TEAM_COMBINE);
+					}
+					else
+					{
+						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+					}
 				}
 			}
 		}
@@ -371,6 +477,24 @@ static int FindPassableSpace( CBasePlayer *pPlayer, const Vector& direction, flo
 	return 0;
 }
 #endif //SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
+
+//------------------------------------------------------------------------------
+// Purpose : The sorta retarded implementation
+// Input   :
+// Output  :
+//------------------------------------------------------------------------------
+Class_T  CHL2MP_Player::Classify(void)
+{
+	if (HL2MPRules()->IsInjustice() == true)
+	{
+		if (GetTeamNumber() == TEAM_REBELS)
+			return BaseClass::Classify(2);
+		else
+			return BaseClass::Classify(3);
+	}
+	else
+		return BaseClass::Classify(1);
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Sets HL2 specific defaults.
@@ -880,6 +1004,184 @@ void CHL2MP_Player::PostThink( void )
 {
 	BaseClass::PostThink();
 	
+	if (sv_regeneration_maxhp.GetInt() > GetMaxHealth())
+		m_iMaxHealth = sv_regeneration_maxhp.GetInt();
+	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
+		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
+	if (HL2MPRules()->IsInjustice() == true)
+	{
+		if (GetTeamNumber() == TEAM_REBELS)
+		{
+			// Regenerate health
+			if (IsAlive() && GetHealth() < GetMaxHealth())
+			{
+				// Color to overlay on the screen while the player is taking damage
+				color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+				if (gpGlobals->curtime > m_fTimeLastHurt)
+				{
+					//Regenerate based on rate, and scale it by the frametime
+					m_fRegenRemander += 1 * gpGlobals->frametime;
+
+					if (m_fRegenRemander >= 1)
+					{
+						TakeHealth(m_fRegenRemander, DMG_GENERIC);
+						m_fRegenRemander = 0;
+						/*if (sv_regeneration_armor.GetInt() == 0)
+						{
+						m_fRegenRemander = 0;
+						}
+						else
+						{
+						if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
+						m_fRegenRemander = 0;
+						}*/
+					}
+				}
+				else
+				{
+					UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+				}
+			}
+			// Regenerate armor
+			if (IsAlive() && ArmorValue() < 200)
+			{
+				// Color to overlay on the screen while the player is taking damage
+				color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+				if (gpGlobals->curtime > m_fTimeLastHurt)
+				{
+					//Regenerate based on rate, and scale it by the frametime
+					m_fRegenRemanderArmor += 1 * gpGlobals->frametime;
+
+					if (m_fRegenRemanderArmor >= 1)
+					{
+						IncrementArmorValue(m_fRegenRemanderArmor, 200);
+						m_fRegenRemanderArmor = 0;
+					}
+				}
+				else
+				{
+					UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+				}
+			}
+		}
+		else
+		{
+			// Regenerate health
+			if (IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1))
+			{
+				// Color to overlay on the screen while the player is taking damage
+				color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+				if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+				{
+					//Regenerate based on rate, and scale it by the frametime
+					m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+					if (m_fRegenRemander >= 1)
+					{
+						TakeHealth(m_fRegenRemander, DMG_GENERIC);
+						m_fRegenRemander = 0;
+						/*if (sv_regeneration_armor.GetInt() == 0)
+						{
+						m_fRegenRemander = 0;
+						}
+						else
+						{
+						if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
+						m_fRegenRemander = 0;
+						}*/
+					}
+				}
+				else
+				{
+					UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+				}
+			}
+			// Regenerate armor
+			if (IsAlive() && ArmorValue() < sv_regeneration_maxarmor.GetInt() && (sv_regeneration_armor.GetInt() == 1))
+			{
+				// Color to overlay on the screen while the player is taking damage
+				color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+				if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+				{
+					//Regenerate based on rate, and scale it by the frametime
+					m_fRegenRemanderArmor += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+					if (m_fRegenRemanderArmor >= 1)
+					{
+						IncrementArmorValue(m_fRegenRemanderArmor, sv_regeneration_maxarmor.GetInt());
+						m_fRegenRemanderArmor = 0;
+					}
+				}
+				else
+				{
+					UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+				}
+			}
+		}
+	}
+	else
+	{
+	// Regenerate health
+	if (IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1))
+	{
+		// Color to overlay on the screen while the player is taking damage
+		color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+		//CBaseEntity *pLastSpawnPoint = g_pLastSpawn;
+		//if (pLastSpawnPoint = g_pLastRebelSpawn)
+		if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+		{
+			//Regenerate based on rate, and scale it by the frametime
+			m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+			if (m_fRegenRemander >= 1)
+			{
+				TakeHealth(m_fRegenRemander, DMG_GENERIC);
+				m_fRegenRemander = 0;
+				/*if (sv_regeneration_armor.GetInt() == 0)
+				{
+				m_fRegenRemander = 0;
+				}
+				else
+				{
+				if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
+				m_fRegenRemander = 0;
+				}*/
+			}
+		}
+		else
+		{
+			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+		}
+	}
+	// Regenerate armor
+	if (IsAlive() && ArmorValue() < sv_regeneration_maxarmor.GetInt() && (sv_regeneration_armor.GetInt() == 1))
+	{
+		// Color to overlay on the screen while the player is taking damage
+		color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+
+		if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+		{
+			//Regenerate based on rate, and scale it by the frametime
+			m_fRegenRemanderArmor += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+			if (m_fRegenRemanderArmor >= 1)
+			{
+				IncrementArmorValue(m_fRegenRemanderArmor, sv_regeneration_maxarmor.GetInt());
+				m_fRegenRemanderArmor = 0;
+			}
+		}
+		else
+		{
+			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
+		}
+	}
+	}
+
 	if ( GetFlags() & FL_DUCKING )
 	{
 		SetCollisionBounds( VEC_CROUCH_TRACE_MIN, VEC_CROUCH_TRACE_MAX );
@@ -1815,6 +2117,27 @@ CBaseEntity *ent = NULL;
 }
 #endif //SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 	
+	if ( HL2MPRules()->IsInjustice() == true )
+	{
+		if ( GetTeamNumber() == TEAM_COMBINE )
+		{
+			pSpawnpointName = "info_player_combine";
+			pLastSpawnPoint = g_pLastCombineSpawn;
+		}
+		else if ( GetTeamNumber() == TEAM_REBELS )
+		{
+			pSpawnpointName = "info_player_god";
+			pLastSpawnPoint = g_pLastRebelSpawn;
+		}
+
+		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
+		{
+			pSpawnpointName = "info_player_deathmatch";
+			pLastSpawnPoint = g_pLastSpawn;
+		}
+	}
+	else
+	{
 	if ( HL2MPRules()->IsTeamplay() == true )
 	{
 		if ( GetTeamNumber() == TEAM_COMBINE )
@@ -1833,6 +2156,7 @@ CBaseEntity *ent = NULL;
 			pSpawnpointName = "info_player_deathmatch";
 			pLastSpawnPoint = g_pLastSpawn;
 		}
+	}
 	}
 
 	pSpot = pLastSpawnPoint;
@@ -2622,7 +2946,7 @@ void CHL2MP_Player::SetClassMedic()
 		m_iHealth = 80;
 		m_iMaxHealth = 80;
 		SetArmorValue(5);
-		SetMaxArmorValue(10);
+		SetMaxArmorValue(100);
 		GiveNamedItem( "weapon_hands" );
 		GiveNamedItem( "weapon_357" );
 		GiveNamedItem( "weapon_shotgun" );
@@ -2695,7 +3019,7 @@ m_iPlayerSoundType = (int)PLAYER_SOUNDS_CITIZEN;
 		m_iHealth = 80;
 		m_iMaxHealth = 80;
 		SetArmorValue(5);
-		SetMaxArmorValue(10);
+		SetMaxArmorValue(100);
 		GiveNamedItem( "weapon_hands" );
 		GiveNamedItem( "weapon_357" );
 		GiveNamedItem( "weapon_shotgun" );

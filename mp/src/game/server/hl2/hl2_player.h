@@ -119,8 +119,7 @@ public:
 	// from cbasecombatcharacter
 	void				InitVCollision( const Vector &vecAbsOrigin, const Vector &vecAbsVelocity );
 	WeaponProficiency_t CalcWeaponProficiency( CBaseCombatWeapon *pWeapon );
-
-	Class_T				Classify ( void );
+	Class_T				Classify ( int lol );
 
 	// from CBasePlayer
 	virtual void		SetupVisibility( CBaseEntity *pViewEntity, unsigned char *pvs, int pvssize );

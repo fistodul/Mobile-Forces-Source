@@ -9,9 +9,11 @@ WeaponData
 	"anim_prefix"	"bow"
 	"bucket"			"3"
 	"bucket_position"	"1"
+	"bucket_360"			"0"
+	"bucket_position_360"	"2"
 
-	"clip_size"		"1"
-	"default_clip"		"4"
+	"clip_size"		"4"
+	"default_clip"		"12"
 	"primary_ammo"		"XBowBolt"
 	"secondary_ammo"	"None"
 
@@ -40,6 +42,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"g"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"g"
 		}
 		"ammo"

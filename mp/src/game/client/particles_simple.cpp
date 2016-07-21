@@ -227,8 +227,8 @@ CSimpleEmitter::CSimpleEmitter( const char *pDebugName ) : CParticleEffect( pDeb
 	m_flNearClipMax	= 64.0f;
 	
 	#ifdef Far_Clipping
-	m_flFarClipMin = 65536;
-    m_flFarClipMax = 65536;
+	m_flFarClipMin = 4096;
+    m_flFarClipMax = 4096;
 	#endif
 }
 

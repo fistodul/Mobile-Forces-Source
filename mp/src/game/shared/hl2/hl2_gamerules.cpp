@@ -1302,6 +1302,8 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 		{
 			case CLASS_NONE:			return "CLASS_NONE";
 			case CLASS_PLAYER:			return "CLASS_PLAYER";
+			case CLASS_PLAYER_RED:		return "CLASS_PLAYER_RED";
+			case CLASS_PLAYER_BLUE:		return "CLASS_PLAYER_BLUE";
 			case CLASS_ANTLION:			return "CLASS_ANTLION";
 			case CLASS_BARNACLE:		return "CLASS_BARNACLE";
 			case CLASS_BULLSEYE:		return "CLASS_BULLSEYE";

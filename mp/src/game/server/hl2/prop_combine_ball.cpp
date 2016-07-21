@@ -1372,6 +1372,8 @@ bool CPropCombineBall::IsAttractiveTarget( CBaseEntity *pEntity )
 			if( GetOwnerEntity()->IsPlayer() ) 
 			{
 				if( pEntity->Classify() == CLASS_PLAYER				||
+					pEntity->Classify() == CLASS_PLAYER_RED				||
+					pEntity->Classify() == CLASS_PLAYER_BLUE				||
 					pEntity->Classify() == CLASS_PLAYER_ALLY		||
 					pEntity->Classify() == CLASS_PLAYER_ALLY_VITAL )
 				{

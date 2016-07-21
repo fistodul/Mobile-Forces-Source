@@ -4,9 +4,12 @@ WeaponData
 	"printname"	"#HL2_Grenade"
 	"viewmodel"				"models/weapons/v_grenade.mdl"
 	"playermodel"			"models/weapons/w_grenade.mdl"
+	//"playermodel"			"models/items/grenadeAmmo.mdl"
 	"anim_prefix"			"Grenade"
 	"bucket"				"4"
 	"bucket_position"		"0"
+	"bucket_360"			"3"
+	"bucket_position_360"		"0"
 
 	"clip_size"				"-1"
 	"clip2_size"			"-1"
@@ -39,6 +42,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"k"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"k"
 		}
 		"ammo"

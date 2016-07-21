@@ -36,6 +36,7 @@ public:
 
 	float			m_flNextBounceSoundTime;
 	bool			m_bInAir;
+	bool			m_bCanExplode;
 	Vector			m_vLastPosition;
 
 public:

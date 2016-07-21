@@ -95,6 +95,9 @@ void CTripmineGrenade::Spawn( void )
 	AddEffects( EF_NOSHADOW );
 	
 	m_pAttachedObject = NULL;
+#ifdef MFS
+	EmitSound( "Trollspam_Sound" );
+#endif
 }
 
 
@@ -104,6 +107,9 @@ void CTripmineGrenade::Precache( void )
 
 	PrecacheScriptSound( "TripmineGrenade.Place" );
 	PrecacheScriptSound( "TripmineGrenade.Activate" );
+#ifdef MFS
+	PrecacheScriptSound("Trollspam_Sound");
+#endif
 }
 
 
@@ -280,6 +286,9 @@ void CTripmineGrenade::Event_Killed( const CTakeDamageInfo &info )
 	SetNextThink( gpGlobals->curtime + 0.25 );
 
 	EmitSound( "TripmineGrenade.StopSound" );
+#ifdef MFS
+	StopSound("Trollspam_Sound");
+#endif
 }
 
 

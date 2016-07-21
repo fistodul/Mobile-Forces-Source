@@ -75,7 +75,6 @@ public:
 	bool				Deploy( void );
 	bool				Holster( CBaseCombatWeapon *pSwitchingTo = NULL );
 
-
 	CWeapon_SLAM();
 
 #ifndef CLIENT_DLL

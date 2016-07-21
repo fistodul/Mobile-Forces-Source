@@ -343,7 +343,7 @@ void C_HL2MP_Player::PreThink( void )
 
 	BaseClass::PreThink();
 
-	HandleSpeedChanges();
+	//HandleSpeedChanges();
 
 	if ( m_HL2Local.m_flSuitPower <= 0.0f )
 	{

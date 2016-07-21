@@ -1,3 +1,5 @@
+particles_manifest
+{
 	"file"		"particles/error.pcf"
 	"file"		"particles/explosion.pcf"
 	"file"		"particles/blood_impact.pcf"
@@ -89,4 +91,4 @@
 	//"file" "particles/smg_muzzle_flash.pcf"
 
 	"file" "particles/weapon_smoke.pcf"
-
+}

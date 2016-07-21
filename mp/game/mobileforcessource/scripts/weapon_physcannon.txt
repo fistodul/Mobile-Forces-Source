@@ -9,6 +9,8 @@ WeaponData
 	"anim_prefix"		"gauss"
 	"bucket"			"5"
 	"bucket_position"	"0"
+	"bucket_360"			"2"
+	"bucket_position_360"	"1"
 	"clip_size"			"0"
 	"clip2_size"		"0"
 	"primary_ammo"		"None"

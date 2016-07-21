@@ -8,8 +8,10 @@ WeaponData
 	"playermodel"			"models/weapons/w_irifle.mdl"
 	"anim_prefix"			"ar2"
 	"bucket"			"2"
-	"bucket_position"		"1"
-
+	"bucket_position"		"2"
+	"bucket_360"			"1"
+	"bucket_position_360"		"2"
+	
 	"clip_size"			"30"
 	"default_clip"			"60"
 
@@ -19,9 +21,9 @@ WeaponData
 	"primary_ammo"			"AR2"
 	"secondary_ammo"		"AR2AltFire"
 
-	"weight"			"0"
+	"weight"				"5"
+	"rumble"			"4"
 	"item_flags"			"0"
-	"damage"			"99"
 
 	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
 	SoundData
@@ -49,6 +51,11 @@ WeaponData
 		"weapon_s"
 		{	
 				"font"		"WeaponIconsSelected"
+				"character"	"l"
+		}
+		"weapon_small"
+		{
+				"font"		"WeaponIconsSmall"
 				"character"	"l"
 		}
 		"ammo"

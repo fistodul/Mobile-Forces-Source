@@ -62,18 +62,24 @@ DESCRIPTION SERVER_OPTIONS
 		{ "32" }
 	}
 	
-	"gamemode"
-	{
-		"#MFS_Gamemode"
-		{ NUMBER 1 10 }
-		{ "0" }
-	}
-
 	"mp_teams_unbalance_limit"
 	{
 		"#MFS_Balance"
 		{ NUMBER 0 -1 }
 		{ "2" }
+	}
+	
+	"exec"
+	{
+		"#MFS_Gamemode"
+		{
+			LIST
+			"Deathmatch" "gamemode\deathmatch"
+			"Squad Deathmatch" "gamemode\squaddeathmatch"
+			"Holdout" "gamemode\holdout"
+			"Injustice" "gamemode\injustice"
+		}
+		{ "gamemode\deathmatch" }
 	}
 	
 	"mp_timelimit"
@@ -90,16 +96,23 @@ DESCRIPTION SERVER_OPTIONS
 		{ "0" }
 	}
 
-	"mp_teamplay"
+	"sprintDisable"
 	{
-		"Enable Squads?"
+		"Disable Running?"
 		{ BOOL }
-		{ "1" }
+		{ "0" }
 	}
-
+	
 	"sv_regeneration"
 	{
 		"Enable Health Regeneration?"
+		{ BOOL }
+		{ "0" }
+	}
+	
+	"sv_regeneration_armor"
+	{
+		"Enable Armor Regeneration?"
 		{ BOOL }
 		{ "0" }
 	}
@@ -114,13 +127,6 @@ DESCRIPTION SERVER_OPTIONS
 	"mp_forcerespawn"
 	{
 		"Force Respawn? xD"
-		{ BOOL }
-		{ "0" }
-	}
-
-	"sprintDisable"
-	{
-		"Disable Running?"
 		{ BOOL }
 		{ "0" }
 	}
@@ -215,7 +221,7 @@ DESCRIPTION SERVER_OPTIONS
 			"Medium" "60000"
 			"High" "90000"
 		}
-		{ "60000" }
+		{ "30000" }
 	}
 
 	"sv_region"

@@ -146,6 +146,7 @@ public:
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	void InitDefaultAIRelationships( void );
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
+	void InitInjusticeAIRelationships( void );
 	
 #endif
 	virtual void ClientDisconnected( edict_t *pClient );
@@ -157,6 +158,8 @@ public:
 
 	
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
+	bool	IsInjustice( void ) { return m_bInjusticeEnabled;	}
+	bool	IsHoldout( void ) { return m_bHoldoutEnabled;	}
 	void	CheckAllPlayersReady( void );
 
 	virtual bool IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer );
@@ -164,6 +167,8 @@ public:
 private:
 	
 	CNetworkVar( bool, m_bTeamPlayEnabled );
+	CNetworkVar( bool, m_bInjusticeEnabled );
+	CNetworkVar(bool, m_bHoldoutEnabled);
 	CNetworkVar( float, m_flGameStartTime );
 	CUtlVector<EHANDLE> m_hRespawnableItemsAndWeapons;
 	float m_tmNextPeriodicThink;

@@ -6,7 +6,7 @@ WeaponData
 	"playermodel"			"models/weapons/w_crowbar.mdl" // Server world model
 	"anim_prefix"			"Grenade" // The HUD icon which will be shown when browsing for this weapon in the weapon selection hud, most likely loaded from halflife2.ttf or hl2mp.ttf.
 	"bucket"			"2" // The horizontal direction.
-	"bucket_position"		"2" // The vertical direction.
+	"bucket_position"		"1" // The vertical direction.
  
 	"clip_size"			"-1" // How many bullets you can fire before you have to reload.
 	"default_clip"			"-1" // How much ammo this weapon can carry.

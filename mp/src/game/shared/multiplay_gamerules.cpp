@@ -53,7 +53,7 @@ REGISTER_GAMERULES_CLASS( CMultiplayRules );
 #ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 	//SecobMod__Information:  This sets what percentage of players are required in the changelevel trigger before map change takes effect. Currently it's set to 100% (all players required).
 	ConVar	mp_transition_players_percent( "mp_transition_players_percent",
-						  "100",
+						  "50",
 						  FCVAR_NOTIFY|FCVAR_REPLICATED,
 						  "How many players in percent are needed for a level transition?" );
 		#ifndef CLIENT_DLL
@@ -741,6 +741,10 @@ ConVarRef suitcharger( "sk_suitcharger" );
 		if ( pKiller)
 		{
 			if ( pKiller->Classify() == CLASS_PLAYER )
+				return (CBasePlayer*)pKiller;
+			else if (pKiller->Classify() == CLASS_PLAYER_RED)
+				return (CBasePlayer*)pKiller;
+			else if (pKiller->Classify() == CLASS_PLAYER_BLUE)
 				return (CBasePlayer*)pKiller;
 
 			// Killing entity might be specifying a scorer player

@@ -2118,7 +2118,7 @@ Vector CNPC_FloorTurret::GetAttackSpread( CBaseCombatWeapon *pWeapon, CBaseEntit
 	// Switch our weapon proficiency based upon our target
 	if ( pTarget )
 	{
-		if ( pTarget->Classify() == CLASS_PLAYER || pTarget->Classify() == CLASS_ANTLION || pTarget->Classify() == CLASS_ZOMBIE )
+		if (pTarget->Classify() == CLASS_PLAYER || CLASS_PLAYER_RED || CLASS_PLAYER_BLUE || pTarget->Classify() == CLASS_ANTLION || pTarget->Classify() == CLASS_ZOMBIE)
 		{
 			// Make me much more accurate
 			weaponProficiency = WEAPON_PROFICIENCY_PERFECT;

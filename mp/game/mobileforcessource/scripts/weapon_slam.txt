@@ -10,10 +10,10 @@ WeaponData
 	"bucket"				"4"
 	"bucket_position"		"2"
 
-	"clip_size"				"4"
+	"clip_size"				"6"
 	"primary_ammo"			"None"
 	"secondary_ammo"		"slam"
-	"default_clip2"			"4"
+	"default_clip2"			"6"
 
 	"weight"				"1"
 	"item_flags"			"2"

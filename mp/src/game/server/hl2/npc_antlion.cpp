@@ -3112,8 +3112,18 @@ void CNPC_Antlion::ClearBurrowPoint( const Vector &origin )
 			bPlayerInSphere = true;
 			continue;
 		}
+		else if (pEntity->Classify() == CLASS_PLAYER_RED)
+		{
+			bPlayerInSphere = true;
+			continue;
+		}
+		else if (pEntity->Classify() == CLASS_PLAYER_BLUE)
+		{
+			bPlayerInSphere = true;
+			continue;
+		}
 
-		if ( pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->VPhysicsGetObject() )
+		if (pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->Classify() != CLASS_PLAYER_RED && pEntity->Classify() != CLASS_PLAYER_BLUE && pEntity->VPhysicsGetObject())
 		{
 			vecSpot	 = pEntity->BodyTarget( origin );
 			vecForce = ( vecSpot - origin ) + Vector( 0, 0, 16 );

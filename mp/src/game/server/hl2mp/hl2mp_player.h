@@ -184,6 +184,8 @@ void CHL2MP_Player::IncrementHealthValue( int nCount )
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 
+	Class_T				Classify ( void );
+
 	#ifdef SecobMod__USE_PLAYERCLASSES
 		void SSPlayerClassesBGCheck(CHL2MP_Player *pPlayer);
 		void ShowSSPlayerClasses(CHL2MP_Player *pPlayer);
@@ -237,6 +239,8 @@ void CHL2MP_Player::IncrementHealthValue( int nCount )
 	void CreateRagdollEntity( void );
 	void GiveAllItems( void );
 	void GiveDefaultItems( void );
+	void GiveGoodItems( void );
+	void GiveEvilItems( void );
 
 	void NoteWeaponFired( void );
 

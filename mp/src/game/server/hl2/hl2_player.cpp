@@ -1019,7 +1019,7 @@ void CHL2_Player::Activate( void )
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-Class_T  CHL2_Player::Classify ( void )
+Class_T  CHL2_Player::Classify( int lol )
 {
 	// If player controlling another entity?  If so, return this class
 	if (m_nControlClass != CLASS_NONE)
@@ -1028,14 +1028,28 @@ Class_T  CHL2_Player::Classify ( void )
 	}
 	else
 	{
-		if(IsInAVehicle())
+		if (IsInAVehicle())
 		{
 			IServerVehicle *pVehicle = GetVehicle();
-			return pVehicle->ClassifyPassenger( this, CLASS_PLAYER );
+			if (lol == 1)
+				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER);
+			else if (lol == 2)
+				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_RED);
+			else if (lol == 3)
+				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_BLUE);
+			else
+				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER);
 		}
 		else
 		{
-			return CLASS_PLAYER;
+			if (lol == 1)
+				return CLASS_PLAYER;
+			else if (lol == 2)
+				return CLASS_PLAYER_RED;
+			else if (lol == 3)
+				return CLASS_PLAYER_BLUE;
+			else
+				return CLASS_PLAYER;
 		}
 	}
 }
@@ -1198,17 +1212,22 @@ void CHL2_Player::InitSprinting( void )
 	StopSprinting();
 }
 
-
+ConVar sprintDisable("sprintDisable", "1", FCVAR_SERVER_CAN_EXECUTE);
 //-----------------------------------------------------------------------------
 // Purpose: Returns whether or not we are allowed to sprint now.
 //-----------------------------------------------------------------------------
 bool CHL2_Player::CanSprint()
 {
+	if(sprintDisable.GetInt() == 0)
+	{
 	return ( m_bSprintEnabled &&										// Only if sprint is enabled 
 			!IsWalking() &&												// Not if we're walking
 			!( m_Local.m_bDucked && !m_Local.m_bDucking ) &&			// Nor if we're ducking
 			(GetWaterLevel() != 3) &&									// Certainly not underwater
-			(GlobalEntity_GetState("suit_no_sprint") != GLOBAL_ON) );	// Out of the question without the sprint module
+			(GlobalEntity_GetState("suit_no_sprint") != GLOBAL_ON) );			// Out of the question without the sprint module
+	}
+	else
+		return false;
 }
 
 //-----------------------------------------------------------------------------

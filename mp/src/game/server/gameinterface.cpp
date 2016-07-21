@@ -816,8 +816,10 @@ void CServerGameDLL::DLLShutdown( void )
 
 	gameeventmanager = NULL;
 	
-	//SteamClient()->ReleaseUser( GetHSteamPipe(), GetHSteamUser() );
-	//SteamClient()->BReleaseSteamPipe( GetHSteamPipe() );
+	/*#ifndef NO_STEAM
+	SteamClient()->ReleaseUser( GetHSteamPipe(), GetHSteamUser() );
+	SteamClient()->BReleaseSteamPipe( GetHSteamPipe() );
+	#endif*/
 	
 	DisconnectTier3Libraries();
 	DisconnectTier2Libraries();

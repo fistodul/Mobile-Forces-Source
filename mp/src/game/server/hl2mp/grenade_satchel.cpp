@@ -13,6 +13,9 @@
 #include "explode.h"
 #include "Sprite.h"
 #include "grenade_satchel.h"
+#ifdef MFS
+#include "eventqueue.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -27,11 +30,13 @@ BEGIN_DATADESC( CSatchelCharge )
 
 	DEFINE_FIELD( m_flNextBounceSoundTime, FIELD_TIME ),
 	DEFINE_FIELD( m_bInAir, FIELD_BOOLEAN ),
+	DEFINE_FIELD( m_bCanExplode, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_vLastPosition, FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_pMyWeaponSLAM, FIELD_CLASSPTR ),
 	DEFINE_FIELD( m_bIsAttached, FIELD_BOOLEAN ),
 
 	// Function Pointers
+	//DEFINE_FUNCTION( SatchelTouch ),
 	DEFINE_THINKFUNC( SatchelThink ),
 
 	// Inputs
@@ -70,6 +75,9 @@ void CSatchelCharge::Spawn( void )
 
 	UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 
+#ifdef MFS
+	SetTouch( &CSatchelCharge::SatchelTouch );
+#endif
 	SetThink( &CSatchelCharge::SatchelThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
@@ -124,6 +132,33 @@ void CSatchelCharge::InputExplode( inputdata_t &inputdata )
 	UTIL_Remove( this );
 }
 
+#ifdef MFS
+//-----------------------------------------------------------------------------
+// Purpose:
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+void CSatchelCharge::SatchelTouch(CBaseEntity *pOther)
+{
+	if (m_bCanExplode)
+	{
+		CBaseEntity *pEntity = NULL;
+
+		while ((pEntity = gEntList.FindEntityByClassname(pEntity, "npc_satchel")) != NULL)
+		{
+			CSatchelCharge *pSatchel = dynamic_cast<CSatchelCharge *>(pEntity);
+			if (pSatchel->m_bIsLive)
+			{
+				g_EventQueue.AddEvent(pSatchel, "Explode", 0.20, this, this);
+			}
+		}
+	}
+	else
+	{
+	m_bCanExplode = true;
+	}
+}
+#endif
 
 void CSatchelCharge::SatchelThink( void )
 {
@@ -168,7 +203,7 @@ void CSatchelCharge::SatchelThink( void )
 
 	StudioFrameAdvance( );
 	SetNextThink( gpGlobals->curtime + 0.1f );
-
+	
 	if (!IsInWorld())
 	{
 		UTIL_Remove( this );

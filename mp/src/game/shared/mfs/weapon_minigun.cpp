@@ -13,17 +13,17 @@
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
  
 //modify this to alter the default(before its increased) rate of fire
-#define def_ROF 0.075f //RPS, 60 Sec / 800 Rounds = 0.075f
+#define ROF 0.080f //RPS, 60 Sec / 800 Rounds = 0.075f
  
 //The gun will fire up to this number of bullets while you hold the fire button. 
 //If you set it to 1 the gun will be semi auto. If you set it to 3 the gun will fire three round bursts
-#define BURST 500;
+#define BURST 720;
  
 #ifdef CLIENT_DLL
 #define CWeaponMiniGun C_WeaponMiniGun
 #endif
  
-ConVar sk_max_Rifle( "sk_max_Rifle", "720", FCVAR_CHEAT | FCVAR_ARCHIVE, "How much this troll wep can have max ammo" );
+ConVar sk_max_Rifle( "sk_max_Rifle", "720", FCVAR_SERVER_CAN_EXECUTE | FCVAR_ARCHIVE, "How much this troll wep can have max ammo" );
 
 //-----------------------------------------------------------------------------
 // CWeaponMiniGun
@@ -38,7 +38,7 @@ class CWeaponMiniGun : public CBaseHL2MPCombatWeapon
     DECLARE_NETWORKCLASS();
     DECLARE_PREDICTABLE();
  
-	int ROF;
+	int ROFI;
 
     void Precache( void );
     void ItemPostFrame( void );
@@ -55,8 +55,8 @@ class CWeaponMiniGun : public CBaseHL2MPCombatWeapon
     virtual bool Reload( void );
  
     int GetMinBurst() { return 2; }
-    int GetMaxBurst() { return 5; }
-    float GetFireRate( void ) { return ROF; }
+	int GetMaxBurst() { return 5; }
+    float GetFireRate( void ) { return ROFI; }
  
     //modify this part to control the general accuracy of the gun
  
@@ -166,7 +166,7 @@ CWeaponMiniGun::CWeaponMiniGun( void )
   m_bFiresUnderwater = false;
   m_bDelayedAttack = false;
   m_flDelayedAttackTime = 0.0f;
-  //int ROF = def_ROF;
+  ROFI = ROF;
   #ifdef Weighted_Weaponry
   Minigun_Weight = 5;
   #endif
@@ -218,7 +218,7 @@ void CWeaponMiniGun::PrimaryAttack( void )
  
     // We fired one shot, decrease the number of bullets available for this burst cycle 
     m_iBurst--;
-    m_flNextPrimaryAttack =gpGlobals->curtime + ROF;
+    m_flNextPrimaryAttack =gpGlobals->curtime + ROFI;
     m_flAttackEnds = gpGlobals->curtime + SequenceDuration();
   }
 }
@@ -280,13 +280,13 @@ void CWeaponMiniGun::ItemPostFrame( void )
   if ( pOwner->m_nButtons & IN_ATTACK )
   {
 	//This epic line makes the increasing happen xD
-	if ( ROF <= 2990 )
+	if ( ROFI > 0.03f )
 	{
-	ROF = ROF + 10;
+	ROFI = ROFI - 0.005f;
 	}
     if (m_flAttackEnds<gpGlobals->curtime)
 	{
-	ROF = def_ROF;
+	ROFI = ROF;
 	{ SendWeaponAnim(ACT_VM_IDLE); }
 	}
   }

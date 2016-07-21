@@ -4,7 +4,7 @@ sv_unlockedchapters 99
 jpeg_quality 100
 cl_forcepreload 1
 r_fastzreject -1
-r_lod -2 // -8
+//r_lod -2 // -8
 //mat_parallaxmap 1
 //mat_queue_mode -1 // maybe this is already set by default to -1 idk
 //mp_decals 800 // Can increase lag but can also "fix badly made sprays xD"

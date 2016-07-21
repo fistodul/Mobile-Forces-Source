@@ -31,7 +31,7 @@ public:
 
 	virtual float GetAutoAimRadius() { return m_fAutoaimRadius; }
 
-	//Class_T Classify( void );
+	Class_T Classify( void );
 	void	Event_Killed( const CTakeDamageInfo &info );
 	void	DecalTrace( trace_t *pTrace, char const *decalName );
 	void	ImpactTrace( trace_t *pTrace, int iDamageType, char *pCustomImpactName );

@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 
-#if 0
+//#if 0
 #include "mp3player.h"
 #include "KeyValues.h"
 #include "filesystem.h"
@@ -1106,10 +1106,10 @@ void CMP3Player::RecursiveFindMP3Files( SoundDirectory_t *root, char const *curr
 {
 	FileFindHandle_t fh;
 
-#if 0
+//#if 0
 	if ( m_nFilesAdded >= 200 )
 		return;
-#endif
+//#endif
 
 	char path[ 512 ];
 	if ( current[ 0 ] )
@@ -1207,10 +1207,10 @@ int CMP3Player::AddSong( char const *relative, int dirnum )
 	
 	if ( songIndex == -1 )
 	{
-#if 0
+//#if 0
 		if ( m_Files.Count() >= 200 )
 			return -1;
-#endif
+//#endif
 
 		MP3File_t mp3;
 
@@ -2108,12 +2108,12 @@ void CMP3Player::OnSliderMoved()
 
 // The engine only allows 4 seconds of skip ahead right now and you have to be connected to get it to work
 //  until this is relaxed we can't do this this way...
-#if 0
+//#if 0
 	float frac = (float)m_pSongProgress->GetValue() / 100.0f;
 
 	float offset = frac * m_flSongDuration;
 	PlaySong( m_nCurrentSong, -offset );
-#endif
+//#endif
 }
 
 void CMP3Player::LoadPlayList( char const *filename )
@@ -2462,7 +2462,7 @@ public:
 
 static CMP3PlayerGameSystem g_MP3Helper;
 
-#else
+/*#else
 
 void MP3Player_Create( vgui::VPANEL parent )
 {
@@ -2472,4 +2472,4 @@ void MP3Player_Destroy()
 {
 }
 
-#endif
+#endif*/

@@ -8,7 +8,9 @@ WeaponData
 	"playermodel"			"models/weapons/w_bugbait.mdl"
 	"anim_prefix"			"Grenade"
 	"bucket"				"5"
-	"bucket_position"		"0"
+	"bucket_position"		"3"
+	"bucket_360"			"3"
+	"bucket_position_360"	"2"
 
 	"clip_size"				"0"
 	"clip2_size"			"0"

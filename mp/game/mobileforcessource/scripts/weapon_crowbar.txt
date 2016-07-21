@@ -9,6 +9,8 @@ WeaponData
 	"anim_prefix"			"crowbar"
 	"bucket"				"0"
 	"bucket_position"		"0"
+	"bucket_360"				"2"
+	"bucket_position_360"		"0"
 
 	"clip_size"				"-1"
 	"primary_ammo"			"None"
