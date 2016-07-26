@@ -8,7 +8,6 @@ The folder structure is like this:
 |	|>>>>mobileforcessource 
 |		|>>>>bin - the client.dll/dylib/so and server.dll/dylib/so go here after being compiled 
 |>>>>src - contains the solutions when they are generated alongside various engine things lol 
-	|>>>>fmod - contains fmod related files, pretty obvious xD 
 	|>>>>game - most of the code which will show up in-game and decide how shit works 
 	|	|>>>>client - contains client-side files 
 	|	|	|>>>>hl2dm - client-side hl2dm code, multiplayer base 
