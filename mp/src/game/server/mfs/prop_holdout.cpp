@@ -25,7 +25,7 @@ BEGIN_DATADESC( CHoldout )
 	DEFINE_FIELD( m_Owner, FIELD_INTEGER ),
 
 	// Function Pointers
-//	DEFINE_FUNCTION( HoldoutTouch ),
+	DEFINE_USEFUNC( HoldoutUse ),
 	DEFINE_THINKFUNC( HoldoutThink ),
 
 END_DATADESC()
@@ -34,10 +34,13 @@ LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );
 
 void CHoldout::Spawn( void )
 {
-	if ( HL2MPRules()->IsHoldout() == false )
-	return;
+CHL2MPRules *pRules = HL2MPRules();
+if ( pRules->IsHoldout() == false )
+{
+return; //Why tf u no work
+}
 	Precache( );
-	SetModel( "models/Alyx.mdl" );
+	SetModel( "models/props/holdout.mdl" );
 
 	VPhysicsInitNormal( SOLID_BBOX, GetSolidFlags() | FSOLID_TRIGGER, false );
 
@@ -45,7 +48,7 @@ void CHoldout::Spawn( void )
 
 	UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 
-	SetTouch( &CHoldout::HoldoutTouch );
+	SetUse( &CHoldout::HoldoutUse );
 	SetThink( &CHoldout::HoldoutThink );
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
@@ -76,10 +79,9 @@ void CHoldout::CreateEffects( void )
 // Input  :
 // Output :
 //-----------------------------------------------------------------------------
-void CHoldout::HoldoutTouch(CBaseEntity *pOther)
+void CHoldout::HoldoutUse(CBasePlayer *pPlayer)
 {
-	CBasePlayer *pPlayer = UTIL_GetNearestVisiblePlayer(this);
-	if (pPlayer)
+	if ( pPlayer->GetTeamNumber() > 1 ) //Shouldnt be owned by spectators even if they somehow "use"
 	{
 		if (m_Owner != pPlayer->GetTeamNumber())
 			m_Owner = pPlayer->GetTeamNumber();
@@ -119,7 +121,7 @@ void CHoldout::HoldoutThink( void )
 
 void CHoldout::Precache( void )
 {
-	PrecacheModel("models/Alyx.mdl");
+	PrecacheModel("models/props/holdout.mdl");
 	PrecacheModel(HOLDOUT_SPRITE);
 }
 
