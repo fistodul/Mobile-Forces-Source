@@ -70,6 +70,7 @@ protected:
 	// virtual void MakeTeamButtons( void );
 	
 	// command callbacks
+	virtual void OnCommand( const char *command );
 	// MESSAGE_FUNC_INT( OnTeamButton, "TeamButton", team );
 
 	IViewPort	*m_pViewPort;
