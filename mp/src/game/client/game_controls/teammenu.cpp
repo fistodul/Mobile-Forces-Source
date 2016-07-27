@@ -381,6 +381,17 @@ void CTeamMenu::OnTeamButton( int team )
 	OnClose();
 } */
 
+void CTeamMenu::OnCommand( const char *command )
+{
+	if ( Q_stricmp( command, "vguicancel" ) )
+	{
+		engine->ClientCmd( const_cast<char *>( command ) );
+	}
+	Close();
+	gViewPortInterface->ShowBackGround( false );
+	BaseClass::OnCommand(command);
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Sets the text of a control by name
 //-----------------------------------------------------------------------------
