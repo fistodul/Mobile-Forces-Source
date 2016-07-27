@@ -59,6 +59,23 @@ public:
 
 	void SetPlayerOwner( CBasePlayer *pPlayer, bool bOwnerOnlyInput = false );
 
+	COutputEvent Output1;
+	COutputEvent Output2;
+	COutputEvent Output3;
+	COutputEvent Output4;
+	COutputEvent Output5;
+	COutputEvent Output6;
+	COutputEvent Output7;
+	COutputEvent Output8;
+	COutputEvent Output9;
+	COutputEvent Output10;
+	COutputEvent Output11;
+	COutputEvent Output12;
+	COutputEvent Output13;
+	COutputEvent Output14;
+	COutputEvent Output15;
+	COutputEvent Output16;
+
 private:
 	void SetAttachmentIndex( int nIndex );
  	void SetPanelName( const char *pPanelName );
