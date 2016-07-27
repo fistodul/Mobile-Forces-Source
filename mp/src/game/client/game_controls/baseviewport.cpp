@@ -106,6 +106,13 @@ CON_COMMAND( hidepanel, "Hides a viewport panel <name>" )
 	 gViewPortInterface->ShowPanel( args[ 1 ], false );
 }
 
+CON_COMMAND( chooseteam, "Opens a menu for teamchoose" )
+{
+ if ( !gViewPortInterface )
+  return;
+ gViewPortInterface->ShowPanel( "team", true );
+}
+
 #ifdef SecobMod__USE_PLAYERCLASSES
 	 CON_COMMAND( SSPlayerClassesBGChecked, "Makes sure the player class menu isn't displayed on the background maps." )
 	{
