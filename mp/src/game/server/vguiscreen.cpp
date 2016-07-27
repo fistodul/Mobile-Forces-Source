@@ -49,6 +49,22 @@ BEGIN_DATADESC( CVGuiScreen )
 	DEFINE_INPUTFUNC( FIELD_VOID, "SetActive", InputSetActive ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "SetInactive", InputSetInactive ),
 
+	DEFINE_OUTPUT( Output1, "Output1" ),
+	DEFINE_OUTPUT( Output2, "Output2" ),
+	DEFINE_OUTPUT( Output3, "Output3" ),
+	DEFINE_OUTPUT( Output4, "Output4" ),
+	DEFINE_OUTPUT( Output5, "Output5" ),
+	DEFINE_OUTPUT( Output6, "Output6" ),
+	DEFINE_OUTPUT( Output7, "Output7" ),
+	DEFINE_OUTPUT( Output8, "Output8" ),
+	DEFINE_OUTPUT( Output9, "Output9" ),
+	DEFINE_OUTPUT( Output10, "Output10" ),
+	DEFINE_OUTPUT( Output11, "Output11" ),
+	DEFINE_OUTPUT( Output12, "Output12" ),
+	DEFINE_OUTPUT( Output13, "Output13" ),
+	DEFINE_OUTPUT( Output14, "Output14" ),
+	DEFINE_OUTPUT( Output15, "Output15" ),
+	DEFINE_OUTPUT( Output16, "Output16" ),
 END_DATADESC()
 
 
