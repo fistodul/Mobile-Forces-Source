@@ -1215,6 +1215,7 @@ bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 
 	m_vecOldViewAngles = pCmd->viewangles;
 	
+	if(pCmd->buttons & IN_VAILDVGUIINPUT)
 	// Check to see if we're in vgui input mode...
 	DetermineVguiInputMode( pCmd );
 
