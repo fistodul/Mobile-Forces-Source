@@ -269,6 +269,8 @@ void CBaseViewport::CreateDefaultPanels( void )
 	AddNewPanel( CreatePanelByName( PANEL_SCOREBOARD ), "PANEL_SCOREBOARD" );
 	AddNewPanel( CreatePanelByName( PANEL_INFO ), "PANEL_INFO" );
 	AddNewPanel( CreatePanelByName( PANEL_SPECGUI ), "PANEL_SPECGUI" );
+	AddNewPanel( CreatePanelByName( PANEL_SPECGUI ), "PANEL_SPECGUI" );
+	AddNewPanel( CreatePanelByName( PANEL_TEAM ), "PANEL_TEAM" ); //This wasnt here??
 #if !defined( TF_CLIENT_DLL )
 	AddNewPanel( CreatePanelByName( PANEL_SPECMENU ), "PANEL_SPECMENU" );
 	AddNewPanel( CreatePanelByName( PANEL_NAV_PROGRESS ), "PANEL_NAV_PROGRESS" );
