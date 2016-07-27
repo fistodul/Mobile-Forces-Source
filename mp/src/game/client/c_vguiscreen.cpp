@@ -867,6 +867,33 @@ vgui::Panel *CVGuiScreenPanel::CreateControlByName(const char *controlName)
 //-----------------------------------------------------------------------------
 void CVGuiScreenPanel::OnCommand( const char *command)
 {
+	if ( stricmp( command, "out1" ) == 0
+		|| stricmp( command, "out2" ) == 0
+		|| stricmp( command, "out3" ) == 0
+		|| stricmp( command, "out4" ) == 0
+		|| stricmp( command, "out5" ) == 0
+		|| stricmp( command, "out6" ) == 0
+		|| stricmp( command, "out7" ) == 0
+		|| stricmp( command, "out8" ) == 0
+		|| stricmp( command, "out9" ) == 0
+		|| stricmp( command, "out10" ) == 0
+		|| stricmp( command, "out11" ) == 0
+		|| stricmp( command, "out12" ) == 0
+		|| stricmp( command, "out13" ) == 0
+		|| stricmp( command, "out14" ) == 0
+		|| stricmp( command, "out15" ) == 0
+		|| stricmp( command, "out16" ) == 0 )
+	{
+		char entindex[8];
+		itoa( this->GetEntity()->entindex(), entindex, 10 ); //Radix is base 10 (decimal)
+		char newcommand[16] = { ' ' };
+		strcat( newcommand, command );
+		strcat( newcommand, " " );
+		strcat( newcommand, entindex );
+		engine->ClientCmd_Unrestricted( const_cast<char *>( newcommand ) );
+		BaseClass::OnCommand( newcommand );
+		return;
+	}
 	if ( Q_stricmp( command, "vguicancel" ) )
 	{
 		engine->ClientCmd( const_cast<char *>( command ) );
