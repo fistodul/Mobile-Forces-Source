@@ -1,4 +1,4 @@
-//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
+//====== Copyright Â© 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: General game definition file (.fgd) 
 //
@@ -1350,10 +1350,26 @@
 	overlaymaterial(string) : "Overlay Material" : "" : "Name of a material to overlay over the top of the VGUI screen. NOTE: This material must write Z for the VGUI screen to work."
 	width(integer) : "Panel Width in World" : 32 : "Width of the panel in units."
 	height(integer) : "Panel Height in World" : 32 : "Height of the panel in units."
-
+ 
 	// Inputs
 	input SetActive(void) : "Make the vgui screen visible."
 	input SetInactive(void) : "Make the vgui screen invisible."
+	output Output1(void) : "Fire output 1."
+	output Output2(void) : "Fire output 2."
+	output Output3(void) : "Fire output 3."
+	output Output4(void) : "Fire output 4."
+	output Output5(void) : "Fire output 5."
+	output Output6(void) : "Fire output 6."
+	output Output7(void) : "Fire output 7."
+	output Output8(void) : "Fire output 8."
+	output Output9(void) : "Fire output 9."
+	output Output10(void) : "Fire output 10."
+	output Output11(void) : "Fire output 11."
+	output Output12(void) : "Fire output 12."
+	output Output13(void) : "Fire output 13."
+	output Output14(void) : "Fire output 14."
+	output Output15(void) : "Fire output 15."
+	output Output16(void) : "Fire output 16."
 ]
 
 @PointClass base(vgui_screen_base) size(-4 -4 -4, 4 4 4) = vgui_screen : 
