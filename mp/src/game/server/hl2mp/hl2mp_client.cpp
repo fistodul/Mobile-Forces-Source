@@ -119,7 +119,10 @@ pPlayer->Spawn();
 	data->SetString( "msg",	"motd" );		// use this stringtable entry
 	data->SetBool( "unload", sv_motd_unload_on_dismissal.GetBool() );
 
+if ( HL2MPRules()->IsTeamplay() == true )
+{
 	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
+}
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 
 	data->deleteThis();
