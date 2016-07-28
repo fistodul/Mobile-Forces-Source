@@ -731,7 +731,7 @@ void CSpectatorGUI::UpdateTimer()
 
 	int timer = gpGlobals->curtime;
 
-	V_snwprintf ( szText, sizeof( szText ), L"%d:%02d", (timer / 60), (timer % 60) );
+	V_swprintf_safe ( szText, L"%d:%02d\n", (timer / 60), (timer % 60) );
 
 	SetLabelText("timerlabel", szText );
 }
