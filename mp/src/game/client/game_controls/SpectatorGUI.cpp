@@ -5,8 +5,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#include "C_Team.h"
 #include "cbase.h"
+#include "C_Team.h"
 #include <cdll_client_int.h>
 #include <globalvars_base.h>
 #include <cdll_util.h>
@@ -58,24 +58,22 @@ ConVar spec_scoreboard( "spec_scoreboard", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE 
 
 CSpectatorGUI *g_pSpectatorGUI = NULL;
 
-// Ms - Update team scores 
 void CSpectatorGUI::UpdateScores()
 {
     // Ms - Do team scores 
     wchar_t eltTeamScore[6], ratTeamScore[6];
-    C_Team *TEAM_COMBINE = GetGlobalTeam(TEAM_ELTADORIANS);
-    C_Team *TEAM_REBELS = GetGlobalTeam(TEAM_RATEALIANES);
+    C_Team *teamElt = GetGlobalTeam(TEAM_COMBINE);
+    C_Team *teamRat = GetGlobalTeam(TEAM_REBELS);
 
-    if (teamCOMBINE) {
-        swprintf(COMBINETeamScore, L"%d", teamCOMBINE->Get_Score());
-        SetLabelText("CTScoreValue", COMBINETeamScore);
+    if (teamElt) {
+        swprintf(eltTeamScore, L"%d", teamElt->Get_Score());
+        SetLabelText("CTScoreValue", eltTeamScore);
     }
-    if (teamREBELS) {
-        swprintf(REBELSTeamScore, L"%d", teamREBELS->Get_Score());
-        SetLabelText("TERScoreValue", REBELSTeamScore);
+    if (teamRat) {
+        swprintf(ratTeamScore, L"%d", teamRat->Get_Score());
+        SetLabelText("TERScoreValue", ratTeamScore);
     }
 }
-
 
 // NB disconnect between localization text and observer mode enums
 static const char *s_SpectatorModes[] =
