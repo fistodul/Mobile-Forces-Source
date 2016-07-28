@@ -79,8 +79,8 @@ protected:
 	void UpdateTimer();
 	void SetLogoImage(const char *image);
 
-protected:	
-define void UpdateScores();
+protected:
+void UpdateScores();
 	enum { INSET_OFFSET = 2 } ; 
 
 	// vgui overrides
