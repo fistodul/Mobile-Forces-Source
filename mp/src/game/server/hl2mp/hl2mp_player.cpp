@@ -500,16 +500,6 @@ Class_T  CHL2MP_Player::Classify(void)
 // Purpose: Sets HL2 specific defaults.
 //-----------------------------------------------------------------------------
 void CHL2MP_Player::Spawn(void)
-if ( GetTeamNumber() != TEAM_SPECTATOR )
-{
-    StopObserverMode();
-}
-else
-{
-    // Ms - If we are spectating then go roaming 
-    StartObserverMode( OBS_MODE_ROAMING );
-}
-}
 {
 #ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 if ( m_bTransition )
@@ -541,7 +531,8 @@ Msg( "Heavies: %i \n", HeavyPlayerNumbers);
 	PickDefaultSpawnTeam();
 
 	BaseClass::Spawn();
-	
+	if ( !IsObserver() )
+	{
 #ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 // Disengage from hierarchy
 SetParent( NULL );
@@ -2487,8 +2478,8 @@ bool CHL2MP_Player::StartObserverMode(int mode)
 	//we only want to go into observer mode if the player asked to, not on a death timeout
 	if ( m_bEnterObserver == true )
 	{
-		// Ms - Call CBasePlayer::StartObserverMode(mode) 
-return BaseClass::StartObserverMode(mode);
+	VPhysicsDestroyObject();
+	return BaseClass::StartObserverMode(mode);
 	}
 	return false;
 }
