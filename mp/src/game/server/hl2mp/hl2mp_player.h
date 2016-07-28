@@ -136,11 +136,11 @@ int CHL2MP_Player::GetMaxArmorValue()
 	return m_iMaxArmor;
 }
 
-#ifdef SecobMod__USE_PLAYERCLASSES
 private:  
 	// Test whether this player is spawning for the first time.
 	bool m_bFirstSpawn;
 	bool IsFirstSpawn();
+#ifdef SecobMod__USE_PLAYERCLASSES
 
 void CHL2MP_Player::SetHealthValue( int value )
 {
@@ -169,6 +169,7 @@ void CHL2MP_Player::IncrementHealthValue( int nCount )
 		m_iHealth = m_iMaxHealth;
 }
 #endif //SecobMod__USE_PLAYERCLASSES
+public: 
 
 	DECLARE_CLASS( CHL2MP_Player, CHL2_Player );
 

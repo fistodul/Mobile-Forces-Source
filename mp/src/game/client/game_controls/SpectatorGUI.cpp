@@ -5,6 +5,7 @@
 // $NoKeywords: $
 //=============================================================================//
 
+#include "C_Team.h"
 #include "cbase.h"
 #include <cdll_client_int.h>
 #include <globalvars_base.h>
@@ -56,6 +57,24 @@ extern IGameUIFuncs *gameuifuncs; // for key binding details
 ConVar spec_scoreboard( "spec_scoreboard", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE );
 
 CSpectatorGUI *g_pSpectatorGUI = NULL;
+
+// Ms - Update team scores 
+void CSpectatorGUI::UpdateScores()
+{
+    // Ms - Do team scores 
+    wchar_t eltTeamScore[6], ratTeamScore[6];
+    C_Team *TEAM_COMBINE = GetGlobalTeam(TEAM_ELTADORIANS);
+    C_Team *TEAM_REBELS = GetGlobalTeam(TEAM_RATEALIANES);
+
+    if (teamCOMBINE) {
+        swprintf(COMBINETeamScore, L"%d", teamCOMBINE->Get_Score());
+        SetLabelText("CTScoreValue", COMBINETeamScore);
+    }
+    if (teamREBELS) {
+        swprintf(REBELSTeamScore, L"%d", teamREBELS->Get_Score());
+        SetLabelText("TERScoreValue", REBELSTeamScore);
+    }
+}
 
 
 // NB disconnect between localization text and observer mode enums
@@ -511,19 +530,23 @@ void CSpectatorGUI::PerformLayout()
 //-----------------------------------------------------------------------------
 void CSpectatorGUI::OnThink()
 {
-	BaseClass::OnThink();
+    BaseClass::OnThink();
 
-	if ( IsVisible() )
-	{
-		if ( m_bSpecScoreboard != spec_scoreboard.GetBool() )
-		{
-			if ( !spec_scoreboard.GetBool() || !gViewPortInterface->GetActivePanel() )
-			{
-				m_bSpecScoreboard = spec_scoreboard.GetBool();
-				gViewPortInterface->ShowPanel( PANEL_SCOREBOARD, m_bSpecScoreboard );
-			}
-		}
-	}
+    if ( IsVisible() )
+    {
+        if ( m_bSpecScoreboard != spec_scoreboard.GetBool() )
+        {
+            if ( !spec_scoreboard.GetBool() || !gViewPortInterface->GetActivePanel() )
+            {
+                m_bSpecScoreboard = spec_scoreboard.GetBool();
+                gViewPortInterface->ShowPanel( PANEL_SCOREBOARD, m_bSpecScoreboard );
+            }
+        }
+        // Ms - Update the timer 
+        UpdateTimer();
+        // Ms - Update team scores 
+        UpdateScores();
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -708,9 +731,9 @@ void CSpectatorGUI::UpdateTimer()
 {
 	wchar_t szText[ 63 ];
 
-	int timer = 0;
+	int timer = gpGlobals->curtime;
 
-	V_swprintf_safe ( szText, L"%d:%02d\n", (timer / 60), (timer % 60) );
+	V_snwprintf ( szText, sizeof( szText ), L"%d:%02d", (timer / 60), (timer % 60) );
 
 	SetLabelText("timerlabel", szText );
 }

@@ -80,6 +80,7 @@ protected:
 	void SetLogoImage(const char *image);
 
 protected:	
+define void UpdateScores();
 	enum { INSET_OFFSET = 2 } ; 
 
 	// vgui overrides

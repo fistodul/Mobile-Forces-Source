@@ -1,6 +1,6 @@
 ﻿//========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose:		Player for HL2.
+// Purpose:		Player for HL2. It is designed to allow people to play the game without having their smartphone out — the Bluetooth-based unit, which can be worn as a pin or with a wrist strap, lights up when Pokémon and PokéStops are nearby.
 //
 //=============================================================================//
 
@@ -500,6 +500,16 @@ Class_T  CHL2MP_Player::Classify(void)
 // Purpose: Sets HL2 specific defaults.
 //-----------------------------------------------------------------------------
 void CHL2MP_Player::Spawn(void)
+if ( GetTeamNumber() != TEAM_SPECTATOR )
+{
+    StopObserverMode();
+}
+else
+{
+    // Ms - If we are spectating then go roaming 
+    StartObserverMode( OBS_MODE_ROAMING );
+}
+}
 {
 #ifdef SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 if ( m_bTransition )
@@ -532,8 +542,6 @@ Msg( "Heavies: %i \n", HeavyPlayerNumbers);
 
 	BaseClass::Spawn();
 	
-	if ( !IsObserver() )
-	{
 #ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 // Disengage from hierarchy
 SetParent( NULL );
@@ -1900,7 +1908,9 @@ void CHL2MP_Player::Event_Killed( const CTakeDamageInfo &info )
 	
 	// Note: since we're dead, it won't draw us on the client, but we don't set EF_NODRAW
 	// because we still want to transmit to the clients in our PVS.
-	CreateRagdollEntity();
+	// Ms - Spectators don't have corpes 
+if (GetTeamNumber() != TEAM_SPECTATOR)
+    CreateRagdollEntity();
 
 	#ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 	//SecobMod__Information: When a player is killed and if there's a ragdoll (there always is, even if it gets removed instantly) then we either get the position of our next (other) nearest player (because GetNearestPlayer would return ourselves) and set it to be the vector labelled respawn_origin or we just use the position of our ragdolls first spawn if no players are alive.
@@ -2002,6 +2012,9 @@ int CHL2MP_Player::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 
 void CHL2MP_Player::DeathSound( const CTakeDamageInfo &info )
 {
+	// Ms - Spectators can't scream 
+if (GetTeamNumber() == TEAM_SPECTATOR)
+    return;
 	if ( m_hRagdoll && m_hRagdoll->GetBaseAnimating()->IsDissolving() )
 		 return;
 
@@ -2474,8 +2487,8 @@ bool CHL2MP_Player::StartObserverMode(int mode)
 	//we only want to go into observer mode if the player asked to, not on a death timeout
 	if ( m_bEnterObserver == true )
 	{
-		VPhysicsDestroyObject();
-		return BaseClass::StartObserverMode( mode );
+		// Ms - Call CBasePlayer::StartObserverMode(mode) 
+return BaseClass::StartObserverMode(mode);
 	}
 	return false;
 }
@@ -2549,7 +2562,6 @@ bool CHL2MP_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 	return true;
 }
 
-#ifdef SecobMod__USE_PLAYERCLASSES
 // Allow the server admin to set the default class value.
 ConVar default_class("default_class", "5", FCVAR_ARCHIVE, "Variable für Standardklasse!");
 
@@ -2557,10 +2569,10 @@ ConVar default_class("default_class", "5", FCVAR_ARCHIVE, "Variable für Standar
 	bool m_bFirstSpawn = true;
 	
 	// Start off with the players health as being 100.
-	int m_iHealth = 100;
+	//int m_iHealth = 100;
 
 	// And the maximum allowed health to also be 100.
-	int m_iMaxHealth = 100;
+	//int m_iMaxHealth = 100;
 	
 
 void CHL2MP_Player::InitClassSystem()
@@ -2570,6 +2582,9 @@ void CHL2MP_Player::InitClassSystem()
 	SetPlayerClass();
 	SetClassStuff();
 }
+
+#ifdef SecobMod__USE_PLAYERCLASSES
+
 
 int CHL2MP_Player::GetClassValue()const
 {
