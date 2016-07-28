@@ -2553,11 +2553,12 @@ bool CHL2MP_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 	return true;
 }
 
+// Is this the first spawn?
+bool m_bFirstSpawn = true;
+
+#ifdef SecobMod__USE_PLAYERCLASSES
 // Allow the server admin to set the default class value.
 ConVar default_class("default_class", "5", FCVAR_ARCHIVE, "Variable für Standardklasse!");
-
-	// Is this first spawn?
-	bool m_bFirstSpawn = true;
 	
 	// Start off with the players health as being 100.
 	//int m_iHealth = 100;
@@ -2573,9 +2574,6 @@ void CHL2MP_Player::InitClassSystem()
 	SetPlayerClass();
 	SetClassStuff();
 }
-
-#ifdef SecobMod__USE_PLAYERCLASSES
-
 
 int CHL2MP_Player::GetClassValue()const
 {
