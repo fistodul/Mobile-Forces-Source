@@ -253,6 +253,10 @@ public:
 	IPlayerInfo *GetPlayerInfo() { return &m_PlayerInfo; }
 	IBotController *GetBotController() { return &m_PlayerInfo; }
 	
+	bool		m_pVGUImode;
+	bool		GetVGUIMode(void) {return m_pVGUImode;}
+	void		SetVGUImode(bool newmode) { m_pVGUImode = newmode;}
+	
 	#ifdef SecobMod__USE_PLAYERCLASSES
 	 // Here are the players speed is set:
 	void SetWalkSpeed(int WalkSpeed);
