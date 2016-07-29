@@ -30,6 +30,11 @@ BEGIN_DATADESC( CHoldout )
 
 END_DATADESC()
 
+IMPLEMENT_SERVERCLASS_ST( CHoldout, DT_Holdout )
+	SendPropFloat( SENDINFO( m_BlueTime ), 0, SPROP_NOSCALE),
+	SendPropFloat( SENDINFO( m_RedTime ), 0, SPROP_NOSCALE),
+END_SEND_TABLE()
+
 LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );
 
 void CHoldout::Spawn( void )
@@ -61,10 +66,18 @@ return; //Why tf u no work
 //-----------------------------------------------------------------------------
 void CHoldout::CreateEffects( void )
 {
-	// Only do this once
+	// Dont overlap
 	if ( m_hGlowSprite != NULL )
 		return;
-
+	
+	if ( m_Owner == 2 )
+	{
+	
+	}
+	else
+	{
+	
+	}
 	// Create a blinking light to show we're an active SLAM
 	m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE, GetAbsOrigin(), false );
 	m_hGlowSprite->SetAttachment( this, 0 );
