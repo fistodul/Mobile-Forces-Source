@@ -163,6 +163,7 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 
     m_bEnterObserver = false;
 	m_bReady = false;
+	m_bFirstSpawn = true;
 
 	m_fRegenRemander = 0;
 	m_fRegenRemanderArmor = 0;
@@ -405,6 +406,11 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		}
 		else
 		{
+			if ( m_bFirstSpawn == true )
+			{
+			ChangeTeam( TEAM_SPECTATORS )
+			else
+			{
 			CTeam *pCombine = g_Teams[TEAM_COMBINE];
 			CTeam *pRebels = g_Teams[TEAM_REBELS];
 
@@ -444,6 +450,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
 					}
 				}
+			}
 			}
 		}
 	}
@@ -726,6 +733,8 @@ CBaseEntity *ent = NULL;
 		}
 	}
 #endif //SecobMod__ENABLE_MAP_SPECIFIC_PLAYER_MODEL_OVERRIDES
+if ( m_bFirstSpawn == true )
+m_bFirstSpawn = false;
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
@@ -1595,13 +1604,47 @@ void CHL2MP_Player::ChangeTeam( int iTeam )
 
 bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 {
-	if ( !GetGlobalTeam( team ) || team == 0 )
+	if ( !GetGlobalTeam( team ) || team < 0 )
 	{
 		Warning( "HandleCommand_JoinTeam( %d ) - invalid team index.\n", team );
 		return false;
 	}
 
-	if ( team == TEAM_SPECTATOR )
+	//auto assign if you join team 0
+	if ( team == 0 )
+	{
+		if (HL2MPRules()->IsInjustice() == true)
+		{
+			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
+			{
+				ChangeTeam(TEAM_REBELS);
+			}
+			else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
+			{
+				ChangeTeam(TEAM_COMBINE);
+			}
+			else
+			{
+				ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+			}
+		}
+		else
+		{
+			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+			{
+				ChangeTeam(TEAM_REBELS);
+			}
+			else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+			{
+				ChangeTeam(TEAM_COMBINE);
+			}
+			else
+			{
+				ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+			}
+		}
+	}
+	else if ( team == TEAM_SPECTATOR )
 	{
 		// Prevent this is the cvar is set
 		if ( !mp_allowspectators.GetInt() )
@@ -1649,7 +1692,7 @@ bool CHL2MP_Player::ClientCommand( const CCommand &args )
 	}
 	else if ( FStrEq( args[0], "jointeam" ) ) 
 	{
-		if ( args.ArgC() < 2 )
+		if ( args.ArgC() < 0 )
 		{
 			Warning( "Player sent bad jointeam syntax\n" );
 		}
@@ -2554,7 +2597,7 @@ bool CHL2MP_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 }
 
 // Is this the first spawn?
-bool m_bFirstSpawn = true;
+//bool m_bFirstSpawn = true;
 
 #ifdef SecobMod__USE_PLAYERCLASSES
 // Allow the server admin to set the default class value.
