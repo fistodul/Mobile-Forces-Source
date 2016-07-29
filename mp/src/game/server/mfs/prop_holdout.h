@@ -24,6 +24,7 @@ class CHoldout : public CBaseGrenade
 {
 public:
 	DECLARE_CLASS( CHoldout, CBaseGrenade );
+	DECLARE_SERVERCLASS();  // make this entity networkable
 
 	void			Spawn( void );
 	void			Precache( void );
@@ -31,10 +32,9 @@ public:
 	void			HoldoutThink( void );
 
 	int			m_Owner;
-	float			m_RedTime;
-	float			m_BlueTime;
+	CNetworkVar( float, m_RedTime );
+	CNetworkVar( float, m_BlueTime );
 
-public:
 	CHoldout();
 	~CHoldout();
 
