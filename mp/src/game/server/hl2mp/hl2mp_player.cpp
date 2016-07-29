@@ -662,6 +662,7 @@ CBaseEntity *ent = NULL;
 
 		RemoveEffects( EF_NODRAW );
 		
+		if (m_bFirstSpawn == false)
 		GiveDefaultItems();
 		#ifdef SecobMod__USE_PLAYERCLASSES			
 		StartSprinting();
