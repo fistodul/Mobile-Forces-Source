@@ -19,6 +19,7 @@
 #include "tier0/memdbgon.h"
 
 #define	HOLDOUT_SPRITE	"sprites/redglow1.vmt"
+#define	HOLDOUT_SPRITE2	"sprites/redglow1.vmt"
 
 BEGIN_DATADESC( CHoldout )
 
@@ -58,7 +59,6 @@ return; //Why tf u no work
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_hGlowSprite = NULL;
-	CreateEffects();
 }
 
 //-----------------------------------------------------------------------------
@@ -69,22 +69,24 @@ void CHoldout::CreateEffects( void )
 	// Dont overlap
 	if ( m_hGlowSprite != NULL )
 		return;
-	
+if ( m_Owner != NULL )
+{
 	if ( m_Owner == 2 )
 	{
-	
+	// Create a blue blinking light to show the owner team
+	m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE2, GetAbsOrigin(), false );
 	}
 	else
 	{
-	
-	}
-	// Create a blinking light to show we're an active SLAM
+	// Create a red blinking light to show the owner team
 	m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE, GetAbsOrigin(), false );
+	}
 	m_hGlowSprite->SetAttachment( this, 0 );
 	m_hGlowSprite->SetTransparency( kRenderTransAdd, 255, 255, 255, 255, kRenderFxStrobeFast );
 	m_hGlowSprite->SetBrightness( 255, 1.0f );
 	m_hGlowSprite->SetScale( 0.2f, 0.5f );
 	m_hGlowSprite->TurnOn();
+}
 }
 
 //-----------------------------------------------------------------------------
@@ -97,7 +99,15 @@ void CHoldout::HoldoutUse(CBasePlayer *pPlayer)
 	if ( pPlayer->GetTeamNumber() > 1 ) //Shouldnt be owned by spectators even if they somehow "use"
 	{
 		if (m_Owner != pPlayer->GetTeamNumber())
-			m_Owner = pPlayer->GetTeamNumber();
+		{
+		m_Owner = pPlayer->GetTeamNumber();
+		if ( m_hGlowSprite != NULL )
+		{
+		UTIL_Remove( m_hGlowSprite );
+		m_hGlowSprite = NULL;
+		}
+		CreateEffects();
+		}
 	}
 }
 
@@ -136,6 +146,7 @@ void CHoldout::Precache( void )
 {
 	PrecacheModel("models/props/holdout.mdl");
 	PrecacheModel(HOLDOUT_SPRITE);
+	PrecacheModel(HOLDOUT_SPRITE2);
 }
 
 //-----------------------------------------------------------------------------
