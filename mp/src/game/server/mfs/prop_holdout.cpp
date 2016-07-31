@@ -52,7 +52,7 @@ return; //Why tf u no work
 
 	SetCollisionGroup( COLLISION_GROUP_WEAPON );
 
-	UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
+	//UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 
 	SetUse( &CHoldout::HoldoutUse );
 	SetThink( &CHoldout::HoldoutThink );
