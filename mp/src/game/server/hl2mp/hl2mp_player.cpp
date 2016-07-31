@@ -485,24 +485,6 @@ static int FindPassableSpace( CBasePlayer *pPlayer, const Vector& direction, flo
 }
 #endif //SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 
-//------------------------------------------------------------------------------
-// Purpose : The sorta retarded implementation
-// Input   :
-// Output  :
-//------------------------------------------------------------------------------
-Class_T  CHL2MP_Player::Classify(void)
-{
-	if (HL2MPRules()->IsInjustice() == true)
-	{
-		if (GetTeamNumber() == TEAM_REBELS)
-			return BaseClass::Classify(2);
-		else
-			return BaseClass::Classify(3);
-	}
-	else
-		return BaseClass::Classify(1);
-}
-
 //-----------------------------------------------------------------------------
 // Purpose: Sets HL2 specific defaults.
 //-----------------------------------------------------------------------------
