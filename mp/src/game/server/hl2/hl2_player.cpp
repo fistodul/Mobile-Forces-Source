@@ -46,6 +46,7 @@
 #include "gamestats.h"
 #include "filters.h"
 #include "tier0/icommandline.h"
+#include "team.h"
 
 #ifdef HL2_EPISODIC
 #include "npc_alyx_episodic.h"
@@ -1024,7 +1025,7 @@ void CHL2_Player::Activate( void )
 // Input   :
 // Output  :
 //------------------------------------------------------------------------------
-Class_T  CHL2_Player::Classify( int lol )
+Class_T  CHL2_Player::Classify( void )
 {
 	// If player controlling another entity?  If so, return this class
 	if (m_nControlClass != CLASS_NONE)
@@ -1036,24 +1037,20 @@ Class_T  CHL2_Player::Classify( int lol )
 		if (IsInAVehicle())
 		{
 			IServerVehicle *pVehicle = GetVehicle();
-			if (lol == 1)
-				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER);
-			else if (lol == 2)
+			if (GetTeamNumber() == 2)
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_RED);
-			else if (lol == 3)
+			else if (GetTeamNumber() == 3)
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_BLUE);
-			else
+			
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER);
 		}
 		else
 		{
-			if (lol == 1)
-				return CLASS_PLAYER;
-			else if (lol == 2)
+			if (GetTeamNumber() == 2)
 				return CLASS_PLAYER_RED;
-			else if (lol == 3)
+			else if (GetTeamNumber() == 3)
 				return CLASS_PLAYER_BLUE;
-			else
+			
 				return CLASS_PLAYER;
 		}
 	}
