@@ -3089,6 +3089,11 @@ void CBasePlayer::Duck( )
 //
 Class_T  CBasePlayer::Classify ( void )
 {
+if (GetTeamNumber() == 2)
+  	return CLASS_PLAYER_RED;
+else if (GetTeamNumber() == 3)
+  	return CLASS_PLAYER_BLUE;
+
 	return CLASS_PLAYER;
 }
 
