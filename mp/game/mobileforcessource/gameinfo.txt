@@ -89,7 +89,6 @@
 			// Note that this folder is scanned only when the game is booted.
 			game+mod			hl2mp/custom/*
 			game+mod			hl2/custom/*
-			game+mod			sourcetest/custom/*
 
 			// Now search loose files.  We'll set the directory containing the gameinfo.txt file
 			// as the first "mod" search path (after any user customizations).  This is also the one
@@ -104,7 +103,6 @@
 			game_lv				hl2/hl2_lv.vpk
 			game+mod			hl2mp/hl2mp_english.vpk
 			game+mod			hl2mp/hl2mp_pak.vpk
-			game+mod			sourcetest/sourcetest_pak.vpk
 			game				|all_source_engine_paths|hl2/hl2_english.vpk
 			game				|all_source_engine_paths|hl2/hl2_pak.vpk
 			game				|all_source_engine_paths|hl2/hl2_textures.vpk
@@ -116,16 +114,13 @@
 			// Add the HL2 directory as a game search path.  This is also where where writes
 			// to the "game" path go.
 			game+game_write		hl2mp
-			game+game_write		sourcetest
 
 			// Where the game's binaries are
 			gamebin				hl2mp/bin
-			gamebin				sourcetest/bin
 
 			// Last, mount in shared HL2 loose files
 			Game				|all_source_engine_paths|hl2mp
 			Game				|all_source_engine_paths|hl2
-			Game				|all_source_engine_paths|sourcetest
 			platform			|all_source_engine_paths|platform
 
 			//Portal1
