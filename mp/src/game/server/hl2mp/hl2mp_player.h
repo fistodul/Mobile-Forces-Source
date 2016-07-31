@@ -185,8 +185,6 @@ public:
 	DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();
 
-	Class_T				Classify ( void );
-
 	#ifdef SecobMod__USE_PLAYERCLASSES
 		void SSPlayerClassesBGCheck(CHL2MP_Player *pPlayer);
 		void ShowSSPlayerClasses(CHL2MP_Player *pPlayer);
