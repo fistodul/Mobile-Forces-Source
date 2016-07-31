@@ -67,7 +67,7 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHudElement( pElementName )
+C_Holdout::C_Holdout( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHudElement( pElementName )
 {
 		SetHiddenBits( HIDEHUD_PLAYERDEAD );
 
@@ -80,7 +80,7 @@ CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHu
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudAmmo::Init( void )
+void C_Holdout::Init( void )
 {
 	m_BlueTime		= -1;
 	m_RedTime	= -1;
@@ -101,14 +101,14 @@ void CHudAmmo::Init( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CHudAmmo::VidInit( void )
+void C_Holdout::VidInit( void )
 {
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Resets hud after save/restore
 //-----------------------------------------------------------------------------
-void CHudAmmo::Reset()
+void C_Holdout::Reset()
 {
 	BaseClass::Reset();
 
@@ -123,7 +123,7 @@ void CHudAmmo::Reset()
 //-----------------------------------------------------------------------------
 // Purpose: called every frame to get ammo info from the weapon
 //-----------------------------------------------------------------------------
-void CHudAmmo::UpdatePlayerAmmo( C_BasePlayer *player )
+void C_Holdout::UpdatePlayerAmmo( C_BasePlayer *player )
 {
 	// Clear out the vehicle entity
 	m_hCurrentVehicle = NULL;
@@ -196,7 +196,7 @@ void CHudAmmo::UpdatePlayerAmmo( C_BasePlayer *player )
 	}
 }
 
-void CHudAmmo::UpdateVehicleAmmo( C_BasePlayer *player, IClientVehicle *pVehicle )
+void C_Holdout::UpdateVehicleAmmo( C_BasePlayer *player, IClientVehicle *pVehicle )
 {
 	m_hCurrentActiveWeapon = NULL;
 	CBaseEntity *pVehicleEnt = pVehicle->GetVehicleEnt();
@@ -258,7 +258,7 @@ void CHudAmmo::UpdateVehicleAmmo( C_BasePlayer *player, IClientVehicle *pVehicle
 //-----------------------------------------------------------------------------
 // Purpose: called every frame to get ammo info from the weapon
 //-----------------------------------------------------------------------------
-void CHudAmmo::OnThink()
+void C_Holdout::OnThink()
 {
 	UpdateAmmoDisplays();
 }
@@ -266,7 +266,7 @@ void CHudAmmo::OnThink()
 //-----------------------------------------------------------------------------
 // Purpose: updates the ammo display counts
 //-----------------------------------------------------------------------------
-void CHudAmmo::UpdateAmmoDisplays()
+void C_Holdout::UpdateAmmoDisplays()
 {
 	C_BasePlayer *player = C_BasePlayer::GetLocalPlayer();
 	IClientVehicle *pVehicle = player ? player->GetVehicle() : NULL;
@@ -284,7 +284,7 @@ void CHudAmmo::UpdateAmmoDisplays()
 //-----------------------------------------------------------------------------
 // Purpose: Updates ammo display
 //-----------------------------------------------------------------------------
-void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
+void C_Holdout::SetAmmo(int ammo, bool playAnimation)
 {
 	if (ammo != m_iAmmo)
 	{
@@ -312,7 +312,7 @@ void CHudAmmo::SetAmmo(int ammo, bool playAnimation)
 //-----------------------------------------------------------------------------
 // Purpose: Updates 2nd ammo display
 //-----------------------------------------------------------------------------
-void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
+void C_Holdout::SetAmmo2(int ammo2, bool playAnimation)
 {
 	if (ammo2 != m_iAmmo2)
 	{
@@ -340,7 +340,7 @@ void CHudAmmo::SetAmmo2(int ammo2, bool playAnimation)
 //-----------------------------------------------------------------------------
 // Purpose: We add an icon into the 
 //-----------------------------------------------------------------------------
-void CHudAmmo::Paint( void )
+void C_Holdout::Paint( void )
 {
 	BaseClass::Paint();
 
@@ -363,7 +363,7 @@ void CHudAmmo::Paint( void )
 //-----------------------------------------------------------------------------
 // Purpose: Displays the secondary ammunition level
 //-----------------------------------------------------------------------------
-class CHudSecondaryAmmo : public CHudNumericDisplay, public CHudElement
+/*class CHudSecondaryAmmo : public CHudNumericDisplay, public CHudElement
 {
 	DECLARE_CLASS_SIMPLE( CHudSecondaryAmmo, CHudNumericDisplay );
 
@@ -507,4 +507,4 @@ private:
 	int		m_iAmmo;
 };
 
-DECLARE_HUDELEMENT( CHudSecondaryAmmo );
+DECLARE_HUDELEMENT( CHudSecondaryAmmo );*/
