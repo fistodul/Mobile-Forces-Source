@@ -5268,7 +5268,6 @@ void CBasePlayer::Spawn( void )
 	UpdateLastKnownArea();
 
 	m_weaponFiredTimer.Invalidate();
-	SetVGUImode(false); 
 }
 
 void CBasePlayer::Activate( void )
@@ -6873,16 +6872,6 @@ bool CBasePlayer::ClientCommand( const CCommand &args )
 			pl->DumpPerfToRecipient( this, nRecords );
 		}
 		return true;
-	}
-	else if ( stricmp( cmd, "vguimode_true" ) == 0 )
-	{
-	SetVGUImode( true );
-	return true;
-	}
-	else if ( stricmp( cmd, "vguimode_false" ) == 0 )
-	{
-	SetVGUImode( false );
-	return true;
 	}
 	else if ( stricmp( cmd, "out1" ) == 0 )
 	{

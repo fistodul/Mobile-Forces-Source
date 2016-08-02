@@ -902,10 +902,8 @@ void CHL2_Player::PreThink(void)
 	// Update weapon's ready status
 	UpdateWeaponPosture();
 	// If we're in VGUI mode we should avoid shooting
-	if ( GetVGUIMode() )
-	{
+	if (m_nButtons & IN_VAILDVGUIINPUT)
 	m_nButtons &= ~(IN_ATTACK|IN_ATTACK2);
-	}
 
 	// Disallow shooting while zooming
 	if ( IsX360() )

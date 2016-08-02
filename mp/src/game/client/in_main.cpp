@@ -1074,7 +1074,7 @@ void CInput::ExtraMouseSample( float frametime, bool active )
 	}
 
 	// Let the move manager override anything it wants to.
-	if ( g_pClientMode->CreateMove( frametime, cmd, true ) )
+	if ( g_pClientMode->CreateMove( frametime, cmd ) )
 	{
 		// Get current view angles after the client mode tweaks with it
 		engine->SetViewAngles( cmd->viewangles );
@@ -1229,7 +1229,7 @@ void CInput::CreateMove ( int sequence_number, float input_sample_frametime, boo
 		VectorCopy( m_angPreviousViewAngles, cmd->viewangles );
 	}
 
-	cmd->buttons |= IN_VALIDVGUIINPUT;
+	cmd->buttons |= IN_VAILDVGUIINPUT;
 	// Let the move manager override anything it wants to.
 	if ( g_pClientMode->CreateMove( input_sample_frametime, cmd ) )
 	{

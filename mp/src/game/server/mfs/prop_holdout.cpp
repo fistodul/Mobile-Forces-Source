@@ -26,7 +26,7 @@ BEGIN_DATADESC( CHoldout )
 	DEFINE_FIELD( m_Owner, FIELD_INTEGER ),
 
 	// Function Pointers
-	DEFINE_USEFUNC( HoldoutUse ),
+	//DEFINE_USEFUNC( HoldoutUse ),
 	DEFINE_THINKFUNC( HoldoutThink ),
 
 END_DATADESC()
@@ -94,7 +94,7 @@ if ( m_Owner != NULL )
 // Input  :
 // Output :
 //-----------------------------------------------------------------------------
-void CHoldout::HoldoutUse(CBasePlayer *pPlayer)
+void CHoldout::HoldoutUse(CBaseEntity *pPlayer, CBaseEntity *pCaller, USE_TYPE useType, float value)
 {
 	if ( pPlayer->GetTeamNumber() > 1 ) //Shouldnt be owned by spectators even if they somehow "use"
 	{

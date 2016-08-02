@@ -62,8 +62,8 @@ void CSpectatorGUI::UpdateScores()
 {
     // Ms - Do team scores 
     wchar_t eltTeamScore[6], ratTeamScore[6];
-    C_Team *teamElt = GetGlobalTeam(TEAM_COMBINE);
-    C_Team *teamRat = GetGlobalTeam(TEAM_REBELS);
+    C_Team *teamElt = GetGlobalTeam(3);
+    C_Team *teamRat = GetGlobalTeam(2);
 
     if (teamElt) {
         swprintf(eltTeamScore, L"%d", teamElt->Get_Score());

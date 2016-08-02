@@ -28,7 +28,7 @@ public:
 
 	void			Spawn( void );
 	void			Precache( void );
-	void			HoldoutUse( CBasePlayer *pPlayer );
+	void			HoldoutUse(CBaseEntity *pPlayer, CBaseEntity *pCaller, USE_TYPE useType, float value);
 	void			HoldoutThink( void );
 
 	int			m_Owner;

@@ -406,51 +406,50 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		}
 		else
 		{
-			if ( m_bFirstSpawn == true )
-			{
-			ChangeTeam( TEAM_SPECTATORS )
+			if (m_bFirstSpawn == true)
+				ChangeTeam(TEAM_SPECTATOR);
 			else
 			{
-			CTeam *pCombine = g_Teams[TEAM_COMBINE];
-			CTeam *pRebels = g_Teams[TEAM_REBELS];
+				CTeam *pCombine = g_Teams[TEAM_COMBINE];
+				CTeam *pRebels = g_Teams[TEAM_REBELS];
 
-			if ( pCombine == NULL || pRebels == NULL )
-			{
-				ChangeTeam( random->RandomInt( TEAM_COMBINE, TEAM_REBELS ) );
-			}
-			else
-			{
-				if (HL2MPRules()->IsInjustice() == true)
+				if (pCombine == NULL || pRebels == NULL)
 				{
-					if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
-					{
-						ChangeTeam(TEAM_REBELS);
-					}
-					else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
-					{
-						ChangeTeam(TEAM_COMBINE);
-					}
-					else
-					{
-						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
-					}
+					ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
 				}
 				else
 				{
-					if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+					if (HL2MPRules()->IsInjustice() == true)
 					{
-						ChangeTeam(TEAM_REBELS);
-					}
-					else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
-					{
-						ChangeTeam(TEAM_COMBINE);
+						if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
+						{
+							ChangeTeam(TEAM_REBELS);
+						}
+						else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
+						{
+							ChangeTeam(TEAM_COMBINE);
+						}
+						else
+						{
+							ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+						}
 					}
 					else
 					{
-						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+						if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+						{
+							ChangeTeam(TEAM_REBELS);
+						}
+						else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+						{
+							ChangeTeam(TEAM_COMBINE);
+						}
+						else
+						{
+							ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+						}
 					}
 				}
-			}
 			}
 		}
 	}
@@ -1596,6 +1595,8 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 	//auto assign if you join team 0
 	if ( team == 0 )
 	{
+		CTeam *pCombine = g_Teams[TEAM_COMBINE];
+		CTeam *pRebels = g_Teams[TEAM_REBELS];
 		if (HL2MPRules()->IsInjustice() == true)
 		{
 			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)

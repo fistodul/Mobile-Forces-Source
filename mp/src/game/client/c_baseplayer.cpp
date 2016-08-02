@@ -1162,7 +1162,7 @@ void C_BasePlayer::DetermineVguiInputMode( CUserCmd *pCmd )
 //-----------------------------------------------------------------------------
 // Purpose: Input handling
 //-----------------------------------------------------------------------------
-bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd, bool bVguiUpdate )
+bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 {
 	// Allow the vehicle to clamp the view angles
 	if ( IsInAVehicle() )
@@ -1215,25 +1215,10 @@ bool C_BasePlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd, bool bVg
 
 	m_vecOldViewAngles = pCmd->viewangles;
 	
-if (bVguiUpdate)
-{
-	bool tempvguimode = IsInVGuiInputMode();
 	// Check to see if we're in vgui input mode...
-	if(pCmd->buttons & IN_VAILDVGUIINPUT)
-	DetermineVguiInputMode( pCmd );
+	if (pCmd->buttons & IN_VAILDVGUIINPUT)
+		DetermineVguiInputMode(pCmd);
 
-	if (tempvguimode == !IsInVGuiInputMode())
-	{
-		if (IsInVGuiInputMode())
-		{
-			engine->ClientCmd( "vguimode_true" );
-		}
-		else
-		{
-			engine->ClientCmd( "vguimode_false" );
-		}
-	}
-}
 	return true;
 }
 
