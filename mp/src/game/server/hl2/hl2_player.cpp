@@ -3014,7 +3014,7 @@ void CHL2_Player::UpdateWeaponPosture( void )
 		UTIL_TraceLine( EyePosition(), EyePosition() + vecAim * CHECK_FRIENDLY_RANGE, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
 
 		CBaseEntity *aimTarget = tr.m_pEnt;
-if ( GetVGUIMode() )
+if (m_nButtons & IN_VAILDVGUIINPUT)
 {
 	//We're over a friendly, drop our weapon
 	if ( Weapon_Lower() == false )
