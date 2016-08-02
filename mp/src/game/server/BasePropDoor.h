@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: A base class for model-based doors. The exact movement required to
 //			open or close the door is not dictated by this class, only that
@@ -131,7 +131,11 @@ private:
 	// Do not make the functions in this block virtual!!
 	// {
 	bool DoorActivate();
+
+public: // R_Yell needs to access this function
 	void DoorOpen( CBaseEntity *pOpenAwayFrom );
+
+private:
 	void OpenIfUnlocked(CBaseEntity *pActivator, CBaseEntity *pOpenAwayFrom);
 
 	void DoorOpenMoveDone();

@@ -28,6 +28,10 @@
 
 #include "tier0/vprof.h"
 
+/*ifdef MFS
+#include "mfs/bot_main.h"
+#endif*/
+
 #ifdef SecobMod__SAVERESTORE
 #include "filesystem.h"
 #endif //SecobMod__SAVERESTORE
@@ -1181,10 +1185,14 @@ void GameStartFrame( void )
 		return;
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
-
+#ifdef MFS
+	extern void Bot_RunAll();
+	Bot_RunAll();
+#else
 #ifdef DEBUG
 	extern void Bot_RunAll();
 	Bot_RunAll();
+#endif
 #endif
 }
 

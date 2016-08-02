@@ -6,6 +6,7 @@
 //=============================================================================//
 #ifndef BOT_BASE_H
 #define BOT_BASE_H
+#ifndef MFS
 #ifdef _WIN32
 #pragma once
 #endif
@@ -14,6 +15,6 @@
 // If iTeam or iClass is -1, then a team or class is randomly chosen.
 CBasePlayer *BotPutInServer( bool bFrozen, int iTeam );
 
-
+#endif
 #endif // BOT_BASE_H
 

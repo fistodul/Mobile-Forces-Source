@@ -41,8 +41,10 @@
 	#include "globalstate.h"
 	#include "FileSystem.h"
 	
+#ifndef MFS
 #ifdef DEBUG	
 	#include "hl2mp_bot_temp.h"
+#endif
 #endif
 
 extern void respawn(CBaseEntity *pEdict, bool fCopyCorpse);
@@ -1185,6 +1187,7 @@ CAmmoDef *GetAmmoDef()
 
 #else
 
+#ifndef MFS
 #ifdef DEBUG
 
 	// Handler for the "bot" command.
@@ -1207,8 +1210,9 @@ CAmmoDef *GetAmmoDef()
 	}
 
 
-	ConCommand cc_Bot( "bot", Bot_f, "Add a bot.", FCVAR_CHEAT );
+	ConCommand cc_Bot( "bot", Bot_f, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE );
 
+#endif
 #endif
 
 	bool CHL2MPRules::FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon )

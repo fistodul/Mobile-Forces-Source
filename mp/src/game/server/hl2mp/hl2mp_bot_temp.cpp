@@ -13,6 +13,7 @@
 
 
 #include "cbase.h"
+#ifndef MFS
 #include "player.h"
 #include "hl2mp_player.h"
 #include "in_buttons.h"
@@ -430,6 +431,6 @@ void Bot_Think( CHL2MP_Player *pBot )
 
 
 
-
+#endif
 #endif
 
