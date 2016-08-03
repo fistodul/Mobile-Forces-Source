@@ -1,7 +1,7 @@
 //******************************************************************
 // Multiplayer AI for Source engine by R_Yell - rebel.y3ll@gmail.com
 //******************************************************************
-
+#ifdef MFS
 #include "bot_main.h"
 #include "doors.h"
 #include "BasePropDoor.h"
@@ -648,7 +648,4 @@ void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
 		}
 	}
 }
-
-
-
-
+#endif

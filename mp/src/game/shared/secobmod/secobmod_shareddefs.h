@@ -106,7 +106,7 @@
 //#define SecobMod__Force_LAN_DISABLED //Disable Lan games from activating on server startup.
 #define SecobMod__ALLOW_VALVE_APPROVED_CHEATING //Allow sv_cheats to work.
 #define SecobMod__MULTIPLAYER_CHAT_BUBBLES //Shows a chat icon while a player is typing.
-//#define SecobMod__HIGH_PING_VEHICLE_FIX //Remove vehicle judder for players with high latency (lag) at the cost of forward/backwards view dampening. //Todo:Check if the player has lag in the code for this then dampen it if he/she has lag(but for now as im lazy this is just disabled :P).
+#define SecobMod__HIGH_PING_VEHICLE_FIX //Remove vehicle judder for players with high latency (lag) at the cost of forward/backwards view dampening. //Todo:Check if the player has lag in the code for this then dampen it if he/she has lag(but for now as im lazy this is just disabled :P).
 #define SecobMod__ALLOW_JEEP_HEADLIGHTS //Allows headlights to work in jeep/jalopy(the flaslight button toggles it).
 
 /******************************/

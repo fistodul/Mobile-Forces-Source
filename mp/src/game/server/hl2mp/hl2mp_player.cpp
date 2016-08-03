@@ -54,7 +54,7 @@ int g_iLastCitizenModel = 0;
 int g_iLastCombineModel = 0;
 
 ConVar sv_regeneration("sv_regeneration", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
-ConVar sv_regeneration_maxhp("sv_regeneration_maxhp", "0", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar sv_regeneration_maxhp("sv_regeneration_maxhp", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 ConVar sv_regeneration_maxarmor("sv_regeneration_maxarmor", "100", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 ConVar sv_regeneration_armor("sv_regeneration_armor", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 ConVar sv_regeneration_wait_time("sv_regeneration_wait_time", "1.0", FCVAR_REPLICATED | FCVAR_CHEAT);
@@ -715,6 +715,15 @@ CBaseEntity *ent = NULL;
 		}
 	}
 #endif //SecobMod__ENABLE_MAP_SPECIFIC_PLAYER_MODEL_OVERRIDES
+	if (GetTeamNumber() != TEAM_SPECTATOR)
+	{
+		StopObserverMode();
+	}
+	else
+	{
+		//if we are a spectator then go into roaming mode
+		StartObserverMode(OBS_MODE_ROAMING);
+	}
 if ( m_bFirstSpawn == true )
 m_bFirstSpawn = false;
 }

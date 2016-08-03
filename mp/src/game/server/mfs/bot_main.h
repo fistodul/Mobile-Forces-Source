@@ -1,6 +1,7 @@
 //******************************************************************
 // Multiplayer AI for Source engine by R_Yell - rebel.y3ll@gmail.com
 //******************************************************************
+#ifdef MFS
 
 #ifndef BOT_MAIN_H
 #define BOT_MAIN_H
@@ -178,3 +179,4 @@ bool CreatePath( CSDKBot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg = vec3_
 void Bot_RunAll();
 
 #endif // BOT_MAIN_H
+#endif

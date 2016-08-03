@@ -54,7 +54,11 @@ public:
 	virtual bool PrimaryAmmoUsesClips() const { return false; }
 #endif
 
+#ifdef SecobMod__HIGH_PING_VEHICLE_FIX
+	virtual bool IsPredicted() const { return true; }
+#else
 	virtual bool IsPredicted() const { return false; }
+#endif
 	virtual int GetJoystickResponseCurve() const;
 
 // C_BaseEntity overrides.

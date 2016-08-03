@@ -3,6 +3,8 @@
 //******************************************************************
 
 #include "cbase.h"
+
+#ifdef MFS
 #include "player.h"
 #include "hl2mp_player.h"
 #include "in_buttons.h"
@@ -65,5 +67,4 @@ void BotAttack( CSDKBot *pBot, CUserCmd &cmd )
 	pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
 
 }
-
-
+#endif

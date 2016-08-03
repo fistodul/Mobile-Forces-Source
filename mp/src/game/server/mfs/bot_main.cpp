@@ -3,6 +3,9 @@
 //******************************************************************
 
 #include "cbase.h"
+
+#ifdef MFS
+
 #include "player.h"
 #include "hl2mp_player.h"
 
@@ -276,5 +279,4 @@ void Bot_Think( CSDKBot *pBot )
 
 	RunPlayerMove( pBot, cmd, gpGlobals->frametime );		
 }
-
-
+#endif

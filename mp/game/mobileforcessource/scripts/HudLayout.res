@@ -127,6 +127,26 @@
 		"digit_ypos" "-1"
 	}
 
+	HudHoldout
+	{
+		"fieldName" "HudHoldout"
+		"xpos"	"r150"
+		"ypos"	"472"
+		"wide"	"136"
+		"tall"  "36"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+
+		"text_xpos" "8"
+		"text_ypos" "20"
+		"digit_xpos" "44"
+		"digit_ypos" "2"
+		"digit2_xpos" "98"
+		"digit2_ypos" "16"
+	}
+	
 	HudAmmo	[$WIN32]
 	{
 		"fieldName" "HudAmmo"
