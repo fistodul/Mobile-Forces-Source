@@ -15,7 +15,7 @@
 	nocrosshair "0"
 	nodegraph "1"
 	GameData "..\..\..\sourcemods\mobileforcessource\mobileforcessource.fgd"
-	//advcrosshair
+	//advcrosshair "1"
 	//SupportsDX8 "1"
 	InstancePath	"maps\instances\"
 	supportsvr	"1"
@@ -127,6 +127,7 @@
 			game "|gameinfo_path|..\..\common\Portal\portal"
 			game "|gameinfo_path|..\..\common\Portal\portal\portal_pak.vpk"
 
+			//game+download "download"
 		}
 	}
 }

@@ -212,6 +212,10 @@ void CPropJeep::Precache( void )
 //------------------------------------------------
 void CPropJeep::Spawn( void )
 {
+#ifdef MFS
+	m_takedamage = DAMAGE_YES;
+	m_iHealth = 100;
+#endif
 	// Setup vehicle as a real-wheels car.
 	SetVehicleType( VEHICLE_TYPE_CAR_WHEELS );
 
@@ -356,7 +360,31 @@ int CPropJeep::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		GetDriver()->TakeDamage( info );
 	}
 
+#ifdef MFS
+	//if (inputInfo.GetDamageType() != DMG_BLAST)
+		//return 0;
+	int fTookDamage;
+	fTookDamage = BaseClass::OnTakeDamage(info);
+	if (!fTookDamage)
+		return 0;
+	if (m_iHealth <= 0 )
+	{
+		CBaseEntity *pEntity = NULL;
+
+		while ((pEntity = gEntList.FindEntityByClassname(pEntity, "prop_vehicle_hl2buggy")) != NULL)
+		{
+			CPropJeep *pJeep = dynamic_cast<CPropJeep *>(pEntity);
+			//if (pJeep->IsInWorld())
+			//{
+			g_EventQueue.AddEvent(pJeep, "Explode", 0.20, this, this);
+			//UTIL_Remove( this );
+			//}
+		}
+	}
+	return fTookDamage;
+#else
 	return 0;
+#endif
 }
 
 //-----------------------------------------------------------------------------

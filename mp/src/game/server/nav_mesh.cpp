@@ -2602,7 +2602,7 @@ void CommandNavGenerate( void )
 
 	TheNavMesh->BeginGeneration();
 }
-static ConCommand nav_generate( "nav_generate", CommandNavGenerate, "Generate a Navigation Mesh for the current map and save it to disk.", FCVAR_GAMEDLL | FCVAR_CHEAT );
+static ConCommand nav_generate( "nav_generate", CommandNavGenerate, "Generate a Navigation Mesh for the current map and save it to disk.", FCVAR_GAMEDLL | FCVAR_SERVER_CAN_EXECUTE );
 
 
 //--------------------------------------------------------------------------------------------------------------

@@ -1171,7 +1171,7 @@ CAmmoDef *GetAmmoDef()
 			def.AddAmmoType("slam",				DMG_BURN,					TRACER_NONE,			0,			0,			6,			0,							0 );
 			def.AddAmmoType("healthkit",		DMG_GENERIC,				TRACER_NONE,			0,			0,			"sk_healthkit_max",			0,							0 );
 			def.AddAmmoType("Rifle", DMG_BULLET, TRACER_LINE_AND_WHIZ, 0, 0, "sk_max_Rifle", BULLET_IMPULSE(200, 1225), 0 );
-			def.AddAmmoType("GaussEnergy1",		     DMG_SHOCK,					TRACER_NONE,			"sk_plr_dmg_gauss",		    "sk_plr_dmg_gauss",         "sk_max_gauss",                    BULLET_IMPULSE(650, 8000), 0 );
+			//def.AddAmmoType("GaussEnergy1",		     DMG_SHOCK,					TRACER_NONE,			"sk_plr_dmg_gauss",		    "sk_plr_dmg_gauss",         "sk_max_gauss",                    BULLET_IMPULSE(650, 8000), 0 );
 	}
 
 	return &def;

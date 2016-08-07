@@ -33,6 +33,7 @@
 //#define Dynamic_shadow // https://developer.valvesoftware.com/wiki/Dynamic_RTT_shadow_angles_in_Source_2007 (is this already present in 2013?)
 //#define FP_Fix // https://developer.valvesoftware.com/wiki/First_Person_Fix
 #define LUA_SDK // for screwing around
+//#define VGUI_FIX // This is mostly implemented but i put under a define stuff that caused problems(documented)
 
 /*****************/
 /* Base Defines. */

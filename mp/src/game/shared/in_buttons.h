@@ -37,6 +37,8 @@
 #define IN_GRENADE1		(1 << 23)	// grenade 1
 #define IN_GRENADE2		(1 << 24)	// grenade 2
 #define	IN_ATTACK3		(1 << 25)
+#ifdef VGUI_FIX
 #define IN_VAILDVGUIINPUT		    (1 << 26) //bitflag for vgui fix
+#endif
 
 #endif // IN_BUTTONS_H

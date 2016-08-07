@@ -115,10 +115,10 @@
 		"brighttext"		"0"
 		"command"		"jointeam 3"
 	}
-	"jointeam1"
+	"spectate"
 	{
 		"ControlName"		"Button"
-		"fieldName"		"jointeam1"
+		"fieldName"		"spectate"
 		"xpos"			"76"
 		"ypos"			"244"
 		"wide"			"148"
@@ -132,7 +132,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"command"		"jointeam 1"
+		"command"		"spectate"
 	}
 	"CancelButton"
 	{

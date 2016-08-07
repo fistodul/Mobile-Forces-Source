@@ -24,6 +24,9 @@
 #include "filesystem.h"
 #include "ammodef.h"
 #endif //SecobMod__SAVERESTORE
+#ifdef MFS
+#include "mfs\bot_main.h"
+#endif
 
 #include "engine/IEngineSound.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
@@ -406,8 +409,60 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		}
 		else
 		{
-			if (m_bFirstSpawn == true)
-				ChangeTeam(TEAM_SPECTATOR);
+#ifdef MFS
+			for (int i = 1; i <= gpGlobals->maxClients; i++)
+			{
+				CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+				CSDKBot *pBot = dynamic_cast<CSDKBot*>(pPlayer);
+			if (!pBot)
+			{
+				if (m_bFirstSpawn == true)
+					ChangeTeam(TEAM_SPECTATOR);
+				else
+				{
+					CTeam *pCombine = g_Teams[TEAM_COMBINE];
+					CTeam *pRebels = g_Teams[TEAM_REBELS];
+
+					if (pCombine == NULL || pRebels == NULL)
+					{
+						ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+					}
+					else
+					{
+						if (HL2MPRules()->IsInjustice() == true)
+						{
+							if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
+							{
+								ChangeTeam(TEAM_REBELS);
+							}
+							else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
+							{
+								ChangeTeam(TEAM_COMBINE);
+							}
+							else
+							{
+								ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+							}
+						}
+						else
+						{
+							if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+							{
+								ChangeTeam(TEAM_REBELS);
+							}
+							else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+							{
+								ChangeTeam(TEAM_COMBINE);
+							}
+							else
+							{
+								ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
+							}
+						}
+					}
+				}
+			}
+#endif
 			else
 			{
 				CTeam *pCombine = g_Teams[TEAM_COMBINE];
@@ -451,6 +506,9 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 					}
 				}
 			}
+#ifdef MFS
+			}
+#endif
 		}
 	}
 }
@@ -643,8 +701,64 @@ CBaseEntity *ent = NULL;
 
 		RemoveEffects( EF_NODRAW );
 		
-		if (m_bFirstSpawn == false)
-		GiveDefaultItems();
+#ifdef MFS
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		{
+			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+			CSDKBot *pBot = dynamic_cast<CSDKBot*>(pPlayer);
+			if (pBot)
+			{
+				if (HL2MPRules()->IsTeamplay() == true)
+				{
+					if (GetTeamNumber() == TEAM_COMBINE)
+					{
+						int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
+
+						g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
+						pBot->SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
+					}
+					else if (GetTeamNumber() == TEAM_REBELS)
+					{
+						int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
+
+						g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
+						pBot->SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
+					}
+				}
+				else
+				{
+					int model = random->RandomInt(2, 3);
+					if (model == 2)
+					{
+						int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
+
+						g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
+						pBot->SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
+					}
+					else
+					{
+						int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
+
+						g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
+						pBot->SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
+					}
+				}
+				GiveDefaultItems();
+			}
+		if (!pBot)
+		{
+#endif
+			if (HL2MPRules()->IsTeamplay() == true)
+			{
+				if (m_bFirstSpawn == false)
+					GiveDefaultItems();
+			}
+			else
+				GiveDefaultItems();
+#ifdef MFS
+		}
+		}
+#endif
 		#ifdef SecobMod__USE_PLAYERCLASSES			
 		StartSprinting();
 		StopSprinting();		
@@ -1595,6 +1709,8 @@ void CHL2MP_Player::ChangeTeam( int iTeam )
 
 bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 {
+	if (GetTeamNumber() == team)
+		return false;
 	if ( !GetGlobalTeam( team ) || team < 0 )
 	{
 		Warning( "HandleCommand_JoinTeam( %d ) - invalid team index.\n", team );
@@ -1604,6 +1720,11 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 	//auto assign if you join team 0
 	if ( team == 0 )
 	{
+		if (HL2MPRules()->IsTeamplay() == false)
+		{
+			ChangeTeam(TEAM_UNASSIGNED);
+			return true;
+		}
 		CTeam *pCombine = g_Teams[TEAM_COMBINE];
 		CTeam *pRebels = g_Teams[TEAM_REBELS];
 		if (HL2MPRules()->IsInjustice() == true)
@@ -1636,6 +1757,7 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 				ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
 			}
 		}
+		return true;
 	}
 	else if ( team == TEAM_SPECTATOR )
 	{
@@ -2592,6 +2714,11 @@ bool CHL2MP_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 // Is this the first spawn?
 //bool m_bFirstSpawn = true;
 
+bool CHL2MP_Player::IsFirstSpawn()
+{
+	return m_bFirstSpawn;
+}
+
 #ifdef SecobMod__USE_PLAYERCLASSES
 // Allow the server admin to set the default class value.
 ConVar default_class("default_class", "5", FCVAR_ARCHIVE, "Variable für Standardklasse!");
@@ -2619,11 +2746,6 @@ int CHL2MP_Player::GetClassValue()const
 int CHL2MP_Player::GetDefaultClassValue()const
 {
 	return m_iDefaultClass;
-}
-
-bool CHL2MP_Player::IsFirstSpawn()
-{
-	return m_bFirstSpawn;
 }
 
 // Soll die Waffen verteilen:

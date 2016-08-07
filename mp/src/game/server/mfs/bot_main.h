@@ -37,6 +37,8 @@
 
 // spawn points are used as hide place references for bots
 #define SPAWN_POINT_NAME "info_player_deathmatch" 
+#define SPAWN_POINT_BLUE "info_player_combine" 
+#define SPAWN_POINT_RED "info_player_rebels" 
 
 // ladder's top dismount point gets added some artificial distance to allow bot more room to complete the operation
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
@@ -127,14 +129,14 @@ public:
 		
 	void Spawn()
 	{
-		BaseClass::Spawn();
+		CHL2MP_Player::Spawn(); // Player model is set there
 
 		hEnemy.Set(NULL);
-		ResetNavigationParams();	
+		ResetNavigationParams();
 		m_AlreadyCheckedHideSpots.RemoveAll();
 		m_flNextDealObstacles = 0;
 		m_flCreateRandomPathCoolDown = 0;
-		m_flNextProximityCheck = 0;		
+		m_flNextProximityCheck = 0;
 		m_flDistTraveled = 0; // distance this bot has traveled recently, since last stuck check
 		m_flMinRangeAttack = 60.0f;
 		m_bInRangeToAttack = false;
@@ -142,7 +144,6 @@ public:
 		m_flNextStrafeTime = 0;
 		m_flStrafeSkillRelatedTimer = 0;
 
-		SetModel( "models/sdk/humans/group03/l7h_rebel.mdl" );
 	}
 
 	void ResetNavigationParams()

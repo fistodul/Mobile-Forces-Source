@@ -54,7 +54,7 @@ extern IGameUIFuncs *gameuifuncs; // for key binding details
 
 // void DuckMessage(const char *str); // from vgui_teamfortressviewport.cpp
 
-ConVar spec_scoreboard( "spec_scoreboard", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE );
+ConVar spec_scoreboard( "spec_scoreboard", "1", FCVAR_CLIENTDLL | FCVAR_ARCHIVE );
 
 CSpectatorGUI *g_pSpectatorGUI = NULL;
 

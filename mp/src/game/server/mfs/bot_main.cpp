@@ -27,10 +27,13 @@ void Bot_Think( CSDKBot *pBot );
 
 
 // Handler for the "bot" command.
-CON_COMMAND_F( bot_add, "Add a bot.", 0 /*FCVAR_CHEAT*/ )
+CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 {
-	if( !TheNavMesh->IsLoaded() )
-		Warning( "No navigation mesh loaded! Can't create bot" );
+	if (!TheNavMesh->IsLoaded())
+	{
+		Warning("No navigation mesh loaded, Creating one");
+		engine->ServerCommand("nav_generate");
+	}
 
 	// Look at -count.
 	int count = args.FindArgInt( "-count", 1 );
@@ -100,8 +103,8 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 	if ( bFrozen )
 		pPlayer->AddEFlags( EFL_BOT_FROZEN );
 
-	pPlayer->ChangeTeam( 0 );
-	pPlayer->RemoveAllItems( true );
+	//pPlayer->ChangeTeam( 0 ); // Is handled by hl2dm's spawn
+	pPlayer->RemoveAllItems( true ); //Why
 
 	// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
 	//pPlayer->Spawn();

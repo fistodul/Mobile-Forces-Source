@@ -308,7 +308,7 @@ bool CreatePath( CSDKBot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg )
 			// if previous waypoint is a ladder top dismount point, increase height a bit
 			if( pBot->m_Waypoints.Count() > 0 && (pBot->m_Waypoints[0].Center.z - closestpoint.z ) > 64.0f && pBot->m_Waypoints[0].TransientType == GO_LADDER_UP )
 			{
-				//FOR_EACH_LL( TheNavMesh->GetLadders(), it )
+				//FOR_EACH_LL( TheNavMesh->GetLadders(), it ) // FixMe
 				for (int i = 0; i<TheNavMesh->GetLadders().Count(); ++i)
 				{
 				CNavLadder *ladder = TheNavMesh->GetLadders()[ i/*t*/ ];
@@ -343,7 +343,20 @@ bool CreateHidePath( CSDKBot *pBot, Vector &HiDeSpot )
 	pBot->m_flNextPathCheck = gpGlobals->curtime + 0.15f;
 
 	CBaseEntity *pSpot = NULL;	
-	while ( (pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_NAME) ) != NULL )
+	const char *pSpawnpointName = SPAWN_POINT_NAME;
+
+	if (HL2MPRules()->IsTeamplay() == true)
+	{
+		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pSpawnpointName)) == NULL)
+		{
+			int troll = random->RandomInt(2, 3);
+			if (troll == 2)
+				pSpawnpointName = SPAWN_POINT_BLUE;
+			else
+				pSpawnpointName = SPAWN_POINT_RED;
+		}
+	}
+	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pSpawnpointName)) != NULL)
 	{
 		if ( pSpot )
 		{

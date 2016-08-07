@@ -24,7 +24,7 @@ class CHoldout : public CBaseGrenade
 {
 public:
 	DECLARE_CLASS( CHoldout, CBaseGrenade );
-	DECLARE_SERVERCLASS();  // make this entity networkable
+	//DECLARE_SERVERCLASS();  // make this entity networkable
 
 	void			Spawn( void );
 	void			Precache( void );
