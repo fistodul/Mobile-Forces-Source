@@ -6210,8 +6210,7 @@ if (GetTeamNumber() == TEAM_SPECTATOR)
 #ifdef HL2_EPISODIC
 
 //-----------------------------------------------------------------------------
-// Purpose: 
-Spawn Jalopy
+// Purpose: Spawn Jalopy
 //-----------------------------------------------------------------------------
 static void CreateJalopy( CBasePlayer *pPlayer )
 {
@@ -6248,7 +6247,7 @@ static ConCommand ch_createjalopy("ch_createjalopy", CC_CH_CreateJalopy, "Spawn 
 
 //-----------------------------------------------------------------------------
 // Purpose: 
-Spawn Jeep
+//Spawn Jeep
 //-----------------------------------------------------------------------------
 static void CreateJeep( CBasePlayer *pPlayer )
 {

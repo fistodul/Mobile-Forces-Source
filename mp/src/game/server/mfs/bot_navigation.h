@@ -354,20 +354,8 @@ bool CreateHidePath( CHL2MP_Bot *pBot, Vector &HiDeSpot )
 	pBot->m_flNextPathCheck = gpGlobals->curtime + 0.15f;
 
 	CBaseEntity *pSpot = NULL;	
-	const char *pHideSpot = SPAWN_POINT_NAME;
 
-	if (HL2MPRules()->IsTeamplay() == true)
-	{
-		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) == NULL)
-		{
-			int troll = random->RandomInt(2, 3);
-			if (troll == 2)
-				pHideSpot = SPAWN_POINT_BLUE;
-			else
-				pHideSpot = SPAWN_POINT_RED;
-		}
-	}
-	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) != NULL && ShouldUpdate == false)
+	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) != NULL && &CHL2MP_Bot::ShouldUpdate == false)
 	{
 		if ( pSpot )
 		{

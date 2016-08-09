@@ -20,7 +20,14 @@ ipch
 *.opensdf
 *.idb
 *.vcxproj
+*.vcxproj.filters
+*.vcxproj.vpc_crc
+*.vpc.sentinel
 *.sln
+mp/src/game/client/Release_mobileforcessource
+mp/src/game/server/Release_mobileforcessource
+mp/src/game/client/Debug_mobileforcessource
+mp/src/game/server/Debug_mobileforcessource
 
 # OSX/Linux build products
 *.mak

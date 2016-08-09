@@ -70,7 +70,9 @@ CBaseEntity	 *g_pLastCombineSpawn = NULL;
 CBaseEntity	 *g_pLastRebelSpawn = NULL;
 extern CBaseEntity				*g_pLastSpawn;
 
-extern ConVar cl_team;
+//extern ConVar s_cl_team;
+ConVar *s_cl_team = cvar->FindVar("cl_team");
+//const char *team = (!pPlayer->IsNetClient()) ? "default" : engine->GetClientConVarValue(clientIndex, "cl_team");
 extern ConVar mp_teams_unbalance_limit;
 
 #define HL2MP_COMMAND_MAX_RATE 0.3
@@ -416,7 +418,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		for (int i = 1; i <= gpGlobals->maxClients; i++)
 		{
 			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-			CSDKBot *pBot = dynamic_cast<CSDKBot*>(pPlayer);
+			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
 			if (!pBot)
 			{
 		#endif
@@ -427,18 +429,18 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				
 					if (pCombine == NULL || pRebels == NULL)
 					{
-						if ( cl_team.GetInt() == blue )
-							ChangeTeam(TEAM_COMBINE;
-						else if ( cl_team.GetInt() == red )
+						if /*(s_cl_team && */(strcmp(s_cl_team->GetString(), "blue") == 0)//) //the search is "expensive", so i nerfed it
+							ChangeTeam(TEAM_COMBINE);
+						else if (strcmp(s_cl_team->GetString(), "red") == 0)
 							ChangeTeam(TEAM_REBELS);
 						else
 							ChangeTeam(TEAM_SPECTATOR);
 					}
-					else if (pCombine == 1 || pRebels == NULL) // Let them "pick" if they want to 1vs1 a demigod lol
+					else if (pCombine->GetNumPlayers() == 1 || pRebels == NULL) // Let them "pick" if they want to 1vs1 a demigod lol
 					{
-						if ( cl_team.GetInt() == blue )
-							ChangeTeam(TEAM_COMBINE;
-						else if ( cl_team.GetInt() == red )
+						if (strcmp(s_cl_team->GetString(), "blue") == 0)
+							ChangeTeam(TEAM_COMBINE);
+						else if (strcmp(s_cl_team->GetString(), "red") == 0)
 							ChangeTeam(TEAM_REBELS);
 						else
 							ChangeTeam(TEAM_SPECTATOR);
@@ -455,9 +457,9 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 						}
 						else
 						{
-							if ( cl_team.GetInt() == blue )
-								ChangeTeam(TEAM_COMBINE;
-							else if ( cl_team.GetInt() == red )
+							if (strcmp(s_cl_team->GetString(), "blue") == 0)
+								ChangeTeam(TEAM_COMBINE);
+							else if (strcmp(s_cl_team->GetString(), "red") == 0)
 								ChangeTeam(TEAM_REBELS);
 							else
 								ChangeTeam(TEAM_SPECTATOR);
@@ -466,42 +468,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				}
 				else
 				{
-					if ( cl_team.GetInt() != default )
-					{
-						CTeam *pCombine = g_Teams[TEAM_COMBINE];
-						CTeam *pRebels = g_Teams[TEAM_REBELS];
-						
-						if (pCombine == NULL || pRebels == NULL)
-						{
-							if ( cl_team.GetInt() == blue )
-								ChangeTeam(TEAM_COMBINE;
-							else if ( cl_team.GetInt() == red )
-								ChangeTeam(TEAM_REBELS);
-							else
-								ChangeTeam(TEAM_SPECTATOR);
-						}
-						else
-						{
-							if (pCombine->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 > pRebels->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 )
-							{
-								ChangeTeam(TEAM_REBELS);
-							}
-							else if (pCombine->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 < pRebels->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 )
-							{
-								ChangeTeam(TEAM_COMBINE);
-							}
-							else
-							{
-								if ( cl_team.GetInt() == blue )
-									ChangeTeam(TEAM_COMBINE;
-								else if ( cl_team.GetInt() == red )
-									ChangeTeam(TEAM_REBELS);
-								else
-									ChangeTeam(TEAM_SPECTATOR);
-							}
-						}
-					}
-					else
+					if (strcmp(s_cl_team->GetString(), "default") == 0)
 					{
 						if (m_bFirstSpawn == true)
 							ChangeTeam(TEAM_SPECTATOR);
@@ -509,7 +476,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 						{
 							CTeam *pCombine = g_Teams[TEAM_COMBINE];
 							CTeam *pRebels = g_Teams[TEAM_REBELS];
-				
+
 							if (pCombine == NULL || pRebels == NULL)
 							{
 								ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
@@ -528,6 +495,41 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 								{
 									ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
 								}
+							}
+						}
+					}
+					else
+					{
+						CTeam *pCombine = g_Teams[TEAM_COMBINE];
+						CTeam *pRebels = g_Teams[TEAM_REBELS];
+
+						if (pCombine == NULL || pRebels == NULL)
+						{
+							if (strcmp(s_cl_team->GetString(), "blue") == 0)
+								ChangeTeam(TEAM_COMBINE);
+							else if (strcmp(s_cl_team->GetString(), "red") == 0)
+								ChangeTeam(TEAM_REBELS);
+							else
+								ChangeTeam(TEAM_SPECTATOR);
+						}
+						else
+						{
+							if (pCombine->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 > pRebels->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1)
+							{
+								ChangeTeam(TEAM_REBELS);
+							}
+							else if (pCombine->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 < pRebels->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1)
+							{
+								ChangeTeam(TEAM_COMBINE);
+							}
+							else
+							{
+								if (strcmp(s_cl_team->GetString(), "blue") == 0)
+									ChangeTeam(TEAM_COMBINE);
+								else if (strcmp(s_cl_team->GetString(), "red") == 0)
+									ChangeTeam(TEAM_REBELS);
+								else
+									ChangeTeam(TEAM_SPECTATOR);
 							}
 						}
 					}
@@ -775,7 +777,7 @@ CBaseEntity *ent = NULL;
 		for (int i = 1; i <= gpGlobals->maxClients; i++)
 		{
 			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-			CSDKBot *pBot = dynamic_cast<CSDKBot*>(pPlayer);
+			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
 			if (pBot)
 			{
 				if (HL2MPRules()->IsTeamplay() == true)

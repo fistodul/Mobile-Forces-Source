@@ -62,7 +62,7 @@ void BotAttack( CHL2MP_Bot *pBot, CUserCmd &cmd )
 		return;
 
 	//Make the bot a savage(more than it already is)
-	StartSprinting();
+	pBot->StartSprinting();
 	cmd.buttons |= IN_ATTACK;
 	pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
 

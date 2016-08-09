@@ -117,12 +117,11 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 	pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
 	pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat( SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
 
-	CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
-	CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
+	//CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
+	//CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
 
 	g_CurBotNumber++;
 
-	SpawnTime = gpGlobals->curtime;
 	return pPlayer;
 }
 
@@ -234,6 +233,9 @@ void Bot_Think( CHL2MP_Bot *pBot )
 
 	if ( pBot->IsEFlagSet(EFL_BOT_FROZEN) )
 		return;
+
+	if (pBot->ShouldUpdate() == true)
+		pBot->Update(1);
 
 	CUserCmd cmd;
 	Q_memset( &cmd, 0, sizeof( cmd ) );	
