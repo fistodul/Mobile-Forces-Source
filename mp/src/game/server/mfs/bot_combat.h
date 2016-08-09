@@ -13,7 +13,7 @@
 #include "bot_main.h"
 
 
-bool AcquireEnemy( CSDKBot *pBot )
+bool AcquireEnemy( CHL2MP_Bot *pBot )
 {
 	float minDist = FLT_MAX;
 	bool Success = false;
@@ -55,14 +55,14 @@ bool AcquireEnemy( CSDKBot *pBot )
 	return Success;
 }
 
-void BotAttack( CSDKBot *pBot, CUserCmd &cmd )
+void BotAttack( CHL2MP_Bot *pBot, CUserCmd &cmd )
 {
-
-	// EXCEPTIONS
+	 //EXCEPTIONS
 	if( !pBot->m_bEnemyOnSights || !pBot->m_bInRangeToAttack || pBot->m_flNextBotAttack > gpGlobals->curtime )
 		return;
 
-	// 
+	//Make the bot a savage(more than it already is)
+	StartSprinting();
 	cmd.buttons |= IN_ATTACK;
 	pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
 

@@ -27,18 +27,24 @@
 #define SKILL_MIN_YAW_RATE 7.0f
 #define SKILL_MAX_YAW_RATE 10.0f
 
+// how fast bot walks
+#define SKILL_MIN_WALK_SPEED 150.0f
+#define SKILL_MAX_WALK_SPEED 250.0f
+
 // how fast bot runs
-#define SKILL_MIN_SPEED 150.0f
-#define SKILL_MAX_SPEED 250.0f
+#define SKILL_MIN_RUN_SPEED 260.0f
+#define SKILL_MAX_RUN_SPEED 320.0f
 
 // how often bot strafes
 #define SKILL_MIN_STRAFE 0.0f
 #define SKILL_MAX_STRAFE 10.0f // set this to 0 to disable strafe skill at all
 
-// spawn points are used as hide place references for bots
+// spawn points are used as hide place references for bots, the captain's spawn isn't used when it's captains for reasons 
 #define SPAWN_POINT_NAME "info_player_deathmatch" 
 #define SPAWN_POINT_BLUE "info_player_combine" 
 #define SPAWN_POINT_RED "info_player_rebels" 
+#define SPAWN_POINT_CAPTAIN _BLUE "info_player_captain_blue" 
+#define SPAWN_POINT_CAPTAIN_RED "info_player_captain_red" 
 
 // ladder's top dismount point gets added some artificial distance to allow bot more room to complete the operation
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
@@ -61,7 +67,8 @@ enum BotSchedules_t
 // these are the basic bot parameters, defined at creation time only
 enum BotSkill_t
 {
-	BOT_SKILL_SPEED,
+	BOT_SKILL_WALK_SPEED,
+	BOT_SKILL_RUN_SPEED,
 	BOT_SKILL_YAW_RATE,
 	BOT_SKILL_STRAFE,
 
@@ -81,7 +88,7 @@ struct NavAreaData_t
 static Vector BotTestHull = Vector(5,5,5);
 
 // This is our bot class.
-class CSDKBot : public CHL2MP_Player
+class CHL2MP_Bot : public CHL2MP_Player
 {
 public:
 
@@ -170,12 +177,27 @@ public:
 	}
 
 	void ResetWaypoints( void ) { m_Waypoints.RemoveAll(); }
+ 	
+	float SpawnTime;
+	bool ShouldUpdate() 	
+	{
+	int should;
+	if ( gpGlobals->curtime - SpawnTime > 3600 )
+	should = 10;
+	if ( should > 9 ) 
+	{ 
+	SpawnTime = gpGlobals->curtime;
+	return true; 
+	}
+	else
+	return false;
+	}
 };
 
 
 CBasePlayer *BotPutInServer( bool bFrozen );
 
-bool CreatePath( CSDKBot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg = vec3_origin );
+bool CreatePath( CHL2MP_Bot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg = vec3_origin );
 
 void Bot_RunAll();
 

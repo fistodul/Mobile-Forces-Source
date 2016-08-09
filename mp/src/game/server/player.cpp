@@ -6211,13 +6211,14 @@ if (GetTeamNumber() == TEAM_SPECTATOR)
 
 //-----------------------------------------------------------------------------
 // Purpose: 
+Spawn Jalopy
 //-----------------------------------------------------------------------------
 static void CreateJalopy( CBasePlayer *pPlayer )
 {
 	// Cheat to create a jeep in front of the player
 	Vector vecForward;
 	AngleVectors( pPlayer->EyeAngles(), &vecForward );
-	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_jeep" );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_jalopy" );
 	if ( pJeep )
 	{
 		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
@@ -6244,12 +6245,49 @@ void CC_CH_CreateJalopy( void )
 
 static ConCommand ch_createjalopy("ch_createjalopy", CC_CH_CreateJalopy, "Spawn jalopy in front of the player.", FCVAR_CHEAT);
 
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+Spawn Jeep
+//-----------------------------------------------------------------------------
+static void CreateJeep( CBasePlayer *pPlayer )
+{
+	// Cheat to create a jeep in front of the player
+	Vector vecForward;
+	AngleVectors( pPlayer->EyeAngles(), &vecForward );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_jalopy" );
+	if ( pJeep )
+	{
+		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
+		QAngle vecAngles( 0, pPlayer->GetAbsAngles().y - 90, 0 );
+		pJeep->SetAbsOrigin( vecOrigin );
+		pJeep->SetAbsAngles( vecAngles );
+		pJeep->KeyValue( "model", "models/buggy.mdl" );
+		pJeep->KeyValue( "solid", "6" );
+		pJeep->KeyValue( "targetname", "jeep" );
+		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/jalopy.txt" );
+		DispatchSpawn( pJeep );
+		pJeep->Activate();
+		pJeep->Teleport( &vecOrigin, &vecAngles, NULL );
+	}
+}
+
+void CC_CH_CreateJeep( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+	CreateJeep( pPlayer );
+}
+
+static ConCommand ch_createjeep("ch_createjeep", CC_CH_CreateJeep, "Spawn jeep in front of the player.", FCVAR_CHEAT);
+
 #endif // HL2_EPISODIC
 
 //-----------------------------------------------------------------------------
-// Create an airboat in front of the specified player
+// Create a jeep in front of the specified player
 //-----------------------------------------------------------------------------
-static void CreateJeep( CBasePlayer *pPlayer )
+static void CreateBuggy( CBasePlayer *pPlayer )
 {
 	// Cheat to create a jeep in front of the player
 	Vector vecForward;
@@ -6277,15 +6315,15 @@ static void CreateJeep( CBasePlayer *pPlayer )
 }
 
 
-void CC_CH_CreateJeep( void )
+void CC_CH_CreateBuggy( void )
 {
 	CBasePlayer *pPlayer = UTIL_GetCommandClient();
 	if ( !pPlayer )
 		return;
-	CreateJeep( pPlayer );
+	CreateBuggy( pPlayer );
 }
 
-static ConCommand ch_createjeep("ch_createjeep", CC_CH_CreateJeep, "Spawn jeep in front of the player.", FCVAR_CHEAT);
+static ConCommand ch_createhl2buggy("ch_createhl2buggy", CC_CH_CreateBuggy, "Spawn hl2 jeep in front of the player.", FCVAR_CHEAT);
 
 
 //-----------------------------------------------------------------------------

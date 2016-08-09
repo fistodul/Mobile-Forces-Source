@@ -152,7 +152,7 @@ void CRotatingPickup::Materialize()
 	SetTouch(&CItem::ItemTouch);
 }
 
-CON_COMMAND(create_rotating_healthkit, "You Spin Me Right Round xD") // Spawns the Thing-amagig.
+CON_COMMAND(create_rotating_healthkit, "You Spin Me Right Round xD, FCVAR_CHEAT") // Spawns the Thing-amagig.
 {
 	//Same like the InventoryRemoveItem function.
 	Vector vecForward;
@@ -160,7 +160,7 @@ CON_COMMAND(create_rotating_healthkit, "You Spin Me Right Round xD") // Spawns t
 	//CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin()); // FUCK U GetAbsOrigin !!!!
 	/*if(!pPlayer)
 	{
-		Warning("Could not deterime calling player!\n");
+		Warning("Could not determine calling player!\n");
 		return;
 	}*/ // Let everything be able to spawn it XD
 

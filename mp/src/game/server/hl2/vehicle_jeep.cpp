@@ -371,14 +371,14 @@ int CPropJeep::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	{
 		CBaseEntity *pEntity = NULL;
 
-		while ((pEntity = gEntList.FindEntityByClassname(pEntity, "prop_vehicle_hl2buggy")) != NULL)
+		if ((pEntity = gEntList.FindEntityByClassname(pEntity, "prop_vehicle_hl2buggy")) != NULL)
 		{
 			CPropJeep *pJeep = dynamic_cast<CPropJeep *>(pEntity);
-			//if (pJeep->IsInWorld())
-			//{
+			if (pJeep == this)
+			{
 			g_EventQueue.AddEvent(pJeep, "Explode", 0.20, this, this);
 			//UTIL_Remove( this );
-			//}
+			}
 		}
 	}
 	return fTookDamage;

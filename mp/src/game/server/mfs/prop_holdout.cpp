@@ -32,8 +32,8 @@ BEGIN_DATADESC( CHoldout )
 END_DATADESC()
 
 /*IMPLEMENT_SERVERCLASS_ST( CHoldout, DT_Holdout )
-	SendPropFloat( SENDINFO( m_BlueTime ), 0, SPROP_NOSCALE),
-	SendPropFloat( SENDINFO( m_RedTime ), 0, SPROP_NOSCALE),
+	SendPropFloat( SENDINFO( m_BlueTime ) ),
+	SendPropFloat( SENDINFO( m_RedTime ) ),
 END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );

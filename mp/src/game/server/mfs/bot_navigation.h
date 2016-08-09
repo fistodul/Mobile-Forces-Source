@@ -11,7 +11,7 @@
 #include "nav_pathfind.h"
 #include "nav_area.h"
 
-void DealWithObstacles( CSDKBot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
+void DealWithObstacles( CHL2MP_Bot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 {
 	if( !pTouchEnt  )
 		return;
@@ -32,13 +32,13 @@ void DealWithObstacles( CSDKBot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 	if( tr.fraction < 1.0f && tr2.fraction == 1.0f )
 	{
 		pBot->m_flNextDealObstacles = 0;
-		cmd.sidemove = -pBot->m_flSkill[BOT_SKILL_SPEED];
+		cmd.sidemove = -pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
 		cmd.forwardmove = 0;
 	}
 	else if( tr.fraction == 1.0f && tr2.fraction < 1.0f )
 	{
 		pBot->m_flNextDealObstacles = 0;
-		cmd.sidemove = pBot->m_flSkill[BOT_SKILL_SPEED];
+		cmd.sidemove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
 		cmd.forwardmove = 0;
 	}
 
@@ -67,7 +67,7 @@ void DealWithObstacles( CSDKBot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 			door->DoorGoUp();
 	}
 
-	// don't pay attention to undestructible objects
+	// don't pay attention to indestructible objects
 	// push objects too
 	if ( FClassnameIs( pTouchEnt, "prop_physics") 
 		|| FClassnameIs( pTouchEnt, "prop_physics_multiplayer") 
@@ -77,7 +77,7 @@ void DealWithObstacles( CSDKBot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 		CBreakableProp *pProp = dynamic_cast< CBreakableProp * >( pTouchEnt );
 		if ( pProp )
 		{
-			// don't destroy explosive props
+			// don't destroy explosive props, with a melee wep 
 			if ( pProp->GetExplosiveDamage() > 0 ||  pProp->GetExplosiveRadius() > 0 )
 				return;
 		}
@@ -110,7 +110,7 @@ void DealWithObstacles( CSDKBot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 
 }
 
-void AddRandomPath( CSDKBot *pBot, float randomStartAngle = 0 )
+void AddRandomPath( CHL2MP_Bot *pBot, float randomStartAngle = 0 )
 {	
 	if( pBot->m_flCreateRandomPathCoolDown > gpGlobals->curtime )
 		return;
@@ -139,7 +139,9 @@ void AddRandomPath( CSDKBot *pBot, float randomStartAngle = 0 )
 			{
 				pBot->AddWaypoint( tr2.endpos , GO_NORTH, 0, 0 ); // we actually use the near to ground position to avoid useless mid-air random waypoints
 				pBot->m_nBotState = BOT_NAVIG_UNSTUCK;
+#ifdef DEBUG
 				DevMsg("Random path created\n");
+#endif
 				return;
 			}
 		}
@@ -147,12 +149,13 @@ void AddRandomPath( CSDKBot *pBot, float randomStartAngle = 0 )
 
 	pBot->m_flCreateRandomPathCoolDown = gpGlobals->curtime+0.75f;
 
-	DevMsg("Random path FAILED\n");
+	DevMsg("Bot random path creation FAILED\n");
+ //Fairly important messages are left  to be in release mode too
 
 	
 }
 
-bool BotOnLadder( CSDKBot *pBot )
+bool BotOnLadder( CHL2MP_Bot *pBot )
 {
 	if( pBot->m_Waypoints.Count() == 0 )
 		return false;
@@ -163,12 +166,14 @@ bool BotOnLadder( CSDKBot *pBot )
 	return false;
 }
 
-bool ArrivedToWaypoint( CSDKBot *pBot )
+bool ArrivedToWaypoint( CHL2MP_Bot *pBot )
 {
 	if( pBot->m_bIsOnLadder )
 	{
 		float dist = fabs(pBot->m_Waypoints[0].Center.z - pBot->GetLocalOrigin().z);
+#ifdef DEBUG
 		//DevMsg(" L %f ", dist );
+#endif
 
 		if( pBot->m_Waypoints[0].TransientType == GO_LADDER_UP && dist < 10  )
 			return true;
@@ -197,12 +202,14 @@ bool ArrivedToWaypoint( CSDKBot *pBot )
 }
 
  //checks bot speed, if total amount each interval doesn't exceed a minimum, then bot is declared 'stuck'
-void CheckStuck( CSDKBot *pBot, CUserCmd &cmd )
+void CheckStuck( CHL2MP_Bot *pBot, CUserCmd &cmd )
 {
 	if( pBot->m_nBotState == BOT_NAVIG_IDLE )
 		return;
 
+#ifdef DEBUG
 	//DevMsg( " %f ", pBot->m_flDistTraveled );
+#endif
 
 	if( pBot->m_flDistTraveled < 100.0f )
 	{			
@@ -224,6 +231,7 @@ void CheckStuck( CSDKBot *pBot, CUserCmd &cmd )
 		{	
 			NDebugOverlay::Line( pBot->GetLocalOrigin()+Vector(0,0,15), pBot->m_Waypoints[0].Center+Vector(0,0,15), 200, 0, 0, false, 5 );
 			DevMsg("!STUCK can't see next waypoint\n");
+ 
 			AddRandomPath(pBot);
 		}
 	}
@@ -233,7 +241,7 @@ void CheckStuck( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 // nav mesh offers some important hints as crouch or jump, among others
-void CheckNavMeshAttrib(  CSDKBot *pBot, trace_t *ptr, CUserCmd &cmd )
+void CheckNavMeshAttrib(  CHL2MP_Bot *pBot, trace_t *ptr, CUserCmd &cmd )
 {
 	if( pBot->m_Waypoints.Count() > 0 ) // waypoint based nav, hints are already stored
 	{
@@ -261,7 +269,7 @@ void CheckNavMeshAttrib(  CSDKBot *pBot, trace_t *ptr, CUserCmd &cmd )
 }
 
 
-bool CreatePath( CSDKBot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg )
+bool CreatePath( CHL2MP_Bot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg )
 {
 	if( !pBot || pBot == NULL )
 		return false;
@@ -333,30 +341,33 @@ bool CreatePath( CSDKBot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg )
 		return true;
 	}	
 
-	DevMsg("!Can't create path from given start to goal areas\n");
+	DevMsg("!Can't create bot path from given start to goal areas\n");
+//Should notify that the map sucks
 	return false;
 }
 
-bool CreateHidePath( CSDKBot *pBot, Vector &HiDeSpot )
+bool CreateHidePath( CHL2MP_Bot *pBot, Vector &HiDeSpot )
 {
+#ifdef DEBUG
 	DevMsg("Let's hide\n");
+#endif
 	pBot->m_flNextPathCheck = gpGlobals->curtime + 0.15f;
 
 	CBaseEntity *pSpot = NULL;	
-	const char *pSpawnpointName = SPAWN_POINT_NAME;
+	const char *pHideSpot = SPAWN_POINT_NAME;
 
 	if (HL2MPRules()->IsTeamplay() == true)
 	{
-		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pSpawnpointName)) == NULL)
+		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) == NULL)
 		{
 			int troll = random->RandomInt(2, 3);
 			if (troll == 2)
-				pSpawnpointName = SPAWN_POINT_BLUE;
+				pHideSpot = SPAWN_POINT_BLUE;
 			else
-				pSpawnpointName = SPAWN_POINT_RED;
+				pHideSpot = SPAWN_POINT_RED;
 		}
 	}
-	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pSpawnpointName)) != NULL)
+	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) != NULL && ShouldUpdate == false)
 	{
 		if ( pSpot )
 		{
@@ -364,10 +375,14 @@ bool CreateHidePath( CSDKBot *pBot, Vector &HiDeSpot )
 
 			if( BotToHideSpotDist > 100 && BotToHideSpotDist < 1500 )
 			{
-				DevMsg("Found suitable spawn point\n");
-				if( CreatePath( pBot, NULL, pSpot->GetLocalOrigin() ) ) // got a route to hide spot, now chech it for possible enemies near
+#ifdef DEBUG
+				DevMsg("Found suitable hide spot\n");
+#endif
+				if( CreatePath( pBot, NULL, pSpot->GetLocalOrigin() ) ) // got a route to hide spot, now check it for possible enemies near
 				{
-					DevMsg("Found hide spot\n");
+#ifdef DEBUG
+					DevMsg("Hide spot vaild\n");
+#endif
 					Vector prevWaypoint = vec3_origin;
 					pBot->m_AlreadyCheckedHideSpots.AddToTail( pSpot->entindex() );
 
@@ -391,6 +406,7 @@ bool CreateHidePath( CSDKBot *pBot, Vector &HiDeSpot )
 							CHL2MP_Player *pPlayer = ToHL2MPPlayer( UTIL_PlayerByIndex( i ) );
 
 							if ( pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer != pBot )
+//Bot's should hide from each other too
 							{
 								float dist = (pBot->m_Waypoints[j].Center - pPlayer->GetLocalOrigin()).Length();
 
@@ -422,7 +438,7 @@ bool CreateHidePath( CSDKBot *pBot, Vector &HiDeSpot )
 }
 
 // decision making process, bot chooses a task to execute, pretty simplified here
-void SelectSchedule( CSDKBot *pBot, bool forcePath = false )
+void SelectSchedule( CHL2MP_Bot *pBot, bool forcePath = false )
 {	
 	Vector HideSpot;
 
@@ -454,7 +470,7 @@ void SelectSchedule( CSDKBot *pBot, bool forcePath = false )
 }	
 
 // this function checks that non waypoint based navigation, including strafing, is safe enough (avoid deadly falls and such)
-bool SafePathAhead( CSDKBot *pBot, Vector origin )
+bool SafePathAhead( CHL2MP_Bot *pBot, Vector origin )
 {
 	if( pBot->m_bIsOnLadder || pBot->m_nBotState == BOT_NAVIG_PATH )
 		return true;
@@ -475,7 +491,7 @@ bool SafePathAhead( CSDKBot *pBot, Vector origin )
 	return true;
 }
 
-void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
+void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 {
 	// teammate proximity check - this prevents two bots share same space, in case collisions among bots are disabled
 	if( pBot->m_flNextProximityCheck < gpGlobals->curtime )
@@ -512,12 +528,15 @@ void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
 		if( tr.m_pEnt == pBot->GetEnemy() ) // this checks if bot still can walk straight towards target, if not just reset waypoints so a route towards him is made
 		{
 			float BotToEnemyDist2d = (pBot->GetLocalOrigin() - pBot->GetEnemy()->GetLocalOrigin()).Length2D();
+#ifdef DEBUG
 			//Msg(" %f ", tr.fraction );
+#endif
 
 			if( BotToEnemyDist2d < 16 ) // we are on top of enemy, forget about combat and get down there 
 			{					
 				pBot->m_flDontUseDirectNav = gpGlobals->curtime + 2.5f;
 				DevMsg("!I'm on top of enemy, literally\n");
+ //Why tf not, not like they wouldnt know already xd
 				if( pBot->GetLocalOrigin().z > pBot->GetEnemy()->GetLocalOrigin().z ) // let's only move if we are on top
 					AddRandomPath( pBot );
 				else
@@ -590,7 +609,7 @@ void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
 			if( SafePathAhead( pBot, pos) )
 			{
 				cmd.buttons |= IN_FORWARD; // this actually only needed for ladders, or bot won't be able to unmount them
-				cmd.forwardmove = pBot->m_flSkill[BOT_SKILL_SPEED];				
+				cmd.forwardmove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];				
 
 				if( fabs(flYawDelta) > 10 )  // decrease speed to avoid missing near waypoints
 					cmd.forwardmove *= RemapValClamped(fabs(flYawDelta), 10.0f, 90.0f, 0.65f, 0.2f);
@@ -628,7 +647,7 @@ void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
 			Vector origin = pBot->GetLocalOrigin()+Vector(0,0,10);
 			pBot->m_flSideMove = ( random->RandomInt( 0, 10 ) > 5 ? 1.0f : -1.0f ); // select left or right, randomly
 
-			float amount = (pBot->m_flSkill[BOT_SKILL_SPEED]*0.5f) * pBot->m_flSideMove; // amount is relative to bot walk speed
+			float amount = (pBot->m_flSkill[BOT_SKILL_WALK_SPEED]*0.5f) * pBot->m_flSideMove; // amount is relative to bot walk speed
 
 			trace_t tr, trb;
 		
@@ -656,7 +675,7 @@ void BotNavigation( CSDKBot *pBot, CUserCmd &cmd  )
 			if( SafePathAhead( pBot, pos) )	
 			{
 				//NDebugOverlay::Cross3DOriented( pBot->EyePosition(), QAngle(0,0,0), 20, 200, 0, 200, false, -1 );
-				cmd.sidemove = pBot->m_flSkill[BOT_SKILL_SPEED] * pBot->m_flSideMove;
+				cmd.sidemove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED] * pBot->m_flSideMove;
 			}
 		}
 	}

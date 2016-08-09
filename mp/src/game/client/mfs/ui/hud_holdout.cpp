@@ -10,7 +10,6 @@
 #include "hud_macros.h"
 #include "hud_numericdisplay.h"
 #include "iclientmode.h"
-#include "iclientvehicle.h"
 #include <vgui_controls/AnimationController.h>
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
@@ -57,6 +56,7 @@ public:
 
 protected:
 	virtual void OnThink();
+	void UpdateAmmoDisplays( C_Holdout *pHoldout );
 	
 private:
 	float	BlueTime;
@@ -112,16 +112,20 @@ void HudHoldout::Reset()
 	RedTime = 0;
 }
 
+void HudHoldout::UpdateAmmoDisplays( C_Holdout *pHoldout )
+{
+	BlueTime = pHoldout->m_BlueTime;
+	RedTime = pHoldout->m_RedTime;
+	SetAmmo(BlueTime, true);
+	SetAmmo2(RedTime, true);
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: called every frame to get ammo info from the weapon
 //-----------------------------------------------------------------------------
 void HudHoldout::OnThink()
 {
-	C_Holdout *pHoldout = NULL;
-	BlueTime = pHoldout->m_BlueTime;
-	RedTime = pHoldout->m_RedTime;
-	SetAmmo(BlueTime, true);
-	SetAmmo2(RedTime, true);
+	UpdateAmmoDisplays();
 }
 
 //-----------------------------------------------------------------------------

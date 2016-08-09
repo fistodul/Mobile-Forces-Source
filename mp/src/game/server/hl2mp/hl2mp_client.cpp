@@ -125,7 +125,14 @@ pPlayer->Spawn();
 
 if ( HL2MPRules()->IsTeamplay() == true )
 {
+if ( HL2MPRules()->IsInjustice() == false )
+//In injustice you only get to pick in semi rare cases
 	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
+else
+{
+if ( pPlayer->GetTeamNumber() == 1 )
+	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
+}
 }
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 
@@ -144,8 +151,8 @@ if ( HL2MPRules()->IsTeamplay() == true )
   //SecobMod__ChangeME!
   //SecobMod__FixMe For whatever reason the new secobmod won't find the cfg file after a map change unless we hard code the file path. Maybe someone with better filesystem knowledge can fix this back
   // to how it used to be (just cfg/transition.cfg). Probably to do with mounting other content in the gameinfo.txt search paths (well that's my guess at least).
-  KeyValues *pkvTransitionRestoreFile = new KeyValues( "C:/Program Files/Steam/SteamApps/sourcemods/mobileforcessource/cfg/transition.cfg" );
-   if ( pkvTransitionRestoreFile->LoadFromFile( filesystem, "C:/Program Files/Steam/SteamApps/sourcemods/mobileforcessource/cfg/transition.cfg" ) )
+  KeyValues *pkvTransitionRestoreFile = new KeyValues( "cfg/transition.cfg" );
+   if ( pkvTransitionRestoreFile->LoadFromFile( filesystem, szFilename, "MOD" ) )
    {
       while ( pkvTransitionRestoreFile )
       {

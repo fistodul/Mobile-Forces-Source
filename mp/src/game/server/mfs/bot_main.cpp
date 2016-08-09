@@ -22,8 +22,8 @@
 #include "nav_pathfind.h"
 #include "nav_area.h"
 
-class CSDKBot;
-void Bot_Think( CSDKBot *pBot );
+class CHL2MP_Bot;
+void Bot_Think( CHL2MP_Bot *pBot );
 
 
 // Handler for the "bot" command.
@@ -31,7 +31,7 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 {
 	if (!TheNavMesh->IsLoaded())
 	{
-		Warning("No navigation mesh loaded, Creating one");
+		DevMsg("No navigation mesh loaded, Creating one");
 		engine->ServerCommand("nav_generate");
 	}
 
@@ -51,9 +51,7 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 
 static int g_CurBotNumber = 1;
 
-
-LINK_ENTITY_TO_CLASS( bot, CSDKBot );
-
+LINK_ENTITY_TO_CLASS( bot, CHL2MP_Bot );
 
 class CBotManager
 {
@@ -63,7 +61,7 @@ public:
 		// This tells it which edict to use rather than creating a new one.
 		CBasePlayer::s_PlayerEdict = pEdict;
 
-		CSDKBot *pPlayer = static_cast<CSDKBot *>( CreateEntityByName( "bot" ) );
+		CHL2MP_Bot *pPlayer = static_cast<CHL2MP_Bot *>( CreateEntityByName( "bot" ) );
 		if ( pPlayer )
 		{
 			pPlayer->SetPlayerName( playername );
@@ -82,7 +80,7 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 	char botname[ 64 ];
 	Q_snprintf( botname, sizeof( botname ), "Bot%02i", g_CurBotNumber );
 	
-	// This trick lets us create a CSDKBot for this client instead of the CSDKPlayer
+	// This trick lets us create a CHL2MP_Bot for this client instead of the CHL2MP_Player
 	// that we would normally get when ClientPutInServer is called.
 	ClientPutInServerOverride( &CBotManager::ClientPutInServerOverride_Bot );
 	edict_t *pEdict = engine->CreateFakeClient( botname );
@@ -95,7 +93,7 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 	}
 
 	// Allocate a player entity for the bot, and call spawn
-	CSDKBot *pPlayer = ((CSDKBot*)CBaseEntity::Instance( pEdict ));
+	CHL2MP_Bot *pPlayer = ((CHL2MP_Bot*)CBaseEntity::Instance( pEdict ));
 
 	pPlayer->ClearFlags();
 	pPlayer->AddFlag( FL_CLIENT | FL_FAKECLIENT );
@@ -115,11 +113,16 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 
 	// set bot skills
 	pPlayer->m_flSkill[BOT_SKILL_YAW_RATE] = random->RandomFloat(SKILL_MIN_YAW_RATE, SKILL_MAX_YAW_RATE);
-	pPlayer->m_flSkill[BOT_SKILL_SPEED] = random->RandomFloat(SKILL_MIN_SPEED, SKILL_MAX_SPEED);
+	pPlayer->m_flSkill[BOT_SKILL_WALK_SPEED] = random->RandomFloat(SKILL_MIN_WALK_SPEED, SKILL_MAX_WALK_SPEED);
+	pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
 	pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat( SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
+
+	CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
+	CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
 
 	g_CurBotNumber++;
 
+	SpawnTime = gpGlobals->curtime;
 	return pPlayer;
 }
 
@@ -134,11 +137,12 @@ void Bot_RunAll( void )
 
 		// Ignore plugin bots
 		if ( pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT)/* && !pPlayer->IsEFlagSet( EFL_PLUGIN_BASED_BOT )*/ )
+ //FixMe
 		{
-			CSDKBot *pBot = dynamic_cast< CSDKBot* >( pPlayer );
+			CHL2MP_Bot *pBot = dynamic_cast< CHL2MP_Bot* >( pPlayer );
 			if ( pBot )
 			{
-				Bot_Think( (CSDKBot *)pPlayer );
+				Bot_Think( (CHL2MP_Bot *)pPlayer );
 			}
 		}
 	}	
@@ -182,7 +186,7 @@ static void RunPlayerMove( CHL2MP_Player *fakeclient, CUserCmd &cmd, float frame
 	gpGlobals->curtime = flOldCurtime;
 }
 
-void Bot_HandleRespawn( CSDKBot *pBot, CUserCmd &cmd )
+void Bot_HandleRespawn( CHL2MP_Bot *pBot, CUserCmd &cmd )
 {		
 	// Try hitting my buttons occasionally
 	if ( random->RandomInt( 0, 100 ) > 80 )
@@ -200,7 +204,7 @@ void Bot_HandleRespawn( CSDKBot *pBot, CUserCmd &cmd )
 }
 
 // here bot updates important info that is used multiple times along the thinking process
-void BotInfoGathering( CSDKBot *pBot )
+void BotInfoGathering( CHL2MP_Bot *pBot )
 {	
 	pBot->m_flBotToEnemyDist = (pBot->GetLocalOrigin() - pBot->GetEnemy()->GetLocalOrigin()).Length();
 
@@ -223,7 +227,7 @@ void BotInfoGathering( CSDKBot *pBot )
 //-----------------------------------------------------------------------------
 // Run this Bot's AI for one tick.
 //-----------------------------------------------------------------------------
-void Bot_Think( CSDKBot *pBot )
+void Bot_Think( CHL2MP_Bot *pBot )
 {
 	// Make sure we stay being a bot
 	pBot->AddFlag( FL_FAKECLIENT );

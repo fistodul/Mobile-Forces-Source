@@ -153,6 +153,8 @@ IMPLEMENT_ACTTABLE(CWeaponGauss);
 
 
 ConVar sk_dmg_gauss( "sk_dmg_gauss", "25", FCVAR_CHEAT ); //10? xd
+ConVar sk_max_gauss( "sk_max_gauss", "150", FCVAR_REPLICATED | FCVAR_CHEAT );
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

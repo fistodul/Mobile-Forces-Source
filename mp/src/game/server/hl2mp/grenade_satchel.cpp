@@ -142,6 +142,7 @@ void CSatchelCharge::SatchelTouch(CBaseEntity *pOther)
 {
 	if (m_bCanExplode)
 	{
+		//InputExplode( this );
 		CBaseEntity *pEntity = NULL;
 
 		while ((pEntity = gEntList.FindEntityByClassname(pEntity, "npc_satchel")) != NULL)
