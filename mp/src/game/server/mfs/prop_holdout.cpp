@@ -40,8 +40,7 @@ LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );
 
 void CHoldout::Spawn( void )
 {
-CHL2MPRules *pRules = HL2MPRules();
-if ( pRules->IsHoldout() == false )
+if (HL2MPRules()->IsHoldout() == false)
 {
 return; //Why tf u no work
 }
@@ -113,7 +112,6 @@ void CHoldout::HoldoutUse(CBaseEntity *pPlayer, CBaseEntity *pCaller, USE_TYPE u
 
 void CHoldout::HoldoutThink( void )
 {
-	CHL2MPRules *pRules = HL2MPRules();
 	if (m_Owner != NULL)
 	{
 		if (m_Owner == 2)
@@ -124,7 +122,7 @@ void CHoldout::HoldoutThink( void )
 			}
 			else
 			{
-				pRules->GoToIntermission();
+				HL2MPRules()->GoToIntermission();
 			}
 		}
 		else
@@ -135,7 +133,7 @@ void CHoldout::HoldoutThink( void )
 			}
 			else
 			{
-				pRules->GoToIntermission();
+				HL2MPRules()->GoToIntermission();
 			}
 		}
 	}

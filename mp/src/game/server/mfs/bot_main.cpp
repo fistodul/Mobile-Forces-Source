@@ -25,14 +25,14 @@
 class CHL2MP_Bot;
 void Bot_Think( CHL2MP_Bot *pBot );
 
-
 // Handler for the "bot" command.
 CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 {
 	if (!TheNavMesh->IsLoaded())
 	{
+		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_GetCommandClient());
 		DevMsg("No navigation mesh loaded, Creating one");
-		engine->ServerCommand("nav_generate");
+		engine->ClientCommand(pPlayer->edict(), "nav_generate");
 	}
 
 	// Look at -count.
@@ -49,7 +49,69 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 	}
 }
 
+void bot_kick_f (const CCommand &args)
+{
+	int name = atoi(args[1]);
+	if (name < 1 )
+	//if ( args.Arg(1) == "" )
+	{
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
+		{
+			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+
+			// Ignore plugin bots
+			if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT)/* && !pPlayer->IsEFlagSet( EFL_PLUGIN_BASED_BOT )*/) //FixMe
+			{
+				CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+				if (pBot)
+				{
+					engine->ClientCommand(pBot->edict(), "disconnect");
+				}
+			}
+		}
+		return;
+	}
+
+	engine->ServerCommand(UTIL_VarArgs("kick %s\n", name));
+}
+
+ConCommand bot_kick("bot_kick", bot_kick_f, "kick a bot", FCVAR_SERVER_CAN_EXECUTE);
+
 static int g_CurBotNumber = 1;
+static int g_CurBlueBotNumber = 1;
+static int g_CurRedBotNumber = 1;
+
+int g_iLastHideSpot = 0;
+
+CHL2MP_Bot::~CHL2MP_Bot( void )
+{
+	/*if (HL2MPRules()->IsTeamplay() == false)
+		g_CurBotNumber = 1;
+	else
+	{
+			g_CurBlueBotNumber = 1;
+			g_CurRedBotNumber = 1;
+	}*/
+}
+
+// hide spot references for bots
+const char *g_ppszRandomHideSpots[] =
+{
+	"info_player_deathmatch"
+	"info_player_combine"
+	"info_player_rebels"
+	"info_player_captain_blue"
+	"info_player_captain_red"
+};
+
+//Probably really rare case as every MFS mapper should include deathmatch spawns
+const char *g_ppszRandomHideSpotsTeams[] =
+{
+	"info_player_combine"
+	"info_player_rebels"
+	"info_player_captain_blue"
+	"info_player_captain_red"
+};
 
 LINK_ENTITY_TO_CLASS( bot, CHL2MP_Bot );
 
@@ -78,7 +140,290 @@ public:
 CBasePlayer *BotPutInServer( bool  bFrozen )
 {
 	char botname[ 64 ];
-	Q_snprintf( botname, sizeof( botname ), "Bot%02i", g_CurBotNumber );
+	/*int pkvWeapon_1_Value;
+	int Weapon_1_PriClip_Value;
+	int Weapon_1_SecClip_Value;*/
+	if (HL2MPRules()->IsTeamplay() == false)
+	{
+		if (g_CurBotNumber == 1)
+		{
+			Q_snprintf(botname, sizeof(botname), "Heywood");
+		}
+		else if (g_CurBotNumber == 2)
+		{
+			Q_snprintf(botname, sizeof(botname), "Coffey");
+		}
+		else if (g_CurBotNumber == 3)
+		{
+			Q_snprintf(botname, sizeof(botname), "Jackson");
+		}
+		else if (g_CurBotNumber == 4)
+		{
+			Q_snprintf(botname, sizeof(botname), "Dillon");
+		}
+		else if (g_CurBotNumber == 5)
+		{
+			Q_snprintf(botname, sizeof(botname), "Lydecker");
+		}
+		else if (g_CurBotNumber == 6)
+		{
+			Q_snprintf(botname, sizeof(botname), "Carter");
+		}
+		else if (g_CurBotNumber == 7)
+		{
+			Q_snprintf(botname, sizeof(botname), "Gorman");
+		}
+		else if (g_CurBotNumber == 8)
+		{
+			Q_snprintf(botname, sizeof(botname), "Powell");
+		}
+		else if (g_CurBotNumber == 9)
+		{
+			Q_snprintf(botname, sizeof(botname), "Sanchez");
+		}
+		else if (g_CurBotNumber == 10)
+		{
+			Q_snprintf(botname, sizeof(botname), "Bennings");
+		}
+		else if (g_CurBotNumber == 11)
+		{
+			Q_snprintf(botname, sizeof(botname), "Bowman");
+		}
+		else if (g_CurBotNumber == 12)
+		{
+			Q_snprintf(botname, sizeof(botname), "Wychek");
+		}
+		else if (g_CurBotNumber == 13)
+		{
+			Q_snprintf(botname, sizeof(botname), "Scagnetti");
+		}
+		else if (g_CurBotNumber == 14)
+		{
+			Q_snprintf(botname, sizeof(botname), "Kurtz");
+		}
+		else if (g_CurBotNumber == 15)
+		{
+			Q_snprintf(botname, sizeof(botname), "Harris");
+		}
+		else if (g_CurBotNumber == 16)
+		{
+			Q_snprintf(botname, sizeof(botname), "Palmer");
+		}
+		else if (g_CurBotNumber == 17)
+		{
+			Q_snprintf(botname, sizeof(botname), "Leyden");
+		}
+		else if (g_CurBotNumber == 18)
+		{
+			Q_snprintf(botname, sizeof(botname), "Baxter");
+		}
+		else if (g_CurBotNumber == 19)
+		{
+			Q_snprintf(botname, sizeof(botname), "Thomson");
+		}
+		else if (g_CurBotNumber == 20)
+		{
+			Q_snprintf(botname, sizeof(botname), "Banks");
+		}
+		else if (g_CurBotNumber == 21)
+		{
+			Q_snprintf(botname, sizeof(botname), "Good");
+		}
+		else if (g_CurBotNumber == 22)
+		{
+			Q_snprintf(botname, sizeof(botname), "Hodgson");
+		}
+		else if (g_CurBotNumber == 23)
+		{
+			Q_snprintf(botname, sizeof(botname), "Hall");
+		}
+		else if (g_CurBotNumber == 24)
+		{
+			Q_snprintf(botname, sizeof(botname), "Macdonald");
+		}
+		else if (g_CurBotNumber == 25)
+		{
+			Q_snprintf(botname, sizeof(botname), "Henderson");
+		}
+		else if (g_CurBotNumber == 26)
+		{
+			Q_snprintf(botname, sizeof(botname), "Williams");
+		}
+		else if (g_CurBotNumber == 27)
+		{
+			Q_snprintf(botname, sizeof(botname), "Hughes");
+		}
+		else if (g_CurBotNumber == 28)
+		{
+			Q_snprintf(botname, sizeof(botname), "Hewitt");
+		}
+		else if (g_CurBotNumber == 29)
+		{
+			Q_snprintf(botname, sizeof(botname), "Jones");
+		}
+		else if (g_CurBotNumber == 30)
+		{
+			Q_snprintf(botname, sizeof(botname), "Biltcliffe");
+		}
+		else if (g_CurBotNumber == 31)
+		{
+			Q_snprintf(botname, sizeof(botname), "Donbavand");
+		}
+		else if (g_CurBotNumber == 32)
+		{
+			Q_snprintf(botname, sizeof(botname), "Fitzsimmons");
+		}
+		else
+		{
+			Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurBotNumber);
+		}
+	}
+	else
+	{
+		/*CBasePlayer *pPlayer = NULL; // so Basically a "whatever the fuck u will be" pointer?
+		if ( pPlayer->GetTeamNumber() == 2)
+		{
+			if (g_CurBlueBotNumber == 1)
+			{
+				Q_snprintf(botname, sizeof(botname), "Heywood");
+			}
+			else if (g_CurBlueBotNumber == 2)
+			{
+				Q_snprintf(botname, sizeof(botname), "Jackson");
+			}
+			else if (g_CurBlueBotNumber == 3)
+			{
+				Q_snprintf(botname, sizeof(botname), "Lydecker");
+			}
+			else if (g_CurBlueBotNumber == 4)
+			{
+				Q_snprintf(botname, sizeof(botname), "Gorman");
+			}
+			else if (g_CurBlueBotNumber == 5)
+			{
+				Q_snprintf(botname, sizeof(botname), "Sanchez");
+			}
+			else if (g_CurBlueBotNumber == 6)
+			{
+				Q_snprintf(botname, sizeof(botname), "Bowman");
+			}
+			else if (g_CurBlueBotNumber == 7)
+			{
+				Q_snprintf(botname, sizeof(botname), "Scagnetti");
+			}
+			else if (g_CurBlueBotNumber == 8)
+			{
+				Q_snprintf(botname, sizeof(botname), "Harris");
+			}
+			else if (g_CurBlueBotNumber == 9)
+			{
+				Q_snprintf(botname, sizeof(botname), "Leyden");
+			}
+			else if (g_CurBlueBotNumber == 10)
+			{
+				Q_snprintf(botname, sizeof(botname), "Thomson");
+			}
+			else if (g_CurBlueBotNumber == 11)
+			{
+				Q_snprintf(botname, sizeof(botname), "Good");
+			}
+			else if (g_CurBlueBotNumber == 12)
+			{
+				Q_snprintf(botname, sizeof(botname), "Hall");
+			}
+			else if (g_CurBlueBotNumber == 13)
+			{
+				Q_snprintf(botname, sizeof(botname), "Henderson");
+			}
+			else if (g_CurBlueBotNumber == 14)
+			{
+				Q_snprintf(botname, sizeof(botname), "Hughes");
+			}
+			else if (g_CurBlueBotNumber == 15)
+			{
+				Q_snprintf(botname, sizeof(botname), "Jones");
+			}
+			else if (g_CurBlueBotNumber == 16)
+			{
+				Q_snprintf(botname, sizeof(botname), "Donbavand");
+			}
+			else
+			{
+				Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurBlueBotNumber);
+			}
+		}
+		else
+		{
+			if (g_CurRedBotNumber == 1)
+			{
+				Q_snprintf(botname, sizeof(botname), "Coffey");
+			}
+			else if (g_CurRedBotNumber == 2)
+			{
+				Q_snprintf(botname, sizeof(botname), "Dillon");
+			}
+			else if (g_CurRedBotNumber == 3)
+			{
+				Q_snprintf(botname, sizeof(botname), "Carter");
+			}
+			else if (g_CurRedBotNumber == 4)
+			{
+				Q_snprintf(botname, sizeof(botname), "Powell");
+			}
+			else if (g_CurRedBotNumber == 5)
+			{
+				Q_snprintf(botname, sizeof(botname), "Bennings");
+			}
+			else if (g_CurRedBotNumber == 6)
+			{
+				Q_snprintf(botname, sizeof(botname), "Wychek");
+			}
+			else if (g_CurRedBotNumber == 7)
+			{
+				Q_snprintf(botname, sizeof(botname), "Kurtz");
+			}
+			else if (g_CurRedBotNumber == 8)
+			{
+				Q_snprintf(botname, sizeof(botname), "Palmer");
+			}
+			else if (g_CurRedBotNumber == 9)
+			{
+				Q_snprintf(botname, sizeof(botname), "Baxter");
+			}
+			else if (g_CurRedBotNumber == 10)
+			{
+				Q_snprintf(botname, sizeof(botname), "Banks");
+			}
+			else if (g_CurRedBotNumber == 11)
+			{
+				Q_snprintf(botname, sizeof(botname), "Hodgson");
+			}
+			else if (g_CurRedBotNumber == 12)
+			{
+				Q_snprintf(botname, sizeof(botname), "Macdonald");
+			}
+			else if (g_CurRedBotNumber == 13)
+			{
+				Q_snprintf(botname, sizeof(botname), "Williams");
+			}
+			else if (g_CurRedBotNumber == 14)
+			{
+				Q_snprintf(botname, sizeof(botname), "Hewitt");
+			}
+			else if (g_CurRedBotNumber == 15)
+			{
+				Q_snprintf(botname, sizeof(botname), "Biltcliffe");
+			}
+			else if (g_CurRedBotNumber == 16)
+			{
+				Q_snprintf(botname, sizeof(botname), "Fitzsimmons");
+			}
+			else
+			{*/
+				Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurRedBotNumber);
+			//}
+		//}
+	}
 	
 	// This trick lets us create a CHL2MP_Bot for this client instead of the CHL2MP_Player
 	// that we would normally get when ClientPutInServer is called.
@@ -117,10 +462,29 @@ CBasePlayer *BotPutInServer( bool  bFrozen )
 	pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
 	pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat( SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
 
-	//CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
-	//CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
+	//pPlayer->CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
+	//pPlayer->CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
 
-	g_CurBotNumber++;
+	/*if ( pkvWeapon_1_Value != 0 )
+	{
+	pPlayer->GiveNamedItem( (pkvWeapon_1_Value) );
+	pPlayer->CBasePlayer::GiveAmmo( Weapon_1_PriClip_Value,	pkvWeapon_1_PriClipAmmo_Value );
+	pPlayer->CBasePlayer::GiveAmmo( Weapon_1_SecClip_Value,	pkvWeapon_1_SecClipAmmo_Value );
+	}
+	else
+	{
+	//This is gonna be really fun
+	}*/
+
+	if (HL2MPRules()->IsTeamplay() == false)
+		g_CurBotNumber++;
+	else
+	{
+		if (pPlayer->GetTeamNumber() == 2 )
+		g_CurBlueBotNumber++;
+		else
+		g_CurRedBotNumber++;
+	}
 
 	return pPlayer;
 }
@@ -135,8 +499,7 @@ void Bot_RunAll( void )
 		CHL2MP_Player *pPlayer = ToHL2MPPlayer( UTIL_PlayerByIndex( i ) );
 
 		// Ignore plugin bots
-		if ( pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT)/* && !pPlayer->IsEFlagSet( EFL_PLUGIN_BASED_BOT )*/ )
- //FixMe
+		if ( pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT)/* && !pPlayer->IsEFlagSet( EFL_PLUGIN_BASED_BOT )*/ ) //FixMe
 		{
 			CHL2MP_Bot *pBot = dynamic_cast< CHL2MP_Bot* >( pPlayer );
 			if ( pBot )
@@ -222,6 +585,95 @@ void BotInfoGathering( CHL2MP_Bot *pBot )
 	pBot->m_flHeightDifToEnemy = pBot->GetLocalOrigin().z - pBot->GetEnemy()->GetLocalOrigin().z;
 }
 	
+void CHL2MP_Bot::Update(int mode)
+{
+	CBaseEntity *pSpot = NULL;
+	const char *OldHideSpot = pHideSpot;
+
+	if (mode == 0) // in any other cases we're calling this with a mode pre-determined
+	{
+		if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_DEATHMATCH)) == NULL)
+		{
+			if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
+			{
+				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+					mode = 6;// This map sucks
+				else
+					// This map is racist
+					mode = 4;
+			}
+			else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+			{
+				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
+					mode = 6;// This map sucks
+				else
+					// This map is racist
+					mode = 5;
+			}
+			if (mode < 4)
+				mode = 2;
+		}
+
+		if (mode < 2)
+		{
+			if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL && (pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+				mode = 3;
+			else
+				mode = 1;
+		}
+	}
+
+	if (mode == 1)
+	{
+		int nHeads = ARRAYSIZE(g_ppszRandomHideSpots);
+
+		g_iLastHideSpot = (g_iLastHideSpot + 1) % nHeads;
+		pHideSpot = g_ppszRandomHideSpots[g_iLastHideSpot];
+
+		if (pHideSpot == OldHideSpot)
+			Update(1);
+	}
+	else if (mode == 2)
+	{
+		int nHeads = ARRAYSIZE(g_ppszRandomHideSpotsTeams);
+
+		g_iLastHideSpot = (g_iLastHideSpot + 1) % nHeads;
+		pHideSpot = g_ppszRandomHideSpotsTeams[g_iLastHideSpot];
+
+		if (pHideSpot == OldHideSpot)
+			Update(2);
+	}
+	else if (mode == 3)
+	{
+		pHideSpot = SPAWN_POINT_DEATHMATCH;
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(3);*/
+	}
+	else if (mode == 4)
+	{
+		pHideSpot = SPAWN_POINT_BLUE;
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(4);*/
+	}
+	else if (mode == 5)
+	{
+		pHideSpot = SPAWN_POINT_RED;
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(5);*/
+	}
+	else if (mode == 6) // This actually happends
+	{
+		pHideSpot = "info_player_start";
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(6);*/
+	}
+
+	UpdateTime = gpGlobals->curtime;
+}
 
 //-----------------------------------------------------------------------------
 // Run this Bot's AI for one tick.
@@ -235,7 +687,7 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		return;
 
 	if (pBot->ShouldUpdate() == true)
-		pBot->Update(1);
+		pBot->Update(0);
 
 	CUserCmd cmd;
 	Q_memset( &cmd, 0, sizeof( cmd ) );	
@@ -286,6 +738,7 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		NDebugOverlay::Cross3DOriented( pBot->m_Waypoints[i].Center, QAngle(0,0,0), 5*i+1, 200, 0, 0, false, -1 );
 	}*/
 
-	RunPlayerMove( pBot, cmd, gpGlobals->frametime );		
+	RunPlayerMove( pBot, cmd, gpGlobals->frametime );	
+
 }
 #endif

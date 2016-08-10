@@ -39,45 +39,9 @@
 #define SKILL_MIN_STRAFE 0.0f
 #define SKILL_MAX_STRAFE 10.0f // set this to 0 to disable strafe skill at all
 
-int g_iLastHideSpot = 0;
-// hide spot references for bots
-const char *g_ppszRandomHideSpots[] =
-{
-	"info_player_deathmatch"
-	"info_player_combine"
-	"info_player_rebels"
-	"info_player_captain_blue"
-	"info_player_captain_red"
-};
-
-//Probably really rare case as every MFS mapper should include deathmatch spawns
-const char *g_ppszRandomHideSpotsTeams[] =
-{
-	"info_player_combine"
-	"info_player_rebels"
-	"info_player_captain_blue"
-	"info_player_captain_red"
-};
-
-//During captains gamemode it's not really safe where they spawn
-const char *g_ppszRandomHideSpotsCaptains[] =
-{
-	"info_player_deathmatch"
-	"info_player_combine"
-	"info_player_rebels"
-};
-
-//Custom HL2DM maps that only have team spawns
-const char *g_ppszRandomHideSpotsTC[] =
-{
-	"info_player_combine"
-	"info_player_rebels"
-};
-
-#define SPAWN_POINT_DEATHMATCH "info_player_combine"
+#define SPAWN_POINT_DEATHMATCH "info_player_deathmatch"
 #define SPAWN_POINT_BLUE "info_player_combine"
 #define SPAWN_POINT_RED "info_player_rebels"
-const char *pHideSpot = SPAWN_POINT_DEATHMATCH;
 
 // ladder's top dismount point gets added some artificial distance to allow bot more room to complete the operation
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
@@ -125,6 +89,8 @@ class CHL2MP_Bot : public CHL2MP_Player
 {
 public:
 
+	~CHL2MP_Bot(void);
+
 	float			m_flNextStrafeTime;
 	float			m_flStrafeSkillRelatedTimer;
 	float			m_flSideMove;
@@ -167,6 +133,10 @@ public:
 
 	CBasePlayer *GetEnemy() { return dynamic_cast<CBasePlayer *>(hEnemy.Get()); }
 
+	float UpdateTime;
+
+	const char *pHideSpot = SPAWN_POINT_DEATHMATCH; //Create an entity "info_hide_spot" and use that by default or use the nav mesh
+
 	void Spawn()
 	{
 		CHL2MP_Player::Spawn(); // Player model is set there
@@ -184,7 +154,7 @@ public:
 		m_flNextStrafeTime = 0;
 		m_flStrafeSkillRelatedTimer = 0;
 
-		SpawnTime = gpGlobals->curtime;
+		UpdateTime = gpGlobals->curtime;
 	}
 
 	void ResetNavigationParams()
@@ -212,61 +182,21 @@ public:
 
 	void ResetWaypoints( void ) { m_Waypoints.RemoveAll(); }
 
-	float SpawnTime;
 	bool ShouldUpdate() 	
 	{
 		CBaseEntity *pSpot = NULL;
+
 		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) == NULL)
 			return true;
 
-		int should = 0;
-		if ( gpGlobals->curtime - SpawnTime > 3600 )
-			should = 10;
-		if ( should > 9 ) 
-		{ 
-			SpawnTime = gpGlobals->curtime;
+		if ( gpGlobals->curtime - UpdateTime > 3600 )
 			return true; 
-		}
-		else
+
 			return false;
 	}
 
-	void Update( int mode )
-	{
-		CBaseEntity *pSpot = NULL;
-		const char *OldHideSpot = pHideSpot;
+	void Update(int mode);
 
-		if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_DEATHMATCH)) == NULL)
-		{
-			if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
-			{
-				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
-					mode = 5;// This map sucks
-				else
-				// This map is racist
-					mode = 4;
-			}
-			else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
-			{
-				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
-					mode = 5;// This map sucks
-				else
-					// This map is racist
-					mode = 4;
-			}
-		}
-
-		if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL && (pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL )
-			mode = 3;
-
-		int nHeads = ARRAYSIZE(g_ppszRandomHideSpots);
-
-		g_iLastHideSpot = (g_iLastHideSpot + 1) % nHeads;
-		pHideSpot = g_ppszRandomHideSpots[g_iLastHideSpot];
-
-		if (pHideSpot == OldHideSpot)
-			Update(1);
-	}
 };
 
 

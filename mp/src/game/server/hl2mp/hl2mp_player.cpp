@@ -70,11 +70,6 @@ CBaseEntity	 *g_pLastCombineSpawn = NULL;
 CBaseEntity	 *g_pLastRebelSpawn = NULL;
 extern CBaseEntity				*g_pLastSpawn;
 
-//extern ConVar s_cl_team;
-ConVar *s_cl_team = cvar->FindVar("cl_team");
-//const char *team = (!pPlayer->IsNetClient()) ? "default" : engine->GetClientConVarValue(clientIndex, "cl_team");
-extern ConVar mp_teams_unbalance_limit;
-
 #define HL2MP_COMMAND_MAX_RATE 0.3
 
 void DropPrimedFragGrenade( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pGrenade );
@@ -415,10 +410,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 		else
 		{
 		#ifdef MFS
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
-		{
-			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
 			if (!pBot)
 			{
 		#endif
@@ -429,6 +421,8 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				
 					if (pCombine == NULL || pRebels == NULL)
 					{
+						ConVar *s_cl_team = cvar->FindVar("cl_team");
+						//const char *s_cl_team = (!pPlayer->IsNetClient()) ? "default" : engine->GetClientConVarValue(clientIndex, "cl_team");
 						if /*(s_cl_team && */(strcmp(s_cl_team->GetString(), "blue") == 0)//) //the search is "expensive", so i nerfed it
 							ChangeTeam(TEAM_COMBINE);
 						else if (strcmp(s_cl_team->GetString(), "red") == 0)
@@ -438,6 +432,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 					}
 					else if (pCombine->GetNumPlayers() == 1 || pRebels == NULL) // Let them "pick" if they want to 1vs1 a demigod lol
 					{
+						ConVar *s_cl_team = cvar->FindVar("cl_team");
 						if (strcmp(s_cl_team->GetString(), "blue") == 0)
 							ChangeTeam(TEAM_COMBINE);
 						else if (strcmp(s_cl_team->GetString(), "red") == 0)
@@ -457,6 +452,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 						}
 						else
 						{
+							ConVar *s_cl_team = cvar->FindVar("cl_team");
 							if (strcmp(s_cl_team->GetString(), "blue") == 0)
 								ChangeTeam(TEAM_COMBINE);
 							else if (strcmp(s_cl_team->GetString(), "red") == 0)
@@ -468,6 +464,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				}
 				else
 				{
+					ConVar *s_cl_team = cvar->FindVar("cl_team");
 					if (strcmp(s_cl_team->GetString(), "default") == 0)
 					{
 						if (m_bFirstSpawn == true)
@@ -514,6 +511,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 						}
 						else
 						{
+							extern ConVar mp_teams_unbalance_limit;
 							if (pCombine->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1 > pRebels->GetNumPlayers() + mp_teams_unbalance_limit.GetInt() - 1)
 							{
 								ChangeTeam(TEAM_REBELS);
@@ -579,7 +577,6 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 					}
 				}
 			}
-		}
 		#endif
 		}
 	}
@@ -774,45 +771,45 @@ CBaseEntity *ent = NULL;
 		RemoveEffects( EF_NODRAW );
 		
 #ifdef MFS
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
-		{
-			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
 			if (pBot)
 			{
-				if (HL2MPRules()->IsTeamplay() == true)
+				if (m_bFirstSpawn == true)
 				{
-					if (GetTeamNumber() == TEAM_COMBINE)
+					if (HL2MPRules()->IsTeamplay() == true)
 					{
-						int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
+						if (GetTeamNumber() == TEAM_COMBINE)
+						{
+							int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
 
-						g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
-						SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
-					}
-					else if (GetTeamNumber() == TEAM_REBELS)
-					{
-						int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
+							g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
+							SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
+						}
+						else if (GetTeamNumber() == TEAM_REBELS)
+						{
+							int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
 
-						g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
-						SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
-					}
-				}
-				else
-				{
-					int model = random->RandomInt(2, 3);
-					if (model == 2)
-					{
-						int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
-
-						g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
-						SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
+							g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
+							SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
+						}
 					}
 					else
 					{
-						int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
+						int model = random->RandomInt(2, 3);
+						if (model == 2)
+						{
+							int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
 
-						g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
-						SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
+							g_iLastCombineModel = (g_iLastCombineModel + 1) % nHeads;
+							SetModel(g_ppszRandomCombineModels[g_iLastCombineModel]);
+						}
+						else
+						{
+							int nHeads = ARRAYSIZE(g_ppszRandomCitizenModels);
+
+							g_iLastCitizenModel = (g_iLastCitizenModel + 1) % nHeads;
+							SetModel(g_ppszRandomCitizenModels[g_iLastCitizenModel]);
+						}
 					}
 				}
 				GiveDefaultItems();
@@ -828,7 +825,6 @@ CBaseEntity *ent = NULL;
 			else
 				GiveDefaultItems();
 #ifdef MFS
-		}
 		}
 #endif
 		#ifdef SecobMod__USE_PLAYERCLASSES			
@@ -1783,6 +1779,7 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 {
 	if (GetTeamNumber() == team)
 		return false;
+
 	if ( !GetGlobalTeam( team ) || team < 0 )
 	{
 		Warning( "HandleCommand_JoinTeam( %d ) - invalid team index.\n", team );
@@ -1792,11 +1789,6 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 	//auto assign if you join team 0
 	if ( team == 0 )
 	{
-		if (HL2MPRules()->IsTeamplay() == false)
-		{
-			ChangeTeam(TEAM_UNASSIGNED);
-			return true;
-		}
 		CTeam *pCombine = g_Teams[TEAM_COMBINE];
 		CTeam *pRebels = g_Teams[TEAM_REBELS];
 		if (HL2MPRules()->IsInjustice() == true)
@@ -1860,6 +1852,15 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 		State_Transition(STATE_ACTIVE);
 	}
 
+	if (!IsDead())
+	{
+		if (team != TEAM_SPECTATOR)
+		{
+			CommitSuicide();
+			IncrementFragCount(1); //adds 1 frag to balance out the 1 subtracted for killing yourself
+		}
+	}
+
 	// Switch their actual team...
 	ChangeTeam( team );
 
@@ -1879,10 +1880,11 @@ bool CHL2MP_Player::ClientCommand( const CCommand &args )
 	}
 	else if ( FStrEq( args[0], "jointeam" ) ) 
 	{
-		if ( args.ArgC() < 0 )
-		{
+		if ( args.ArgC() < 2 )
+		/*{
 			Warning( "Player sent bad jointeam syntax\n" );
-		}
+		}*/
+		return true;
 
 		if ( ShouldRunRateLimitedCommand( args ) )
 		{
