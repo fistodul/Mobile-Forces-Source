@@ -23,7 +23,7 @@
 "Valve_Keyboard_Look_Modifier"		"Keyboard look modifier"
 "Valve_Use_Items"			"Use item (buttons, machines, ...)"
 "Valve_Pickup_Use_Objects"		"Pickup/Use objects"
-"Valve_Communication_Title"		"COMMUNICATION"
+"Valve_Communication_Title"		"Communication"
 "Valve_Use_Voice_Communication"		"Use voice communication"
 "Valve_Chat_Message"			"Chat message"
 "Valve_Team_Message"			"Team message"
