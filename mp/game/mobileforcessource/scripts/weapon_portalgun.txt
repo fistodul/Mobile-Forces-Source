@@ -8,17 +8,15 @@ WeaponData
 	"playermodel"	"models/weapons/w_portalgun.mdl"
 	"anim_prefix"	"bow"
 	"bucket"			"3"
-	"bucket_position"	"2"
+	"bucket_position"	"3"
 
 	"clip_size"		"1"
-	"default_clip"		"50"
-	"primary_ammo"		"XBowBolt"
+	"default_clip"		"1"
+	"primary_ammo"		"None"
 	"secondary_ammo"	"None"
 
-	"weight"		"6"
+	"weight"		"0"
 	"item_flags"		"0"
-
-	"damage"		"100"
 	
 	//OrangeBox Co-Operative - Information: IronSight Code - Don't use it for the crossbow as it flips our viewmodel 180degrees while zoomed.
 	//ExpOffset

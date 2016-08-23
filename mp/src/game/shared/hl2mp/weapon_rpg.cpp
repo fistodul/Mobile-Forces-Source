@@ -1861,7 +1861,15 @@ void CWeaponRPG::ItemPostFrame( void )
 	/*#ifdef MFS
 		SuppressGuiding();
 	#else*/
-		SuppressGuiding( false );
+		if (pPlayer->IsInAVehicle() == true)
+		{
+			//if (pVehicle->GetPassengerRole == VEHICLE_ROLE_DRIVER)
+				SuppressGuiding();
+			/*else
+				SuppressGuiding(false);*/
+		}
+		else
+			SuppressGuiding( false );
 	//#endif
 	}
 

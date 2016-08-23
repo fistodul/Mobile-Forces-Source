@@ -78,6 +78,8 @@ LINK_ENTITY_TO_CLASS( player, CHL2MP_Player );
 
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
+LINK_ENTITY_TO_CLASS(info_player_captain_blue, CPointEntity);
+LINK_ENTITY_TO_CLASS(info_player_captain_red, CPointEntity);
 LINK_ENTITY_TO_CLASS( info_player_god, CPointEntity );
 
 //SecobMod__Information: Here we allow each class to have their own spawn point.
@@ -245,6 +247,8 @@ void CHL2MP_Player::GiveAllItems( void )
 	CBasePlayer::GiveAmmo(	1,	"healthkit" );
 	CBasePlayer::GiveAmmo(	150,	"GaussEnergy1" );
 	CBasePlayer::GiveAmmo(	100,	"Extinguisher"	);
+	CBasePlayer::GiveAmmo( 192, "SMG3" );
+	CBasePlayer::GiveAmmo( 255, "Dualies" );
 	GiveNamedItem( "weapon_knife" );
 	GiveNamedItem( "weapon_smg3" );
 	GiveNamedItem( "weapon_minigun" );
@@ -254,6 +258,9 @@ void CHL2MP_Player::GiveAllItems( void )
 	GiveNamedItem( "weapon_dualies" );
 	GiveNamedItem( "weapon_portalgun" );
 	GiveNamedItem( "weapon_bugbait" );
+	GiveNamedItem("weapon_dualies");
+	GiveNamedItem( "weapon_grapple" );
+	GiveNamedItem("weapon_sniper");
 	
 	GiveNamedItem( "weapon_crowbar" );
 	GiveNamedItem( "weapon_stunstick" );
@@ -341,6 +348,7 @@ void CHL2MP_Player::GiveGoodItems( void )
 	GiveNamedItem( "weapon_bugbait" );
 	GiveNamedItem( "weapon_physcannon" );
 	GiveNamedItem( "weapon_troll" );
+	GiveNamedItem( "weapon_grapple" );
 	
 }
 void CHL2MP_Player::GiveEvilItems( void )
@@ -361,11 +369,15 @@ void CHL2MP_Player::GiveEvilItems( void )
 
 	CBasePlayer::GiveAmmo( 720,	"Rifle" );
 	CBasePlayer::GiveAmmo(	150,	"GaussEnergy1" );
+	CBasePlayer::GiveAmmo( 192, "SMG3" );
+	CBasePlayer::GiveAmmo( 255, "Dualies" );
 	GiveNamedItem( "weapon_knife" );
 	GiveNamedItem( "weapon_smg3" );
 	GiveNamedItem( "weapon_minigun" );
 	GiveNamedItem( "weapon_gauss" );
 	GiveNamedItem( "weapon_dualies" );
+	GiveNamedItem( "weapon_smg3" );
+	GiveNamedItem( "weapon_sniper" );
 	
 	GiveNamedItem( "weapon_crowbar" );
 	GiveNamedItem( "weapon_stunstick" );
@@ -385,45 +397,46 @@ void CHL2MP_Player::GiveEvilItems( void )
 	GiveNamedItem( "weapon_slam" );
 	
 }
-void CHL2MP_Player::PickDefaultSpawnTeam( void )
+void CHL2MP_Player::PickDefaultSpawnTeam(void)
 {
-	if ( GetTeamNumber() == 0 )
+#ifdef MFS
+	CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
+	if (!pBot)
 	{
-		if ( HL2MPRules()->IsTeamplay() == false )
+#endif
+		if (GetTeamNumber() == 0)
 		{
-			if ( GetModelPtr() == NULL )
+			if (HL2MPRules()->IsTeamplay() == false)
 			{
-				const char *szModelName = NULL;
-				szModelName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_playermodel" );
-
-				if ( ValidatePlayerModel( szModelName ) == false )
+				if (GetModelPtr() == NULL)
 				{
-					char szReturnString[512];
+					const char *szModelName = NULL;
+					szModelName = engine->GetClientConVarValue(engine->IndexOfEdict(edict()), "cl_playermodel");
 
-					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/combine_soldier.mdl\n" );
-					engine->ClientCommand ( edict(), szReturnString );
+					if (ValidatePlayerModel(szModelName) == false)
+					{
+						char szReturnString[512];
+
+						Q_snprintf(szReturnString, sizeof(szReturnString), "cl_playermodel models/combine_soldier.mdl\n");
+						engine->ClientCommand(edict(), szReturnString);
+					}
+
+					ChangeTeam(TEAM_UNASSIGNED);
 				}
-
-				ChangeTeam( TEAM_UNASSIGNED );
 			}
-		}
-		else
-		{
-		#ifdef MFS
-			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
-			if (!pBot)
+			else
 			{
-		#endif
 				if (HL2MPRules()->IsInjustice() == true)
 				{
 					CTeam *pCombine = g_Teams[TEAM_COMBINE];
 					CTeam *pRebels = g_Teams[TEAM_REBELS];
-				
+
 					if (pCombine == NULL || pRebels == NULL)
 					{
 						ConVar *s_cl_team = cvar->FindVar("cl_team");
 						//const char *s_cl_team = (!pPlayer->IsNetClient()) ? "default" : engine->GetClientConVarValue(clientIndex, "cl_team");
-						if /*(s_cl_team && */(strcmp(s_cl_team->GetString(), "blue") == 0)//) //the search is "expensive", so i nerfed it
+						//if (s_cl_team && (strcmp(s_cl_team->GetString(), "blue") == 0)) //the search is "expensive", so i nerfed it
+						if (strcmp(s_cl_team->GetString(), "blue") == 0)
 							ChangeTeam(TEAM_COMBINE);
 						else if (strcmp(s_cl_team->GetString(), "red") == 0)
 							ChangeTeam(TEAM_REBELS);
@@ -533,53 +546,10 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 					}
 				}
 			}
-		#ifdef MFS
-			else
-			{
-				CTeam *pCombine = g_Teams[TEAM_COMBINE];
-				CTeam *pRebels = g_Teams[TEAM_REBELS];
-
-				if (pCombine == NULL || pRebels == NULL)
-				{
-					ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
-				}
-				else
-				{
-					if (HL2MPRules()->IsInjustice() == true)
-					{
-						if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
-						{
-							ChangeTeam(TEAM_REBELS);
-						}
-						else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
-						{
-							ChangeTeam(TEAM_COMBINE);
-						}
-						else
-						{
-							ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
-						}
-					}
-					else
-					{
-						if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
-						{
-							ChangeTeam(TEAM_REBELS);
-						}
-						else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
-						{
-							ChangeTeam(TEAM_COMBINE);
-						}
-						else
-						{
-							ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
-						}
-					}
-				}
-			}
-		#endif
 		}
+#ifdef MFS
 	}
+#endif
 }
 
 #ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
@@ -1208,15 +1178,6 @@ void CHL2MP_Player::PostThink( void )
 					{
 						TakeHealth(m_fRegenRemander, DMG_GENERIC);
 						m_fRegenRemander = 0;
-						/*if (sv_regeneration_armor.GetInt() == 0)
-						{
-						m_fRegenRemander = 0;
-						}
-						else
-						{
-						if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
-						m_fRegenRemander = 0;
-						}*/
 					}
 				}
 				else
@@ -1264,15 +1225,6 @@ void CHL2MP_Player::PostThink( void )
 					{
 						TakeHealth(m_fRegenRemander, DMG_GENERIC);
 						m_fRegenRemander = 0;
-						/*if (sv_regeneration_armor.GetInt() == 0)
-						{
-						m_fRegenRemander = 0;
-						}
-						else
-						{
-						if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
-						m_fRegenRemander = 0;
-						}*/
 					}
 				}
 				else
@@ -1323,15 +1275,6 @@ void CHL2MP_Player::PostThink( void )
 			{
 				TakeHealth(m_fRegenRemander, DMG_GENERIC);
 				m_fRegenRemander = 0;
-				/*if (sv_regeneration_armor.GetInt() == 0)
-				{
-				m_fRegenRemander = 0;
-				}
-				else
-				{
-				if (ArmorValue() == sv_regeneration_maxarmor.GetInt())
-				m_fRegenRemander = 0;
-				}*/
 			}
 		}
 		else
@@ -1780,11 +1723,11 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 	if (GetTeamNumber() == team)
 		return false;
 
-	if ( !GetGlobalTeam( team ) || team < 0 )
+	/*if ( !GetGlobalTeam( team ) || team < 0 )
 	{
 		Warning( "HandleCommand_JoinTeam( %d ) - invalid team index.\n", team );
 		return false;
-	}
+	}*/
 
 	//auto assign if you join team 0
 	if ( team == 0 )
@@ -1880,11 +1823,11 @@ bool CHL2MP_Player::ClientCommand( const CCommand &args )
 	}
 	else if ( FStrEq( args[0], "jointeam" ) ) 
 	{
-		if ( args.ArgC() < 2 )
-		/*{
+		/*if ( args.ArgC() < 2 )
+		{
 			Warning( "Player sent bad jointeam syntax\n" );
+			return false;
 		}*/
-		return true;
 
 		if ( ShouldRunRateLimitedCommand( args ) )
 		{

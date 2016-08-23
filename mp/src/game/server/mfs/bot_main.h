@@ -39,12 +39,18 @@
 #define SKILL_MIN_STRAFE 0.0f
 #define SKILL_MAX_STRAFE 10.0f // set this to 0 to disable strafe skill at all
 
+//Individual hide spot declerations, allowing for a dynamic list of hide spots
 #define SPAWN_POINT_DEATHMATCH "info_player_deathmatch"
 #define SPAWN_POINT_BLUE "info_player_combine"
 #define SPAWN_POINT_RED "info_player_rebels"
+#define SPAWN_POINT_CAPTAIN_BLUE "info_player_captain_blue"
+#define SPAWN_POINT_CAPTAIN_RED "info_player_combine_red"
 
 // ladder's top dismount point gets added some artificial distance to allow bot more room to complete the operation
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
+
+extern ConVar bot_mimic_yaw_offset;
+extern ConVar bot_mimic;
 
 enum BotGeneralStates_t
 {
@@ -89,7 +95,7 @@ class CHL2MP_Bot : public CHL2MP_Player
 {
 public:
 
-	~CHL2MP_Bot(void);
+	//~CHL2MP_Bot(void);
 
 	float			m_flNextStrafeTime;
 	float			m_flStrafeSkillRelatedTimer;
@@ -197,10 +203,32 @@ public:
 
 	void Update(int mode);
 
+	bool RunMimicCommand(CUserCmd& cmd)
+	{
+		if (bot_mimic.GetInt() <= 0)
+			return false;
+
+		if (bot_mimic.GetInt() > gpGlobals->maxClients)
+			return false;
+
+
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(bot_mimic.GetInt());
+		if (!pPlayer)
+			return false;
+
+		if (!pPlayer->GetLastUserCommand())
+			return false;
+
+		cmd = *pPlayer->GetLastUserCommand();
+		cmd.viewangles[YAW] += bot_mimic_yaw_offset.GetFloat();
+
+		return true;
+	}
+
 };
 
 
-CBasePlayer *BotPutInServer( bool bFrozen );
+CBasePlayer *BotPutInServer(bool bFrozen, int iTeam);
 
 bool CreatePath( CHL2MP_Bot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg = vec3_origin );
 

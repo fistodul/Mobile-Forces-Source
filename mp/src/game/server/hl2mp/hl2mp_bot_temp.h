@@ -10,7 +10,7 @@
 #ifdef _WIN32
 #pragma once
 #endif
-
+#include "player.h"
 
 // If iTeam or iClass is -1, then a team or class is randomly chosen.
 CBasePlayer *BotPutInServer( bool bFrozen, int iTeam );

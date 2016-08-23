@@ -29,6 +29,7 @@
 #define	CROWBAR_RANGE	75.0f
 #define	CROWBAR_REFIRE	0.4f
 
+ConVar	sk_plr_dmg_crowbar("sk_plr_dmg_crowbar", "25", FCVAR_REPLICATED);
 
 //-----------------------------------------------------------------------------
 // CWeaponCrowbar
@@ -82,7 +83,7 @@ CWeaponCrowbar::CWeaponCrowbar( void )
 //-----------------------------------------------------------------------------
 float CWeaponCrowbar::GetDamageForActivity( Activity hitActivity )
 {
-	return 25.0f;
+	return sk_plr_dmg_crowbar.GetInt();
 }
 
 //-----------------------------------------------------------------------------

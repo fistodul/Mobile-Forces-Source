@@ -16,8 +16,8 @@
 
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 
-#define	Dualies_FASTEST_REFIRE_TIME		0.3f
-#define	Dualies_FASTEST_DRY_REFIRE_TIME	0.4f
+#define	Dualies_FASTEST_REFIRE_TIME		0.1f
+#define	Dualies_FASTEST_DRY_REFIRE_TIME	0.2f
 
 #define	Dualies_ACCURACY_SHOT_PENALTY_TIME		0.2f	// Applied amount of time each shot adds to the time we must recover from
 #define	Dualies_ACCURACY_MAXIMUM_PENALTY_TIME	1.5f	// Maximum penalty to deal out
@@ -25,6 +25,10 @@
 #ifdef CLIENT_DLL
 #define CWeaponDualies C_WeaponDualies
 #endif
+
+ConVar	sk_plr_dmg_dualies("sk_plr_dmg_dualies", "20", FCVAR_REPLICATED);
+ConVar	sk_npc_dmg_dualies("sk_npc_dmg_dualies", "18", FCVAR_REPLICATED);
+ConVar	sk_max_dualies("sk_max_dualies", "80", FCVAR_REPLICATED);
 
 //-----------------------------------------------------------------------------
 // CWeaponDualies
@@ -103,6 +107,8 @@ private:
 	CNetworkVar( int,	m_nNumShotsFired );
 
 	bool bFlip;
+	int LeftAmmo;
+	int RightAmmo;
 
 private:
 	CWeaponDualies( const CWeaponDualies & );
@@ -203,6 +209,8 @@ CWeaponDualies::CWeaponDualies( void )
 	#ifdef Weighted_Weaponry
 	Dualies_Weight = 1;
 	#endif
+	LeftAmmo = GetMaxClip1()/2;
+	RightAmmo = LeftAmmo;
 }
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 #ifndef CLIENT_DLL
@@ -274,16 +282,34 @@ void CWeaponDualies::PrimaryAttack()
 	m_flLastAttackTime = gpGlobals->curtime;
 	m_flSoonestPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
  
+	// Only the player fires this way so we can cast
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+	if (pOwner->m_nButtons & IN_ATTACK2)
+	{
+		if (RightAmmo >= 1)
+			bFlip = false;
+		else
+			bFlip = true;
+	}
+	else if (pOwner->m_nButtons & IN_ATTACK)
+	{
+		if (LeftAmmo >= 1)
+			bFlip = true;
+		else
+			bFlip = false;
+	}
+
 	//Flipping Code -Jman
 	if ( !bFlip)
 	{
 		BaseClass::PrimaryAttack();
-		bFlip= true;
+		RightAmmo--;
 	}
 	else
 	{
 		LeftGunAttack();
-		bFlip= false;
+		LeftAmmo--;
 	}
 }
 
@@ -423,20 +449,17 @@ void CWeaponDualies::ItemPostFrame( void )
 
 	if ( pOwner == NULL )
 		return;
-	
-	if ( pOwner->m_nButtons & IN_ATTACK2 )
-	{
-		m_flLastAttackTime = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
-		m_flSoonestPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
-		m_flNextPrimaryAttack = gpGlobals->curtime + Dualies_FASTEST_REFIRE_TIME;
-	}
 
 	//Allow a refire as fast as the player can click
-	if ( ( ( pOwner->m_nButtons & IN_ATTACK ) == false ) && ( m_flSoonestPrimaryAttack < gpGlobals->curtime ) )
+	if (((pOwner->m_nButtons & IN_ATTACK) == false && (pOwner->m_nButtons & IN_ATTACK2) == false) && (m_flSoonestPrimaryAttack < gpGlobals->curtime))
 	{
 		m_flNextPrimaryAttack = gpGlobals->curtime - 0.1f;
 	}
 	else if ( ( pOwner->m_nButtons & IN_ATTACK ) && ( m_flNextPrimaryAttack < gpGlobals->curtime ) && ( m_iClip1 <= 0 ) )
+	{
+		DryFire();
+	}
+	else if ((pOwner->m_nButtons & IN_ATTACK2) && (m_flNextPrimaryAttack < gpGlobals->curtime) && (m_iClip1 <= 0))
 	{
 		DryFire();
 	}

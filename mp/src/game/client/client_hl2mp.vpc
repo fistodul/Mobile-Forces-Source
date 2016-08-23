@@ -19,7 +19,7 @@ $Configuration
 	}
 }
 
-$Project "Client (HL2MP)"
+$Project "Client (MFS)"
 {
 	$Folder	"Source Files"
 	{
@@ -126,17 +126,21 @@ $Project "Client (HL2MP)"
 		//$File	"mfs\ui\hud_holdout.cpp"
 		$File	"mfs\c_rotating_healthkit.cpp"
 		$File	"mfs\pm.cpp"
+		$File	"mfs\c_weapon_sniper.cpp"
+		$File	"mfs\c_weapon_grapple.cpp"
+		$File	"mfs\c_weapon_grapple.h"
 		$File	"$SRCDIR\game\shared\mfs\weapon_smg3.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_gauss.cpp"
 		//$File	"mfs\ui\hud_level.cpp"
 		//$File	"$SRCDIR\game\shared\mfs\myconvars.cpp"
 		//$File	"$SRCDIR\game\shared\mfs\myconvars.h"
+		$File	"$SRCDIR\game\shared\mfs\weapon_sniper.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_minigun.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_healthkit.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_troll.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_dualies.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_knife.cpp"
-		$File	"$SRCDIR\game\shared\mfs\weapon_smg3.cpp"
+		$File	"$SRCDIR\game\shared\mfs\achievements_mfs.cpp"
 		//$File	"mfs\ui\hud_tasklist.cpp"
 		//$File	"mfs\ui\hud_tasklist.h"
 		//$File	"mfs\cloakproxy.cpp"

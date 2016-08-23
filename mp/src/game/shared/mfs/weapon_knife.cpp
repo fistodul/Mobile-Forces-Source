@@ -47,6 +47,8 @@ extern ConVar metropolice_move_and_melee;
 #define CWeaponKnife C_WeaponKnife
 #endif
 
+ConVar	sk_plr_dmg_knife("sk_plr_dmg_knife", "25", FCVAR_REPLICATED);
+
 class CWeaponKnife : public CBaseHL2MPBludgeonWeapon
 {
 	DECLARE_CLASS( CWeaponKnife, CBaseHL2MPBludgeonWeapon );
@@ -235,7 +237,7 @@ void CWeaponKnife::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponKnife::GetDamageForActivity( Activity hitActivity )
 {
-	return 25.0f;
+	return sk_plr_dmg_knife.GetInt();
 }
 
 //-----------------------------------------------------------------------------

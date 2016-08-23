@@ -47,6 +47,8 @@ extern ConVar metropolice_move_and_melee;
 #define CWeaponStunStick C_WeaponStunStick
 #endif
 
+ConVar	sk_plr_dmg_stunstick("sk_plr_dmg_stunstick", "40", FCVAR_REPLICATED);
+
 class CWeaponStunStick : public CBaseHL2MPBludgeonWeapon
 {
 	DECLARE_CLASS( CWeaponStunStick, CBaseHL2MPBludgeonWeapon );
@@ -235,7 +237,7 @@ void CWeaponStunStick::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponStunStick::GetDamageForActivity( Activity hitActivity )
 {
-	return 40.0f;
+	return sk_plr_dmg_stunstick.GetInt();
 }
 
 //-----------------------------------------------------------------------------

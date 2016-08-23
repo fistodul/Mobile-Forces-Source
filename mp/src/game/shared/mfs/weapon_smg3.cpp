@@ -29,6 +29,10 @@
 #define SMG1_GRENADE_DAMAGE 100.0f
 #define SMG1_GRENADE_RADIUS 250.0f
 
+ConVar	sk_plr_dmg_smg3("sk_plr_dmg_smg3", "10", FCVAR_REPLICATED);
+ConVar	sk_npc_dmg_smg3("sk_npc_dmg_smg3", "9", FCVAR_REPLICATED);
+ConVar	sk_max_smg3("sk_max_smg3", "192", FCVAR_REPLICATED);
+
 class CWeaponSMG3 : public CHL2MPMachineGun
 {
 public:

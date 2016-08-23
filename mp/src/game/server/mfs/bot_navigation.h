@@ -11,6 +11,8 @@
 #include "nav_pathfind.h"
 #include "nav_area.h"
 
+extern ConVar bot_zombie;
+
 void DealWithObstacles( CHL2MP_Bot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
 {
 	if( !pTouchEnt  )
@@ -32,14 +34,20 @@ void DealWithObstacles( CHL2MP_Bot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd 
 	if( tr.fraction < 1.0f && tr2.fraction == 1.0f )
 	{
 		pBot->m_flNextDealObstacles = 0;
-		cmd.sidemove = -pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
-		cmd.forwardmove = 0;
+		if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
+		{
+			cmd.sidemove = -pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
+			cmd.forwardmove = 0;
+		}
 	}
 	else if( tr.fraction == 1.0f && tr2.fraction < 1.0f )
 	{
 		pBot->m_flNextDealObstacles = 0;
-		cmd.sidemove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
-		cmd.forwardmove = 0;
+		if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
+		{
+			cmd.sidemove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
+			cmd.forwardmove = 0;
+		}
 	}
 
 	// open doors 
@@ -102,8 +110,11 @@ void DealWithObstacles( CHL2MP_Bot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd 
 			}
 		}
 
-		if( hit )			
-			cmd.buttons |= IN_ATTACK;
+		if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
+		{
+			if (hit)
+				cmd.buttons |= IN_ATTACK;
+		}
 
 		//pTouchEnt->TakeDamage( CTakeDamageInfo( pBot, pBot, 300, DMG_GENERIC ) ); // extra damage to it?
 	}
@@ -583,8 +594,11 @@ void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 		rate = clamp( rate, 0, fabs(flYawDelta) );
 		CurrentFwd[YAW] += ( rate * flSide * gpGlobals->frametime * 30.0f );
 
-		pBot->SnapEyeAngles(CurrentFwd);
-		cmd.viewangles = pBot->EyeAngles();
+		if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool() /*&& bot_flipout.GetInt() < 2*/) // This shit is being handled by something else then? xd
+		{
+			pBot->SnapEyeAngles(CurrentFwd);
+			cmd.viewangles = pBot->EyeAngles();
+		}
 
 		if( (!pBot->m_bEnemyOnSights || ( pBot->m_bEnemyOnSights && !pBot->m_bInRangeToAttack )) )
 		{			
@@ -596,11 +610,14 @@ void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 
 			if( SafePathAhead( pBot, pos) )
 			{
-				cmd.buttons |= IN_FORWARD; // this actually only needed for ladders, or bot won't be able to unmount them
-				cmd.forwardmove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];				
+				if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
+				{
+					cmd.buttons |= IN_FORWARD; // this actually only needed for ladders, or bot won't be able to unmount them
+					cmd.forwardmove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED];
 
-				if( fabs(flYawDelta) > 10 )  // decrease speed to avoid missing near waypoints
-					cmd.forwardmove *= RemapValClamped(fabs(flYawDelta), 10.0f, 90.0f, 0.65f, 0.2f);
+					if (fabs(flYawDelta) > 10)  // decrease speed to avoid missing near waypoints
+						cmd.forwardmove *= RemapValClamped(fabs(flYawDelta), 10.0f, 90.0f, 0.65f, 0.2f);
+				}
 			}
 		}
 
@@ -663,6 +680,7 @@ void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 			if( SafePathAhead( pBot, pos) )	
 			{
 				//NDebugOverlay::Cross3DOriented( pBot->EyePosition(), QAngle(0,0,0), 20, 200, 0, 200, false, -1 );
+				if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
 				cmd.sidemove = pBot->m_flSkill[BOT_SKILL_WALK_SPEED] * pBot->m_flSideMove;
 			}
 		}

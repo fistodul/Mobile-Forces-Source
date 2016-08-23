@@ -28,9 +28,9 @@
 
 #include "tier0/vprof.h"
 
-/*ifdef MFS
+#ifdef MFS
 #include "mfs/bot_main.h"
-#endif*/
+#endif
 
 #ifdef SecobMod__SAVERESTORE
 #include "filesystem.h"
@@ -125,14 +125,8 @@ pPlayer->Spawn();
 
 if ( HL2MPRules()->IsTeamplay() == true )
 {
-if ( HL2MPRules()->IsInjustice() == false )
-//In injustice you only get to pick in semi rare cases
-	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
-else
-{
-if ( pPlayer->GetTeamNumber() == 1 )
-	pPlayer->ShowViewPortPanel( PANEL_TEAM, true, data );
-}
+	if (pPlayer->GetTeamNumber() == 1)
+		pPlayer->ShowViewPortPanel(PANEL_TEAM, true, data);
 }
 	pPlayer->ShowViewPortPanel( PANEL_INFO, true, data );
 
@@ -1193,7 +1187,7 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 #ifdef MFS
-	extern void Bot_RunAll();
+	//extern void Bot_RunAll();
 	Bot_RunAll();
 #else
 #ifdef DEBUG

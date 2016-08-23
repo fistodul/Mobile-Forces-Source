@@ -1,83 +1,63 @@
+// Grapple Hook
 WeaponData
 {
-    printname        "GRAPPLE HOOK"
-    viewmodel        models/weapons/v_crossbow.mdl
-    playermodel    models/weapons/w_crossbow.mdl
-    anim_prefix    bow
-    bucket            5
-    bucket_position    2
- 
- 
-//    clip_size        1
-//    default_clip        5
-//    primary_ammo        XBowBolt
-//    secondary_ammo    None
- 
-    clip_size                -1
-    clip2_size            -1
-    primary_ammo            None
-    secondary_ammo        None
-    default_clip            -1
-    default_clip2            -1
- 
-    autoswitchto            0
-    autoswitchfrom        0
-    weight        0
-    item_flags        0
- 
- 
-    // Sounds for the weapon. There is a max of 16 sounds per category (i.e.
-max 16 single_shot sounds)
-    SoundData
-    {
-        single_shot    Weapon_Crossbow.Single
-        reload    Weapon_Crossbow.Reload
-        special1    Weapon_Crossbow.BoltElectrify
-        special2    Weapon_Crossbow.BoltFly
-    }
- 
-    TextureData
-    {
-        weapon
-        {
-                font        WeaponIcons
-                character    g
-        }
-        weapon_s
-        {
-                font        WeaponIconsSelected
-                character    g
-        }
-        ammo
-        {
-                font        WeaponIcons
-                character    w
-        }
-        crosshair
-        {
-                font        Crosshairs
-                character    Q
-        }
-        autoaim
-        {
-            file        sprites/crosshairs
-            x        0
-            y        96
-            width        24
-            height    24
-        }
-        zoom
-        {
-                font        Crosshairs
-                character    Q
-        }
-        zoom_autoaim
-        {
-            file        sprites/crosshairs
-            x        24
-            y        112
-            width        104
-            height    16
-        }
-    }
+// Weapon data is loaded by both the Game and Client DLLs.
+"printname" "Grapple Hook"
+"viewmodel" "models/weapons/v_physcannon.mdl"
+"playermodel" "models/weapons/w_Physics.mdl"
+"anim_prefix" "gauss"
+"bucket" "4"
+"bucket_position" "3"
+"bucket_360" "0"
+"bucket_position_360" "0"
+"clip_size" "1"
+"clip2_size" "-1"
+"primary_ammo" "None"
+"secondary_ammo" "None"
+"default_clip" "-1"
+"default_clip2" "-1"
+"autoswitchto" "0"
+"autoswitchfrom" "0"
+"weight" "0"
+"rumble" "1"
+"item_flags" "0"
+// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
+SoundData
+{
+"reload" "Weapon_Pistol.Reload"
+"reload_npc" "Weapon_Pistol.NPC_Reload"
+"empty" "Weapon_MegaPhysCannon.DryFire"
+"single_shot" "Weapon_Mortar.Single"
+"single_shot_npc" "Weapon_Mortar.Single"
+"special1" "Weapon_PhysCannon.HoldSound"
+"special2" "Weapon_Pistol.Special2"
+"burst" "Weapon_Pistol.Burst"
+}
+// Weapon Sprite data is loaded by the Client DLL.
+TextureData
+{
+"weapon"
+{
+"font" "WeaponIcons"
+"character" "m"
+}
+"weapon_s"
+{
+"font" "WeaponIconsSelected"
+"character" "m"
+}
+"crosshair"
+{
+"font" "Crosshairs"
+"character" "Q"
+}
+"autoaim"
+{
+"file" "sprites/crosshairs"
+"x" "48"
+"y" "72"
+"width" "24"
+"height" "24"
+}
+}
 }

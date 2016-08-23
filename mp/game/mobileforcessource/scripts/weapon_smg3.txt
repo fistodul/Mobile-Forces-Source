@@ -8,18 +8,18 @@ WeaponData
 	"playermodel"			"models/weapons/w_smg1.mdl"	//FIXME: 
 	"anim_prefix"			"smg2"
 	"bucket"				"2"
-	"bucket_position"		"3"
+	"bucket_position"		"0"
 	"bucket_360"			"1"
 	"bucket_position_360"	"0"
 
 	"clip_size"				"48"
 	"clip2_size"			"-1"
 
-	"default_clip"			"192"
+	"default_clip"			"48"
 	"default_clip2"			"-1"
 
-	"primary_ammo"			"SMG1"
-	"secondary_ammo"		"SMG1_Grenade"
+	"primary_ammo"			"SMG3"
+	"secondary_ammo"		""
 
 	"weight"				"3"
 	"rumble"			"3"

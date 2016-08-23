@@ -9,7 +9,7 @@ r_fastzreject -1
 //mat_queue_mode -1 // maybe this is already set by default to -1 idk
 //mp_decals 800 // Can increase lag but can also "fix badly made sprays xD"
 //r_decals 800
-sv_client_predict 0
+//sv_client_predict 0
 exec skill_manifest.cfg
 
 // Setup custom controller

@@ -69,6 +69,7 @@
 #include "dt_utlvector_send.h"
 #include "vote_controller.h"
 #include "ai_speech.h"
+#include "mfs/func_buyzone.h"
 
 #if defined USES_ECON_ITEMS
 #include "econ_wearable.h"
@@ -2209,6 +2210,23 @@ bool CBasePlayer::IsOnLadder( void )
 	return (GetMoveType() == MOVETYPE_LADDER);
 }
 
+bool CBasePlayer::IsinBuyzone(void)
+{
+	CBaseEntity *pEntity = NULL;
+
+	if ((pEntity = gEntList.FindEntityByClassname(pEntity, "func_buyzone")) != NULL)
+	{
+		CBuyZone *pBuyZone = NULL;
+		float flDist = GetAbsOrigin().DistTo(pBuyZone->GetAbsOrigin());
+
+		if (flDist < 60)
+			return pBuyZone->isinbuyzone;
+
+		return false;
+	}
+	else
+		return false;
+}
 
 float CBasePlayer::GetWaterJumpTime() const
 {

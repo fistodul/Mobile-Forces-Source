@@ -224,7 +224,7 @@ DECLARE_ACHIEVEMENT( CAchievementHLXKillEliteSoldierWithOwnEnergyBall, ACHIEVEME
 //			weapons (except grav gun).  If bBulletOnly is true, only counts
 //			attacks with ammo that does bullet damage.
 //-----------------------------------------------------------------------------
-int CalcPlayerAttacks( bool bBulletOnly )
+/*int CalcPlayerAttacks( bool bBulletOnly )
 {
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 	CAmmoDef *pAmmoDef = GetAmmoDef();
@@ -251,7 +251,7 @@ int CalcPlayerAttacks( bool bBulletOnly )
 		}
 	}
 	return iTotalAttacks;
-}
+}*/
 
 #endif	// ( defined( MFS ) )
 

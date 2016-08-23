@@ -25,92 +25,140 @@
 class CHL2MP_Bot;
 void Bot_Think( CHL2MP_Bot *pBot );
 
-// Handler for the "bot" command.
-CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
-{
-	if (!TheNavMesh->IsLoaded())
-	{
-		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_GetCommandClient());
-		DevMsg("No navigation mesh loaded, Creating one");
-		engine->ClientCommand(pPlayer->edict(), "nav_generate");
-	}
+ConVar bot_forcefireweapon("bot_forcefireweapon", "", FCVAR_CHEAT, "Force bots with the specified weapon to fire.");
+ConVar bot_forceattack2("bot_forceattack2", "0", FCVAR_CHEAT, "When firing, use attack2.");
+ConVar bot_forceattackon("bot_forceattackon", "0", FCVAR_CHEAT, "When firing, don't tap fire, hold it down.");
+ConVar bot_flipout("bot_flipout", "0", FCVAR_CHEAT, "When on, all bots fire their guns.");
+ConVar bot_defend("bot_defend", "0", 0, "Set to a team number, and that team will all keep their combat shields raised.");
+//ConVar bot_changeclass("bot_changeclass", "0", FCVAR_CHEAT, "Force all bots to change to the specified class.");
+ConVar bot_zombie("bot_zombie", "0", FCVAR_CHEAT, "Brraaaaaiiiins.");
+ConVar bot_mimic_yaw_offset("bot_mimic_yaw_offset", "0", FCVAR_CHEAT, "Offsets the bot yaw.");
+ConVar bot_attack("bot_attack", "0", FCVAR_CHEAT, "Shoot!");
 
-	// Look at -count.
-	int count = args.FindArgInt( "-count", 1 );
-	count = clamp( count, 1, 16 );
+ConVar bot_sendcmd("bot_sendcmd", "", FCVAR_CHEAT, "Forces bots to send the specified command.");
 
-	// Look at -frozen.
-	bool bFrozen = !!args.FindArg( "-frozen" );
-		
-	// Ok, spawn all the bots.
-	while ( --count >= 0 )
-	{
-		BotPutInServer( bFrozen );
-	}
-}
+ConVar bot_crouch("bot_crouch", "0", FCVAR_CHEAT, "Bot crouches");
+
+#ifdef NEXT_BOT
+extern ConVar bot_mimic;
+#else
+ConVar bot_mimic("bot_mimic", "0", FCVAR_CHEAT, "Bot uses usercmd of player by index.");
+#endif
 
 void bot_kick_f (const CCommand &args)
 {
-	int name = atoi(args[1]);
-	if (name < 1 )
-	//if ( args.Arg(1) == "" )
+	int name = atoi(args.Arg(1));
+	if ( name )
 	{
-		for (int i = 1; i <= gpGlobals->maxClients; i++)
-		{
-			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-
-			// Ignore plugin bots
-			if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT)/* && !pPlayer->IsEFlagSet( EFL_PLUGIN_BASED_BOT )*/) //FixMe
-			{
-				CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
-				if (pBot)
-				{
-					engine->ClientCommand(pBot->edict(), "disconnect");
-				}
-			}
-		}
+		engine->ServerCommand(UTIL_VarArgs("kick %s\n", name));
 		return;
 	}
 
-	engine->ServerCommand(UTIL_VarArgs("kick %s\n", name));
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	{
+		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+
+		// Ignore plugin bots
+		if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT))
+		{
+			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+			if (pBot)
+			{
+				engine->ClientCommand(pBot->edict(), "disconnect");
+			}
+		}
+	}
 }
 
 ConCommand bot_kick("bot_kick", bot_kick_f, "kick a bot", FCVAR_SERVER_CAN_EXECUTE);
 
 static int g_CurBotNumber = 1;
-static int g_CurBlueBotNumber = 1;
-static int g_CurRedBotNumber = 1;
 
 int g_iLastHideSpot = 0;
+int g_iLastBotName = 0;
 
-CHL2MP_Bot::~CHL2MP_Bot( void )
+/*CHL2MP_Bot::~CHL2MP_Bot( void )
 {
-	/*if (HL2MPRules()->IsTeamplay() == false)
-		g_CurBotNumber = 1;
-	else
-	{
-			g_CurBlueBotNumber = 1;
-			g_CurRedBotNumber = 1;
-	}*/
-}
+	//g_CurBotNumber--; //FixMe, Crashes the game
+}*/
 
-// hide spot references for bots
-const char *g_ppszRandomHideSpots[] =
+// all bot names
+const char *g_ppszRandomBotNames[] =
 {
-	"info_player_deathmatch"
-	"info_player_combine"
-	"info_player_rebels"
-	"info_player_captain_blue"
-	"info_player_captain_red"
+	"Heywood",
+	"Coffey",
+	"Jackson",
+	"Dillon",
+	"Lydecker",
+	"Carter",
+	"Gorman",
+	"Powell",
+	"Sanchez",
+	"Bennings",
+	"Bowman",
+	"Wychek",
+	"Scagnetti",
+	"Kurtz",
+	"Harris",
+	"Palmer",
+	"Leyden",
+	"Baxter",
+	"Thomson",
+	"Banks",
+	"Good",
+	"Hodgson",
+	"Hall",
+	"Macdonald",
+	"Henderson",
+	"Williams",
+	"Hughes",
+	"Hewitt",
+	"Jones",
+	"Biltcliffe",
+	"Donbavand",
+	"Fitzsimmons",
 };
 
-//Probably really rare case as every MFS mapper should include deathmatch spawns
-const char *g_ppszRandomHideSpotsTeams[] =
+// Blue bot names
+const char *g_ppszRandomBlueBotNames[] =
 {
-	"info_player_combine"
-	"info_player_rebels"
-	"info_player_captain_blue"
-	"info_player_captain_red"
+	"Heywood",
+	"Jackson",
+	"Lydecker",
+	"Gorman",
+	"Sanchez",
+	"Bowman",
+	"Scagnetti",
+	"Harris",
+	"Leyden",
+	"Thomson",
+	"Good",
+	"Hall",
+	"Henderson",
+	"Hughes",
+	"Jones",
+	"Donbavand",
+};
+
+// Red bot names
+const char *g_ppszRandomRedBotNames[] =
+{
+	"Coffey",
+	"Dillon",
+	"Carter",
+	"Powell",
+	"Bennings",
+	"Wychek",
+	"Kurtz",
+	"Palmer",
+	"Baxter",
+	"Banks",
+	"Hodgson",
+	"Macdonald",
+	"Williams",
+	"Hewitt",
+	"Biltcliffe",
+	"Fitzsimmons",
 };
 
 LINK_ENTITY_TO_CLASS( bot, CHL2MP_Bot );
@@ -137,356 +185,215 @@ public:
 // Purpose: Create a new Bot and put it in the game.
 // Output : Pointer to the new Bot, or NULL if there's no free clients.
 //-----------------------------------------------------------------------------
-CBasePlayer *BotPutInServer( bool  bFrozen )
+CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 {
-	char botname[ 64 ];
-	/*int pkvWeapon_1_Value;
-	int Weapon_1_PriClip_Value;
-	int Weapon_1_SecClip_Value;*/
+	const char *botname = NULL;
+	char botname2[64];
 	if (HL2MPRules()->IsTeamplay() == false)
 	{
-		if (g_CurBotNumber == 1)
+		int nHeads = ARRAYSIZE(g_ppszRandomBotNames);
+		if (nHeads >= 1)
 		{
-			Q_snprintf(botname, sizeof(botname), "Heywood");
-		}
-		else if (g_CurBotNumber == 2)
-		{
-			Q_snprintf(botname, sizeof(botname), "Coffey");
-		}
-		else if (g_CurBotNumber == 3)
-		{
-			Q_snprintf(botname, sizeof(botname), "Jackson");
-		}
-		else if (g_CurBotNumber == 4)
-		{
-			Q_snprintf(botname, sizeof(botname), "Dillon");
-		}
-		else if (g_CurBotNumber == 5)
-		{
-			Q_snprintf(botname, sizeof(botname), "Lydecker");
-		}
-		else if (g_CurBotNumber == 6)
-		{
-			Q_snprintf(botname, sizeof(botname), "Carter");
-		}
-		else if (g_CurBotNumber == 7)
-		{
-			Q_snprintf(botname, sizeof(botname), "Gorman");
-		}
-		else if (g_CurBotNumber == 8)
-		{
-			Q_snprintf(botname, sizeof(botname), "Powell");
-		}
-		else if (g_CurBotNumber == 9)
-		{
-			Q_snprintf(botname, sizeof(botname), "Sanchez");
-		}
-		else if (g_CurBotNumber == 10)
-		{
-			Q_snprintf(botname, sizeof(botname), "Bennings");
-		}
-		else if (g_CurBotNumber == 11)
-		{
-			Q_snprintf(botname, sizeof(botname), "Bowman");
-		}
-		else if (g_CurBotNumber == 12)
-		{
-			Q_snprintf(botname, sizeof(botname), "Wychek");
-		}
-		else if (g_CurBotNumber == 13)
-		{
-			Q_snprintf(botname, sizeof(botname), "Scagnetti");
-		}
-		else if (g_CurBotNumber == 14)
-		{
-			Q_snprintf(botname, sizeof(botname), "Kurtz");
-		}
-		else if (g_CurBotNumber == 15)
-		{
-			Q_snprintf(botname, sizeof(botname), "Harris");
-		}
-		else if (g_CurBotNumber == 16)
-		{
-			Q_snprintf(botname, sizeof(botname), "Palmer");
-		}
-		else if (g_CurBotNumber == 17)
-		{
-			Q_snprintf(botname, sizeof(botname), "Leyden");
-		}
-		else if (g_CurBotNumber == 18)
-		{
-			Q_snprintf(botname, sizeof(botname), "Baxter");
-		}
-		else if (g_CurBotNumber == 19)
-		{
-			Q_snprintf(botname, sizeof(botname), "Thomson");
-		}
-		else if (g_CurBotNumber == 20)
-		{
-			Q_snprintf(botname, sizeof(botname), "Banks");
-		}
-		else if (g_CurBotNumber == 21)
-		{
-			Q_snprintf(botname, sizeof(botname), "Good");
-		}
-		else if (g_CurBotNumber == 22)
-		{
-			Q_snprintf(botname, sizeof(botname), "Hodgson");
-		}
-		else if (g_CurBotNumber == 23)
-		{
-			Q_snprintf(botname, sizeof(botname), "Hall");
-		}
-		else if (g_CurBotNumber == 24)
-		{
-			Q_snprintf(botname, sizeof(botname), "Macdonald");
-		}
-		else if (g_CurBotNumber == 25)
-		{
-			Q_snprintf(botname, sizeof(botname), "Henderson");
-		}
-		else if (g_CurBotNumber == 26)
-		{
-			Q_snprintf(botname, sizeof(botname), "Williams");
-		}
-		else if (g_CurBotNumber == 27)
-		{
-			Q_snprintf(botname, sizeof(botname), "Hughes");
-		}
-		else if (g_CurBotNumber == 28)
-		{
-			Q_snprintf(botname, sizeof(botname), "Hewitt");
-		}
-		else if (g_CurBotNumber == 29)
-		{
-			Q_snprintf(botname, sizeof(botname), "Jones");
-		}
-		else if (g_CurBotNumber == 30)
-		{
-			Q_snprintf(botname, sizeof(botname), "Biltcliffe");
-		}
-		else if (g_CurBotNumber == 31)
-		{
-			Q_snprintf(botname, sizeof(botname), "Donbavand");
-		}
-		else if (g_CurBotNumber == 32)
-		{
-			Q_snprintf(botname, sizeof(botname), "Fitzsimmons");
+			g_iLastBotName = (g_iLastBotName + 1) % nHeads;
+			botname = g_ppszRandomBotNames[g_iLastBotName];
+
+			for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+			{
+				if (g_ppszRandomBotNames[i] == botname) // If we find the item to delete...
+				{
+					for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+					{
+						g_ppszRandomBotNames[j] = g_ppszRandomBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+					}
+					g_ppszRandomBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+					nHeads--; // Reduce the array size by one.
+					break; // Exit out of the 'find item to delete' loop.	
+				}
+			}
 		}
 		else
 		{
-			Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurBotNumber);
+			Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
 		}
 	}
 	else
 	{
-		/*CBasePlayer *pPlayer = NULL; // so Basically a "whatever the fuck u will be" pointer?
-		if ( pPlayer->GetTeamNumber() == 2)
+		if (iTeam == TEAM_COMBINE)
 		{
-			if (g_CurBlueBotNumber == 1)
+			int nHeads = ARRAYSIZE(g_ppszRandomBlueBotNames);
+			if (nHeads >= 1)
 			{
-				Q_snprintf(botname, sizeof(botname), "Heywood");
-			}
-			else if (g_CurBlueBotNumber == 2)
-			{
-				Q_snprintf(botname, sizeof(botname), "Jackson");
-			}
-			else if (g_CurBlueBotNumber == 3)
-			{
-				Q_snprintf(botname, sizeof(botname), "Lydecker");
-			}
-			else if (g_CurBlueBotNumber == 4)
-			{
-				Q_snprintf(botname, sizeof(botname), "Gorman");
-			}
-			else if (g_CurBlueBotNumber == 5)
-			{
-				Q_snprintf(botname, sizeof(botname), "Sanchez");
-			}
-			else if (g_CurBlueBotNumber == 6)
-			{
-				Q_snprintf(botname, sizeof(botname), "Bowman");
-			}
-			else if (g_CurBlueBotNumber == 7)
-			{
-				Q_snprintf(botname, sizeof(botname), "Scagnetti");
-			}
-			else if (g_CurBlueBotNumber == 8)
-			{
-				Q_snprintf(botname, sizeof(botname), "Harris");
-			}
-			else if (g_CurBlueBotNumber == 9)
-			{
-				Q_snprintf(botname, sizeof(botname), "Leyden");
-			}
-			else if (g_CurBlueBotNumber == 10)
-			{
-				Q_snprintf(botname, sizeof(botname), "Thomson");
-			}
-			else if (g_CurBlueBotNumber == 11)
-			{
-				Q_snprintf(botname, sizeof(botname), "Good");
-			}
-			else if (g_CurBlueBotNumber == 12)
-			{
-				Q_snprintf(botname, sizeof(botname), "Hall");
-			}
-			else if (g_CurBlueBotNumber == 13)
-			{
-				Q_snprintf(botname, sizeof(botname), "Henderson");
-			}
-			else if (g_CurBlueBotNumber == 14)
-			{
-				Q_snprintf(botname, sizeof(botname), "Hughes");
-			}
-			else if (g_CurBlueBotNumber == 15)
-			{
-				Q_snprintf(botname, sizeof(botname), "Jones");
-			}
-			else if (g_CurBlueBotNumber == 16)
-			{
-				Q_snprintf(botname, sizeof(botname), "Donbavand");
+				g_iLastBotName = (g_iLastBotName + 1) % nHeads;
+				botname = g_ppszRandomBlueBotNames[g_iLastBotName];
+
+				for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+				{
+					if (g_ppszRandomBlueBotNames[i] == botname) // If we find the item to delete...
+					{
+						for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+						{
+							g_ppszRandomBlueBotNames[j] = g_ppszRandomBlueBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+						}
+						g_ppszRandomBlueBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+						nHeads--; // Reduce the array size by one.
+						break; // Exit out of the 'find item to delete' loop.	
+					}
+				}
 			}
 			else
 			{
-				Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurBlueBotNumber);
+				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
 			}
 		}
 		else
 		{
-			if (g_CurRedBotNumber == 1)
+			int nHeads = ARRAYSIZE(g_ppszRandomRedBotNames);
+			if (nHeads >= 1)
 			{
-				Q_snprintf(botname, sizeof(botname), "Coffey");
-			}
-			else if (g_CurRedBotNumber == 2)
-			{
-				Q_snprintf(botname, sizeof(botname), "Dillon");
-			}
-			else if (g_CurRedBotNumber == 3)
-			{
-				Q_snprintf(botname, sizeof(botname), "Carter");
-			}
-			else if (g_CurRedBotNumber == 4)
-			{
-				Q_snprintf(botname, sizeof(botname), "Powell");
-			}
-			else if (g_CurRedBotNumber == 5)
-			{
-				Q_snprintf(botname, sizeof(botname), "Bennings");
-			}
-			else if (g_CurRedBotNumber == 6)
-			{
-				Q_snprintf(botname, sizeof(botname), "Wychek");
-			}
-			else if (g_CurRedBotNumber == 7)
-			{
-				Q_snprintf(botname, sizeof(botname), "Kurtz");
-			}
-			else if (g_CurRedBotNumber == 8)
-			{
-				Q_snprintf(botname, sizeof(botname), "Palmer");
-			}
-			else if (g_CurRedBotNumber == 9)
-			{
-				Q_snprintf(botname, sizeof(botname), "Baxter");
-			}
-			else if (g_CurRedBotNumber == 10)
-			{
-				Q_snprintf(botname, sizeof(botname), "Banks");
-			}
-			else if (g_CurRedBotNumber == 11)
-			{
-				Q_snprintf(botname, sizeof(botname), "Hodgson");
-			}
-			else if (g_CurRedBotNumber == 12)
-			{
-				Q_snprintf(botname, sizeof(botname), "Macdonald");
-			}
-			else if (g_CurRedBotNumber == 13)
-			{
-				Q_snprintf(botname, sizeof(botname), "Williams");
-			}
-			else if (g_CurRedBotNumber == 14)
-			{
-				Q_snprintf(botname, sizeof(botname), "Hewitt");
-			}
-			else if (g_CurRedBotNumber == 15)
-			{
-				Q_snprintf(botname, sizeof(botname), "Biltcliffe");
-			}
-			else if (g_CurRedBotNumber == 16)
-			{
-				Q_snprintf(botname, sizeof(botname), "Fitzsimmons");
+				g_iLastBotName = (g_iLastBotName + 1) % nHeads;
+				botname = g_ppszRandomRedBotNames[g_iLastBotName];
+
+				for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+				{
+					if (g_ppszRandomRedBotNames[i] == botname) // If we find the item to delete...
+					{
+						for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+						{
+							g_ppszRandomRedBotNames[j] = g_ppszRandomRedBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+						}
+						g_ppszRandomRedBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+						nHeads--; // Reduce the array size by one.
+						break; // Exit out of the 'find item to delete' loop.	
+					}
+				}
 			}
 			else
-			{*/
-				Q_snprintf(botname, sizeof(botname), "Bot%02i", g_CurRedBotNumber);
-			//}
-		//}
+			{
+				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
+			}
+		}
 	}
-	
+
 	// This trick lets us create a CHL2MP_Bot for this client instead of the CHL2MP_Player
 	// that we would normally get when ClientPutInServer is called.
-	ClientPutInServerOverride( &CBotManager::ClientPutInServerOverride_Bot );
-	edict_t *pEdict = engine->CreateFakeClient( botname );
-	ClientPutInServerOverride( NULL );
+	ClientPutInServerOverride(&CBotManager::ClientPutInServerOverride_Bot);
 
-	if (!pEdict)
+	if (botname != NULL)
 	{
-		Msg( "Failed to create Bot (no edict available)\n");
-		return NULL;
-	}
+		edict_t *pEdict = engine->CreateFakeClient(botname);
+		ClientPutInServerOverride(NULL);
 
-	// Allocate a player entity for the bot, and call spawn
-	CHL2MP_Bot *pPlayer = ((CHL2MP_Bot*)CBaseEntity::Instance( pEdict ));
+		if (!pEdict)
+		{
+			Msg("Failed to create Bot (no edict available)\n");
+			return NULL;
+		}
 
-	pPlayer->ClearFlags();
-	pPlayer->AddFlag( FL_CLIENT | FL_FAKECLIENT );
+		/*int pkvWeapon_1_Value;
+		int Weapon_1_PriClip_Value;
+		int Weapon_1_SecClip_Value;*/
 
-	if ( bFrozen )
-		pPlayer->AddEFlags( EFL_BOT_FROZEN );
+		// Allocate a player entity for the bot, and call spawn
+		CHL2MP_Bot *pPlayer = ((CHL2MP_Bot*)CBaseEntity::Instance(pEdict));
 
-	//pPlayer->ChangeTeam( 0 ); // Is handled by hl2dm's spawn
-	pPlayer->RemoveAllItems( true ); //Why
+		pPlayer->ClearFlags();
+		pPlayer->AddFlag(FL_CLIENT | FL_FAKECLIENT);
 
-	// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
-	//pPlayer->Spawn();
+		if (bFrozen)
+			pPlayer->AddEFlags(EFL_BOT_FROZEN);
 
-	CCommand args;
-	args.Tokenize( "joingame" );
-	pPlayer->ClientCommand( args );
+		//pPlayer->ChangeTeam( iTeam ); // Modified Hl2DM's pickdefaultspawnteam to not check for bots
+		//pPlayer->RemoveAllItems( true ); //Why
 
-	// set bot skills
-	pPlayer->m_flSkill[BOT_SKILL_YAW_RATE] = random->RandomFloat(SKILL_MIN_YAW_RATE, SKILL_MAX_YAW_RATE);
-	pPlayer->m_flSkill[BOT_SKILL_WALK_SPEED] = random->RandomFloat(SKILL_MIN_WALK_SPEED, SKILL_MAX_WALK_SPEED);
-	pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
-	pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat( SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
+		// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
+		//pPlayer->Spawn();
 
-	//pPlayer->CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
-	//pPlayer->CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
+		CCommand args;
+		args.Tokenize("joingame");
+		pPlayer->ClientCommand(args);
 
-	/*if ( pkvWeapon_1_Value != 0 )
-	{
-	pPlayer->GiveNamedItem( (pkvWeapon_1_Value) );
-	pPlayer->CBasePlayer::GiveAmmo( Weapon_1_PriClip_Value,	pkvWeapon_1_PriClipAmmo_Value );
-	pPlayer->CBasePlayer::GiveAmmo( Weapon_1_SecClip_Value,	pkvWeapon_1_SecClipAmmo_Value );
-	}
-	else
-	{
-	//This is gonna be really fun
-	}*/
+		// set bot skills
+		pPlayer->m_flSkill[BOT_SKILL_YAW_RATE] = random->RandomFloat(SKILL_MIN_YAW_RATE, SKILL_MAX_YAW_RATE);
+		pPlayer->m_flSkill[BOT_SKILL_WALK_SPEED] = random->RandomFloat(SKILL_MIN_WALK_SPEED, SKILL_MAX_WALK_SPEED);
+		pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
+		pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat(SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
 
-	if (HL2MPRules()->IsTeamplay() == false)
-		g_CurBotNumber++;
-	else
-	{
-		if (pPlayer->GetTeamNumber() == 2 )
-		g_CurBlueBotNumber++;
+		//pPlayer->CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
+		//pPlayer->CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
+
+		/*if ( pkvWeapon_1_Value != 0 )
+		{
+		pPlayer->GiveNamedItem( (pkvWeapon_1_Value) );
+		pPlayer->CBasePlayer::GiveAmmo( Weapon_1_PriClip_Value,	pkvWeapon_1_PriClipAmmo_Value );
+		pPlayer->CBasePlayer::GiveAmmo( Weapon_1_SecClip_Value,	pkvWeapon_1_SecClipAmmo_Value );
+		}
 		else
-		g_CurRedBotNumber++;
-	}
+		{
+		//This is gonna be really fun
+		}*/
 
-	return pPlayer;
+		g_CurBotNumber++;
+
+		return pPlayer;
+	}
+	else
+	{
+		edict_t *pEdict = engine->CreateFakeClient(botname2);
+		ClientPutInServerOverride(NULL);
+
+		if (!pEdict)
+		{
+			Msg("Failed to create Bot (no edict available)\n");
+			return NULL;
+		}
+
+		/*int pkvWeapon_1_Value;
+		int Weapon_1_PriClip_Value;
+		int Weapon_1_SecClip_Value;*/
+
+		// Allocate a player entity for the bot, and call spawn
+		CHL2MP_Bot *pPlayer = ((CHL2MP_Bot*)CBaseEntity::Instance(pEdict));
+
+		pPlayer->ClearFlags();
+		pPlayer->AddFlag(FL_CLIENT | FL_FAKECLIENT);
+
+		if (bFrozen)
+			pPlayer->AddEFlags(EFL_BOT_FROZEN);
+
+		//pPlayer->ChangeTeam( iTeam ); // Modified Hl2DM's pickdefaultspawnteam to not check for bots
+		//pPlayer->RemoveAllItems( true ); //Why
+
+		// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
+		//pPlayer->Spawn();
+
+		CCommand args;
+		args.Tokenize("joingame");
+		pPlayer->ClientCommand(args);
+
+		// set bot skills
+		pPlayer->m_flSkill[BOT_SKILL_YAW_RATE] = random->RandomFloat(SKILL_MIN_YAW_RATE, SKILL_MAX_YAW_RATE);
+		pPlayer->m_flSkill[BOT_SKILL_WALK_SPEED] = random->RandomFloat(SKILL_MIN_WALK_SPEED, SKILL_MAX_WALK_SPEED);
+		pPlayer->m_flSkill[BOT_SKILL_RUN_SPEED] = random->RandomFloat(SKILL_MIN_RUN_SPEED, SKILL_MAX_RUN_SPEED);
+		pPlayer->m_flSkill[BOT_SKILL_STRAFE] = random->RandomFloat(SKILL_MIN_STRAFE, SKILL_MAX_STRAFE);
+
+		//pPlayer->CBasePlayer::SetNormSpeed( BOT_SKILL_WALK_SPEED );
+		//pPlayer->CBasePlayer::SetSprintSpeed( BOT_SKILL_RUN_SPEED );
+
+		/*if ( pkvWeapon_1_Value != 0 )
+		{
+		pPlayer->GiveNamedItem( (pkvWeapon_1_Value) );
+		pPlayer->CBasePlayer::GiveAmmo( Weapon_1_PriClip_Value,	pkvWeapon_1_PriClipAmmo_Value );
+		pPlayer->CBasePlayer::GiveAmmo( Weapon_1_SecClip_Value,	pkvWeapon_1_SecClipAmmo_Value );
+		}
+		else
+		{
+		//This is gonna be really fun
+		}*/
+
+		g_CurBotNumber++;
+
+		return pPlayer;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -522,7 +429,7 @@ void Bot_RunAll( void )
 //			msec - 
 // Output : 	virtual void
 //-----------------------------------------------------------------------------
-static void RunPlayerMove( CHL2MP_Player *fakeclient, CUserCmd &cmd, float frametime )
+static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, const QAngle& viewangles, unsigned short buttons, float frametime)
 {
 	if ( !fakeclient )
 		return;
@@ -533,6 +440,17 @@ static void RunPlayerMove( CHL2MP_Player *fakeclient, CUserCmd &cmd, float frame
 
 	float flTimeBase = gpGlobals->curtime + gpGlobals->frametime - frametime;
 	fakeclient->SetTimeBase( flTimeBase );
+
+	Q_memset(&cmd, 0, sizeof(cmd));
+
+	//if (bot_flipout.GetBool())
+		//VectorCopy(viewangles, cmd.viewangles);
+
+	if (bot_crouch.GetInt())
+		cmd.buttons |= IN_DUCK;
+
+	if (bot_attack.GetBool())
+		cmd.buttons |= IN_ATTACK;
 
 	MoveHelperServer()->SetHost( fakeclient );
 	fakeclient->PlayerRunCommand( &cmd, MoveHelperServer() );
@@ -597,27 +515,48 @@ void CHL2MP_Bot::Update(int mode)
 			if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
 			{
 				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
-					mode = 6;// This map sucks
+					mode = 7;// This map sucks
 				else
 					// This map is racist
-					mode = 4;
+					mode = 8;
 			}
 			else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
 			{
 				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
-					mode = 6;// This map sucks
+					mode = 7;// This map sucks
 				else
 					// This map is racist
-					mode = 5;
+					mode = 9;
 			}
-			if (mode < 4)
-				mode = 2;
+			if (mode < 7)
+			{
+				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_BLUE)) == NULL)
+				{
+					if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_RED)) == NULL)
+						mode = 3;
+					else
+						mode = 4;
+
+				}
+				else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_RED)) == NULL)
+				{
+					if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_BLUE)) == NULL)
+						mode = 3;
+					else
+						mode = 5;
+
+				}
+				if (mode < 3)
+				{
+					mode = 2;
+				}
+			}
 		}
 
 		if (mode < 2)
 		{
 			if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL && (pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
-				mode = 3;
+				mode = 6;
 			else
 				mode = 1;
 		}
@@ -625,51 +564,105 @@ void CHL2MP_Bot::Update(int mode)
 
 	if (mode == 1)
 	{
-		int nHeads = ARRAYSIZE(g_ppszRandomHideSpots);
+		int troll = random->RandomInt(1, 5);
 
-		g_iLastHideSpot = (g_iLastHideSpot + 1) % nHeads;
-		pHideSpot = g_ppszRandomHideSpots[g_iLastHideSpot];
+		if (troll == 2)
+			pHideSpot = SPAWN_POINT_DEATHMATCH;
+		else if (troll == 2)
+			pHideSpot = SPAWN_POINT_RED;
+		else if (troll == 3)
+			pHideSpot = SPAWN_POINT_BLUE;
+		else if (troll == 4)
+			pHideSpot = SPAWN_POINT_CAPTAIN_BLUE;
+		else if (troll == 5)
+			pHideSpot = SPAWN_POINT_CAPTAIN_RED;
 
 		if (pHideSpot == OldHideSpot)
 			Update(1);
 	}
-	else if (mode == 2)
+	else if (mode == 2) //Highly unlikely, cuz every MFS mapper should include deathmatch spawns
 	{
-		int nHeads = ARRAYSIZE(g_ppszRandomHideSpotsTeams);
+		int troll = random->RandomInt(2, 5);
 
-		g_iLastHideSpot = (g_iLastHideSpot + 1) % nHeads;
-		pHideSpot = g_ppszRandomHideSpotsTeams[g_iLastHideSpot];
+		if (troll == 2)
+			pHideSpot = SPAWN_POINT_RED;
+		else if (troll == 3)
+			pHideSpot = SPAWN_POINT_BLUE;
+		else if (troll == 4)
+			pHideSpot = SPAWN_POINT_CAPTAIN_BLUE;
+		else if (troll == 5)
+			pHideSpot = SPAWN_POINT_CAPTAIN_RED;
 
 		if (pHideSpot == OldHideSpot)
 			Update(2);
 	}
 	else if (mode == 3)
 	{
+		int troll = random->RandomInt(2, 3);
+
+		if ( troll == 2 )
+			pHideSpot = SPAWN_POINT_RED;
+		else if ( troll == 3 )
+			pHideSpot = SPAWN_POINT_BLUE;
+
+		if (pHideSpot == OldHideSpot)
+			Update(3);
+	}
+	else if (mode == 4) // i also dunno why would this ever happen
+	{
+		int troll = random->RandomInt(2, 4);
+
+		if (troll == 2)
+			pHideSpot = SPAWN_POINT_RED;
+		else if (troll == 3)
+			pHideSpot = SPAWN_POINT_BLUE;
+		else if (troll == 4)
+			pHideSpot = SPAWN_POINT_RED;
+
+		if (pHideSpot == OldHideSpot)
+			Update(4);
+	}
+	else if (mode == 5) // or this
+	{
+		int troll = random->RandomInt(2, 4);
+
+		if (troll == 2)
+			pHideSpot = SPAWN_POINT_RED;
+		else if (troll == 3)
+			pHideSpot = SPAWN_POINT_BLUE;
+		else if (troll == 4)
+			pHideSpot = SPAWN_POINT_BLUE;
+
+		if (pHideSpot == OldHideSpot)
+			Update(5);
+	}
+	else if (mode == 6)
+	{
 		pHideSpot = SPAWN_POINT_DEATHMATCH;
 
 		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
-		Update(3);*/
+		Update(6);*/
 	}
-	else if (mode == 4)
-	{
-		pHideSpot = SPAWN_POINT_BLUE;
-
-		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
-		Update(4);*/
-	}
-	else if (mode == 5)
-	{
-		pHideSpot = SPAWN_POINT_RED;
-
-		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
-		Update(5);*/
-	}
-	else if (mode == 6) // This actually happends
+	else if (mode == 7) // This actually happends
 	{
 		pHideSpot = "info_player_start";
 
 		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
-		Update(6);*/
+		Update(7);*/
+	}
+	else if (mode == 8)
+	{
+		pHideSpot = SPAWN_POINT_RED;
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(8);*/
+	}
+	else if (mode == 9)
+	{
+		pHideSpot = SPAWN_POINT_BLUE;
+
+		/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+		Update(9);*/
 	}
 
 	UpdateTime = gpGlobals->curtime;
@@ -689,6 +682,11 @@ void Bot_Think( CHL2MP_Bot *pBot )
 	if (pBot->ShouldUpdate() == true)
 		pBot->Update(0);
 
+	//QAngle vecViewAngles;
+	unsigned short buttons = 0;
+
+	//vecViewAngles = pBot->GetLocalAngles();
+
 	CUserCmd cmd;
 	Q_memset( &cmd, 0, sizeof( cmd ) );	
 
@@ -702,6 +700,55 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		Vector Forward;
 		AngleVectors(pBot->GetLocalAngles(), &Forward);
 		UTIL_TraceHull( pBot->GetLocalOrigin()+Vector(0,0,5), pBot->GetLocalOrigin() + Vector(0,0,5) + (Forward * 50), pBot->GetPlayerMins(), pBot->GetPlayerMaxs(), MASK_PLAYERSOLID, pBot, COLLISION_GROUP_NONE, &tr_front );
+
+		// Is my team being forced to defend?
+		if (bot_defend.GetInt() == pBot->GetTeamNumber())
+		{
+			buttons |= IN_ATTACK2;
+		}
+		// If bots are being forced to fire a weapon, see if I have it
+		else if (bot_forcefireweapon.GetString())
+		{
+			CBaseCombatWeapon *pWeapon = pBot->Weapon_OwnsThisType(bot_forcefireweapon.GetString());
+			if (pWeapon)
+			{
+				// Switch to it if we don't have it out
+				CBaseCombatWeapon *pActiveWeapon = pBot->GetActiveWeapon();
+
+				// Switch?
+				if (pActiveWeapon != pWeapon)
+				{
+					pBot->Weapon_Switch(pWeapon);
+				}
+				else
+				{
+					// Start firing
+					// Some weapons require releases, so randomise firing
+					if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
+					{
+						buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
+					}
+				}
+			}
+		}
+
+		if (bot_flipout.GetInt())
+		{
+			if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
+			{
+				buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
+			}
+		}
+
+		if (strlen(bot_sendcmd.GetString()) > 0)
+		{
+			//send the cmd from this bot
+			CCommand args;
+			args.Tokenize(bot_sendcmd.GetString());
+			pBot->ClientCommand(args);
+
+			bot_sendcmd.SetValue("");
+		}
 
 		// enemy acquisition
 		if( !pBot->GetEnemy() || pBot->RecheckEnemy() || !pBot->GetEnemy()->IsAlive() )
@@ -738,7 +785,32 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		NDebugOverlay::Cross3DOriented( pBot->m_Waypoints[i].Center, QAngle(0,0,0), 5*i+1, 200, 0, 0, false, -1 );
 	}*/
 
-	RunPlayerMove( pBot, cmd, gpGlobals->frametime );	
+	/*if (bot_flipout.GetInt() >= 2)
+	{
 
+		QAngle angOffset = RandomAngle(-1, 1);
+		QAngle LastAngles = (pBot->GetLocalAngles() + angOffset);
+
+		for (int i = 0; i < 2; i++)
+		{
+			if (fabs(LastAngles[i] - pBot->GetLocalAngles[i]) > 15.0f)
+			{
+				if (LastAngles[i] > pBot->GetLocalAngles[i])
+				{
+					LastAngles[i] = pBot->GetLocalAngles[i] + 15;
+				}
+				else
+				{
+					LastAngles[i] = pBot->GetLocalAngles[i] - 15;
+				}
+			}
+		}
+
+		LastAngles[2] = 0;
+
+		pBot->SetLocalAngles(LastAngles);
+	}*/
+
+	RunPlayerMove(pBot, cmd, pBot->GetLocalAngles(), buttons, gpGlobals->frametime);
 }
 #endif

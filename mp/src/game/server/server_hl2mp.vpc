@@ -20,7 +20,7 @@ $Configuration
 	}
 }
 
-$Project "Server (HL2MP)"
+$Project "Server (MFS)"
 {
 	$Folder	"Source Files"
 	{
@@ -267,6 +267,11 @@ $Project "Server (HL2MP)"
 		$File	"mfs\npc_santa.cpp"
 		$File	"mfs\rotating_healthkit.cpp"
 		$File	"mfs\sdk_melon.cpp"
+		$File	"mfs\weapon_grapple.cpp"
+		$File	"mfs\weapon_grapple.h"
+		$File	"mfs\func_buyzone.cpp"
+		$File	"mfs\func_buyzone.h"
+		$File	"$SRCDIR\game\shared\mfs\weapon_sniper.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_gauss.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_smg3.cpp"
 		//$File	"$SRCDIR\game\shared\mfs\myconvars.cpp"
@@ -275,7 +280,7 @@ $Project "Server (HL2MP)"
 		$File	"$SRCDIR\game\shared\mfs\weapon_healthkit.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_troll.cpp"
 		$File	"$SRCDIR\game\shared\mfs\weapon_dualies.cpp"
-		$File	"$SRCDIR\game\shared\mfs\weapon_smg3.cpp"
+		$File	"$SRCDIR\game\shared\mfs\achievements_mfs.cpp"
 		//$File	"mfs\EnvHudTasklist.cpp"
 		//$File	"mfs\cloaktest.cpp"
 		//$File	"mfs\point_keypad.cpp"

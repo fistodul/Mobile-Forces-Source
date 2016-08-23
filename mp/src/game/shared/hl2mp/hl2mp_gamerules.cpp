@@ -41,7 +41,9 @@
 	#include "globalstate.h"
 	#include "FileSystem.h"
 	
-#ifndef MFS
+#ifdef MFS
+	#include "mfs/bot_main.h"
+#else
 #ifdef DEBUG	
 	#include "hl2mp_bot_temp.h"
 #endif
@@ -145,6 +147,8 @@ static const char *s_PreserveEnts[] =
 	"info_player_combine",
 	"info_player_rebel",
 	"info_player_god",
+	"info_player_captain_blue",
+	"info_player_captain_red",
 	"info_map_parameters",
 	"keyframe_rope",
 	"move_rope",
@@ -1172,6 +1176,9 @@ CAmmoDef *GetAmmoDef()
 			def.AddAmmoType("healthkit",		DMG_GENERIC,				TRACER_NONE,			0,			0,			"sk_healthkit_max",			0,							0 );
 			def.AddAmmoType("Rifle", DMG_BULLET, TRACER_LINE_AND_WHIZ, 0, 0, "sk_max_Rifle", BULLET_IMPULSE(200, 1225), 0 );
 			def.AddAmmoType("GaussEnergy1",		     DMG_SHOCK,					TRACER_NONE,			"sk_dmg_gauss",		    "sk_dmg_gauss",         "sk_max_gauss",                    BULLET_IMPULSE(650, 8000), 0 );
+			def.AddAmmoType("SniperBolt", DMG_BULLET | DMG_SNIPER, TRACER_LINE, "sk_plr_dmg_sniper", "sk_npc_dmg_sniper", "sk_max_sniper", BULLET_IMPULSE(800, 8000), 0);
+			def.AddAmmoType("SMG3",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg3",			"sk_npc_dmg_smg3",			"sk_max_smg3",			BULLET_IMPULSE(200, 1225), 0 );
+			def.AddAmmoType("Dualies",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_dualies",		"sk_npc_dmg_dualies",		"sk_max_dualies",		BULLET_IMPULSE(200, 1225), 0 );
 	}
 
 	return &def;
@@ -1187,7 +1194,78 @@ CAmmoDef *GetAmmoDef()
 
 #else
 
-#ifndef MFS
+#ifdef MFS
+// Handler for the "bot" command.
+CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
+{
+	if (!TheNavMesh->IsLoaded())
+	{
+		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_GetCommandClient());
+		DevMsg("No navigation mesh loaded, Creating one");
+		engine->ClientCommand(pPlayer->edict(), "nav_generate");
+	}
+
+	// Look at -count.
+	int count = args.FindArgInt( "-count", 1 );
+	count = clamp( count, 1, 32 );
+
+	CTeam *pCombine = g_Teams[TEAM_COMBINE];
+	CTeam *pRebels = g_Teams[TEAM_REBELS];
+
+	int iTeam;
+	if (HL2MPRules()->IsTeamplay() == false)
+		iTeam = TEAM_UNASSIGNED;
+	else
+	{
+		if (pCombine == NULL || pRebels == NULL)
+		{
+			iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+		}
+		else
+		{
+			if (HL2MPRules()->IsInjustice() == true)
+			{
+				if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
+				{
+					iTeam = TEAM_REBELS;
+				}
+				else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers() * 9)
+				{
+					iTeam = TEAM_COMBINE;
+				}
+				else
+				{
+					iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+				}
+			}
+			else
+			{
+				if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+				{
+					iTeam = TEAM_REBELS;
+				}
+				else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+				{
+					iTeam = TEAM_COMBINE;
+				}
+				else
+				{
+					iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+				}
+			}
+		}
+	}
+
+	// Look at -frozen.
+	bool bFrozen = !!args.FindArg( "-frozen" );
+
+	// Ok, spawn all the bots.
+	while ( --count >= 0 )
+	{
+		BotPutInServer( bFrozen, iTeam );
+	}
+}
+#else
 #ifdef DEBUG
 
 	// Handler for the "bot" command.
