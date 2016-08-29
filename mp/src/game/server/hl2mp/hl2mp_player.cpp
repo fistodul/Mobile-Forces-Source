@@ -297,16 +297,20 @@ void CHL2MP_Player::GiveDefaultItems( void )
 
 	if ( GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER )
 	{
+#ifdef MFS
 		if ( HL2MPRules()->IsInjustice() == true )
 		GiveGoodItems();
 		else
+#endif
 		GiveNamedItem( "weapon_knife" );
 	}
 	else if ( GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN )
 	{
+#ifdef MFS
 		if ( HL2MPRules()->IsInjustice() == true )
 		GiveEvilItems();
 		else
+#endif
 		GiveNamedItem( "weapon_crowbar" );
 	}
 	
@@ -426,6 +430,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam(void)
 			}
 			else
 			{
+#ifdef MFS
 				if (HL2MPRules()->IsInjustice() == true)
 				{
 					CTeam *pCombine = g_Teams[TEAM_COMBINE];
@@ -477,6 +482,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam(void)
 				}
 				else
 				{
+#endif
 					ConVar *s_cl_team = cvar->FindVar("cl_team");
 					if (strcmp(s_cl_team->GetString(), "default") == 0)
 					{
@@ -549,8 +555,8 @@ void CHL2MP_Player::PickDefaultSpawnTeam(void)
 		}
 #ifdef MFS
 	}
-#endif
 }
+#endif
 
 #ifdef SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 //------------------------------------------------------------------------------
@@ -1159,6 +1165,7 @@ void CHL2MP_Player::PostThink( void )
 		m_iMaxHealth = sv_regeneration_maxhp.GetInt();
 	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
 		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
+#ifdef MFS
 	if (HL2MPRules()->IsInjustice() == true)
 	{
 		if (GetTeamNumber() == TEAM_REBELS)
@@ -1258,6 +1265,7 @@ void CHL2MP_Player::PostThink( void )
 	}
 	else
 	{
+#endif
 	// Regenerate health
 	if (IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1))
 	{
@@ -1304,7 +1312,9 @@ void CHL2MP_Player::PostThink( void )
 			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
 		}
 	}
+#ifdef MFS
 	}
+#endif
 
 	if ( GetFlags() & FL_DUCKING )
 	{
@@ -1734,6 +1744,7 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 	{
 		CTeam *pCombine = g_Teams[TEAM_COMBINE];
 		CTeam *pRebels = g_Teams[TEAM_REBELS];
+#ifdef MFS
 		if (HL2MPRules()->IsInjustice() == true)
 		{
 			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
@@ -1751,6 +1762,7 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 		}
 		else
 		{
+#endif
 			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
 			{
 				ChangeTeam(TEAM_REBELS);
@@ -1763,7 +1775,9 @@ bool CHL2MP_Player::HandleCommand_JoinTeam( int team )
 			{
 				ChangeTeam(random->RandomInt(TEAM_COMBINE, TEAM_REBELS));
 			}
+#ifdef MFS
 		}
+#endif
 		return true;
 	}
 	else if ( team == TEAM_SPECTATOR )
@@ -2296,6 +2310,7 @@ CBaseEntity *ent = NULL;
 }
 #endif //SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE
 	
+#ifdef MFS
 	if ( HL2MPRules()->IsInjustice() == true )
 	{
 		if ( GetTeamNumber() == TEAM_COMBINE )
@@ -2317,6 +2332,7 @@ CBaseEntity *ent = NULL;
 	}
 	else
 	{
+#endif
 	if ( HL2MPRules()->IsTeamplay() == true )
 	{
 		if ( GetTeamNumber() == TEAM_COMBINE )
@@ -2336,7 +2352,9 @@ CBaseEntity *ent = NULL;
 			pLastSpawnPoint = g_pLastSpawn;
 		}
 	}
+#ifdef MFS
 	}
+#endif
 
 	pSpot = pLastSpawnPoint;
 	// Randomize the start spot

@@ -1,7 +1,6 @@
 //******************************************************************
 // Multiplayer AI for Source engine by R_Yell - rebel.y3ll@gmail.com
 //******************************************************************
-#ifdef MFS
 
 #ifndef BOT_MAIN_H
 #define BOT_MAIN_H
@@ -49,8 +48,10 @@
 // ladder's top dismount point gets added some artificial distance to allow bot more room to complete the operation
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
 
+#ifdef MFS
 extern ConVar bot_mimic_yaw_offset;
 extern ConVar bot_mimic;
+#endif
 
 enum BotGeneralStates_t
 {
@@ -203,6 +204,7 @@ public:
 
 	void Update(int mode);
 
+#ifdef MFS
 	bool RunMimicCommand(CUserCmd& cmd)
 	{
 		if (bot_mimic.GetInt() <= 0)
@@ -224,6 +226,7 @@ public:
 
 		return true;
 	}
+#endif
 
 };
 
@@ -235,4 +238,3 @@ bool CreatePath( CHL2MP_Bot *pBot, CBasePlayer *pPlayer, Vector OptionalOrg = ve
 void Bot_RunAll();
 
 #endif // BOT_MAIN_H
-#endif

@@ -592,8 +592,10 @@ public:
 	virtual void			ForceDropOfCarriedPhysObjects( CBaseEntity *pOnlyIfHoldindThis = NULL ) {}
 	virtual float			GetHeldObjectMass( IPhysicsObject *pHeldObject );
 	
-	//SecobMod__MiscFixes
+	//SecobMod__MiscFixes , FixMe
+#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
 	virtual CBaseEntity		*GetHeldObject( void );
+#endif
 
 	void					CheckSuitUpdate();
 	void					SetSuitUpdate(const char *name, int fgroup, int iNoRepeat);

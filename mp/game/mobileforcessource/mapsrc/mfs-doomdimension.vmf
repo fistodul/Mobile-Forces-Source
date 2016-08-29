@@ -1,8 +1,8 @@
 versioninfo
 {
 	"editorversion" "400"
-	"editorbuild" "6411"
-	"mapversion" "1"
+	"editorbuild" "6920"
+	"mapversion" "8"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "1"
+	"mapversion" "8"
 	"classname" "worldspawn"
 	"comment" "Decompiled by BSPSource v1.3.21 from mfs-doomdimension"
 	"detailmaterial" "detail/detailsprites"
@@ -414,7 +414,7 @@ world
 		{
 			"id" "38"
 			"plane" "(640 -512 640) (640 -512 576) (-832 -512 576)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -425,7 +425,7 @@ world
 		{
 			"id" "39"
 			"plane" "(-832 448 640) (-832 448 576) (640 448 576)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -436,7 +436,7 @@ world
 		{
 			"id" "40"
 			"plane" "(-832 448 576) (-832 -512 576) (640 -512 576)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
@@ -447,7 +447,7 @@ world
 		{
 			"id" "41"
 			"plane" "(-832 -512 640) (-832 448 640) (640 448 640)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[1 0 0 0] 0.25"
 			"vaxis" "[0 -1 0 0] 0.25"
 			"rotation" "0"
@@ -458,7 +458,7 @@ world
 		{
 			"id" "42"
 			"plane" "(-832 -512 640) (-832 -512 576) (-832 448 576)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -469,7 +469,7 @@ world
 		{
 			"id" "43"
 			"plane" "(640 448 640) (640 448 576) (640 -512 576)"
-			"material" "SKYBOX/SKY_DAY01_01UP"
+			"material" "EFFECTS/FIRE_CLOUD1"
 			"uaxis" "[0 1 0 0] 0.25"
 			"vaxis" "[0 0 -1 0] 0.25"
 			"rotation" "0"
@@ -504,7 +504,7 @@ entity
 	"classname" "point_message"
 	"message" "You are here cuz well .... You're here IN THE DOOM DIMENSION"
 	"radius" "128"
-	"origin" "0 0 73"
+	"origin" "0 0 128"
 	editor
 	{
 		"color" "220 30 220"
@@ -540,7 +540,7 @@ entity
 {
 	"id" "350"
 	"classname" "info_player_start"
-	"angles" "0 0 0"
+	"angles" "0 240 0"
 	"origin" "64 128 64"
 	editor
 	{
@@ -554,7 +554,7 @@ entity
 {
 	"id" "352"
 	"classname" "info_player_start"
-	"angles" "0 0 0"
+	"angles" "0 120 0"
 	"origin" "64 -128 64"
 	editor
 	{
@@ -569,8 +569,8 @@ cameras
 	"activecamera" "0"
 	camera
 	{
-		"position" "[15.1757 -90.8952 98.2983]"
-		"look" "[47.1963 162.592 22.9306]"
+		"position" "[65.0052 -119.358 389.225]"
+		"look" "[14.4483 -27.3989 144.38]"
 	}
 	camera
 	{

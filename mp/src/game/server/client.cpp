@@ -902,6 +902,7 @@ const char *g_ppszBuyableItems[] =
 {
 	"item_suit",
 	"armor",
+	"weapon_pistol",
 };
 
 ConVar buyablearmor("buyablearmor", "100", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
@@ -942,7 +943,8 @@ CON_COMMAND(buy, "Buy's buyable items if the player is in the buy zone.")
 			}
 			else
 			{
-				return;
+				engine->ClientCommand(pPlayer->edict(), "ToggleBuyMenu");
+				break; // Exit out of the 'find item to buy' loop.	
 			}
 		}
 	}

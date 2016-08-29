@@ -2216,15 +2216,16 @@ bool CBasePlayer::IsinBuyzone(void)
 
 	if ((pEntity = gEntList.FindEntityByClassname(pEntity, "func_buyzone")) != NULL)
 	{
-		CBuyZone *pBuyZone = NULL;
-		float flDist = GetAbsOrigin().DistTo(pBuyZone->GetAbsOrigin());
+		/*CBuyZone *pBuyZone = NULL;
+		float flDist = this->GetAbsOrigin().DistTo(pBuyZone->GetAbsOrigin());
 
 		if (flDist < 60)
 			return pBuyZone->isinbuyzone;
 
-		return false;
+		return false;*/
+		return true;
 	}
-	else
+	
 		return false;
 }
 
@@ -6467,7 +6468,7 @@ return;
 	case 82:
 		#ifdef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 		// Cheat to create a jeep in front of the player
-		CreateJeep( this );
+		CreateBuggy( this );
 		#endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 		break;
 

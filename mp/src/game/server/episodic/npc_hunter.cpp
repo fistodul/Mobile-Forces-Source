@@ -6,6 +6,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef HL2_EPISODIC
 #include "npc_strider.h"
 #include "npc_hunter.h"
 #include "ai_behavior_follow.h"
@@ -7762,3 +7763,4 @@ AI_BEGIN_CUSTOM_NPC( npc_hunter, CNPC_Hunter )
 	// formula is MIN_DIST * 10000 + MAX_DIST
 
 AI_END_CUSTOM_NPC()
+#endif

@@ -83,7 +83,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_pistol"
+		"Command"		"buy weapon_pistol"
 		"Default"		"0"
 	}
 	"submachineguns"
@@ -103,7 +103,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_smg"
+		"Command"		"buy weapon_smg3"
 		"Default"		"0"
 	}
 	"shotguns"
@@ -123,7 +123,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_shotgun"
+		"Command"		"buy weapon_shotgun"
 		"Default"		"0"
 	}
 	"rifles"
@@ -143,7 +143,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_crossbow"
+		"Command"		"buy weapon_crossbow"
 		"Default"		"0"
 	}
 	"machineguns"
@@ -163,7 +163,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_minigun"
+		"Command"		"buy weapon_minigun"
 		"Default"		"0"
 	}
 	"rpg"
@@ -183,7 +183,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_rpg"
+		"Command"		"buy weapon_rpg"
 		"Default"		"0"
 	}
 	"grenade"
@@ -203,7 +203,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_frag"
+		"Command"		"buy weapon_frag"
 		"Default"		"0"
 	}
 	"slam"
@@ -223,7 +223,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_slam"
+		"Command"		"buy weapon_slam"
 		"Default"		"0"
 	}
 	"phk"
@@ -243,7 +243,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give weapon_portablehealthkit"
+		"Command"		"buy weapon_portablehealthkit"
 		"Default"		"0"
 	}
 	"equipment"
@@ -263,7 +263,7 @@
 		"textAlignment"		"west"
 		"dulltext"		"0"
 		"brighttext"		"0"
-		"Command"		"give item_armor"
+		"Command"		"buy item_armor"
 		"Default"		"0"
 	}
 	"CancelButton"

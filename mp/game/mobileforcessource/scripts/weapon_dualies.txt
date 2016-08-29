@@ -1,4 +1,4 @@
-// Pistol
+// Dual Pistols
 
 WeaponData
 {

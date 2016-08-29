@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef HL2_EPISODIC
 #include "npcevent.h"
 #include "ai_motor.h"
 #include "ai_senses.h"
@@ -876,3 +877,4 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER( CAI_PassengerBehaviorZombie )
 
 		AI_END_CUSTOM_SCHEDULE_PROVIDER()
 }
+#endif

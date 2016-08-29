@@ -1585,6 +1585,7 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		{
 			// if the player is holding the object, use it's real mass (player holding reduced the mass)
 			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+			#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN //FixMe
 			CBasePlayer *pPlayer = NULL;
 
 						// See which MP player is holding the physics object and then use that player to get the real mass of the object.
@@ -1598,6 +1599,9 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 								break;
 							}
 						}
+			#else
+			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+			#endif
 			#else
 			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 			#endif //SecobMod__Enable_Fixed_Multiplayer_AI

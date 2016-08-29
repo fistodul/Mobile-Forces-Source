@@ -1,3 +1,11 @@
+https://github.com/ValveSoftware/source-sdk-2013/pull/375/files
+https://github.com/ValveSoftware/source-sdk-2013/pull/381/files
+https://github.com/ValveSoftware/source-sdk-2013/pull/381/files
+https://github.com/ValveSoftware/source-sdk-2013/pull/313/files
+gamui2
+weapon drop system
+fix credits and buymenu
+
 // Important Shit:
 Vector vNearestPlayerPos = UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin())->GetAbsOrigin();
 if ( !ppAIs[i]->IsInPlayerSquad() && !UTIL_FindClientInPVS( ppAIs[i]->edict() ) && ( ( ppAIs[i]->GetAbsOrigin() - vNearestPlayerPos ).LengthSqr() > 150*12 || fabsf( ppAIs[i]->GetAbsOrigin().z - vNearestPlayerPos.z ) > 192 ) )

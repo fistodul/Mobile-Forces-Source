@@ -4,10 +4,11 @@
 
 #include "cbase.h"
 
-#ifdef MFS
-
 #include "player.h"
 #include "hl2mp_player.h"
+#ifndef MFS
+#include "team.h"
+#endif
 
 #include "in_buttons.h"
 #include "movehelper_server.h"
@@ -25,11 +26,12 @@
 class CHL2MP_Bot;
 void Bot_Think( CHL2MP_Bot *pBot );
 
+#ifdef MFS
 ConVar bot_forcefireweapon("bot_forcefireweapon", "", FCVAR_CHEAT, "Force bots with the specified weapon to fire.");
 ConVar bot_forceattack2("bot_forceattack2", "0", FCVAR_CHEAT, "When firing, use attack2.");
 ConVar bot_forceattackon("bot_forceattackon", "0", FCVAR_CHEAT, "When firing, don't tap fire, hold it down.");
 ConVar bot_flipout("bot_flipout", "0", FCVAR_CHEAT, "When on, all bots fire their guns.");
-ConVar bot_defend("bot_defend", "0", 0, "Set to a team number, and that team will all keep their combat shields raised.");
+ConVar bot_defend("bot_defend", "0", FCVAR_CHEAT, "Set to a team number, and that team will all keep their combat shields raised.");
 //ConVar bot_changeclass("bot_changeclass", "0", FCVAR_CHEAT, "Force all bots to change to the specified class.");
 ConVar bot_zombie("bot_zombie", "0", FCVAR_CHEAT, "Brraaaaaiiiins.");
 ConVar bot_mimic_yaw_offset("bot_mimic_yaw_offset", "0", FCVAR_CHEAT, "Offsets the bot yaw.");
@@ -43,6 +45,62 @@ ConVar bot_crouch("bot_crouch", "0", FCVAR_CHEAT, "Bot crouches");
 extern ConVar bot_mimic;
 #else
 ConVar bot_mimic("bot_mimic", "0", FCVAR_CHEAT, "Bot uses usercmd of player by index.");
+#endif
+#endif
+
+#ifndef MFS
+// Handler for the "bot" command.
+CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
+{
+	if (!TheNavMesh->IsLoaded())
+	{
+		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_GetCommandClient());
+		DevMsg("No navigation mesh loaded, Creating one");
+		engine->ClientCommand(pPlayer->edict(), "nav_generate");
+	}
+
+	// Look at -count.
+	int count = args.FindArgInt( "-count", 1 );
+	count = clamp( count, 1, 32 );
+
+	CTeam *pCombine = g_Teams[TEAM_COMBINE];
+	CTeam *pRebels = g_Teams[TEAM_REBELS];
+
+	int iTeam;
+	if (HL2MPRules()->IsTeamplay() == false)
+		iTeam = TEAM_UNASSIGNED;
+	else
+	{
+		if (pCombine == NULL || pRebels == NULL)
+		{
+			iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+		}
+		else
+		{
+			if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
+			{
+				iTeam = TEAM_REBELS;
+			}
+			else if (pCombine->GetNumPlayers() < pRebels->GetNumPlayers())
+			{
+				iTeam = TEAM_COMBINE;
+			}
+			else
+			{
+				iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+			}
+		}
+	}
+
+	// Look at -frozen.
+	bool bFrozen = !!args.FindArg( "-frozen" );
+
+	// Ok, spawn all the bots.
+	while ( --count >= 0 )
+	{
+		BotPutInServer( bFrozen, iTeam );
+	}
+}
 #endif
 
 void bot_kick_f (const CCommand &args)
@@ -443,6 +501,7 @@ static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, const QAngle
 
 	Q_memset(&cmd, 0, sizeof(cmd));
 
+#ifdef MFS
 	//if (bot_flipout.GetBool())
 		//VectorCopy(viewangles, cmd.viewangles);
 
@@ -451,6 +510,7 @@ static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, const QAngle
 
 	if (bot_attack.GetBool())
 		cmd.buttons |= IN_ATTACK;
+#endif
 
 	MoveHelperServer()->SetHost( fakeclient );
 	fakeclient->PlayerRunCommand( &cmd, MoveHelperServer() );
@@ -701,6 +761,7 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		AngleVectors(pBot->GetLocalAngles(), &Forward);
 		UTIL_TraceHull( pBot->GetLocalOrigin()+Vector(0,0,5), pBot->GetLocalOrigin() + Vector(0,0,5) + (Forward * 50), pBot->GetPlayerMins(), pBot->GetPlayerMaxs(), MASK_PLAYERSOLID, pBot, COLLISION_GROUP_NONE, &tr_front );
 
+#ifdef MFS
 		// Is my team being forced to defend?
 		if (bot_defend.GetInt() == pBot->GetTeamNumber())
 		{
@@ -749,6 +810,7 @@ void Bot_Think( CHL2MP_Bot *pBot )
 
 			bot_sendcmd.SetValue("");
 		}
+#endif
 
 		// enemy acquisition
 		if( !pBot->GetEnemy() || pBot->RecheckEnemy() || !pBot->GetEnemy()->IsAlive() )
@@ -813,4 +875,3 @@ void Bot_Think( CHL2MP_Bot *pBot )
 
 	RunPlayerMove(pBot, cmd, pBot->GetLocalAngles(), buttons, gpGlobals->frametime);
 }
-#endif

@@ -40,10 +40,12 @@ LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );
 
 void CHoldout::Spawn( void )
 {
+#ifdef MFS
 if (HL2MPRules()->IsHoldout() == false)
 {
 return; //Why tf u no work
 }
+#endif
 	Precache( );
 	SetModel( "models/props/holdout.mdl" );
 

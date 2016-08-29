@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#ifdef HL2_EPISODIC
+
 class CBaseEntity;
 
 /// true if given entity pointer is a hunter.
@@ -22,4 +24,5 @@ void Hunter_StriderBusterAttached( CBaseEntity *pHunter, CBaseEntity *pAttached 
 void Hunter_StriderBusterDetached( CBaseEntity *pHunter, CBaseEntity *pAttached );
 void Hunter_StriderBusterLaunched( CBaseEntity *pBuster );
 
+#endif
 #endif

@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef HL2_EPISODIC
 #include "vehicle_jeep_episodic.h"
 #include "collisionutils.h"
 #include "npc_alyx_episodic.h"
@@ -1785,4 +1786,4 @@ bool CPropJeepEpisodic::AllowBlockedExit( CBaseCombatCharacter *pPassenger, int 
 	// sticking the player through player clips or into geometry.
 	return GetSmoothedVelocity().IsLengthLessThan( jalopy_blocked_exit_max_speed.GetFloat() );
 }
-
+#endif

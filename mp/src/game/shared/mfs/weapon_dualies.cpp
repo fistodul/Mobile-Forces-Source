@@ -53,6 +53,8 @@ public:
 	void	AddViewKick( void );
 	void	DryFire( void );
 
+	void	SecondaryAttack(void);
+
 	void	UpdatePenaltyTime( void );
 
 	Activity	GetPrimaryAttackActivity( void );
@@ -265,6 +267,22 @@ void CWeaponDualies::DryFire( void )
 	m_flNextPrimaryAttack		= gpGlobals->curtime + SequenceDuration();
 }
 
+void CWeaponDualies::SecondaryAttack(void)
+{
+	// Only the player fires this way so we can cast
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+
+	if (pPlayer == NULL)
+		return;
+
+	if (RightAmmo >= 1)
+		bFlip = false;
+	else
+		bFlip = true;
+
+	PrimaryAttack();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose:
 //-----------------------------------------------------------------------------
@@ -285,14 +303,7 @@ void CWeaponDualies::PrimaryAttack()
 	// Only the player fires this way so we can cast
 	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
 
-	if (pOwner->m_nButtons & IN_ATTACK2)
-	{
-		if (RightAmmo >= 1)
-			bFlip = false;
-		else
-			bFlip = true;
-	}
-	else if (pOwner->m_nButtons & IN_ATTACK)
+	if (pOwner->m_nButtons & IN_ATTACK)
 	{
 		if (LeftAmmo >= 1)
 			bFlip = true;

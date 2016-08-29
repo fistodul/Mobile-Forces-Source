@@ -150,6 +150,8 @@ $Project "Client (MFS)"
 		//$File	"mfs\vgui_keypad.h"
 		$File	"mfs\ui\credits.cpp"
 		$File	"mfs\ui\credits.h"
+		$File	"mfs\ui\buymenu.cpp"
+		$File	"mfs\ui\buymenu.h"
 		//$File	"hl2/c_weapon_gravitygun.cpp"
 		}
 		

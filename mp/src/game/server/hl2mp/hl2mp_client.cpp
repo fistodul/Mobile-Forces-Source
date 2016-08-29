@@ -1187,10 +1187,12 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
 #ifdef MFS
-	//extern void Bot_RunAll();
 	Bot_RunAll();
 #else
 #ifdef DEBUG
+	extern void Bot_RunAll();
+	Bot_RunAll();
+#else
 	extern void Bot_RunAll();
 	Bot_RunAll();
 #endif

@@ -52,7 +52,7 @@ CMyPanel::CMyPanel(vgui::VPANEL parent)
  
 	vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
  
-	DevMsg("Credits has been constructed\n");
+	//DevMsg("Credits has been constructed\n");
  
 	//Button done
 	m_pCloseButton = new Button(this, "Button", "Close", this, "turnoff");
