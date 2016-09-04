@@ -18,7 +18,7 @@
 //#define Rotational_Gravity_Gun // Well Basically it lets u rotate shit with the gravity gun :P
 //#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
-//#define SSE // Source shader editor
+#define SSE // Source shader editor
 //#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
 //#define hitmarkers // it enables battlefield style hitmarkers :P
 #define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them
@@ -34,6 +34,7 @@
 //#define FP_Fix // https://developer.valvesoftware.com/wiki/First_Person_Fix
 #define LUA_SDK // for screwing around
 //#define VGUI_FIX // This is mostly implemented but i put under a define stuff that caused problems(documented)
+#define GAMEUI2
 
 /*****************/
 /* Base Defines. */
@@ -41,7 +42,6 @@
 #define SecobMod__MiscFixes //Used when a fix doesn't quite fit in any of the other defined categories. 
 #define SecobMod__Enable_Fixed_Multiplayer_AI //Allows AI in your mod, also fixes numerous crashes to do with AI and related features.
 //#define SecobMod__PREVENT_ITEM_WEAPON_RESPAWNING //Prevent items and weapons from respawning after being picked up by a player. Actually we cheat and set the respawn time insanely high.
-
 
 /***************************/
 /* Singleplayer Additions. */
@@ -92,7 +92,6 @@
 #define SecobMod__HAS_FLASHLIGHT_REGARDLESS_OF_SUIT //Enables the flashlight except HL2 DM overrides disabling this and provides the flashlight anyway.
 #define SecobMod__HAS_GEIGER_COUNTER_REGARDLESS_OF_SUIT //Allows you to detect toxic areas.
 #define SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS //The glowing outline that you see used in L4D (Left4Dead).
-#define GLOWS_ENABLE //Use this to enable Valve's glow code for use with the above (both defines are required).
 
 /**********************/
 /* Map Enhancements. */
@@ -121,5 +120,12 @@
 /******************/
 #define SecobMod__BG_FIX //Stops the MOTD/Briefing Panel and the Class Menu from showing on main menu maps.
 #define SecobMod__FIX_SHOTGUN_FAST_SWITCH_BUG //Fixes a bug in the shotgun code - Community fix submitted fix by SubZero.
+
+#ifdef SSE
+#define SOURCE_2013
+#endif
+#ifdef SecobMod__HAS_L4D_STYLE_GLOW_EFFECTS
+#define GLOWS_ENABLE //Use this to enable Valve's glow code for use with the L4D code (both defines are required).
+#endif
 
 #endif // SecobMod__SHAREDDEFS_H

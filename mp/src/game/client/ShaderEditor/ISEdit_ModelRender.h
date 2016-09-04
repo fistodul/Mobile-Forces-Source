@@ -1,17 +1,17 @@
 #ifndef IV_SHADEREDITOR_MRENDER
 #define IV_SHADEREDITOR_MRENDER
 
-#ifdef SSE
-
 #ifdef _WIN32
 #pragma once
 #endif // _WIN32
+
+#ifdef SSE
 
 #ifdef SHADER_EDITOR_DLL
 #include "../public/tier1/interface.h"
 #else
 #include "interface.h"
-#include "ShaderEditor/ShaderEditorSystem.h"
+#include "shadereditor/shadereditorsystem.h"
 #endif // NOT SHADER_EDITOR_DLL
 
 

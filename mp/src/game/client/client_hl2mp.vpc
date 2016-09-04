@@ -173,18 +173,18 @@ $Project "Client (MFS)"
 		{
 			$Folder	"Header Files"
 			{
-				$File	"$SRCDIR\game\client\ShaderEditor\ISEdit_ModelRender.h"
-				$File	"$SRCDIR\game\client\ShaderEditor\IVShaderEditor.h"
-				$File	"$SRCDIR\game\client\ShaderEditor\ShaderEditorSystem.h"
-				$File	"$SRCDIR\game\client\ShaderEditor\SEdit_ModelRender.h"
-				$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.h"
+				$File	"$SRCDIR\game\client\ShaderEditor\isedit_modelrender.h"
+				$File	"$SRCDIR\game\client\ShaderEditor\ivshadereditor.h"
+				$File	"$SRCDIR\game\client\ShaderEditor\shadereditorsystem.h"
+				$File	"$SRCDIR\game\client\ShaderEditor\sedit_modelrender.h"
+				$File	"$SRCDIR\game\client\ShaderEditor\grass\cgrasscluster.h"
 			}
  
 			$Folder	"Implementation Files"
 			{
-				$File	"$SRCDIR\game\client\ShaderEditor\ShaderEditorSystem.cpp"
-				$File	"$SRCDIR\game\client\ShaderEditor\SEdit_ModelRender.cpp"
-				$File	"$SRCDIR\game\client\ShaderEditor\Grass\CGrassCluster.cpp"
+				$File	"$SRCDIR\game\client\ShaderEditor\shadereditorsystem.cpp"
+				$File	"$SRCDIR\game\client\ShaderEditor\sedit_modelrender.cpp"
+				$File	"$SRCDIR\game\client\ShaderEditor\grass\cgrasscluster.cpp"
 			}
 		}
 		

@@ -55,7 +55,7 @@
 #include "client_virtualreality.h"
 
 #ifdef Grass_Clusters
-#include "ShaderEditor/Grass/CGrassCluster.h"
+#include "shadereditor/grass/cgrasscluster.h"
 #endif
 
 #ifdef PORTAL
@@ -82,7 +82,12 @@
 #include "C_Env_Projected_Texture.h"
 
 #ifdef SSE
-#include "ShaderEditor/ShaderEditorSystem.h"
+#include "shadereditor/shadereditorsystem.h"
+#endif
+
+
+#if defined(GAMEUI2)
+#include "igameui2.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -2002,7 +2007,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		{
 			AddViewToScene( pSkyView );
 			#ifdef SSE
-			g_ShaderEditorSystem->UpdateSkymask();
+			g_ShaderEditorSystem->UpdateSkymask(); //FixMe? -_-
 			#endif
 		}
 		SafeRelease( pSkyView );
@@ -2062,7 +2067,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		DrawViewModels( view, whatToDraw & RENDERVIEW_DRAWVIEWMODEL );
 		
 		#ifdef SSE
-		g_ShaderEditorSystem->UpdateSkymask( bDrew3dSkybox );
+		g_ShaderEditorSystem->UpdateSkymask( bDrew3dSkybox ); //FixMe -_-
 		#endif
 
 		DrawUnderwaterOverlay();
@@ -2204,6 +2209,25 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		saveRenderTarget = g_pSourceVR->GetRenderTarget( (ISourceVirtualReality::VREye)(view.m_eStereoEye - 1), ISourceVirtualReality::RT_Color );
 	}
 
+#ifdef GAMEUI2
+	if (g_pGameUI2)
+	{
+		ITexture* maskTexture = materials->FindTexture("_rt_MaskGameUI", TEXTURE_GROUP_RENDER_TARGET);
+		if (maskTexture)
+		{
+			CMatRenderContextPtr renderContext(materials);
+			renderContext->PushRenderTargetAndViewport(maskTexture);
+			renderContext->ClearColor4ub(0, 0, 0, 255);
+			renderContext->ClearBuffers(true, true, true);
+			renderContext->PopRenderTargetAndViewport();
+
+			g_pGameUI2->SetFrustum(GetFrustum());
+			g_pGameUI2->SetView(view);
+			g_pGameUI2->SetMaskTexture(maskTexture);
+		}
+	}
+#endif
+	
 	// Draw the 2D graphics
 	render->Push2DView( view, 0, saveRenderTarget, GetFrustum() );
 

@@ -1,11 +1,11 @@
 #ifndef IV_SHADEREDITOR
 #define IV_SHADEREDITOR
 
-#ifdef SSE
-
 #ifdef _WIN32
 #pragma once
 #endif // _WIN32
+
+#ifdef SSE
 
 #define pFnClCallback( x ) void(* x )( float *pfl4 )
 #define pFnClCallback_Declare( x ) void x( float *pfl4 )
@@ -22,7 +22,7 @@
 #include "view_shared.h"
 #else
 #include "interface.h"
-#include "ShaderEditor/ShaderEditorSystem.h"
+#include "shadereditor/shadereditorsystem.h"
 #endif // NOT SHADER_EDITOR_DLL
 
 enum SEDIT_SKYMASK_MODE
@@ -126,7 +126,6 @@ extern IVShaderEditor *shaderEdit;
 #endif // NOT SHADER_EDITOR_DLL
 
 #endif // NOT PROCSHADER_DLL
-
 #endif
 
 #endif // NOT IV_SHADEREDITOR

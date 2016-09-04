@@ -85,7 +85,7 @@ void BasePanel::PaintBlurMask()
 
 	if (GameUI2().IsInLevel())
 	{
-		vgui::surface()->DrawSetColor(Color(255, 255, 255, 255));
+		vgui::surface()->DrawSetColor(Color(128, 128, 128, 60));
 		vgui::surface()->DrawFilledRect(0, 0, GameUI2().GetViewport().x, GameUI2().GetViewport().y);
 	}
 }

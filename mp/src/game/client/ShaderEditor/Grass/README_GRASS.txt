@@ -67,7 +67,7 @@ Find this line:
 
 Add this line below:
 
-#include "ShaderEditor/Grass/CGrassCluster.h"
+#include "shadereditor/grass/cgrasscluster.h"
 
 
 Find this line:
@@ -115,7 +115,7 @@ Find this line:
 
 Add this line below:
 
-#include "ShaderEditor/Grass/CGrassCluster.h"
+#include "shadereditor/grass/cgrasscluster.h"
 
 
 Find this line in the function void CRendering3dView::DrawOpaqueRenderables( bool bShadowDepth ):

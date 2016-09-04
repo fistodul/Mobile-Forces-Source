@@ -57,6 +57,5 @@ private:
 
 extern ShaderEditorHandler *g_ShaderEditorSystem;
 
-
 #endif
 #endif

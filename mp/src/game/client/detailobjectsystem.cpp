@@ -23,7 +23,7 @@
 #include "c_world.h"
 
 #ifdef Grass_Clusters
-#include "ShaderEditor/Grass/CGrassCluster.h"
+#include "shadereditor/grass/cgrasscluster.h"
 #endif
 
 #include "tier0/valve_minmax_off.h"

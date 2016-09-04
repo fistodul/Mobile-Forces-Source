@@ -10,8 +10,8 @@
 #include "cbase.h"
 #ifdef SSE
 #include "client_factorylist.h"
-#include "ShaderEditor/IVShaderEditor.h"
-#include "ShaderEditor/SEdit_ModelRender.h"
+#include "shadereditor/ivshadereditor.h"
+#include "ShaderEditor/sedit_modelrender.h"
 #include "ivrenderview.h"
 #include "iviewrender.h"
 #include "viewrender.h"
@@ -512,8 +512,8 @@ protected:
 		//if( !r_drawopaquerenderables.GetBool() )
 		//	return;
 
-		if( !m_pMainView->ShouldDrawEntities() )
-			return;
+		//if( !m_pMainView->ShouldDrawEntities() ) //FixMe -_-
+			//return;
 
 		render->SetBlend( 1 );
 

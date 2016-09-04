@@ -1,7 +1,9 @@
 
 #include "cbase.h"
+
 #ifdef Grass_Clusters
-#include "ShaderEditor/Grass/CGrassCluster.h"
+
+#include "shadereditor/grass/cgrasscluster.h"
 #include "view.h"
 #include "viewrender.h"
 #include "idebugoverlaypanel.h"

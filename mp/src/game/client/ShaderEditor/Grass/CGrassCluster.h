@@ -2,6 +2,7 @@
 #define GRASS_CLUSTER_H
 
 #include "cbase.h"
+
 #ifdef Grass_Clusters
 
 class CFastTimer;
@@ -128,7 +129,6 @@ private:
 
 	double m_flMorphTime;
 };
-
 
 #endif
 #endif

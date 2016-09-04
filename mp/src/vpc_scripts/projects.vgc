@@ -49,6 +49,11 @@ $Project "mathlib"
 	"mathlib\mathlib.vpc" [$WINDOWS||$X360||$POSIX]
 }
 
+$Project "gameui2"
+{
+	"game\gameui2\gameui2_base.vpc"		[($WIN32||$POSIX)]
+}
+
 $Project "motionmapper"
 {
 	"utils\motionmapper\motionmapper.vpc" [$WIN32]
