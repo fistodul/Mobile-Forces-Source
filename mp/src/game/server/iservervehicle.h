@@ -136,4 +136,18 @@ public:
 	virtual bool			PassengerShouldReceiveDamage( CTakeDamageInfo &info ) = 0;
 };
 
+#ifdef passengers
+//=============================================================================//
+//	BY ALISTAIR 'peachfuzz' LESZKIEWICZ
+//	peachfux@gmail.com
+//=============================================================================//
+class IPassengerVehicle : public IDrivableVehicle
+{
+public:
+	virtual CBaseEntity		*GetPassenger( int iRole ) = 0;
+	virtual int				GetNumPassengers( void ) = 0;
+	virtual void			PassengerEnterVehicle( CBasePlayer *pPlayer, int nRole ) = 0;
+};
+#endif
+
 #endif // IVEHICLE_H

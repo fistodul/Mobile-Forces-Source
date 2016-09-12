@@ -305,6 +305,8 @@ END_DATADESC()
 //-----------------------------------------------------------------------------
 class CGrabController : public IMotionEvent
 {
+	DECLARE_SIMPLE_DATADESC();
+
 public:
 
 	CGrabController( void );
@@ -331,6 +333,15 @@ public:
 	QAngle			m_attachedAnglesPlayerSpace;
 	Vector			m_attachedPositionObjectSpace;
 
+#ifdef ARGG
+	QAngle			m_targetRotation;
+	// adnan
+	// set up the modified pickup angles... allow the player to rotate the object in their grip
+	QAngle		m_vecRotatedCarryAngles;
+	bool			m_bHasRotatedCarryAngles;
+	// end adnan
+#endif
+
 private:
 	// Compute the max speed for an attached object
 	void ComputeMaxSpeed( CBaseEntity *pEntity, IPhysicsObject *pPhysics );
@@ -351,11 +362,22 @@ private:
 	QAngle			m_vecPreferredCarryAngles;
 	bool			m_bHasPreferredCarryAngles;
 
-
 	IPhysicsMotionController *m_controller;
 	int				m_frameCount;
 	friend class CWeaponPhysCannon;
 };
+
+BEGIN_SIMPLE_DATADESC(CGrabController)
+#ifdef ARGG
+DEFINE_FIELD(m_targetRotation, FIELD_VECTOR),
+// adnan
+// set up the fields for our added vars
+DEFINE_FIELD(m_vecRotatedCarryAngles, FIELD_VECTOR),
+DEFINE_FIELD(m_bHasRotatedCarryAngles, FIELD_BOOLEAN),
+// end adnan
+#endif
+
+END_DATADESC()
 
 const float DEFAULT_MAX_ANGULAR = 360.0f * 10.0f;
 const float REDUCED_CARRY_MASS = 1.0f;
@@ -374,6 +396,13 @@ CGrabController::CGrabController( void )
 	m_attachedEntity = NULL;
 	m_vecPreferredCarryAngles = vec3_angle;
 	m_bHasPreferredCarryAngles = false;
+#ifdef ARGG
+	// adnan
+	// initialize our added vars
+	m_vecRotatedCarryAngles = vec3_angle;
+	m_bHasRotatedCarryAngles = false;
+	// end adnan
+#endif
 }
 
 CGrabController::~CGrabController( void )
@@ -608,7 +637,13 @@ void CGrabController::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, 
 
 	m_bHasPreferredCarryAngles = false;
 #endif
-
+#ifdef ARGG
+	m_targetRotation = TransformAnglesToPlayerSpace(angles, pPlayer);
+	// adnan
+	// we need to grab the preferred/non preferred carry angles here for the rotatedcarryangles
+	m_vecRotatedCarryAngles = m_targetRotation;
+	// end adnan
+#endif
 }
 
 static void ClampPhysicsVelocity( IPhysicsObject *pPhys, float linearLimit, float angularLimit )
@@ -1093,6 +1128,8 @@ private:
 
 class CWeaponPhysCannon : public CBaseHL2MPCombatWeapon
 {
+	DECLARE_DATADESC();
+
 public:
 	DECLARE_CLASS( CWeaponPhysCannon, CBaseHL2MPCombatWeapon );
 
@@ -1134,6 +1171,13 @@ public:
 	
 #endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN
 	
+#ifdef ARGG
+	// adnan
+	// for overriding the mouse -> view angles (but still calc view angles)
+	bool OverrideViewAngles( void );
+	// end adnan
+#endif
+
 	virtual void SetViewModel( void );
 	virtual const char *GetShootSound( int iIndex ) const;
 	
@@ -1336,6 +1380,13 @@ protected:
 private:
 	CWeaponPhysCannon( const CWeaponPhysCannon & );
 
+#ifdef ARGG
+	// adnan
+	// this is how we tell if we're rotating what we're holding
+	CNetworkVar(bool, m_bIsCurrentlyRotating);
+	// end adnan
+#endif
+
 #ifndef CLIENT_DLL
 	DECLARE_ACTTABLE();
 #endif
@@ -1353,6 +1404,12 @@ BEGIN_NETWORK_TABLE( CWeaponPhysCannon, DT_WeaponPhysCannon )
 	RecvPropFloat( RECVINFO( m_attachedAnglesPlayerSpace[2] ) ),
 	RecvPropInt( RECVINFO( m_EffectState ) ),
 	RecvPropBool( RECVINFO( m_bOpen ) ),
+#ifdef ARGG
+	// adnan
+	// also receive if we're rotating what we're holding (by pressing use)
+	RecvPropBool( RECVINFO( m_bIsCurrentlyRotating ) ),
+	// end adnan
+#endif
 #else
 	SendPropBool( SENDINFO( m_bActive ) ),
 	SendPropEHandle( SENDINFO( m_hAttachedObject ) ),
@@ -1362,6 +1419,12 @@ BEGIN_NETWORK_TABLE( CWeaponPhysCannon, DT_WeaponPhysCannon )
 	SendPropAngle( SENDINFO_VECTORELEM(m_attachedAnglesPlayerSpace, 2 ), 11 ),
 	SendPropInt( SENDINFO( m_EffectState ) ),
 	SendPropBool( SENDINFO( m_bOpen ) ),
+#ifdef ARGG
+	// adnan
+	// need to seind if we're rotating what we're holding
+	SendPropBool(SENDINFO(m_bIsCurrentlyRotating)),
+	// end adnan
+#endif
 #endif
 END_NETWORK_TABLE()
 
@@ -1409,6 +1472,13 @@ IMPLEMENT_ACTTABLE(CWeaponPhysCannon);
 
 #endif
 
+BEGIN_DATADESC(CWeaponPhysCannon)
+#ifdef ARGG
+// adnan
+DEFINE_FIELD(m_bIsCurrentlyRotating, FIELD_BOOLEAN),
+// end adnan
+#endif
+END_DATADESC()
 
 enum
 {
@@ -2717,6 +2787,40 @@ bool CGrabController::UpdateObject( CBasePlayer *pPlayer, float flError )
 	if (!pEntity->VPhysicsGetObject() )
 		return false;    
 
+#ifdef ARGG
+	// adnan
+	// if we've been rotating it, set it to its proper new angles (change m_attachedAnglesPlayerSpace while modifier)
+	//Pickup_GetRotatedCarryAngles( pEntity, pPlayer, pPlayer->EntityToWorldTransform(), angles );
+	// added the ... && (mousedx | mousedy) so we dont have to calculate if no mouse movement
+	// UPDATE: m_vecRotatedCarryAngles has become a temp variable... can be cleaned up by using actual temp vars
+#ifdef CLIENT_DLL
+	if (m_bHasRotatedCarryAngles && (pPlayer->m_pCurrentCommand->mousedx || pPlayer->m_pCurrentCommand->mousedy))
+#else
+	if (m_bHasRotatedCarryAngles && (pPlayer->GetCurrentCommand()->mousedx || pPlayer->GetCurrentCommand()->mousedy))
+#endif
+	{
+		// method II: relative orientation
+		VMatrix vDeltaRotation, vCurrentRotation, vNewRotation;
+
+		MatrixFromAngles(m_targetRotation, vCurrentRotation);
+
+#ifdef CLIENT_DLL
+		m_vecRotatedCarryAngles[YAW] = pPlayer->m_pCurrentCommand->mousedx*0.05;
+		m_vecRotatedCarryAngles[PITCH] = pPlayer->m_pCurrentCommand->mousedy*-0.05;
+#else
+		m_vecRotatedCarryAngles[YAW] = pPlayer->GetCurrentCommand()->mousedx*0.05;
+		m_vecRotatedCarryAngles[PITCH] = pPlayer->GetCurrentCommand()->mousedy*-0.05;
+#endif
+		m_vecRotatedCarryAngles[ROLL] = 0;
+		MatrixFromAngles(m_vecRotatedCarryAngles, vDeltaRotation);
+
+		MatrixMultiply(vDeltaRotation, vCurrentRotation, vNewRotation);
+		MatrixToAngles(vNewRotation, m_targetRotation);
+	}
+	// end adnan
+	//SetTargetPosition(m_targetPosition, m_targetRotation);
+#endif
+
 	//Adrian: Oops, our object became motion disabled, let go!
 	IPhysicsObject *pPhys = pEntity->VPhysicsGetObject();
 	if ( pPhys && pPhys->IsMoveable() == false )
@@ -2845,6 +2949,28 @@ bool CGrabController::UpdateObject( CBasePlayer *pPlayer, float flError )
 
 	return true;
 }
+
+#ifdef ARGG
+// adnan
+// this is where we say that we dont want ot apply the current calculated view angles
+//-----------------------------------------------------------------------------
+// Purpose: Allow weapons to override mouse input to viewangles (for orbiting)
+//-----------------------------------------------------------------------------
+bool CWeaponPhysCannon::OverrideViewAngles(void)
+{
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+
+	if (!pPlayer)
+		return false;
+
+	if (m_bIsCurrentlyRotating) {
+		return true;
+	}
+
+	return false;
+}
+// end adnan
+#endif
 
 void CWeaponPhysCannon::UpdateObject( void )
 {
@@ -3238,6 +3364,41 @@ void CWeaponPhysCannon::ItemPostFrame()
 		return;
 	}
 
+#ifdef ARGG
+	// adnan
+	// this is where we check if we're orbiting the object
+
+	// if we're holding something and pressing use,
+	//  then set us in the orbiting state
+	//  - this will indicate to OverrideMouseInput that we should zero the input and update our delta angles
+	//  UPDATE: not anymore.  now this just sets our state variables.
+	CBaseEntity *pObject = m_grabController.GetAttached();
+	if (pObject) {
+		if ((pOwner->m_nButtons & IN_ATTACK2) && (pOwner->m_nButtons & IN_USE)) {
+			m_grabController.m_bHasRotatedCarryAngles = true;
+
+			// did we JUST hit use?
+			//  if so, grab the current angles to begin with as the rotated angles
+			if (!(pOwner->m_afButtonLast & IN_USE)) {
+				m_grabController.m_vecRotatedCarryAngles = pObject->GetAbsAngles();
+			}
+
+			m_bIsCurrentlyRotating = true;
+		}
+		else {
+			m_grabController.m_bHasRotatedCarryAngles = false;
+
+			m_bIsCurrentlyRotating = false;
+		}
+	}
+	else {
+		m_bIsCurrentlyRotating = false;
+
+		m_grabController.m_bHasRotatedCarryAngles = false;
+	}
+	// end adnan
+#endif
+
 	//Check for object in pickup range
 	if ( m_bActive == false )
 	{
@@ -3282,6 +3443,11 @@ void CWeaponPhysCannon::ItemPostFrame()
 
 	if ( pOwner->m_nButtons & IN_ATTACK )
 	{
+#if defined( ARGG )
+		if ((pOwner->m_nButtons & IN_USE)) {
+			pOwner->m_vecUseAngles = pOwner->pl.v_angle;
+		}
+#endif
 		PrimaryAttack();
 	}
 	else 

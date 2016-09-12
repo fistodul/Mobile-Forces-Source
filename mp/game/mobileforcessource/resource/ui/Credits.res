@@ -14,7 +14,7 @@ echo Thanks to:
 echo Seco-7 Multiplayer mod
 echo Valve
 echo Junaid Malik (Various help)
-echo The Obsidian Conflict Team(For the epic grapple hook which is sort of implemented xD)
+echo The Obsidian Conflict Team(For the epic grapple hook xD)
 echo Maestro Fenix and SysOp for the Coded keypad
 echo The Internet xD
 wait 5

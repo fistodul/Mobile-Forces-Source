@@ -387,6 +387,9 @@ CHud::CHud()
 	SetDefLessFunc( m_RenderGroups );
 
 	m_flScreenShotTime = -1;
+#ifdef ARGG
+	m_bSkipClear = false;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1175,8 +1178,16 @@ bool CHud::DoesRenderGroupExist( int iGroupIndex )
 //-----------------------------------------------------------------------------
 void CHud::UpdateHud( bool bActive )
 {
+#ifndef ARGG
 	// clear the weapon bits.
-	gHUD.m_iKeyBits &= (~(IN_WEAPON1|IN_WEAPON2));
+	gHUD.m_iKeyBits &= (~(IN_WEAPON1 | IN_WEAPON2));
+#else
+	if (!gHUD.m_bSkipClear)
+	{
+		// clear the weapon bits.
+		gHUD.m_iKeyBits &= (~(IN_WEAPON1 | IN_WEAPON2));
+	}
+#endif
 
 	g_pClientMode->Update();
 

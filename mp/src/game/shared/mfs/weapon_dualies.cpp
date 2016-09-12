@@ -315,12 +315,12 @@ void CWeaponDualies::PrimaryAttack()
 	if ( !bFlip)
 	{
 		BaseClass::PrimaryAttack();
-		RightAmmo--;
+		//RightAmmo--;
 	}
 	else
 	{
 		LeftGunAttack();
-		LeftAmmo--;
+		//LeftAmmo--;
 	}
 }
 

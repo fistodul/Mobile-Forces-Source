@@ -66,6 +66,7 @@ server_blacklist.txt
 *.prt
 *.lin
 mp/game/mobileforcessource/mapsrc/*.bsp
+*_old.bsp
 
 # shader files
 *.tmp

@@ -30,7 +30,6 @@ int ScreenTransform( const Vector& point, Vector& screen );
 extern ConVar default_fov;
 extern ConVar joy_response_move_vehicle;
 
-
 IMPLEMENT_CLIENTCLASS_DT(C_PropVehicleDriveable, DT_PropVehicleDriveable, CPropVehicleDriveable)
 	RecvPropEHandle( RECVINFO(m_hPlayer) ),
 	RecvPropInt( RECVINFO( m_nSpeed ) ),
@@ -63,6 +62,50 @@ ConVar r_VehicleViewClamp( "r_VehicleViewClamp", "1", FCVAR_CHEAT );
 									// spline in between
 
 
+									
+/*#ifdef pilotable
+// remaps an angular variable to a 3 band function:
+// 0 <= t < start :		f(t) = 0
+// start <= t <= end :	f(t) = end * spline(( t-start) / (end-start) )  // s curve between clamped and linear
+// end < t :			f(t) = t
+float RemapAngleRange( float startInterval, float endInterval, float value, RemapAngleRange_CurvePart_t *peCurvePart )
+{
+	// Fixup the roll
+	value = AngleNormalize( value );
+	float absAngle = fabs(value);
+	// beneath cutoff?
+	if ( absAngle < startInterval )
+	{
+		if ( peCurvePart )
+		{
+			*peCurvePart = RemapAngleRange_CurvePart_Zero;
+		}
+		value = 0;
+	}
+	// in spline range?
+	else if ( absAngle <= endInterval )
+	{
+		float newAngle = SimpleSpline( (absAngle - startInterval) / (endInterval-startInterval) ) * endInterval;
+		// grab the sign from the initial value
+		if ( value < 0 )
+		{
+			newAngle *= -1;
+		}
+		if ( peCurvePart )
+		{
+			*peCurvePart = RemapAngleRange_CurvePart_Spline;
+		}
+		value = newAngle;
+	}
+	// else leave it alone, in linear range
+	else if ( peCurvePart )
+	{
+		*peCurvePart = RemapAngleRange_CurvePart_Linear;
+	}
+	return value;
+}
+#endif*/
+
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
@@ -86,6 +129,9 @@ C_PropVehicleDriveable::C_PropVehicleDriveable() :
 	m_ViewSmoothingData.flPitchCurveLinear = PITCH_CURVE_LINEAR;
 	m_ViewSmoothingData.flRollCurveZero = ROLL_CURVE_ZERO;
 	m_ViewSmoothingData.flRollCurveLinear = ROLL_CURVE_LINEAR;
+	#ifdef pilotable
+	m_ViewSmoothingData.bBlendAnglesAPC = true;
+	#endif
 
 	m_ViewSmoothingData.flFOV = m_flFOV = default_fov.GetFloat();
 
@@ -418,6 +464,105 @@ void C_PropVehicleDriveable::OnEnteredVehicle( C_BaseCombatCharacter *pPassenger
 	HapticsEnteredVehicle(this,pPassenger);
 #endif
 }
+
+/*#ifdef pilotable
+//=============================================================================================
+// VEHICLE VIEW SMOOTHING. See iclientvehicle.h for details.
+//=============================================================================================
+//-----------------------------------------------------------------------------
+// Purpose: For a given degree of freedom, blends between the raw and clamped
+//			view depending on this vehicle's preferences. When vehicles wreck
+//			catastrophically, it's often better to lock the view for a little
+//			while until things settle down than to keep trying to clamp/flatten
+//			the view artificially because we can never really catch up with
+//			the chaotic flipping.
+//-----------------------------------------------------------------------------
+float ApplyViewLocking( float flAngleRaw, float flAngleClamped, ViewLockData_t &lockData, RemapAngleRange_CurvePart_t eCurvePart )
+{
+	// If we're set up to never lock this degree of freedom, return the clamped value.
+	if ( lockData.flLockInterval == 0 )
+		return flAngleClamped;
+	float flAngleOut = flAngleClamped;
+	// Lock the view if we're in the linear part of the curve, and keep it locked
+	// until some duration after we return to the flat (zero) part of the curve.
+	if ( ( eCurvePart == RemapAngleRange_CurvePart_Linear ) ||
+		 ( lockData.bLocked && ( eCurvePart == RemapAngleRange_CurvePart_Spline ) ) )
+	{
+		//Msg( "LOCKED\n" );
+		lockData.bLocked = true;
+		lockData.flUnlockTime = gpGlobals->curtime + lockData.flLockInterval;
+		flAngleOut = flAngleRaw;
+	}
+	else
+	{
+		if ( ( lockData.bLocked ) && ( gpGlobals->curtime > lockData.flUnlockTime ) )
+		{
+			lockData.bLocked = false;
+			if ( lockData.flUnlockBlendInterval > 0 )
+			{
+				lockData.flUnlockTime = gpGlobals->curtime;
+			}
+			else
+			{
+				lockData.flUnlockTime = 0;
+			}
+		}
+		if ( !lockData.bLocked )
+		{
+			if ( lockData.flUnlockTime != 0 )
+			{
+				// Blend out from the locked raw view (no remapping) to a remapped view.
+				float flBlend = RemapValClamped( gpGlobals->curtime - lockData.flUnlockTime, 0, lockData.flUnlockBlendInterval, 0, 1 );
+				//Msg( "BLEND %f\n", flBlend );
+				flAngleOut = Lerp( flBlend, flAngleRaw, flAngleClamped );
+				if ( flBlend >= 1.0f )
+				{
+					lockData.flUnlockTime = 0;
+				}
+			}
+			else
+			{
+				// Not blending out from a locked view to a remapped view.
+				//Msg( "CLAMPED\n" );
+				flAngleOut = flAngleClamped;
+			}
+		}
+		else
+		{
+			//Msg( "STILL LOCKED\n" );
+			flAngleOut = flAngleRaw;
+		}
+	}
+	return flAngleOut;
+}
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : pData - 
+//			vehicleEyeAngles - 
+//-----------------------------------------------------------------------------
+void RemapViewAngles( ViewSmoothingData_t *pData, QAngle &vehicleEyeAngles )
+{
+	QAngle vecEyeAnglesRemapped;
+	
+	// Clamp pitch.
+	RemapAngleRange_CurvePart_t ePitchCurvePart;
+	vecEyeAnglesRemapped.x = RemapAngleRange( pData->flPitchCurveZero, pData->flPitchCurveLinear, vehicleEyeAngles.x, &ePitchCurvePart );
+	vehicleEyeAngles.z = vecEyeAnglesRemapped.z = AngleNormalize( vehicleEyeAngles.z );
+	// Blend out the roll dampening as our pitch approaches 90 degrees, to avoid gimbal lock problems.
+	float flBlendRoll = 1.0;
+	if ( fabs( vehicleEyeAngles.x ) > 60 )
+	{
+		flBlendRoll = RemapValClamped( fabs( vecEyeAnglesRemapped.x ), 60, 80, 1, 0);
+	}
+	RemapAngleRange_CurvePart_t eRollCurvePart;
+	float flRollDamped = RemapAngleRange( pData->flRollCurveZero, pData->flRollCurveLinear, vecEyeAnglesRemapped.z, &eRollCurvePart );
+	vecEyeAnglesRemapped.z = Lerp( flBlendRoll, vecEyeAnglesRemapped.z, flRollDamped );
+	//Msg("PITCH ");
+	vehicleEyeAngles.x = ApplyViewLocking( vehicleEyeAngles.x, vecEyeAnglesRemapped.x, pData->pitchLockData, ePitchCurvePart );
+	//Msg("ROLL ");
+	vehicleEyeAngles.z = ApplyViewLocking( vehicleEyeAngles.z, vecEyeAnglesRemapped.z, pData->rollLockData, eRollCurvePart );
+}
+#endif*/
 
 // NVNT - added function
 void C_PropVehicleDriveable::OnExitedVehicle( C_BaseCombatCharacter *pPassenger )

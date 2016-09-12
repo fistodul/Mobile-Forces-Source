@@ -66,6 +66,10 @@ struct ViewSmoothingData_t
 	Vector	vecOriginSaved;
 	QAngle	vecAngleDiffSaved;	// The original angular error between the entry/exit anim and player's view when we started playing the anim.
 	QAngle	vecAngleDiffMin;	// Tracks the minimum angular error achieved so we can converge on the anim's angles.
+#ifdef pilotable
+	bool bBlendAnglesAPC;		// TheQuartz, only for non entry anims, to blend the view angles correctly
+	float flAPCTimeToStart;
+#endif
 };
 
 // TEMP: Shared vehicle view smoothing
@@ -75,5 +79,11 @@ void SharedVehicleViewSmoothing(CBasePlayer *pPlayer,
 								const Vector &vecEyeExitEndpoint, 
 								ViewSmoothingData_t *pData, 
 								float *pFOV );
+
+#ifdef pilotable
+void VehicleViewSmoothingSTR(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);
+void VehicleViewSmoothingAPC(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);
+void VehicleViewSmoothingHLC(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);
+#endif
 
 #endif // VEHICLE_VIEWBLEND_SHARED_H

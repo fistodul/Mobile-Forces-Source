@@ -261,6 +261,7 @@ void CHL2MP_Player::GiveAllItems( void )
 	GiveNamedItem("weapon_dualies");
 	GiveNamedItem( "weapon_grapple" );
 	GiveNamedItem("weapon_sniper");
+	GiveNamedItem("weapon_physgun");
 	
 	GiveNamedItem( "weapon_crowbar" );
 	GiveNamedItem( "weapon_stunstick" );
@@ -348,7 +349,6 @@ void CHL2MP_Player::GiveGoodItems( void )
 	CBasePlayer::GiveAmmo(	1,	"healthkit" );
 	CBasePlayer::GiveAmmo(	100,	"Extinguisher"	);
 	GiveNamedItem( "weapon_healthkit" );
-	GiveNamedItem( "weapon_portalgun" );
 	GiveNamedItem( "weapon_bugbait" );
 	GiveNamedItem( "weapon_physcannon" );
 	GiveNamedItem( "weapon_troll" );

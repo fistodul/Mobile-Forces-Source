@@ -15,6 +15,10 @@
 #include "r_efx.h"
 #include "dlight.h"
 
+#if defined( ARGG )
+#include "iclientmode.h"
+#endif
+
 #ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 	#include "iviewrender.h"
 #endif //SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
