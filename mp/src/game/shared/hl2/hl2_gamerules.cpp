@@ -1336,8 +1336,11 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 	{
 	}
 
+#endif
+#ifdef LUA_SDK
 	void CHalfLife2::Think( void )
 	{
+#ifndef CLIENT_DLL
 		BaseClass::Think();
 #ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 		if( physcannon_mega_enabled.GetBool() == true )
@@ -1350,7 +1353,27 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
 		}
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
+#endif
 	}
+#else
+#ifndef CLIENT_DLL
+	void CHalfLife2::Think( void )
+	{
+		BaseClass::Think();
+
+		if( physcannon_mega_enabled.GetBool() == true )
+		{
+			m_bMegaPhysgun = true;
+		}
+		else
+		{
+			// FIXME: Is there a better place for this?
+			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
+		}
+	}
+#endif
+#endif
+#ifndef CLIENT_DLL
 
 	//-----------------------------------------------------------------------------
 	// Purpose: Returns how much damage the given ammo type should do to the victim

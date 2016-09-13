@@ -51,7 +51,7 @@ $Configuration
 	
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\shared;$SRCDIR\utils\common;$SRCDIR\game\shared\econ;$SRCDIR\game\server\NextBot"
+		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\shared;$SRCDIR\utils\common;$SRCDIR\game\shared\econ;$SRCDIR\game\server\NextBot;..\..\lua\lua-5.1.5\src;..\..\lua\lua-5.1.5\etc"
 		$PreprocessorDefinitions		"$BASE;GAME_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;sprintf=use_Q_snprintf_instead_of_sprintf;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead"
 		$PreprocessorDefinitions		"$BASE;SWDS" [$POSIX]
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WINDOWS||$X360]
@@ -61,7 +61,8 @@ $Configuration
 
 	$Linker
 	{
-		$AdditionalDependencies			"$BASE winmm.lib" [$WIN32]
+		$AdditionalLibraryDirectories	"..\..\lua\lua-5.1.5\src"
+		$AdditionalDependencies			"$BASE winmm.lib lua51.lib" [$WIN32]
 		$SystemLibraries                                                        "iconv" [$OSXALL]
 	}
 }
@@ -665,6 +666,52 @@ $Project
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"
 		$File	"$SRCDIR\public\haptics\haptic_utils.cpp"	[$WIN32]
 
+		$Folder	"Lua"
+		{
+			$File	"lbaseanimating.cpp"
+			$File	"lbaseanimating.h"
+			$File	"lbaseentity.cpp"
+			$File	"lbaseentity.h"
+			$File	"lentitylist.cpp"
+			$File	"hl2\lhl2_player.cpp"
+			$File	"lplayer.cpp"
+			$File	"lrecipientfilter.cpp"
+			$File	"lrecipientfilter.h"
+			$File	"lutil.cpp"
+			$File	"lutil.h"
+			$File	"basescriptedtrigger.cpp"
+			$File	"basescriptedtrigger.h"
+			$File	"$SRCDIR\game\shared\basescripted.cpp"
+			$File	"$SRCDIR\game\shared\basescripted.h"
+			$File	"$SRCDIR\game\shared\lbasecombatweapon_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbasecombatweapon_shared.h"
+			$File	"$SRCDIR\game\shared\lbaseentity_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbaseentity_shared.h"
+			$File	"$SRCDIR\game\shared\lbaseplayer_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbaseplayer_shared.h"
+			$File	"$SRCDIR\game\shared\leffect_dispatch_data.cpp"
+			$File	"$SRCDIR\game\shared\leffect_dispatch_data.h"
+			$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.cpp"
+			$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.h"
+			$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.cpp"
+			$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.h"
+			$File	"$SRCDIR\game\shared\limovehelper.cpp"
+			$File	"$SRCDIR\game\shared\limovehelper.h"
+			$File	"$SRCDIR\game\shared\lin_buttons.cpp"
+			$File	"$SRCDIR\game\shared\lipredictionsystem.cpp"
+			$File	"$SRCDIR\game\shared\lshareddefs.cpp"
+			$File	"$SRCDIR\game\shared\lshareddefs.h"
+			$File	"$SRCDIR\game\shared\lsrcinit.cpp"
+			$File	"$SRCDIR\game\shared\ltakedamageinfo.cpp"
+			$File	"$SRCDIR\game\shared\ltakedamageinfo.h"
+			$File	"$SRCDIR\game\shared\luacachefile.cpp"
+			$File	"$SRCDIR\game\shared\luacachefile.h"
+			$File	"$SRCDIR\game\shared\luamanager.cpp"
+			$File	"$SRCDIR\game\shared\luamanager.h"
+			$File	"$SRCDIR\game\shared\luasrclib.h"
+			$File	"$SRCDIR\game\shared\lutil_shared.cpp"
+		}
+		
 		// Not using precompiled header cbase.h
 
 		$File	"$SRCDIR\public\bone_setup.cpp"					\

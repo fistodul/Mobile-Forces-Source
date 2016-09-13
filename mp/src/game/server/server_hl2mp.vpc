@@ -300,8 +300,6 @@ $Project "Server (MFS)"
 		$File	"mfs\vehicle_passenger.h"
 		$File	"mfs\vehicle_passengerserver.cpp"
 		$File	"mfs\vehicle_passengerserver.h"
-		//$File	"$SRCDIR\game\shared\mfs\luamanager.cpp"
-		//$File	"$SRCDIR\game\shared\mfs\luamanager.h"
 		}
 		
 		$Folder	"seco"

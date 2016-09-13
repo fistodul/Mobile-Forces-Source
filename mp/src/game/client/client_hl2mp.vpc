@@ -159,8 +159,6 @@ $Project "Client (MFS)"
 		$File	"mfs\c_vehicle_helicopter.h"
 		$File	"mfs\c_vehicle_passenger.cpp"
 		$File	"mfs\c_vehicle_passenger.h"
-		//$File	"$SRCDIR\game\shared\mfs\luamanager.cpp"
-		//$File	"$SRCDIR\game\shared\mfs\luamanager.h"
 		}
 		
 		$Folder	"seco"

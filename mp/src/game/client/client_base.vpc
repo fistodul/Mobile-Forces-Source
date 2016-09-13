@@ -51,7 +51,7 @@ $Configuration
 
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;$SRCDIR\game\gameui2"
+		$AdditionalIncludeDirectories	".\;$BASE;$SRCDIR\vgui2\include;$SRCDIR\vgui2\controls;$SRCDIR\game\shared;.\game_controls;$SRCDIR\thirdparty\sixensesdk\include;$SRCDIR\game\gameui2;..\..\lua\lua-5.1.5\src;..\..\lua\lua-5.1.5\etc"
 		$PreprocessorDefinitions		"$BASE;NO_STRING_T;CLIENT_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead" 
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen" [$WIN32]
 		$PreprocessorDefinitions		"$BASE;USE_WEBM_FOR_REPLAY;" [$LINUXALL]
@@ -63,11 +63,12 @@ $Configuration
 
 	$Linker
 	{
+		$AdditionalLibraryDirectories	"..\..\lua\lua-5.1.5\src"
 		$SystemLibraries				"iconv" [$OSXALL]
 		$SystemFrameworks				"Carbon" [$OSXALL]
 		$SystemLibraries				"rt" [$LINUXALL]
 		$IgnoreImportLibrary			"TRUE"
-		$AdditionalDependencies			"$BASE winmm.lib"	[$WIN32]
+		$AdditionalDependencies			"$BASE winmm.lib lua51.lib"	[$WIN32]
 		$AdditionalDependencies			"$BASE wsock32.lib Ws2_32.lib" [$BUILD_REPLAY]
 	}
 }
@@ -504,6 +505,68 @@ $Project
 		$File	"$SRCDIR\public\haptics\haptic_msgs.cpp"	[!$X360]
 		$File	"$SRCDIR\public\haptics\haptic_utils.cpp"	[$WIN32&&!$X360]
 
+		$Folder	"Lua"
+		{
+			$File	"lc_baseanimating.cpp"
+			$File	"lc_baseanimating.h"
+			$File	"lc_baseentity.cpp"
+			$File	"lc_baseplayer.cpp"
+			$File	"lc_recipientfilter.cpp"
+			$File	"lc_recipientfilter.h"
+			$File	"lcdll_util.cpp"
+			$File	"liclientshadowmgr.cpp"
+			$File	"lprediction.cpp"
+			$File	"$SRCDIR\game\shared\basescripted.cpp"
+			$File	"$SRCDIR\game\shared\basescripted.h"
+			$File	"$SRCDIR\game\shared\lbasecombatweapon_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbasecombatweapon_shared.h"
+			$File	"$SRCDIR\game\shared\lbaseentity_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbaseentity_shared.h"
+			$File	"$SRCDIR\game\shared\lbaseplayer_shared.cpp"
+			$File	"$SRCDIR\game\shared\lbaseplayer_shared.h"
+			$File	"$SRCDIR\game\shared\leffect_dispatch_data.cpp"
+			$File	"$SRCDIR\game\shared\leffect_dispatch_data.h"
+			$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.cpp"
+			$File	"$SRCDIR\game\shared\hl2mp\lhl2mp_player_shared.h"
+			$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.cpp"
+			$File	"$SRCDIR\game\shared\hl2mp\weapon_hl2mpbase_scriptedweapon.h"
+			$File	"$SRCDIR\game\shared\limovehelper.cpp"
+			$File	"$SRCDIR\game\shared\limovehelper.h"
+			$File	"$SRCDIR\game\shared\lin_buttons.cpp"
+			$File	"$SRCDIR\game\shared\lipredictionsystem.cpp"
+			$File	"$SRCDIR\game\shared\lshareddefs.cpp"
+			$File	"$SRCDIR\game\shared\lshareddefs.h"
+			$File	"$SRCDIR\game\shared\lsrcinit.cpp"
+			$File	"$SRCDIR\game\shared\ltakedamageinfo.cpp"
+			$File	"$SRCDIR\game\shared\ltakedamageinfo.h"
+			$File	"$SRCDIR\game\shared\luacachefile.cpp"
+			$File	"$SRCDIR\game\shared\luacachefile.h"
+			$File	"$SRCDIR\game\shared\luamanager.cpp"
+			$File	"$SRCDIR\game\shared\luamanager.h"
+			$File	"$SRCDIR\game\shared\luasrclib.h"
+			$File	"$SRCDIR\game\shared\lutil_shared.cpp"
+			
+			$Folder	"Scripted Controls"
+			{
+				$File	"scripted_controls\lButton.cpp"
+				$File	"scripted_controls\lButton.h"
+				$File	"scripted_controls\lCheckButton.cpp"
+				$File	"scripted_controls\lCheckButton.h"
+				$File	"scripted_controls\lFrame.cpp"
+				$File	"scripted_controls\lFrame.h"
+				$File	"scripted_controls\lPanel.cpp"
+				$File	"scripted_controls\lPanel.h"
+				$File	"scripted_controls\lPropertyDialog.cpp"
+				$File	"scripted_controls\lPropertyDialog.h"
+				$File	"scripted_controls\lPropertyPage.cpp"
+				$File	"scripted_controls\lPropertyPage.h"
+				$File	"scripted_controls\scriptedclientluapanel.cpp"
+				$File	"scripted_controls\scriptedclientluapanel.h"
+				$File	"scripted_controls\scriptedhudviewport.cpp"
+				$File	"scripted_controls\scriptedhudviewport.h"
+			}
+		}
+		
 		$Folder	"Sixense"
 		{
 			$File	"sixense\in_sixense.cpp"
