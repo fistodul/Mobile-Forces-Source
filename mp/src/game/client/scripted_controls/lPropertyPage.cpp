@@ -6,6 +6,7 @@
 //=============================================================================//
 
 #include <cbase.h>
+#ifdef LUA_SDK
 #include "vgui/KeyCode.h"
 #include <vgui_int.h>
 #include "luamanager.h"
@@ -399,4 +400,4 @@ LUALIB_API int luaopen_vgui_PropertyPage(lua_State *L) {
   lua_pop(L, 2);
   return 1;
 }
-
+#endif

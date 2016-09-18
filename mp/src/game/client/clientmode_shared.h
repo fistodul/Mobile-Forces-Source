@@ -16,8 +16,8 @@
 #include "GameEventListener.h"
 #include <baseviewport.h>
 #ifdef LUA_SDK
-#include <scriptedhudviewport.h>
-#include <scriptedclientluapanel.h>
+#include "scripted_controls\scriptedhudviewport.h"
+#include "scripted_controls\scriptedclientluapanel.h"
 #endif
 
 class CBaseHudChat;

@@ -569,11 +569,21 @@ private:
 	float							m_flOldEncodedController[MAXSTUDIOBONECTRLS];
 
 	// Clientside animation
+#ifdef LUA_SDK
+public:
 	bool							m_bClientSideAnimation;
 	bool							m_bLastClientSideFrameReset;
+	int								m_nResetEventsParity;
+private:
+#else
+	bool							m_bClientSideAnimation;
+	bool							m_bLastClientSideFrameReset;
+#endif
 
 	int								m_nNewSequenceParity;
+#ifndef LUA_SDK
 	int								m_nResetEventsParity;
+#endif
 
 	int								m_nPrevNewSequenceParity;
 	int								m_nPrevResetEventsParity;

@@ -10,9 +10,10 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-#define linetchannelinfo_cpp
 
 #include "cbase.h"
+#define linetchannelinfo_cpp
+
 #include "inetchannelinfo.h"
 #include "lua.hpp"
 #include "luasrclib.h"

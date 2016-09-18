@@ -252,6 +252,10 @@ void CBaseCombatWeapon::Precache( void )
 
 	// Add this weapon to the weapon registry, and get our index into it
 	// Get weapon data from script file
+#if defined( LUA_SDK )
+	if ( !IsScripted() )
+	{
+#endif
 	if ( ReadWeaponDataFromFileForSlot( filesystem, GetClassname(), &m_hWeaponFileInfo, GetEncryptionKey() ) )
 	{
 		// Get the ammo indexes for the ammo's specified in the data file
@@ -312,6 +316,9 @@ void CBaseCombatWeapon::Precache( void )
 		Warning( "Error reading weapon data file for: %s\n", GetClassname() );
 	//	Remove( );	//don't remove, this gets released soon!
 	}
+#if defined( LUA_SDK )
+	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -2496,7 +2503,6 @@ void CBaseCombatWeapon::PoseParameterOverride( bool bReset )
 		}
 	}
 }
-
 
 //-----------------------------------------------------------------------------
 // Purpose:

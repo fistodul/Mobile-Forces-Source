@@ -49,6 +49,9 @@
 #include "steam/steam_api.h"
 #include "sourcevr/isourcevirtualreality.h"
 #include "client_virtualreality.h"
+#ifdef LUA_SDK
+#include "luamanager.h"
+#endif
 
 #if defined USES_ECON_ITEMS
 #include "econ_wearable.h"

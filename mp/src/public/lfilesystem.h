@@ -12,6 +12,8 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
+
 /* type for FileHandle_t functions */
 typedef FileHandle_t lua_FileHandle_t;
 
@@ -33,5 +35,5 @@ LUA_API void  (lua_pushfilehandle) (lua_State *L, lua_FileHandle_t hFile);
 
 LUALIB_API lua_FileHandle_t &(luaL_checkfilehandle) (lua_State *L, int narg);
 
-
+#endif
 #endif // LFILESYSTEM_H

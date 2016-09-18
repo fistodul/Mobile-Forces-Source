@@ -79,10 +79,10 @@ static const char *s_pGibModelName[APC_MAX_GIBS] =
 };
 
 
-LINK_ENTITY_TO_CLASS( prop_vehicle_apc, CPropAPC );
+LINK_ENTITY_TO_CLASS( prop_vehicle_apc, CPropAPC2 );
 
 
-BEGIN_DATADESC( CPropAPC )
+BEGIN_DATADESC( CPropAPC2 )
 
 	DEFINE_FIELD( m_flDangerSoundTime,	FIELD_TIME ),
 	DEFINE_FIELD( m_flHandbrakeTime,	FIELD_TIME ),
@@ -110,7 +110,7 @@ BEGIN_DATADESC( CPropAPC )
 	DEFINE_OUTPUT( m_OnFiredMissile, "OnFiredMissile" ),
 
 END_DATADESC()
-IMPLEMENT_SERVERCLASS_ST( CPropAPC, DT_PropAPC )
+IMPLEMENT_SERVERCLASS_ST( CPropAPC2, DT_PropAPC2 )
 //	//SendPropBool( SENDINFO( m_bHeadlightIsOn ) ),
 SendPropInt		(SENDINFO(m_iHealth), 10 ),
 SendPropInt		(SENDINFO(m_iAmmoCount), 10 ),
@@ -120,11 +120,11 @@ END_SEND_TABLE();
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-CPropAPC::CPropAPC() 
+CPropAPC2::CPropAPC2() 
 {
 	m_bHasGun = true;
 }
-void CPropAPC::Precache( void )
+void CPropAPC2::Precache( void )
 {
 	BaseClass::Precache();
 
@@ -148,7 +148,7 @@ void CPropAPC::Precache( void )
 //------------------------------------------------
 // Spawn
 //------------------------------------------------
-void CPropAPC::Spawn( void )
+void CPropAPC2::Spawn( void )
 {
 	SetVehicleType( VEHICLE_TYPE_CAR_WHEELS );
 	BaseClass::Spawn();
@@ -181,7 +181,7 @@ void CPropAPC::Spawn( void )
 //-----------------------------------------------------------------------------
 // Purpose: Create a laser
 //-----------------------------------------------------------------------------
-void CPropAPC::CreateAPCLaserDot( void )
+void CPropAPC2::CreateAPCLaserDot( void )
 {
 	// Create a laser if we don't have one
 	if ( m_hLaserDot == NULL )
@@ -193,7 +193,7 @@ void CPropAPC::CreateAPCLaserDot( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::Activate()
+void CPropAPC2::Activate()
 {
 	BaseClass::Activate();
 
@@ -216,7 +216,7 @@ void CPropAPC::Activate()
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::UpdateOnRemove( void )
+void CPropAPC2::UpdateOnRemove( void )
 {
 	if ( m_hLaserDot )
 	{
@@ -230,7 +230,7 @@ void CPropAPC::UpdateOnRemove( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::CreateServerVehicle( void )
+void CPropAPC2::CreateServerVehicle( void )
 {
 	// Create our armed server vehicle
 	m_pServerVehicle = new CAPCFourWheelServerVehicle();
@@ -242,7 +242,7 @@ void CPropAPC::CreateServerVehicle( void )
 // Purpose: 
 // Input  : *pMoveData - 
 //-----------------------------------------------------------------------------
-Class_T	CPropAPC::ClassifyPassenger(CBaseCombatCharacter *pPassenger, Class_T defaultClassification)
+Class_T	CPropAPC2::ClassifyPassenger(CBaseCombatCharacter *pPassenger, Class_T defaultClassification)
 { 
 	return CLASS_PLAYER;	
 }
@@ -251,7 +251,7 @@ Class_T	CPropAPC::ClassifyPassenger(CBaseCombatCharacter *pPassenger, Class_T de
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-float CPropAPC::DamageModifier ( CTakeDamageInfo &info ) 
+float CPropAPC2::DamageModifier ( CTakeDamageInfo &info ) 
 { 
 	CTakeDamageInfo DmgInfo = info;
 	// bullets, slashing and headbutts don't hurt us in the apc, neither do rockets
@@ -270,7 +270,7 @@ float CPropAPC::DamageModifier ( CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // position of eyes
 //-----------------------------------------------------------------------------
-Vector CPropAPC::EyePosition( )
+Vector CPropAPC2::EyePosition( )
 {
 	Vector vecEyePosition;
 	CollisionProp()->NormalizedToWorldSpace( Vector( 0.5, 0.5, 1.0 ), &vecEyePosition );
@@ -281,7 +281,7 @@ Vector CPropAPC::EyePosition( )
 //-----------------------------------------------------------------------------
 // Add a smoke trail since we've taken more damage
 //-----------------------------------------------------------------------------
-void CPropAPC::AddSmokeTrail( const Vector &vecPos )
+void CPropAPC2::AddSmokeTrail( const Vector &vecPos )
 {
 	// Start this trail out with a bang!
 	ExplosionCreate( vecPos, vec3_angle, this, 1000, 500.0f, SF_ENVEXPLOSION_NODAMAGE | 
@@ -340,7 +340,7 @@ void CPropAPC::AddSmokeTrail( const Vector &vecPos )
 //------------------------------------------------------------------------------
 // Pow!
 //------------------------------------------------------------------------------
-void CPropAPC::ExplodeAndThrowChunk( const Vector &vecExplosionPos )
+void CPropAPC2::ExplodeAndThrowChunk( const Vector &vecExplosionPos )
 {
 	ExplosionCreate( vecExplosionPos, vec3_angle, this, 1000, 500.0f, 
 		SF_ENVEXPLOSION_NODAMAGE | SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS	|
@@ -398,7 +398,7 @@ void CPropAPC::ExplodeAndThrowChunk( const Vector &vecExplosionPos )
 //-----------------------------------------------------------------------------
 // Should we trigger a damage effect?
 //-----------------------------------------------------------------------------
-inline bool CPropAPC::ShouldTriggerDamageEffect( int nPrevHealth, int nEffectCount ) const
+inline bool CPropAPC2::ShouldTriggerDamageEffect( int nPrevHealth, int nEffectCount ) const
 {
 	int nPrevRange = (int)( ((float)nPrevHealth / (float)GetMaxHealth()) * nEffectCount );
 	int nRange = (int)( ((float)GetHealth() / (float)GetMaxHealth()) * nEffectCount );
@@ -409,7 +409,7 @@ inline bool CPropAPC::ShouldTriggerDamageEffect( int nPrevHealth, int nEffectCou
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::Event_Killed( const CTakeDamageInfo &info )
+void CPropAPC2::Event_Killed( const CTakeDamageInfo &info )
 {
 	CBasePlayer *pPlayer = m_hPlayer;
 	if ( pPlayer )
@@ -522,7 +522,7 @@ void CPropAPC::Event_Killed( const CTakeDamageInfo &info )
 //-----------------------------------------------------------------------------
 // Purpose: Blows it up!
 //-----------------------------------------------------------------------------
-void CPropAPC::InputDestroy( inputdata_t &inputdata )
+void CPropAPC2::InputDestroy( inputdata_t &inputdata )
 {
 	CTakeDamageInfo info( this, this, m_iHealth, DMG_BLAST );
 	info.SetDamagePosition( WorldSpaceCenter() );
@@ -534,7 +534,7 @@ void CPropAPC::InputDestroy( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 // Aim the next rocket at a specific target
 //-----------------------------------------------------------------------------
-void CPropAPC::InputFireMissileAt( inputdata_t &inputdata )
+void CPropAPC2::InputFireMissileAt( inputdata_t &inputdata )
 {
 	string_t strMissileTarget = MAKE_STRING( inputdata.value.String() );
 	CBaseEntity *pTarget = gEntList.FindEntityByName( NULL, strMissileTarget, NULL );
@@ -551,7 +551,7 @@ void CPropAPC::InputFireMissileAt( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-int CPropAPC::OnTakeDamage( const CTakeDamageInfo &info )
+int CPropAPC2::OnTakeDamage( const CTakeDamageInfo &info )
 {
 	if ( m_iHealth == 0 )
 		return 0;
@@ -594,7 +594,7 @@ int CPropAPC::OnTakeDamage( const CTakeDamageInfo &info )
 // Purpose: 
 // Input  : *pMoveData - 
 //-----------------------------------------------------------------------------
-void CPropAPC::ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMoveData )
+void CPropAPC2::ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMoveData )
 {
 	BaseClass::ProcessMovement( pPlayer, pMoveData );
 
@@ -638,7 +638,7 @@ void CPropAPC::ProcessMovement( CBasePlayer *pPlayer, CMoveData *pMoveData )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::Think( void )
+void CPropAPC2::Think( void )
 {
 	if (!m_bSpawn) {
 		if(m_fReloadTime<=gpGlobals->curtime && m_iAmmoCount<50) {
@@ -752,7 +752,7 @@ void CPropAPC::Think( void )
 //-----------------------------------------------------------------------------
 // Aims the secondary weapon at a target 
 //-----------------------------------------------------------------------------
-void CPropAPC::AimSecondaryWeaponAt( CBaseEntity *pTarget )
+void CPropAPC2::AimSecondaryWeaponAt( CBaseEntity *pTarget )
 {
 	m_hRocketTarget = pTarget;
 
@@ -767,7 +767,7 @@ void CPropAPC::AimSecondaryWeaponAt( CBaseEntity *pTarget )
 	EnableLaserDot( m_hLaserDot, m_hRocketTarget != NULL );
 }
 
-void CPropAPC::AimSecondaryWeapon(Vector &vecWorldTarget )
+void CPropAPC2::AimSecondaryWeapon(Vector &vecWorldTarget )
 {
 	//m_hRocketTarget = vecWorldTarget;
 
@@ -785,7 +785,7 @@ void CPropAPC::AimSecondaryWeapon(Vector &vecWorldTarget )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iButtonsDown, int iButtonsReleased )
+void CPropAPC2::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iButtonsDown, int iButtonsReleased )
 {
 	switch( m_lifeState )
 	{
@@ -818,7 +818,7 @@ void CPropAPC::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iButtonsDown
 	BaseClass::DriveVehicle( flFrameTime, ucmd, iButtonsDown, iButtonsReleased );
 }
 
-void CPropAPC::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+void CPropAPC2::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
 {
 	CBasePlayer *pPlayer = ToBasePlayer( pActivator );
 	if ( !pPlayer )
@@ -842,8 +842,8 @@ void CPropAPC::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useT
 
 void KillAPCs(void)
 {
-CPropAPC *pAPC=NULL;
-	while ( ( pAPC = (CPropAPC*)gEntList.FindEntityByClassname( pAPC, "prop_vehicle_apc" )) != NULL )
+CPropAPC2 *pAPC=NULL;
+	while ( ( pAPC = (CPropAPC2*)gEntList.FindEntityByClassname( pAPC, "prop_vehicle_apc" )) != NULL )
 	{
 		// Si el strider esta conducido, entonces no se le mata.
 			CTakeDamageInfo info( pAPC, pAPC, 10000, DMG_BLAST );
@@ -858,7 +858,7 @@ static ConCommand sv_killapcs("sv_killapcs", KillAPCs, "Kill and respawn APC's i
 //-----------------------------------------------------------------------------
 // Primary gun 
 //-----------------------------------------------------------------------------
-void CPropAPC::AimPrimaryWeapon( const Vector &vecWorldTarget ) 
+void CPropAPC2::AimPrimaryWeapon( const Vector &vecWorldTarget ) 
 {
 	EntityMatrix parentMatrix;
 	parentMatrix.InitFromEntity( this, m_nMachineGunBaseAttachment );
@@ -907,7 +907,7 @@ void CPropAPC::AimPrimaryWeapon( const Vector &vecWorldTarget )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-const char *CPropAPC::GetTracerType( void ) 
+const char *CPropAPC2::GetTracerType( void ) 
 {
 	return "HelicopterTracer"; 
 }
@@ -916,7 +916,7 @@ const char *CPropAPC::GetTracerType( void )
 //-----------------------------------------------------------------------------
 // Allows the shooter to change the impact effect of his bullets
 //-----------------------------------------------------------------------------
-void CPropAPC::DoImpactEffect( trace_t &tr, int nDamageType )
+void CPropAPC2::DoImpactEffect( trace_t &tr, int nDamageType )
 {
 	UTIL_ImpactTrace( &tr, nDamageType, "HelicopterImpact" );
 } 
@@ -925,7 +925,7 @@ void CPropAPC::DoImpactEffect( trace_t &tr, int nDamageType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::DoMuzzleFlash( void )
+void CPropAPC2::DoMuzzleFlash( void )
 {
 	CEffectData data;
 	data.m_nEntIndex = entindex();
@@ -940,7 +940,7 @@ void CPropAPC::DoMuzzleFlash( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::FireMachineGun( void )
+void CPropAPC2::FireMachineGun( void )
 {
 	if ( m_flMachineGunTime > gpGlobals->curtime )
 		return;
@@ -995,7 +995,7 @@ void CPropAPC::FireMachineGun( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::GetRocketShootPosition( Vector *pPosition )
+void CPropAPC2::GetRocketShootPosition( Vector *pPosition )
 {
 	QAngle vecRocketAngles;
 	GetAttachment( m_nRocketAttachment, *pPosition, vecRocketAngles );
@@ -1005,7 +1005,7 @@ void CPropAPC::GetRocketShootPosition( Vector *pPosition )
 //-----------------------------------------------------------------------------
 // Create a corpse 
 //-----------------------------------------------------------------------------
-void CPropAPC::CreateCorpse( )
+void CPropAPC2::CreateCorpse( )
 {
 	m_lifeState = LIFE_DEAD;
 
@@ -1047,15 +1047,15 @@ void CPropAPC::CreateCorpse( )
 
 //
 
-	CPropAPC *pAPC = (CPropAPC *)CreateEntityByName( "prop_vehicle_apc" );
+	CPropAPC2 *pAPC = (CPropAPC2 *)CreateEntityByName( "prop_vehicle_apc" );
 		
 	if ( pAPC )
 	{
 		pAPC->InicialSpawn=m_vOriginalSpawnOrigin;
 		pAPC->InicialAngle=m_vOriginalSpawnAngles;
 		pAPC->m_bSpawn=true;
-		pAPC->SetThink( &CPropAPC::Materialize );
-		pAPC->SetContextThink( &CPropAPC::Materialize, gpGlobals->curtime + 5.0f, "RESPAWNING" );
+		pAPC->SetThink( &CPropAPC2::Materialize );
+		pAPC->SetContextThink( &CPropAPC2::Materialize, gpGlobals->curtime + 5.0f, "RESPAWNING" );
 		pAPC->SetNextThink( gpGlobals->curtime + 5.0f );
 	}
 	else
@@ -1070,7 +1070,7 @@ void CPropAPC::CreateCorpse( )
 	UTIL_Remove( this );
 }
 
-void CPropAPC::Materialize( void )
+void CPropAPC2::Materialize( void )
 {
 	//trace_t tr;
 	//UTIL_TraceHull( m_vOriginalSpawnOrigin, m_vOriginalSpawnOrigin, Vector(-38,-38,-38),Vector(38,38,38), MASK_SOLID, this, COLLISION_GROUP_NONE, &tr );
@@ -1092,14 +1092,14 @@ void CPropAPC::Materialize( void )
 	Teleport( &InicialSpawn, &InicialAngle, NULL );
 	Spawn();
 	Activate();
-	SetThink( &CPropAPC::Think );
+	SetThink( &CPropAPC2::Think );
 	SetNextThink( gpGlobals->curtime);
 	
 }
 //-----------------------------------------------------------------------------
 // Death volley 
 //-----------------------------------------------------------------------------
-void CPropAPC::FireDying( )
+void CPropAPC2::FireDying( )
 {
 	if ( m_flRocketTime > gpGlobals->curtime )
 		return;
@@ -1145,7 +1145,7 @@ void CPropAPC::FireDying( )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CPropAPC::FireRocket( void )
+void CPropAPC2::FireRocket( void )
 {
 	if ( m_flRocketTime > gpGlobals->curtime )
 		return;
@@ -1210,12 +1210,12 @@ void CPropAPC::FireRocket( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-float CPropAPC::MaxAttackRange() const
+float CPropAPC2::MaxAttackRange() const
 {
 	return ROCKET_ATTACK_RANGE_MAX;
 }
 
-Vector CPropAPC::BodyTarget( const Vector &posSrc, bool bNoisy )
+Vector CPropAPC2::BodyTarget( const Vector &posSrc, bool bNoisy )
 {
 	Vector	shotPos;
 	matrix3x4_t	matrix;
@@ -1234,7 +1234,7 @@ Vector CPropAPC::BodyTarget( const Vector &posSrc, bool bNoisy )
 	return shotPos;
 }
 
-void CPropAPC::EnterVehicle( CBasePlayer *pPlayer )
+void CPropAPC2::EnterVehicle( CBasePlayer *pPlayer )
 {
 	if ( !pPlayer )
 		return;
@@ -1253,14 +1253,14 @@ void CPropAPC::EnterVehicle( CBasePlayer *pPlayer )
 // Purpose: 
 //-----------------------------------------------------------------------------
 
-CPropAPC *CAPCFourWheelServerVehicle::GetAPC( void )
+CPropAPC2 *CAPCFourWheelServerVehicle::GetAPC( void )
 {
-	return (CPropAPC*)GetDrivableVehicle();
+	return (CPropAPC2*)GetDrivableVehicle();
 }
 
 void CAPCFourWheelServerVehicle::NPC_AimPrimaryWeapon( Vector vecTarget )
 {
-	CPropAPC *pAPC = ((CPropAPC*)m_pVehicle);
+	CPropAPC2 *pAPC = ((CPropAPC2*)m_pVehicle);
 	pAPC->AimPrimaryWeapon( vecTarget );
 }
 
@@ -1271,7 +1271,7 @@ void CAPCFourWheelServerVehicle::NPC_AimSecondaryWeapon( Vector vecTarget )
 {
 	// Add some random noise
 //	Vector vecOffset = vecTarget + RandomVector( -128, 128 );
-//	((CPropAPC*)m_pVehicle)->AimSecondaryWeaponAt( vecOffset );
+//	((CPropAPC2*)m_pVehicle)->AimSecondaryWeaponAt( vecOffset );
 }
 
 //-----------------------------------------------------------------------------
@@ -1297,7 +1297,7 @@ void CAPCFourWheelServerVehicle::Weapon_SecondaryRanges( float *flMinRange, floa
 //-----------------------------------------------------------------------------
 float CAPCFourWheelServerVehicle::Weapon_PrimaryCanFireAt( void )
 {
-	return ((CPropAPC*)m_pVehicle)->PrimaryWeaponFireTime();
+	return ((CPropAPC2*)m_pVehicle)->PrimaryWeaponFireTime();
 }
 
 //-----------------------------------------------------------------------------
@@ -1305,7 +1305,7 @@ float CAPCFourWheelServerVehicle::Weapon_PrimaryCanFireAt( void )
 //-----------------------------------------------------------------------------
 float CAPCFourWheelServerVehicle::Weapon_SecondaryCanFireAt( void )
 {
-	return ((CPropAPC*)m_pVehicle)->SecondaryWeaponFireTime();
+	return ((CPropAPC2*)m_pVehicle)->SecondaryWeaponFireTime();
 }
 
 void CAPCFourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )

@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lbaseplayer_shared_cpp
-
 #include "cbase.h"
+#define lbaseplayer_shared_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lbaseplayer_shared.h"
@@ -180,10 +180,10 @@ static int CBasePlayer_GetDefaultFOV (lua_State *L) {
   return 1;
 }
 
-static int CBasePlayer_GetEFNoInterpParity (lua_State *L) {
+/*static int CBasePlayer_GetEFNoInterpParity (lua_State *L) {
   lua_pushinteger(L, luaL_checkplayer(L, 1)->GetEFNoInterpParity());
   return 1;
-}
+}*/
 
 static int CBasePlayer_GetFOV (lua_State *L) {
   lua_pushnumber(L, luaL_checkplayer(L, 1)->GetFOV());
@@ -398,10 +398,10 @@ static int CBasePlayer_HintMessage (lua_State *L) {
   return 0;
 }
 
-static int CBasePlayer_IncrementEFNoInterpParity (lua_State *L) {
+/*static int CBasePlayer_IncrementEFNoInterpParity (lua_State *L) {
   luaL_checkplayer(L, 1)->IncrementEFNoInterpParity();
   return 0;
-}
+}*/
 
 static int CBasePlayer_IsBot (lua_State *L) {
   lua_pushboolean(L, luaL_checkplayer(L, 1)->IsBot());
@@ -933,7 +933,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GetBonusProgress", CBasePlayer_GetBonusProgress},
   {"GetDeathTime", CBasePlayer_GetDeathTime},
   {"GetDefaultFOV", CBasePlayer_GetDefaultFOV},
-  {"GetEFNoInterpParity", CBasePlayer_GetEFNoInterpParity},
+  //{"GetEFNoInterpParity", CBasePlayer_GetEFNoInterpParity},
   {"GetFOV", CBasePlayer_GetFOV},
   {"GetFOVDistanceAdjustFactor", CBasePlayer_GetFOVDistanceAdjustFactor},
   {"GetFOVTime", CBasePlayer_GetFOVTime},
@@ -962,7 +962,7 @@ static const luaL_Reg CBasePlayermeta[] = {
   {"GetWaterJumpTime", CBasePlayer_GetWaterJumpTime},
   {"GetWeapon", CBasePlayer_GetWeapon},
   {"HintMessage", CBasePlayer_HintMessage},
-  {"IncrementEFNoInterpParity", CBasePlayer_IncrementEFNoInterpParity},
+  //{"IncrementEFNoInterpParity", CBasePlayer_IncrementEFNoInterpParity},
   {"IsBot", CBasePlayer_IsBot},
   {"IsHLTV", CBasePlayer_IsHLTV},
   {"IsInAVehicle", CBasePlayer_IsInAVehicle},
@@ -1062,4 +1062,4 @@ LUALIB_API int luaopen_CBasePlayer_shared (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
-
+#endif

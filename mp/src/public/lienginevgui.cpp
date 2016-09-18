@@ -6,9 +6,10 @@
 // $Date:         $
 // $NoKeywords: $
 //=============================================================================//
-#define lienginevgui_cpp
 
 #include "cbase.h"
+#define lienginevgui_cpp
+#ifdef LUA_SDK
 #include "ienginevgui.h"
 #include "lua.hpp"
 #include "luasrclib.h"
@@ -49,4 +50,4 @@ LUALIB_API int luaopen_enginevgui (lua_State *L) {
   luaL_register(L, LUA_ENGINEVGUILIBNAME, enginevguilib);
   return 1;
 }
-
+#endif

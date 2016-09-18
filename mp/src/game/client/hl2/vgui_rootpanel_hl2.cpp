@@ -79,7 +79,6 @@ vgui::Panel *VGui_GetClientLuaRootPanel( void )
 	vgui::Panel *pRoot = mode->m_pClientLuaPanel;
 	return pRoot;
 }
-#endif
 
 //-----------------------------------------------------------------------------
 // C_ScriptedBaseGameUIPanel implementation.
@@ -148,3 +147,4 @@ void C_ScriptedBaseGameUIPanel::LevelInit( void )
 void C_ScriptedBaseGameUIPanel::LevelShutdown( void )
 {
 }
+#endif

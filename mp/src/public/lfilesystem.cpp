@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lfilesystem_cpp
-
 #include "cbase.h"
+#define lfilesystem_cpp
+#ifdef LUA_SDK
 #include "filesystem.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -109,7 +109,7 @@ static int filesystem_Disconnect (lua_State *L) {
 }
 
 static int filesystem_EnableWhitelistFileTracking (lua_State *L) {
-  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1));
+  filesystem->EnableWhitelistFileTracking(luaL_checkboolean(L, 1), true, false); //FixMe
   return 0;
 }
 
@@ -422,4 +422,4 @@ LUALIB_API int luaopen_filesystem (lua_State *L) {
   luaL_register(L, LUA_FILESYSTEMLIBNAME, filesystemlib);
   return 1;
 }
-
+#endif

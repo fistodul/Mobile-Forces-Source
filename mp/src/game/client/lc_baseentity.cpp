@@ -4,9 +4,10 @@
 //
 // $NoKeywords: $
 //===========================================================================//
-#define lc_baseentity_cpp
 
 #include "cbase.h"
+#define lc_baseentity_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lbaseentity_shared.h"
@@ -181,4 +182,4 @@ LUALIB_API int luaopen_CBaseEntity (lua_State *L) {
   luaL_register(L, NULL, CBaseEntitymeta);
   return 1;
 }
-
+#endif

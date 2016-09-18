@@ -10,6 +10,8 @@
 #pragma once
 #endif
 
+//SecobMod__Information: Here we add in the Source Engine Co-Operative Base Mod shared definitions file. Appeared to ignore it??
+#include "./secobmod/secobmod_shareddefs.h"
 
 #include "cmodel.h"
 #include "utlvector.h"

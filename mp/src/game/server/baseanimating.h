@@ -393,7 +393,13 @@ private:
 	CNetworkArray( float, m_flEncodedController, NUM_BONECTRLS );		// bone controller setting (0..1)
 
 	// Client-side animation (useful for looping animation objects)
+#ifdef LUA_SDK
+public:
 	CNetworkVar( bool, m_bClientSideAnimation );
+private:
+#else
+	CNetworkVar(bool, m_bClientSideAnimation);
+#endif
 	CNetworkVar( bool, m_bClientSideFrameReset );
 
 	CNetworkVar( int, m_nNewSequenceParity );

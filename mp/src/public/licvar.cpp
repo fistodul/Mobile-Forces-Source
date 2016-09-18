@@ -4,9 +4,9 @@
 //
 //===========================================================================//
 
-#define leiface_cpp
-
 #include "cbase.h"
+#define leiface_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lColor.h"
@@ -104,4 +104,4 @@ LUALIB_API int luaopen_cvar (lua_State *L) {
   InstallGlobalChangeCallbacks();
   return 1;
 }
-
+#endif

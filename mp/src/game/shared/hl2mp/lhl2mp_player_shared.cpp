@@ -5,10 +5,10 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define lhl2mp_player_shared_cpp
 
 #include "cbase.h"
-
+#define lhl2mp_player_shared_cpp
+#ifdef LUA_SDK
 #include "hl2mp_player_shared.h"
 
 #include "luamanager.h"
@@ -97,10 +97,14 @@ static int CHL2MP_Player_CanSprint (lua_State *L) {
   return 1;
 }
 
-static int CHL2MP_Player_DoAnimationEvent (lua_State *L) {
-  luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkint(L, 2), luaL_optinteger(L, 3, 0));
+/*static int CHL2MP_Player_DoAnimationEvent (lua_State *L) {
+#ifdef SOURCE_2007
+	luaL_checkhl2mpplayer(L, 1)->DoAnimationEvent((PlayerAnimEvent_t)luaL_checkint(L, 2), luaL_optinteger(L, 3, 0));
+ #else
+	luaL_checkhl2mpplayer(L, 1)->m_PlayerAnimState.Update()luaL_checkint(L, 2), luaL_optinteger(L, 3, 0);
+#endif
   return 0;
-}
+}*/
 
 static int CHL2MP_Player___index (lua_State *L) {
   CHL2MP_Player *pPlayer = lua_tohl2mpplayer(L, 1);
@@ -114,10 +118,12 @@ static int CHL2MP_Player___index (lua_State *L) {
 	return lua_error(L);
   }
   const char *field = luaL_checkstring(L, 2);
+#ifdef SOURCE_2007
 #ifdef CLIENT_DLL
   if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
     lua_pushnumber(L, pPlayer->m_fNextThinkPushAway);
   else {
+#endif
 #endif
     if (pPlayer->m_nTableReference != LUA_NOREF) {
       lua_getref(L, pPlayer->m_nTableReference);
@@ -162,8 +168,10 @@ static int CHL2MP_Player___index (lua_State *L) {
         }
       }
     }
+#ifdef SOURCE_2007
 #ifdef CLIENT_DLL
   }
+#endif
 #endif
   return 1;
 }
@@ -180,10 +188,12 @@ static int CHL2MP_Player___newindex (lua_State *L) {
 	return lua_error(L);
   }
   const char *field = luaL_checkstring(L, 2);
+#ifdef SOURCE_2007
 #ifdef CLIENT_DLL
   if (Q_strcmp(field, "m_fNextThinkPushAway") == 0)
     pPlayer->m_fNextThinkPushAway = luaL_checknumber(L, 3);
   else {
+#endif
 #endif
     if (pPlayer->m_nTableReference == LUA_NOREF) {
       lua_newtable(L);
@@ -193,8 +203,10 @@ static int CHL2MP_Player___newindex (lua_State *L) {
     lua_pushvalue(L, 3);
     lua_setfield(L, -2, field);
 	lua_pop(L, 1);
+#ifdef SOURCE_2007
 #ifdef CLIENT_DLL
   }
+#endif
 #endif
   return 0;
 }
@@ -219,7 +231,7 @@ static const luaL_Reg CHL2MP_Playermeta[] = {
   {"CalculateIKLocks", CHL2MP_Player_CalculateIKLocks},
   {"CalcView", CHL2MP_Player_CalcView},
   {"CanSprint", CHL2MP_Player_CanSprint},
-  {"DoAnimationEvent", CHL2MP_Player_DoAnimationEvent},
+//  {"DoAnimationEvent", CHL2MP_Player_DoAnimationEvent},
   {"__index", CHL2MP_Player___index},
   {"__newindex", CHL2MP_Player___newindex},
   {"__eq", CHL2MP_Player___eq},
@@ -252,4 +264,4 @@ LUALIB_API int luaopen_CHL2MP_Player_shared (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
-
+#endif

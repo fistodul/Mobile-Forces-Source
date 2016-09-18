@@ -4,9 +4,9 @@
 //
 //===========================================================================//
 
-#define lbaseentity_shared_cpp
-
 #include "cbase.h"
+#define lbaseentity_shared_cpp
+#ifdef LUA_SDK
 #ifdef CLIENT_DLL
 #include "c_recipientfilter.h"
 #define CRecipientFilter C_RecipientFilter
@@ -1744,4 +1744,4 @@ LUALIB_API int luaopen_CBaseEntity_shared (lua_State *L) {
   lua_setglobal(L, "NULL");  /* set global NULL */
   return 1;
 }
-
+#endif

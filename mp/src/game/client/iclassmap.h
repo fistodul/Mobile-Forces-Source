@@ -7,6 +7,8 @@
 
 #ifndef ICLASSMAP_H
 #define ICLASSMAP_H
+//SecobMod__Information: Here we add in the Source Engine Co-Operative Base Mod shared definitions file., appeared to be excluded
+#include "./secobmod/secobmod_shareddefs.h"
 #ifdef _WIN32
 #pragma once
 #endif

@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lshareddefs_cpp
-
 #include "cbase.h"
+#define lshareddefs_cpp
+#ifdef LUA_SDK
 #include "ammodef.h"
 #include "luamanager.h"
 #include "lshareddefs.h"
@@ -44,7 +44,11 @@ LUA_API lua_FireBulletsInfo_t lua_tofirebulletsinfo (lua_State *L, int idx) {
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iDamage");
   if (!lua_isnil(L, -1))
+#ifdef SOURCE_2007
     info.m_iDamage = luaL_checkint(L, -1);
+#else
+	  info.m_flDamage = luaL_checknumber(L, -1);
+#endif
   lua_pop(L, 1);
   lua_getfield(L, idx, "m_iPlayerDamage");
   if (!lua_isnil(L, -1))
@@ -126,4 +130,4 @@ LUA_API void lua_toemitsound (lua_State *L, int idx, EmitSound_t &ep) {
   }
   lua_pop(L, 1);
 }
-
+#endif

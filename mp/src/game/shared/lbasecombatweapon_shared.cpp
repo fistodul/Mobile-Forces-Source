@@ -4,9 +4,10 @@
 //
 // $NoKeywords: $
 //=============================================================================//
-#define lbasecombatweapon_shared_cpp
 
 #include "cbase.h"
+#define lbasecombatweapon_shared_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lbasecombatweapon_shared.h"
@@ -62,10 +63,12 @@ static int CBaseCombatWeapon_Activate (lua_State *L) {
   return 0;
 }
 
+#ifndef HL2MP //FixMe
 static int CBaseCombatWeapon_ActivityListCount (lua_State *L) {
   lua_pushinteger(L, luaL_checkweapon(L, 1)->ActivityListCount());
   return 1;
 }
+#endif
 
 static int CBaseCombatWeapon_ActivityOverride (lua_State *L) {
   bool *pRequired = (bool *)luaL_checkboolean(L, 3);
@@ -972,7 +975,9 @@ static int CBaseCombatWeapon___tostring (lua_State *L) {
 static const luaL_Reg CBaseCombatWeaponmeta[] = {
   {"AbortReload", CBaseCombatWeapon_AbortReload},
   {"Activate", CBaseCombatWeapon_Activate},
+#ifndef HL2MP //FixMe
   {"ActivityListCount", CBaseCombatWeapon_ActivityListCount},
+#endif
   {"ActivityOverride", CBaseCombatWeapon_ActivityOverride},
   {"AddViewKick", CBaseCombatWeapon_AddViewKick},
   {"AllowsAutoSwitchFrom", CBaseCombatWeapon_AllowsAutoSwitchFrom},
@@ -1114,4 +1119,4 @@ LUALIB_API int luaopen_CBaseCombatWeapon (lua_State *L) {
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
   return 1;
 }
-
+#endif

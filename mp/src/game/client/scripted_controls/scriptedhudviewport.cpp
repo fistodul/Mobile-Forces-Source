@@ -12,7 +12,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-
+#ifdef LUA_SDK
 // our definition
 #include "scriptedhudviewport.h"
 
@@ -52,3 +52,4 @@ void CScriptedHudViewport::Paint()
 	BEGIN_LUA_CALL_HOOK( "HudViewportPaint" );
 	END_LUA_CALL_HOOK( 0, 0 );
 }
+#endif

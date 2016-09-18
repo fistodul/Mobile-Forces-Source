@@ -7,6 +7,7 @@
 
 #include "cbase.h"
 #include "takedamageinfo.h"
+#ifdef LUA_SDK
 #include "lua.hpp"
 #include "luasrclib.h"
 #include "ltakedamageinfo.h"
@@ -368,4 +369,4 @@ LUALIB_API int luaopen_CTakeDamageInfo (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
-
+#endif

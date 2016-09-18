@@ -4,9 +4,10 @@
 //
 // $NoKeywords: $
 //===========================================================================//
-#define lc_baseanimating_cpp
 
 #include "cbase.h"
+#define lc_baseanimating_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lc_baseanimating.h"
@@ -327,8 +328,8 @@ static int CBaseAnimating_GetHitboxSetName (lua_State *L) {
   return 1;
 }
 
-static int CBaseAnimating_GetModelWidthScale (lua_State *L) {
-  lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelWidthScale());
+static int CBaseAnimating_GetModelScale (lua_State *L) {
+  lua_pushnumber(L, luaL_checkanimating(L, 1)->GetModelScale());
   return 1;
 }
 
@@ -588,7 +589,7 @@ static int CBaseAnimating_RemoveFromClientSideAnimationList (lua_State *L) {
 }
 
 static int CBaseAnimating_ResetEventsParity (lua_State *L) {
-  luaL_checkanimating(L, 1)->ResetEventsParity();
+	luaL_checkanimating(L, 1)->m_nResetEventsParity;
   return 0;
 }
 
@@ -660,8 +661,8 @@ static int CBaseAnimating_SetHitboxSetByName (lua_State *L) {
   return 0;
 }
 
-static int CBaseAnimating_SetModelWidthScale (lua_State *L) {
-  luaL_checkanimating(L, 1)->SetModelWidthScale(luaL_checknumber(L, 2));
+static int CBaseAnimating_SetModelScale (lua_State *L) {
+  luaL_checkanimating(L, 1)->SetModelScale(luaL_checknumber(L, 2));
   return 0;
 }
 
@@ -942,7 +943,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"GetHitboxSet", CBaseAnimating_GetHitboxSet},
   {"GetHitboxSetCount", CBaseAnimating_GetHitboxSetCount},
   {"GetHitboxSetName", CBaseAnimating_GetHitboxSetName},
-  {"GetModelWidthScale", CBaseAnimating_GetModelWidthScale},
+  {"GetModelWidthScale", CBaseAnimating_GetModelScale},
   {"GetNumBodyGroups", CBaseAnimating_GetNumBodyGroups},
   {"GetNumFlexControllers", CBaseAnimating_GetNumFlexControllers},
   {"GetPlaybackRate", CBaseAnimating_GetPlaybackRate},
@@ -1005,7 +1006,7 @@ static const luaL_Reg CBaseAnimatingmeta[] = {
   {"SetCycle", CBaseAnimating_SetCycle},
   {"SetHitboxSet", CBaseAnimating_SetHitboxSet},
   {"SetHitboxSetByName", CBaseAnimating_SetHitboxSetByName},
-  {"SetModelWidthScale", CBaseAnimating_SetModelWidthScale},
+  {"SetModelWidthScale", CBaseAnimating_SetModelScale},
   {"SetPlaybackRate", CBaseAnimating_SetPlaybackRate},
   {"SetPoseParameter", CBaseAnimating_SetPoseParameter},
   {"SetPredictable", CBaseAnimating_SetPredictable},
@@ -1048,4 +1049,4 @@ LUALIB_API int luaopen_CBaseAnimating (lua_State *L) {
   lua_setfield(L, -2, "__type");  /* metatable.__type = "entity" */
   return 1;
 }
-
+#endif

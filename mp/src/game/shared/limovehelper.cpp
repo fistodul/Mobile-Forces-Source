@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define limovehelper_cpp
-
 #include "cbase.h"
+#define limovehelper_cpp
+#ifdef LUA_SDK
 #include "imovehelper.h"
 #include "lua.hpp"
 #include "limovehelper.h"
@@ -134,3 +134,4 @@ LUALIB_API int luaopen_IMoveHelper (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
+#endif

@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lnetworkstringtabledefs_cpp
-
 #include "cbase.h"
+#define lnetworkstringtabledefs_cpp
+#ifdef LUA_SDK
 #include "networkstringtabledefs.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -203,4 +203,4 @@ LUALIB_API int luaopen_networkstringtable (lua_State *L) {
   luaL_register(L, LUA_NETWORKSTRINGTABLELIBNAME, networkstringtablelib);
   return 1;
 }
-
+#endif

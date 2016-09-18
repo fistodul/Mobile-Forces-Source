@@ -1360,7 +1360,7 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 	void CHalfLife2::Think( void )
 	{
 		BaseClass::Think();
-
+#ifndef SecobMod__Enable_Fixed_Multiplayer_AI
 		if( physcannon_mega_enabled.GetBool() == true )
 		{
 			m_bMegaPhysgun = true;
@@ -1370,6 +1370,7 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 			// FIXME: Is there a better place for this?
 			m_bMegaPhysgun = ( GlobalEntity_GetState("super_phys_gun") == GLOBAL_ON );
 		}
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	}
 #endif
 #endif

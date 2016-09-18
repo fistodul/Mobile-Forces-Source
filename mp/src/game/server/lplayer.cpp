@@ -4,9 +4,9 @@
 //
 //===========================================================================//
 
-#define lplayer_cpp
-
 #include "cbase.h"
+#define lplayer_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbasecombatweapon_shared.h"
 #include "lbaseentity_shared.h"
@@ -183,7 +183,9 @@ static int CBasePlayer_Event_KilledOther (lua_State *L) {
 }
 
 static int CBasePlayer_Event_Dying (lua_State *L) {
-  luaL_checkplayer(L, 1)->Event_Dying();
+	CTakeDamageInfo info;
+	//info.SetDamage( nHealth + 10 );
+	luaL_checkplayer(L, 1)->Event_Dying( info );
   return 0;
 }
 
@@ -263,7 +265,11 @@ static int CBasePlayer_Weapon_DropSlot (lua_State *L) {
 }
 
 static int CBasePlayer_Weapon_GetLast (lua_State *L) {
+#ifdef SOURCE_2007
   lua_pushweapon(L, luaL_checkplayer(L, 1)->Weapon_GetLast());
+#else
+	lua_pushweapon(L, luaL_checkplayer(L, 1)->GetLastWeapon());
+#endif
   return 1;
 }
 
@@ -606,4 +612,4 @@ LUALIB_API int luaopen_CBasePlayer (lua_State *L) {
   luaL_register(L, NULL, CBasePlayermeta);
   return 1;
 }
-
+#endif

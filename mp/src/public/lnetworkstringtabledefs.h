@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
+
 #include "networkstringtabledefs.h"
 
 /* type for INetworkStringTable functions */
@@ -34,5 +36,5 @@ LUA_API void  (lua_pushstringtable) (lua_State *L, lua_INetworkStringTable *pNet
 
 LUALIB_API lua_INetworkStringTable *(luaL_checkstringtable) (lua_State *L, int narg);
 
-
+#endif
 #endif // LNETWORKSTRINGTABLEDEFS_H

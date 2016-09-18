@@ -4,9 +4,8 @@
 //
 //=============================================================================//
 
-#define lglobalvars_base_cpp
-
 #include "cbase.h"
+#define lglobalvars_base_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
 

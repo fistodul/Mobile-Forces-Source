@@ -5,10 +5,9 @@
 // $NoKeywords: $
 //===========================================================================//
 
-
-#define lsrcinit_cpp
-
 #include "cbase.h"
+#ifdef LUA_SDK
+#define lsrcinit_cpp
 #include "lua.hpp"
 
 #include "luasrclib.h"
@@ -116,4 +115,4 @@ LUALIB_API void luasrc_openlibs (lua_State *L) {
     lua_call(L, 1, 0);
   }
 }
-
+#endif

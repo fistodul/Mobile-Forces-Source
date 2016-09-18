@@ -5,9 +5,10 @@
 //			- Manages the player's flashlight effect.
 //
 //===========================================================================//
-#define lc_baseplayer_cpp
 
 #include "cbase.h"
+#define lc_baseplayer_cpp
+#ifdef LUA_SDK
 #include "c_baseplayer.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -40,3 +41,4 @@ LUALIB_API int luaopen_CBasePlayer (lua_State *L) {
   luaL_register(L, NULL, CBasePlayermeta);
   return 1;
 }
+#endif

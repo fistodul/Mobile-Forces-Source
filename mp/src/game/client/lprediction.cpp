@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //===========================================================================//
 
-#define lprediction_cpp
-
 #include "cbase.h"
+#define lprediction_cpp
+#ifdef LUA_SDK
 #include "prediction.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -125,3 +125,4 @@ LUALIB_API int luaopen_prediction (lua_State *L) {
   luaL_register(L, LUA_PREDICTIONLIBNAME, predictionlib);
   return 1;
 }
+#endif

@@ -11,6 +11,7 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
 
 /* type for CTakeDamageInfo functions */
 typedef CTakeDamageInfo lua_CTakeDamageInfo;
@@ -33,5 +34,5 @@ LUA_API void  (lua_pushdamageinfo) (lua_State *L, lua_CTakeDamageInfo &info);
 
 LUALIB_API lua_CTakeDamageInfo &(luaL_checkdamageinfo) (lua_State *L, int narg);
 
-
+#endif
 #endif // LTAKEDAMAGEINFO_H

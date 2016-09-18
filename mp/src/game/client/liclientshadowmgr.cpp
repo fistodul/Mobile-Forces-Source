@@ -6,9 +6,8 @@
 //
 //=============================================================================//
 
-#define liclientshadowmgr_cpp
-
 #include "cbase.h"
+#define liclientshadowmgr_cpp
 #include "luamanager.h"
 #include "mathlib/lvector.h"
 

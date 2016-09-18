@@ -32,7 +32,6 @@ public:
 									C_BaseTempEntity( void );
 	virtual							~C_BaseTempEntity( void );
 
-
 // IClientUnknown implementation.
 public:
 

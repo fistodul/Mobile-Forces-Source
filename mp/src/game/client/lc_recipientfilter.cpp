@@ -5,9 +5,10 @@
 // $NoKeywords: $
 //
 //=============================================================================//
-#define lc_recipientfilter_cpp
 
 #include "cbase.h"
+#define lc_recipientfilter_cpp
+#ifdef LUA_SDK
 #include "c_recipientfilter.h"
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -266,3 +267,4 @@ LUALIB_API int luaopen_CPASFilter (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
+#endif

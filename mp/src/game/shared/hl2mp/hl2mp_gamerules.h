@@ -117,6 +117,13 @@ public:
 	virtual void CreateStandardEntities( void );
 	virtual void ClientSettingsChanged( CBasePlayer *pPlayer );
 	virtual int PlayerRelationship( CBaseEntity *pPlayer, CBaseEntity *pTarget );
+#ifdef LUA_SDK
+#ifndef CLIENT_DLL
+	virtual bool PlayerCanHearChat( CBasePlayer *pListener, CBasePlayer *pSpeaker );
+	virtual bool ClientConnected( edict_t *pEntity, const char *pszName, const char *pszAddress, char *reject, int maxrejectlen );
+	virtual void InitHUD( CBasePlayer *pl );
+#endif
+#endif
 	virtual void GoToIntermission( void );
 	virtual void DeathNotice( CBasePlayer *pVictim, const CTakeDamageInfo &info );
 	virtual const char *GetGameDescription( void );
@@ -134,6 +141,10 @@ public:
 	virtual Vector VecItemRespawnSpot( CItem *pItem );
 	virtual QAngle VecItemRespawnAngles( CItem *pItem );
 	virtual float	FlItemRespawnTime( CItem *pItem );
+#ifdef LUA_SDK
+	virtual void PlayerGotItem( CBasePlayer *pPlayer, CItem *pItem );
+	virtual int ItemShouldRespawn( CItem *pItem );
+#endif
 	virtual bool	CanHavePlayerItem( CBasePlayer *pPlayer, CBaseCombatWeapon *pItem );
 	virtual bool FShouldSwitchWeapon( CBasePlayer *pPlayer, CBaseCombatWeapon *pWeapon );
 
@@ -151,6 +162,12 @@ public:
 #endif
 	virtual void ClientDisconnected( edict_t *pClient );
 
+#ifdef LUA_SDK
+#ifndef CLIENT_DLL
+	virtual float FlPlayerFallDamage( CBasePlayer *pPlayer );
+#endif
+#endif
+	
 	bool CheckGameOver( void );
 	bool IsIntermission( void );
 
@@ -160,6 +177,17 @@ public:
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
 	bool	IsInjustice( void ) { return m_bInjusticeEnabled;	}
 	bool	IsHoldout( void ) { return m_bHoldoutEnabled;	}
+#ifdef LUA_SDK
+#ifndef CLIENT_DLL
+	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker );
+	bool	AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
+
+	void	PlayerSpawn( CBasePlayer *pPlayer );
+	void	PlayerThink( CBasePlayer *pPlayer );
+	bool	FPlayerCanRespawn( CBasePlayer *pPlayer );
+	float	FlPlayerSpawnTime( CBasePlayer *pPlayer );
+#endif
+#endif
 	void	CheckAllPlayersReady( void );
 
 	virtual bool IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer );

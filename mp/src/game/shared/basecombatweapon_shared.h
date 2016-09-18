@@ -72,7 +72,7 @@ class CUserCmd;
 // activity table.
 // UNDONE: Cascade these?
 #define IMPLEMENT_ACTTABLE(className) \
-	acttable_t *className::ActivityList( int &iActivityCount ) { iActivityCount = ARRAYSIZE(m_acttable); return m_acttable; }
+	acttable_t *className::ActivityList( int &iActivityCount ) { iActivityCount = ARRAYSIZE(m_acttable); return m_acttable; } \
 
 typedef struct
 {
@@ -190,6 +190,10 @@ public:
 	// A derived weapon class should return true here so that weapon sounds, etc, can
 	//  apply the proper filter
 	virtual bool			IsPredicted( void ) const { return false; }
+#if defined( LUA_SDK )
+	virtual bool			IsScripted( void ) const { return false; }
+	virtual bool			IsWeapon( void ) const { return true; }
+#endif
 
 	virtual void			Spawn( void );
 	virtual void			Precache( void );
@@ -358,7 +362,11 @@ public:
 public:
 
 	// Weapon info accessors for data in the weapon's data file
+#ifndef LUA_SDK
 	const FileWeaponInfo_t	&GetWpnData( void ) const;
+#else
+	virtual const FileWeaponInfo_t	&GetWpnData( void ) const;
+#endif
 	virtual const char		*GetViewModel( int viewmodelindex = 0 ) const;
 	virtual const char		*GetWorldModel( void ) const;
 	virtual const char		*GetAnimPrefix( void ) const;

@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define leffect_dispatch_data_cpp
-
 #include "cbase.h"
+#define leffect_dispatch_data_cpp
+#ifdef LUA_SDK
 #if CLIENT_DLL
 #include "c_te_effect_dispatch.h"
 #else
@@ -208,4 +208,4 @@ LUALIB_API int luaopen_CEffectData (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
-
+#endif

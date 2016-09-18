@@ -5,6 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
 #include "filters.h"
@@ -257,5 +258,5 @@ void CBaseScriptedTrigger::EndTouch(CBaseEntity *pOther)
 	END_LUA_CALL_TRIGGER_METHOD( 1, 0 );
 #endif
 }
-
+#endif
 

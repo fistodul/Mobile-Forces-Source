@@ -5,6 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "filesystem.h"
 #ifdef WIN32
 #include "winlite.h"
@@ -355,4 +356,5 @@ CON_COMMAND(dumpluacachefile, "Dump the contents of the Lua cache file database 
 	}
 }
 
+#endif
 #endif

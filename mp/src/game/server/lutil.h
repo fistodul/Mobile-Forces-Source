@@ -11,6 +11,10 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
+
 LUALIB_API int luaopen_UTIL(lua_State *L);
+
+#endif
 
 #endif // UTIL_H

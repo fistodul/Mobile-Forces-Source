@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lhl2mp_player_shared.h"
 
@@ -48,4 +49,4 @@ LUALIB_API int luaopen_CHL2MP_Player (lua_State *L) {
   luaL_register(L, NULL, CHL2MP_Playermeta);
   return 1;
 }
-
+#endif

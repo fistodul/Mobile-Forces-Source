@@ -7,6 +7,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "basescripted.h"
 #include "luamanager.h"
 #ifdef CLIENT_DLL
@@ -301,4 +302,4 @@ void CBaseScripted::VPhysicsUpdate( IPhysicsObject *pPhysics )
 	END_LUA_CALL_ENTITY_METHOD( 1, 0 );
 #endif
 }
-
+#endif

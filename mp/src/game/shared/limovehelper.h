@@ -12,6 +12,7 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
 
 /* type for IMoveHelper functions */
 typedef IMoveHelper lua_IMoveHelper;
@@ -34,5 +35,5 @@ LUA_API void  (lua_pushmovehelper) (lua_State *L, lua_IMoveHelper *pHelper);
 
 LUALIB_API lua_IMoveHelper *(luaL_checkmovehelper) (lua_State *L, int narg);
 
-
+#endif
 #endif // LIMOVEHELPER_H

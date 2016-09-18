@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
+
 /* type for CRecipientFilter functions */
 typedef C_RecipientFilter lua_CRecipientFilter;
 
@@ -39,5 +41,5 @@ LUA_API void  (lua_pushpasfilter) (lua_State *L, lua_CPASFilter &filter);
 LUALIB_API lua_CRecipientFilter &(luaL_checkrecipientfilter) (lua_State *L, int narg);
 LUALIB_API lua_CPASFilter &(luaL_checkpasfilter) (lua_State *L, int narg);
 
-
+#endif
 #endif // LC_RECIPIENTFILTER_H

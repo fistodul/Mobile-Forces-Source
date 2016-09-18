@@ -18,8 +18,6 @@
 /* type for CHL2MP_Player functions */
 typedef CHL2MP_Player lua_CHL2MP_Player;
 
-
-
 /*
 ** access functions (stack -> C)
 */

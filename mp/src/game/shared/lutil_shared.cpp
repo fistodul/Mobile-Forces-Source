@@ -4,9 +4,9 @@
 //
 //=============================================================================//
 
-#define lutil_shared_cpp
-
 #include "cbase.h"
+#define lutil_shared_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
@@ -187,4 +187,4 @@ LUALIB_API int luaopen_UTIL_shared (lua_State *L) {
   luaL_register(L, "UTIL", util_funcs);
   return 1;
 }
-
+#endif

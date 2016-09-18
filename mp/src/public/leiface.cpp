@@ -6,9 +6,9 @@
 //
 //===========================================================================//
 
-#define leiface_cpp
-
 #include "cbase.h"
+#define leiface_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "luasrclib.h"
 #include "lbaseentity_shared.h"
@@ -344,4 +344,4 @@ LUALIB_API int luaopen_engine (lua_State *L) {
   luaL_register(L, LUA_ENGINELIBNAME, enginelib);
   return 1;
 }
-
+#endif

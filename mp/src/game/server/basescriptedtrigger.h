@@ -11,6 +11,8 @@
 #pragma once
 #endif
 
+#ifdef LUA_SDK
+
 #include "triggers.h"
 #include "entityoutput.h"
 
@@ -46,4 +48,5 @@ protected:
 void RegisterScriptedTrigger( const char *szClassname );
 void ResetTriggerFactoryDatabase( void );
 
+#endif
 #endif // BASESCRIPTEDTRIGGER_H

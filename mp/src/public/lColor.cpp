@@ -5,9 +5,8 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lColor_cpp
-
 #include "cbase.h"
+#define lColor_cpp
 #include "Color.h"
 #include "fmtstr.h"
 #include "lua.hpp"

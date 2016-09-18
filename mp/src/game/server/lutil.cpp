@@ -5,9 +5,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lutil_cpp
-
 #include "cbase.h"
+#define lutil_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseentity_shared.h"
 #include "lbaseplayer_shared.h"
@@ -518,4 +518,5 @@ LUALIB_API int luaopen_UTIL (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
+#endif
 

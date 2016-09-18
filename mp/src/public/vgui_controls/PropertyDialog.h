@@ -15,6 +15,9 @@
 #include <vgui/VGUI.h>
 #include <vgui_controls/Frame.h>
 
+//SecobMod__Information: Here we add in the Source Engine Co-Operative Base Mod shared definitions file. Because it doesnt like it
+#include "./../game/shared/secobmod/secobmod_shareddefs.h"
+
 namespace vgui
 {
 
@@ -53,6 +56,11 @@ public:
 		"ApplyChanges"		- sent when the OK / Apply button is pressed.  Changed data should be written into document.
 	*/
 
+#ifdef LUA_SDK
+	PropertySheet *_propertySheet;
+	Button *_applyButton;
+#endif
+
 protected:
 	// Called when the OK button is pressed.  Simply closes the dialog.
 	virtual bool OnOK(bool applyOnly);
@@ -71,10 +79,14 @@ protected:
 	void EnableApplyButton(bool bEnable);
 	
 private:
+#ifndef LUA_SDK
 	PropertySheet *_propertySheet;
+#endif
 	Button *_okButton;
 	Button *_cancelButton;
+#ifndef LUA_SDK
 	Button *_applyButton;
+#endif
 
 	CPanelAnimationVar( int, m_iSheetInsetBottom, "sheetinset_bottom", "32" );
 };

@@ -5,7 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-
+#ifdef LUA_SDK
 #if defined( CLIENT_DLL )
 	#include "c_hl2mp_player.h"
 #else
@@ -1018,5 +1018,5 @@ int CHL2MPScriptedWeapon::DrawModel( int flags )
 	return BaseClass::DrawModel( flags );
 }
 #endif
-
+#endif
 

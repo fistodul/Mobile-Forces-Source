@@ -6,9 +6,9 @@
 // $NoKeywords: $
 //=============================================================================//
 
-#define lcdll_util_cpp
-
 #include "cbase.h"
+#define lcdll_util_cpp
+#ifdef LUA_SDK
 #include "luamanager.h"
 #include "lbaseplayer_shared.h"
 #include "lbaseentity_shared.h"
@@ -210,4 +210,4 @@ LUALIB_API int luaopen_UTIL (lua_State *L) {
   luaL_register(L, "UTIL", util_funcs);
   return 1;
 }
-
+#endif

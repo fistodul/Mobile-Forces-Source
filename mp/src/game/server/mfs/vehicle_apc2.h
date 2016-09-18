@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 // Purpose: Four wheel physics vehicle server vehicle with weaponry
 //-----------------------------------------------------------------------------
-class CPropAPC;
+class CPropAPC2;
 
 class CAPCFourWheelServerVehicle : public CFourWheelServerVehicle
 {
@@ -39,20 +39,20 @@ public:
 	float		Weapon_PrimaryCanFireAt( void );		// Return the time at which this vehicle's primary weapon can fire again
 	float		Weapon_SecondaryCanFireAt( void );		// Return the time at which this vehicle's secondary weapon can fire again
 protected:
-	CPropAPC *GetAPC( void );
+	CPropAPC2 *GetAPC( void );
 };
 
 
 //-----------------------------------------------------------------------------
 // A driveable vehicle with a gun that shoots wherever the driver looks.
 //-----------------------------------------------------------------------------
-class CPropAPC : public CPropVehicleDriveable
+class CPropAPC2 : public CPropVehicleDriveable
 {
 	DECLARE_CLASS( CPropAPC, CPropVehicleDriveable );
 	DECLARE_SERVERCLASS();
 public:
 
-	CPropAPC::CPropAPC();
+	CPropAPC2::CPropAPC2();
 
 	// CBaseEntity
 	virtual void Precache( void );

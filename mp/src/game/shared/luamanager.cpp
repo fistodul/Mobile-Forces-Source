@@ -5,6 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "filesystem.h"
 #ifndef CLIENT_DLL
 #include "gameinterface.h"
@@ -816,6 +817,7 @@ static int DoFileCompletion( const char *partial, char commands[ COMMAND_COMPLET
 	  if (n>0)
 	    Warning( "Warning: %d object(s) left on the stack!\n", n );
 	}
+#endif
 #endif
 #endif
 #endif

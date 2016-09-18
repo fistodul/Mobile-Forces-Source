@@ -44,7 +44,9 @@ public:
 		TURN_RIGHT
 	};
 
+#ifndef lhl2mp_player_shared_cpp
 	CPlayerAnimState( CHL2MP_Player *outer );
+#endif
 
 	Activity			BodyYawTranslateActivity( Activity activity );
 
@@ -54,7 +56,9 @@ public:
 				
 	void				GetPoseParameters( CStudioHdr *pStudioHdr, float poseParameter[MAXSTUDIOPOSEPARAM] );
 
+#ifndef lhl2mp_player_shared_cpp
 	CHL2MP_Player		*GetOuter();
+#endif
 
 private:
 	void				GetOuterAbsVelocity( Vector& vel );
@@ -68,7 +72,9 @@ private:
 
 	void				ComputePlaybackRate();
 
+#ifndef lhl2mp_player_shared_cpp
 	CHL2MP_Player		*m_pOuter;
+#endif
 
 	float				m_flGaitYaw;
 	float				m_flStoredCycle;
