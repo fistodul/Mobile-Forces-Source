@@ -6307,7 +6307,7 @@ static void CreateJalopy( CBasePlayer *pPlayer )
 		pJeep->SetAbsAngles( vecAngles );
 		pJeep->KeyValue( "model", "models/vehicle.mdl" );
 		pJeep->KeyValue( "solid", "6" );
-		pJeep->KeyValue( "targetname", "jeep" );
+		pJeep->KeyValue( "targetname", "jalopy" );
 		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/jalopy.txt" );
 		DispatchSpawn( pJeep );
 		pJeep->Activate();
@@ -6480,11 +6480,119 @@ void CC_CH_CreateChoreo( void )
 	if ( !pPlayer )
 		return;
 
-	CreateAirboat( pPlayer );
+	CreateChoreo( pPlayer );
 
 }
 
 static ConCommand ch_createchoreo( "ch_createchoreo", CC_CH_CreateChoreo, "Spawn a choreo in front of the player.", FCVAR_CHEAT );
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//Spawn Jeep
+//-----------------------------------------------------------------------------
+static void CreateHeli( CBasePlayer *pPlayer )
+{
+	// Cheat to create a jeep in front of the player
+	Vector vecForward;
+	AngleVectors( pPlayer->EyeAngles(), &vecForward );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "vehicle_helicopter" );
+	if ( pJeep )
+	{
+		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
+		QAngle vecAngles( 0, pPlayer->GetAbsAngles().y - 90, 0 );
+		pJeep->SetAbsOrigin( vecOrigin );
+		pJeep->SetAbsAngles( vecAngles );
+		pJeep->KeyValue( "model", "models/Combine_Helicopter.mdl" );
+		pJeep->KeyValue( "solid", "6" );
+		pJeep->KeyValue( "targetname", "heli" );
+		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/vehicle_helicopter.txt" );
+		DispatchSpawn( pJeep );
+		pJeep->Activate();
+		pJeep->Teleport( &vecOrigin, &vecAngles, NULL );
+	}
+}
+
+void CC_CH_CreateHeli( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+	CreateHeli( pPlayer );
+}
+
+static ConCommand ch_createheli("ch_createheli", CC_CH_CreateHeli, "Spawn helicopter in front of the player.", FCVAR_CHEAT);
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//Spawn Jeep
+//-----------------------------------------------------------------------------
+static void CreateStrider( CBasePlayer *pPlayer )
+{
+	// Cheat to create a jeep in front of the player
+	Vector vecForward;
+	AngleVectors( pPlayer->EyeAngles(), &vecForward );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "qua_strider" );
+	if ( pJeep )
+	{
+		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
+		QAngle vecAngles( 0, pPlayer->GetAbsAngles().y - 90, 0 );
+		pJeep->SetAbsOrigin( vecOrigin );
+		pJeep->SetAbsAngles( vecAngles );
+		pJeep->KeyValue( "model", "models/combine_Strider.mdl" );
+		pJeep->KeyValue( "solid", "6" );
+		pJeep->KeyValue( "targetname", "strider" );
+		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/strider.txt" );
+		DispatchSpawn( pJeep );
+		pJeep->Activate();
+		pJeep->Teleport( &vecOrigin, &vecAngles, NULL );
+	}
+}
+
+void CC_CH_CreateStrider( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+	CreateStrider( pPlayer );
+}
+
+static ConCommand ch_createstrider("ch_createstrider", CC_CH_CreateStrider, "Spawn Strider in front of the player.", FCVAR_CHEAT);
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//Spawn Jeep
+//-----------------------------------------------------------------------------
+static void CreateAPC( CBasePlayer *pPlayer )
+{
+	// Cheat to create a jeep in front of the player
+	Vector vecForward;
+	AngleVectors( pPlayer->EyeAngles(), &vecForward );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_apc" );
+	if ( pJeep )
+	{
+		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
+		QAngle vecAngles( 0, pPlayer->GetAbsAngles().y - 90, 0 );
+		pJeep->SetAbsOrigin( vecOrigin );
+		pJeep->SetAbsAngles( vecAngles );
+		pJeep->KeyValue( "model", "models/combine_apc.mdl" );
+		pJeep->KeyValue( "solid", "6" );
+		pJeep->KeyValue( "targetname", "apc" );
+		pJeep->KeyValue( "vehiclescript", "scripts/vehicles/apc.txt" );
+		DispatchSpawn( pJeep );
+		pJeep->Activate();
+		pJeep->Teleport( &vecOrigin, &vecAngles, NULL );
+	}
+}
+
+void CC_CH_CreateAPC( void )
+{
+	CBasePlayer *pPlayer = UTIL_GetCommandClient();
+	if ( !pPlayer )
+		return;
+	CreateAPC( pPlayer );
+}
+
+static ConCommand ch_createapc("ch_createapc", CC_CH_CreateAPC, "Spawn APC in front of the player.", FCVAR_CHEAT);
 #endif //SecobMod__ALLOW_VALVE_APPROVED_CHEATING
 
 

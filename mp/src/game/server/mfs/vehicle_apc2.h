@@ -15,13 +15,14 @@
 
 #include "vehicle_base.h"
 #include "smoke_trail.h"
+//#include "vehicle_apc.h" //Make it inherrit in the future
 
 //-----------------------------------------------------------------------------
 // Purpose: Four wheel physics vehicle server vehicle with weaponry
 //-----------------------------------------------------------------------------
 class CPropAPC2;
 
-class CAPCFourWheelServerVehicle : public CFourWheelServerVehicle
+class CAPC2FourWheelServerVehicle : public CFourWheelServerVehicle
 {
 	typedef CFourWheelServerVehicle BaseClass;
 // IServerVehicle
@@ -48,7 +49,7 @@ protected:
 //-----------------------------------------------------------------------------
 class CPropAPC2 : public CPropVehicleDriveable
 {
-	DECLARE_CLASS( CPropAPC, CPropVehicleDriveable );
+	DECLARE_CLASS( CPropAPC2, CPropVehicleDriveable );
 	DECLARE_SERVERCLASS();
 public:
 

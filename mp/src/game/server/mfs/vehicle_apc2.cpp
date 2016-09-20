@@ -56,7 +56,7 @@
 extern short g_sModelIndexFireball; // Echh...
 
 
-ConVar sk_apc_health( "sk_apc_health", "750" );
+//ConVar sk_apc2_health( "sk_apc2_health", "750" );
 
 
 #define APC_MAX_CHUNKS	3
@@ -233,7 +233,7 @@ void CPropAPC2::UpdateOnRemove( void )
 void CPropAPC2::CreateServerVehicle( void )
 {
 	// Create our armed server vehicle
-	m_pServerVehicle = new CAPCFourWheelServerVehicle();
+	m_pServerVehicle = new CAPC2FourWheelServerVehicle();
 	m_pServerVehicle->SetVehicle( this );
 }
 
@@ -1253,12 +1253,12 @@ void CPropAPC2::EnterVehicle( CBasePlayer *pPlayer )
 // Purpose: 
 //-----------------------------------------------------------------------------
 
-CPropAPC2 *CAPCFourWheelServerVehicle::GetAPC( void )
+CPropAPC2 *CAPC2FourWheelServerVehicle::GetAPC( void )
 {
 	return (CPropAPC2*)GetDrivableVehicle();
 }
 
-void CAPCFourWheelServerVehicle::NPC_AimPrimaryWeapon( Vector vecTarget )
+void CAPC2FourWheelServerVehicle::NPC_AimPrimaryWeapon( Vector vecTarget )
 {
 	CPropAPC2 *pAPC = ((CPropAPC2*)m_pVehicle);
 	pAPC->AimPrimaryWeapon( vecTarget );
@@ -1267,7 +1267,7 @@ void CAPCFourWheelServerVehicle::NPC_AimPrimaryWeapon( Vector vecTarget )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAPCFourWheelServerVehicle::NPC_AimSecondaryWeapon( Vector vecTarget )
+void CAPC2FourWheelServerVehicle::NPC_AimSecondaryWeapon( Vector vecTarget )
 {
 	// Add some random noise
 //	Vector vecOffset = vecTarget + RandomVector( -128, 128 );
@@ -1277,7 +1277,7 @@ void CAPCFourWheelServerVehicle::NPC_AimSecondaryWeapon( Vector vecTarget )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAPCFourWheelServerVehicle::Weapon_PrimaryRanges( float *flMinRange, float *flMaxRange )
+void CAPC2FourWheelServerVehicle::Weapon_PrimaryRanges( float *flMinRange, float *flMaxRange )
 {
 	*flMinRange = MACHINE_GUN_ATTACK_RANGE_MIN;
 	*flMaxRange = MACHINE_GUN_ATTACK_RANGE_MAX;
@@ -1286,7 +1286,7 @@ void CAPCFourWheelServerVehicle::Weapon_PrimaryRanges( float *flMinRange, float 
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CAPCFourWheelServerVehicle::Weapon_SecondaryRanges( float *flMinRange, float *flMaxRange )
+void CAPC2FourWheelServerVehicle::Weapon_SecondaryRanges( float *flMinRange, float *flMaxRange )
 {
 	*flMinRange = ROCKET_ATTACK_RANGE_MIN;
 	*flMaxRange = ROCKET_ATTACK_RANGE_MAX;
@@ -1295,7 +1295,7 @@ void CAPCFourWheelServerVehicle::Weapon_SecondaryRanges( float *flMinRange, floa
 //-----------------------------------------------------------------------------
 // Purpose: Return the time at which this vehicle's primary weapon can fire again
 //-----------------------------------------------------------------------------
-float CAPCFourWheelServerVehicle::Weapon_PrimaryCanFireAt( void )
+float CAPC2FourWheelServerVehicle::Weapon_PrimaryCanFireAt( void )
 {
 	return ((CPropAPC2*)m_pVehicle)->PrimaryWeaponFireTime();
 }
@@ -1303,12 +1303,12 @@ float CAPCFourWheelServerVehicle::Weapon_PrimaryCanFireAt( void )
 //-----------------------------------------------------------------------------
 // Purpose: Return the time at which this vehicle's secondary weapon can fire again
 //-----------------------------------------------------------------------------
-float CAPCFourWheelServerVehicle::Weapon_SecondaryCanFireAt( void )
+float CAPC2FourWheelServerVehicle::Weapon_SecondaryCanFireAt( void )
 {
 	return ((CPropAPC2*)m_pVehicle)->SecondaryWeaponFireTime();
 }
 
-void CAPCFourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
+void CAPC2FourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
 {
 
 

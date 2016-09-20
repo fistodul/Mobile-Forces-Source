@@ -62,18 +62,18 @@ ConVar r_APCFOV( "r_APCFOV", "90", FCVAR_CHEAT );
 //
 // Client-side Jeep Class
 //
-class C_PropAPC : public C_PropVehicleDriveable
+class C_PropAPC2 : public C_PropVehicleDriveable
 {
 
-	DECLARE_CLASS( C_PropAPC, C_PropVehicleDriveable );
+	DECLARE_CLASS( C_PropAPC2, C_PropVehicleDriveable );
 
 public:
 
 	DECLARE_CLIENTCLASS();
 	DECLARE_INTERPOLATION();
 
-	C_PropAPC();
-	~C_PropAPC();
+	C_PropAPC2();
+	~C_PropAPC2();
 
 public:
 	
@@ -111,7 +111,7 @@ private:
 	bool		m_bHeadlightIsOn;*/
 };
 
-IMPLEMENT_CLIENTCLASS_DT( C_PropAPC, DT_PropAPC, CPropAPC )
+IMPLEMENT_CLIENTCLASS_DT( C_PropAPC2, DT_PropAPC2, CPropAPC2 )
 	RecvPropInt		(RECVINFO(m_iHealth)),
 	RecvPropInt		(RECVINFO(m_iAmmoCount)),
 	RecvPropInt		(RECVINFO(m_iCannonCount)),
@@ -120,7 +120,7 @@ END_RECV_TABLE()
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-C_PropAPC::C_PropAPC()
+C_PropAPC2::C_PropAPC2()
 {
 	//m_vecEyeSpeed.Init();
 	//m_flViewAngleDeltaTime = 0.0f;
@@ -131,7 +131,7 @@ C_PropAPC::C_PropAPC()
 //-----------------------------------------------------------------------------
 // Purpose: Deconstructor
 //-----------------------------------------------------------------------------
-C_PropAPC::~C_PropAPC()
+C_PropAPC2::~C_PropAPC2()
 {
 	/*if ( m_pHeadlight )
 	{
@@ -139,12 +139,12 @@ C_PropAPC::~C_PropAPC()
 	}*/
 }
 
-void C_PropAPC::Simulate( void )
+void C_PropAPC2::Simulate( void )
 {
 	//DevMsg("SIMULADO");
 	BaseClass::Simulate();
 }
-void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType )
+void C_PropAPC2::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType )
 {
 	float flTracerDist;
 	Vector vecDir;
@@ -159,7 +159,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 //-----------------------------------------------------------------------------
 // Purpose: Blend view angles.
 //-----------------------------------------------------------------------------
-//void C_PropAPC::UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserCmd *pCmd )
+//void C_PropAPC2::UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserCmd *pCmd )
 //{
 //	if ( r_APCViewBlendTo.GetInt() )
 //	{
@@ -193,7 +193,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 ////-----------------------------------------------------------------------------
 //// Purpose:
 ////-----------------------------------------------------------------------------
-//void C_PropAPC::DampenEyePosition( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles )
+//void C_PropAPC2::DampenEyePosition( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles )
 //{
 //#ifdef HL2_DLL
 //	// Get the frametime. (Check to see if enough time has passed to warrent dampening).
@@ -220,7 +220,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 //// Use the controller as follows:
 //// speed += ( pCoefficientsOut[0] * ( targetPos - currentPos ) + pCoefficientsOut[1] * ( targetSpeed - currentSpeed ) ) * flDeltaTime;
 ////-----------------------------------------------------------------------------
-//void C_PropAPC::ComputePDControllerCoefficients( float *pCoefficientsOut,
+//void C_PropAPC2::ComputePDControllerCoefficients( float *pCoefficientsOut,
 //												  float flFrequency, float flDampening,
 //												  float flDeltaTime )
 //{
@@ -236,7 +236,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 ////-----------------------------------------------------------------------------
 //// Purpose:
 ////-----------------------------------------------------------------------------
-//void C_PropAPC::DampenForwardMotion( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles, float flFrameTime )
+//void C_PropAPC2::DampenForwardMotion( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles, float flFrameTime )
 //{
 //	Vector vecPredEyePos = m_vecLastEyePos + m_vecEyeSpeed * flFrameTime;
 //	Vector vecPredEyeSpeed = m_vecEyeSpeed;
@@ -299,7 +299,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 ////-----------------------------------------------------------------------------
 //// Purpose:
 ////-----------------------------------------------------------------------------
-//void C_PropAPC::DampenUpMotion( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles, float flFrameTime )
+//void C_PropAPC2::DampenUpMotion( Vector &vecVehicleEyePos, QAngle &vecVehicleEyeAngles, float flFrameTime )
 //{
 //	// Get up vector.
 //	Vector vecUp;
@@ -313,7 +313,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-//void C_PropAPC::OnEnteredVehicle( C_BasePlayer *pPlayer )
+//void C_PropAPC2::OnEnteredVehicle( C_BasePlayer *pPlayer )
 //{
 ////	int eyeAttachmentIndex = LookupAttachment( "cannon_muzzle" );
 ////	Vector vehicleEyeOrigin;
@@ -325,7 +325,7 @@ void C_PropAPC::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int i
 ////	m_vecEyeSpeed = vec3_origin;
 ////	m_bEnterAnimOn=false;
 //}
-void C_PropAPC::ReceiveMessage( int classID, bf_read &msg )
+void C_PropAPC2::ReceiveMessage( int classID, bf_read &msg )
 {
 	if ( classID != GetClientClass()->m_ClassID )
 	{
@@ -437,7 +437,7 @@ void QUA_MuzzleFlash_APC(ClientEntityHandle_t hEntity, int attachmentIndex)
 	}
 }
 
-void C_PropAPC::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
+void C_PropAPC2::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
 {	
 	VehicleViewSmoothingAPC( m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, &m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL );
 }
