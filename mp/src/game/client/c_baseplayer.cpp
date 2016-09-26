@@ -51,6 +51,8 @@
 #include "client_virtualreality.h"
 #ifdef LUA_SDK
 #include "luamanager.h"
+#include "lbaseplayer_shared.h"
+#include "mathlib/lvector.h"
 #endif
 
 #if defined USES_ECON_ITEMS
@@ -310,6 +312,10 @@ END_RECV_TABLE()
 		
 		#ifdef SecobMod__USE_PLAYERCLASSES
 			RecvPropFloat	(RECVINFO(m_iJumpHeight)),
+#else
+#ifdef MFS
+		RecvPropFloat(RECVINFO(m_iJumpHeight)),
+#endif
 		#endif //SecobMod__USE_PLAYERCLASSES
 		
 		RecvPropInt		(RECVINFO(m_fFlags)),
@@ -1291,12 +1297,12 @@ void C_BasePlayer::UpdateFlashlight()
 		AngleVectors( angLightDir, &vecForward, &vecRight, &vecUp );
 	#endif
 		
-/*#ifdef LUA_SDK
+#ifdef LUA_SDK
 		int nDistance = FLASHLIGHT_DISTANCE;
 
 		BEGIN_LUA_CALL_HOOK("PlayerUpdateFlashlight");
-		lua_pushhl2mpplayer(L, this);
-		lua_pushvector(L, position);
+		lua_pushplayer(L, this);
+		lua_pushvector(L, EyePosition());
 		lua_pushvector(L, vecForward);
 		lua_pushvector(L, vecRight);
 		lua_pushvector(L, vecUp);
@@ -1304,7 +1310,7 @@ void C_BasePlayer::UpdateFlashlight()
 		END_LUA_CALL_HOOK(6, 5);
 
 		if (lua_isuserdata(L, -5) && luaL_checkudata(L, -5, "Vector"))
-			VectorCopy(luaL_checkvector(L, -5), position);
+			VectorCopy(luaL_checkvector(L, -5), EyePosition());
 		if (lua_isuserdata(L, -4) && luaL_checkudata(L, -4, "Vector"))
 			VectorCopy(luaL_checkvector(L, -4), vecForward);
 		if (lua_isuserdata(L, -3) && luaL_checkudata(L, -3, "Vector"))
@@ -1318,11 +1324,11 @@ void C_BasePlayer::UpdateFlashlight()
 
 
 		// Update the light with the new position and direction.		
-		m_pFlashlight->UpdateLight(position, vecForward, vecRight, vecUp, nDistance);
-#else*/
+		m_pFlashlight->UpdateLight(EyePosition(), vecForward, vecRight, vecUp, nDistance);
+#else
 		// Update the light with the new position and direction.		
 		m_pFlashlight->UpdateLight( EyePosition(), vecForward, vecRight, vecUp, FLASHLIGHT_DISTANCE );
-//#endif
+#endif
 	}
 	else if (m_pFlashlight)
 	{
@@ -3132,6 +3138,14 @@ static ConCommand soundscape_dumpclient("soundscape_dumpclient", CC_DumpClientSo
 	{
 	        return m_iJumpHeight;
 	}
+#else
+#ifdef MFS
+float C_BasePlayer::GetJumpHeight()
+{
+	return m_iJumpHeight;
+}
+#else
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 

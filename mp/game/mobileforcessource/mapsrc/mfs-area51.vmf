@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "6920"
-	"mapversion" "19"
+	"mapversion" "20"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "19"
+	"mapversion" "20"
 	"classname" "worldspawn"
 	"comment" "Decompiled by BSPSource v1.3.21 from mfs-test_facility"
 	"detailmaterial" "detail/detailsprites"
@@ -12804,12 +12804,12 @@ entity
 	"lightmapresolutiony" "32"
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
-	"origin" "1856 2304 576"
 	"screenspacefade" "0"
 	"skin" "0"
 	"solid" "6"
 	"VehicleLocked" "0"
 	"vehiclescript" "scripts/vehicles/jeep_test.txt"
+	"origin" "1856 2304 576"
 	editor
 	{
 		"color" "220 30 220"
@@ -12836,12 +12836,12 @@ entity
 	"lightmapresolutiony" "32"
 	"maxdxlevel" "0"
 	"mindxlevel" "0"
-	"origin" "360.17 960 960"
 	"screenspacefade" "0"
 	"skin" "0"
 	"solid" "6"
 	"VehicleLocked" "0"
 	"vehiclescript" "scripts/vehicles/jeep_test.txt"
+	"origin" "360.17 960 960"
 	editor
 	{
 		"color" "220 30 220"
@@ -12853,7 +12853,7 @@ entity
 entity
 {
 	"id" "10511"
-	"classname" "prop_vehicle_apc2"
+	"classname" "prop_vehicle_apc"
 	"actionScale" "1"
 	"angles" "0 0 0"
 	"disableselfshadowing" "0"
@@ -12873,7 +12873,7 @@ entity
 	"skin" "0"
 	"solid" "6"
 	"VehicleLocked" "0"
-	"vehiclescript" "scripts/vehicles/jeep_test.txt"
+	"vehiclescript" "scripts/vehicles/apc.txt"
 	editor
 	{
 		"color" "220 30 220"
@@ -12887,8 +12887,8 @@ cameras
 	"activecamera" "0"
 	camera
 	{
-		"position" "[4321.01 3722.68 107.294]"
-		"look" "[4073.02 3644.01 50.0885]"
+		"position" "[4855.42 4056.2 797.14]"
+		"look" "[4651.5 3905.86 714.819]"
 	}
 }
 cordon

@@ -179,7 +179,7 @@ public:
 	bool	IsHoldout( void ) { return m_bHoldoutEnabled;	}
 #ifdef LUA_SDK
 #ifndef CLIENT_DLL
-	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker );
+	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info );
 	bool	AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
 
 	void	PlayerSpawn( CBasePlayer *pPlayer );

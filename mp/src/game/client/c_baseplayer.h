@@ -263,6 +263,11 @@ public:
 	#ifdef SecobMod__USE_PLAYERCLASSES
 		float GetJumpHeight();
 		CNetworkVar( float, m_iJumpHeight );
+#else
+#ifdef MFS
+	float GetJumpHeight();
+	CNetworkVar(float, m_iJumpHeight);
+#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 	
 	virtual void				AbortReload( void );

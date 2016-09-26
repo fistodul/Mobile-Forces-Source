@@ -186,7 +186,14 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 	m_bDelayedMessage = false;
 	PlayerCanChangeClass = false;
 #endif //SecobMod__USE_PLAYERCLASSES
-	
+#ifdef MFS
+	weight = 0;
+	old_weight = weight;
+	CBasePlayer::SetWalkSpeed(150);
+	CBasePlayer::SetNormSpeed(190);
+	CBasePlayer::SetSprintSpeed(320);
+	CBasePlayer::SetJumpHeight(21);
+#endif
 //	UseClientSideAnimation();
 }
 
@@ -818,7 +825,12 @@ CBaseEntity *ent = NULL;
 #endif
 		#ifdef SecobMod__USE_PLAYERCLASSES			
 		StartSprinting();
-		StopSprinting();		
+		StopSprinting();	
+		#else
+		#ifdef MFS
+		StartSprinting();
+		StopSprinting();
+		#endif
 		#endif //SecobMod__USE_PLAYERCLASSES
 	}
 
@@ -1188,6 +1200,24 @@ void CHL2MP_Player::PostThink( void )
 	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
 		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
 #ifdef MFS
+	for (int i = 0; i <= MAX_WEAPONS; i++)
+	{
+		if (m_hMyWeapons[i].Get())
+		{
+			CBaseCombatWeapon *pWeapon = GetWeapon(i);
+			weight = pWeapon->weight;
+			if (weight != old_weight)
+			{
+				CBasePlayer::SetWalkSpeed(150 - weight);
+				CBasePlayer::SetNormSpeed(190 - weight);
+				CBasePlayer::SetSprintSpeed(320 - weight);
+				//CBasePlayer::SetJumpHeight(21 - weight);
+				StartSprinting();
+				StopSprinting();
+				old_weight = weight;
+			}
+		}
+	}
 	if (HL2MPRules()->IsInjustice() == true)
 	{
 		if (GetTeamNumber() == TEAM_REBELS)

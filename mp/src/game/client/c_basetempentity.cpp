@@ -61,6 +61,45 @@ C_BaseTempEntity::~C_BaseTempEntity( void )
 {
 }
 
+#ifdef LUA_SDK
+/*const char *C_BaseTempEntity::GetClassname( void )
+{
+	static char outstr[ 256 ];
+	outstr[ 0 ] = 0;
+	bool gotname = false;
+#if defined ( LUA_SDK )
+	if ( m_iClassname && m_iClassname[ 0 ] )
+	{
+		Q_snprintf( outstr, sizeof( outstr ), "%s", m_iClassname );
+		gotname = true;
+	}
+#endif
+#ifndef NO_ENTITY_PREDICTION
+	if ( GetPredDescMap() )
+	{
+		const char *mapname =  GetClassMap().Lookup( GetPredDescMap()->dataClassName );
+		if ( mapname && mapname[ 0 ] ) 
+		{
+			Q_strncpy( outstr, mapname, sizeof( outstr ) );
+			gotname = true;
+		}
+	}
+#endif
+
+	if ( !gotname )
+	{
+		Q_strncpy( outstr, typeid( *this ).name(), sizeof( outstr ) );
+	}
+
+	return outstr;
+}*/
+
+void C_BaseTempEntity::SetClassname(const char *className)
+{
+	m_iClassname = MAKE_STRING(className);
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Get next temp ent in chain
 // Output : CBaseTempEntity *

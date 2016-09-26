@@ -97,6 +97,11 @@ ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 #define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
 #define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
 #else
+#ifdef MFS
+#define HL2_WALK_SPEED CBasePlayer::GetWalkSpeed()
+#define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
+#define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
+#else
 	#ifdef HL2MP
 	#define HL2_WALK_SPEED 150
 	#define HL2_NORM_SPEED 190
@@ -106,6 +111,7 @@ ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 	#define	HL2_NORM_SPEED hl2_normspeed.GetFloat()
 	#define	HL2_SPRINT_SPEED hl2_sprintspeed.GetFloat()
 	#endif //HL2MP
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 ConVar player_showpredictedposition( "player_showpredictedposition", "0" );

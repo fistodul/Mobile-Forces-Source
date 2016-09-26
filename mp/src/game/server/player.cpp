@@ -10388,6 +10388,48 @@ float CBasePlayer::GetJumpHeight()
 {
         return m_iJumpHeight;
 }
+#else
+#ifdef MFS
+void CBasePlayer::SetWalkSpeed(int WalkSpeed)
+{
+	m_iWalkSpeed = WalkSpeed;
+}
+
+void CBasePlayer::SetNormSpeed(int NormSpeed)
+{
+	m_iNormSpeed = NormSpeed;
+}
+
+void CBasePlayer::SetSprintSpeed(int SprintSpeed)
+{
+	m_iSprintSpeed = SprintSpeed;
+}
+
+void CBasePlayer::SetJumpHeight(float JumpHeight)
+{
+	m_iJumpHeight = JumpHeight;
+}
+
+int CBasePlayer::GetWalkSpeed()
+{
+	return m_iWalkSpeed;
+}
+
+int CBasePlayer::GetNormSpeed()
+{
+	return m_iNormSpeed;
+}
+
+int CBasePlayer::GetSprintSpeed()
+{
+	return m_iSprintSpeed;
+}
+
+float CBasePlayer::GetJumpHeight()
+{
+	return m_iJumpHeight;
+}
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 #ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS

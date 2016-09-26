@@ -409,6 +409,134 @@ void CHL2MPRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &inf
 #endif
 }
 
+#ifndef CLIENT_DLL
+#if defined ( LUA_SDK )
+bool CHL2MPRules::FPlayerCanTakeDamage(CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info)
+{
+	BEGIN_LUA_CALL_HOOK("FPlayerCanTakeDamage");
+	lua_pushplayer(L, pPlayer);
+	lua_pushentity(L, pAttacker);
+	END_LUA_CALL_HOOK(2, 1);
+
+	RETURN_LUA_BOOLEAN();
+
+	return BaseClass::FPlayerCanTakeDamage(pPlayer, pAttacker, info);
+}
+
+bool CHL2MPRules::AllowDamage(CBaseEntity *pVictim, const CTakeDamageInfo &info)
+{
+	CTakeDamageInfo lInfo = info;
+
+	BEGIN_LUA_CALL_HOOK("AllowDamage");
+	lua_pushentity(L, pVictim);
+	lua_pushdamageinfo(L, lInfo);
+	END_LUA_CALL_HOOK(2, 1);
+
+	RETURN_LUA_BOOLEAN();
+
+	return BaseClass::AllowDamage(pVictim, lInfo);
+}
+#ifdef HL2SB
+//-----------------------------------------------------------------------------
+// Purpose: Whether or not the NPC should drop a health vial
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CHL2MPRules::NPC_ShouldDropHealth(CBasePlayer *pRecipient)
+{
+	// Can only do this every so often
+	if (m_flLastHealthDropTime > gpGlobals->curtime)
+		return false;
+
+	//Try to throw dynamic health
+	float healthPerc = ((float)pRecipient->m_iHealth / (float)pRecipient->m_iMaxHealth);
+
+	if (random->RandomFloat(0.0f, 1.0f) > healthPerc*1.5f)
+		return true;
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Whether or not the NPC should drop a health vial
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CHL2MPRules::NPC_ShouldDropGrenade(CBasePlayer *pRecipient)
+{
+	// Can only do this every so often
+	if (m_flLastGrenadeDropTime > gpGlobals->curtime)
+		return false;
+
+	int grenadeIndex = GetAmmoDef()->Index("grenade");
+	int numGrenades = pRecipient->GetAmmoCount(grenadeIndex);
+
+	// If we're not maxed out on grenades and we've randomly okay'd it
+	if ((numGrenades < GetAmmoDef()->MaxCarry(grenadeIndex)) && (random->RandomInt(0, 2) == 0))
+		return true;
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update the drop counter for health
+//-----------------------------------------------------------------------------
+void CHL2MPRules::NPC_DroppedHealth(void)
+{
+	m_flLastHealthDropTime = gpGlobals->curtime + sk_plr_health_drop_time.GetFloat();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Update the drop counter for grenades
+//-----------------------------------------------------------------------------
+void CHL2MPRules::NPC_DroppedGrenade(void)
+{
+	m_flLastGrenadeDropTime = gpGlobals->curtime + sk_plr_grenade_drop_time.GetFloat();
+}
+
+#endif
+
+void CHL2MPRules::PlayerThink(CBasePlayer *pPlayer)
+{
+	BEGIN_LUA_CALL_HOOK("PlayerThink");
+	lua_pushplayer(L, pPlayer);
+	END_LUA_CALL_HOOK(1, 0);
+
+	BaseClass::PlayerThink(pPlayer);
+}
+
+void CHL2MPRules::PlayerSpawn(CBasePlayer *pPlayer)
+{
+	BEGIN_LUA_CALL_HOOK("PlayerSpawn");
+	lua_pushplayer(L, pPlayer);
+	END_LUA_CALL_HOOK(1, 1);
+
+	RETURN_LUA_NONE();
+
+	BaseClass::PlayerSpawn(pPlayer);
+}
+
+bool CHL2MPRules::FPlayerCanRespawn(CBasePlayer *pPlayer)
+{
+	BEGIN_LUA_CALL_HOOK("FPlayerCanRespawn");
+	lua_pushplayer(L, pPlayer);
+	END_LUA_CALL_HOOK(1, 1);
+
+	RETURN_LUA_BOOLEAN();
+
+	return BaseClass::FPlayerCanRespawn(pPlayer);
+}
+
+float CHL2MPRules::FlPlayerSpawnTime(CBasePlayer *pPlayer)
+{
+	BEGIN_LUA_CALL_HOOK("FlPlayerSpawnTime");
+	lua_pushplayer(L, pPlayer);
+	END_LUA_CALL_HOOK(1, 1);
+
+	RETURN_LUA_NUMBER();
+
+	return BaseClass::FlPlayerSpawnTime(pPlayer);
+}
+#endif
+#endif
 
 void CHL2MPRules::Think( void )
 {

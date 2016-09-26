@@ -18,6 +18,8 @@
 #pragma once
 #endif
 
+//SecobMod__Information: Here we add in the Source Engine Co-Operative Base Mod shared definitions file. Appeared to ignore it??
+#include "./secobmod/secobmod_shareddefs.h"
 
 #include "mathlib/mathlib.h"
 
@@ -61,9 +63,13 @@ public:
 
 	CBaseTrace() {}
 
+#if !defined ( LUA_SDK )
+	// HACKHACK: We only do this for Lua, but Lua classes which use traces will
+	// throw errors when we compile, so define this outside of the Lua SDK.
 private:
 	// No copy constructors allowed
 	CBaseTrace(const CBaseTrace& vOther);
+#endif
 };
 
 #endif // TRACE_H

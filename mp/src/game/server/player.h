@@ -271,6 +271,26 @@ public:
 	int GetNormSpeed();
 	int GetSprintSpeed();
 	float GetJumpHeight();
+	#else
+	#ifdef MFS
+	// Here are the players speed is set:
+	void SetWalkSpeed(int WalkSpeed);
+	void SetNormSpeed(int NormSpeed);
+	void SetSprintSpeed(int SprintSpeed);
+	void SetJumpHeight(float JumpHeight);
+
+	// Spielergeschwindigkeit:
+	int m_iWalkSpeed;
+	int m_iNormSpeed;
+	int m_iSprintSpeed;
+
+	CNetworkVar(float, m_iJumpHeight);
+
+	int GetWalkSpeed();
+	int GetNormSpeed();
+	int GetSprintSpeed();
+	float GetJumpHeight();
+	#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 
 	#ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS

@@ -87,6 +87,9 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 	m_iPrimaryAmmoType = -1;
 	m_iSecondaryAmmoType = -1;
 #endif
+#ifdef MFS
+	weight = 0;
+#endif
 
 #if !defined( CLIENT_DLL )
 	m_pConstraint = NULL;

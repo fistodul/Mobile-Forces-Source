@@ -1,14 +1,9 @@
 @include "base.fgd"
+@include "halflife2.fgd"
 @include "hl2mp.fgd"
 
 @PointClass base(BaseDriveableVehicle) studio("models/combine_Strider.mdl") = qua_strider :
 	"The Pilotable Strider !!."
-[
-]
-
-
-@PointClass base(BaseDriveableVehicle) studio("models/combine_apc.mdl") = prop_vehicle_apc2 :
-	"Driveable APC."
 [
 ]
 

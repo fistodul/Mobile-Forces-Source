@@ -159,6 +159,8 @@ $Project "Client (MFS)"
 		$File	"mfs\c_vehicle_helicopter.h"
 		$File	"mfs\c_vehicle_passenger.cpp"
 		$File	"mfs\c_vehicle_passenger.h"
+		$File	"$SRCDIR\public\XUnzip.cpp"
+		$File	"$SRCDIR\public\zip_utils.cpp"
 		}
 		
 		$Folder	"seco"

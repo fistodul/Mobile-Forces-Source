@@ -300,6 +300,9 @@ $Project "Server (MFS)"
 		$File	"mfs\vehicle_passenger.h"
 		$File	"mfs\vehicle_passengerserver.cpp"
 		$File	"mfs\vehicle_passengerserver.h"
+		$File	"$SRCDIR\public\zip_utils.cpp"
+		//Should be External Dependency
+		$File	"$SRCDIR\public\zip\XUnzip.h"
 		}
 		
 		$Folder	"seco"

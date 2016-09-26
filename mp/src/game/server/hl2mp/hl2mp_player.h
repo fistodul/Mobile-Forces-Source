@@ -115,6 +115,15 @@ public:
 int m_iWalkSpeed; 
 int m_iNormSpeed;
 int m_iSprintSpeed;
+#else
+#ifdef MFS
+	int weight;
+	int old_weight;
+// Ints for the movement speeds.
+int m_iWalkSpeed; 
+int m_iNormSpeed;
+int m_iSprintSpeed;
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 // Armor Ints.

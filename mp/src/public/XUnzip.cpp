@@ -92,11 +92,18 @@
 //       own source and binary releases.
 //
 ///////////////////////////////////////////////////////////////////////////////
+//#ifdef LUA_SDK
+#include "cbase.h"
+//#endif
 
 #if defined( WIN32 ) && !defined( _X360 )
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
+#ifdef LUA_SDK
+#include <winlite.h> // Dont rly know why, but it was the difference in hl2sb's XUnzip.cpp compared to the XUnzip_src.cpp which it uses
+#else
 #include <windows.h>
+#endif
 #include <tchar.h>
 #elif defined(POSIX)
 #include <fcntl.h>
@@ -2776,7 +2783,8 @@ LUFILE *lufopen(void *z,unsigned int len,DWORD flags,ZRESULT *err)
 			HANDLE hf = z;
 			bool res;
 #ifdef _WIN32		
-			res = DuplicateHandle(GetCurrentProcess(),hf,GetCurrentProcess(),&h,0,FALSE,DUPLICATE_SAME_ACCESS) == TRUE;
+			//res = DuplicateHandle(GetCurrentProcess(),hf,GetCurrentProcess(),&h,0,FALSE,DUPLICATE_SAME_ACCESS) == TRUE;
+			res = DuplicateHandle(GetCurrentProcess(),hf,GetCurrentProcess(),&h,0,FALSE,DUPLICATE_SAME_ACCESS) == 1;
 #else
 			h = (void*) dup( (int)hf );
 			res = (int) dup >= 0;

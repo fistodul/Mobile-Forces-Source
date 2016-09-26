@@ -32,6 +32,12 @@ public:
 									C_BaseTempEntity( void );
 	virtual							~C_BaseTempEntity( void );
 
+#ifdef LUA_SDK
+	virtual void					SetClassname(const char *className);
+	string_t						m_iClassname;
+	//char const						*GetClassname( void );
+#endif
+
 // IClientUnknown implementation.
 public:
 

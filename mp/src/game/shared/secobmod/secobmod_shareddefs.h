@@ -32,7 +32,7 @@
 //#define MFS_MOTD // if map briefings are enabled this will load the MOTD if no map briefing is found
 //#define Dynamic_shadow // https://developer.valvesoftware.com/wiki/Dynamic_RTT_shadow_angles_in_Source_2007 (is this already present in 2013?)
 //#define FP_Fix // https://developer.valvesoftware.com/wiki/First_Person_Fix
-//#define LUA_SDK // for screwing around
+#define LUA_SDK // for screwing around
 //#define VGUI_FIX // This is mostly implemented but i put under a define stuff that caused problems(documented)
 #define GAMEUI2 // Ported Alien Swarm Gameui2
 #define pilotable // Pilotable Strider
