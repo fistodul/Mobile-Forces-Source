@@ -1,4 +1,4 @@
-**This is the source code of Mobile Forces Source xD (and apparently the MFS wiki)**
+﻿**This is the source code of Mobile Forces Source xD (and apparently the MFS wiki)**
  
 The folder structure is like this: 
 
@@ -7,6 +7,8 @@ The folder structure is like this:
 |>>>>game - the default game folder you would get with the source sdk 
 |	|>>>>mobileforcessource 
 |		|>>>>bin - the client.dll/dylib/so and server.dll/dylib/so go here after being compiled 
+|		|>>>>mapsrc - map vmf's 
+|		|>>>>modelsrc - model source files 
 |>>>>src - contains the solutions when they are generated alongside various engine things lol 
 	|>>>>game - most of the code which will show up in-game and decide how shit works 
 	|	|>>>>client - contains client-side files 

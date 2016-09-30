@@ -49,8 +49,9 @@
 #define LADDER_EXTRA_HEIGHT_VEC Vector(0,0,25)
 
 #ifdef MFS
-extern ConVar bot_mimic_yaw_offset;
+#ifndef bot_main_cpp
 extern ConVar bot_mimic;
+#endif
 #endif
 
 enum BotGeneralStates_t
@@ -96,7 +97,7 @@ class CHL2MP_Bot : public CHL2MP_Player
 {
 public:
 
-	//~CHL2MP_Bot(void);
+	~CHL2MP_Bot();
 
 	float			m_flNextStrafeTime;
 	float			m_flStrafeSkillRelatedTimer;
@@ -220,9 +221,6 @@ public:
 
 		if (!pPlayer->GetLastUserCommand())
 			return false;
-
-		cmd = *pPlayer->GetLastUserCommand();
-		cmd.viewangles[YAW] += bot_mimic_yaw_offset.GetFloat();
 
 		return true;
 	}

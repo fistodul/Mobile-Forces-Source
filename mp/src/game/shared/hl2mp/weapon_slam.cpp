@@ -768,6 +768,21 @@ void CWeapon_SLAM::ItemPostFrame( void )
 		return;
 	}
 
+	if (!HasPrimaryAmmo())
+		weight = 0;
+	else if (GetPrimaryAmmoCount() == 1)
+		weight = 0.5;
+	else if (GetPrimaryAmmoCount() == 2)
+		weight = 1;
+	else if (GetPrimaryAmmoCount() == 3)
+		weight = 1.5;
+	else if (GetPrimaryAmmoCount() == 4)
+		weight = 2;
+	else if (GetPrimaryAmmoCount() == 5)
+		weight = 2.5;
+	else if (GetPrimaryAmmoCount() == 6)
+		weight = 3;
+
 	SLAMThink();
 
 	if ((pOwner->m_nButtons & IN_ATTACK2) && (m_flNextSecondaryAttack <= gpGlobals->curtime))
@@ -1065,6 +1080,6 @@ CWeapon_SLAM::CWeapon_SLAM(void)
 	m_bNeedDetonatorDraw	= false;
 	m_bNeedDetonatorHolster	= false;
 	#ifdef MFS
-	//Slam_Weight= 0.5;
+	weight= 1;
 	#endif
 }

@@ -25,6 +25,7 @@
 	#include "c_te_effect_dispatch.h"
 	#include "fx_quad.h"
 	#include "fx.h"
+	#include "hl2mp/hl2mp_gamerules.h"
 
 	extern void DrawHalo( IMaterial* pMaterial, const Vector &source, float scale, float const *color, float flHDRColorScale );
 	extern void FormatViewModelAttachment( Vector &vOrigin, bool bInverse );
@@ -78,7 +79,18 @@ public:
 	void		Spawn();
 
 	float		GetRange( void )		{ return KNIFE_RANGE; }
-	float		GetFireRate( void )		{ return KNIFE_REFIRE; }
+
+		float		GetFireRate(void)		{ 
+#ifdef CLIENT_DLL
+			CHL2MPRules *pRules = HL2MPRules();
+			if (pRules->IsKnifeFight() == true)
+#else
+			if (HL2MPRules()->IsKnifeFight() == true)
+#endif
+				return KNIFE_REFIRE/2;
+			else
+				return KNIFE_REFIRE;
+		}
 
 
 	bool		Deploy( void );

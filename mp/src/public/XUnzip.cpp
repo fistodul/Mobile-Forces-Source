@@ -92,18 +92,12 @@
 //       own source and binary releases.
 //
 ///////////////////////////////////////////////////////////////////////////////
-//#ifdef LUA_SDK
 #include "cbase.h"
-//#endif
 
 #if defined( WIN32 ) && !defined( _X360 )
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
-#ifdef LUA_SDK
-#include <winlite.h> // Dont rly know why, but it was the difference in hl2sb's XUnzip.cpp compared to the XUnzip_src.cpp which it uses
-#else
-#include <windows.h>
-#endif
+#include <winlite.h>
 #include <tchar.h>
 #elif defined(POSIX)
 #include <fcntl.h>

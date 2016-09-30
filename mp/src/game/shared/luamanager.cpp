@@ -5,6 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#define luamanager_cpp
 #ifdef LUA_SDK
 #include "filesystem.h"
 #ifndef CLIENT_DLL
@@ -26,7 +27,11 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef MFS
+ConVar gamemode( "gamemode", "default", FCVAR_ARCHIVE | FCVAR_REPLICATED );
+#else
 ConVar gamemode( "gamemode", "sandbox", FCVAR_ARCHIVE | FCVAR_REPLICATED );
+#endif
 static char contentSearchPath[MAX_PATH];
 
 static void tag_error (lua_State *L, int narg, int tag) {

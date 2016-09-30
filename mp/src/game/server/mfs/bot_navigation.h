@@ -11,7 +11,9 @@
 #include "nav_area.h"
 
 #ifdef MFS
+#ifndef bot_main_cpp
 extern ConVar bot_zombie;
+#endif
 #endif
 
 void DealWithObstacles( CHL2MP_Bot *pBot, CBaseEntity *pTouchEnt, CUserCmd &cmd  )
@@ -417,20 +419,42 @@ bool CreateHidePath( CHL2MP_Bot *pBot, Vector &HiDeSpot )
 						{
 							CHL2MP_Player *pPlayer = ToHL2MPPlayer( UTIL_PlayerByIndex( i ) );
 
-							if ( pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer != pBot )
-//Bot's should hide from each other too
+							if (HL2MPRules()->IsTeamplay() == true)
 							{
-								float dist = (pBot->m_Waypoints[j].Center - pPlayer->GetLocalOrigin()).Length();
-
-								if( dist > 750 )
-									continue;
-
-								trace_t tr;
-								UTIL_TraceLine( pBot->m_Waypoints[j].Center, pPlayer->EyePosition(),MASK_SHOT, pPlayer, 0, &tr );
-
-								if( tr.fraction == 1.0 ) // enemy can see this waypoint and is too close, so this route isn't valid
+								//if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer->GetTeamNumber() != pBot->GetTeamNumber())
+								if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer->GetTeamNumber() != pBot->GetTeamNumber() && pPlayer != pBot) //Human enemies only
 								{
-									return false;
+									float dist = (pBot->m_Waypoints[j].Center - pPlayer->GetLocalOrigin()).Length();
+
+									if (dist > 750)
+										continue;
+
+									trace_t tr;
+									UTIL_TraceLine(pBot->m_Waypoints[j].Center, pPlayer->EyePosition(), MASK_SHOT, pPlayer, 0, &tr);
+
+									if (tr.fraction == 1.0) // enemy can see this waypoint and is too close, so this route isn't valid
+									{
+										return false;
+									}
+								}
+							}
+							else
+							{
+								//if (pPlayer && pPlayer != NULL && pPlayer->IsAlive())
+								if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer != pBot) //Human enemies only
+								{
+									float dist = (pBot->m_Waypoints[j].Center - pPlayer->GetLocalOrigin()).Length();
+
+									if (dist > 750)
+										continue;
+
+									trace_t tr;
+									UTIL_TraceLine(pBot->m_Waypoints[j].Center, pPlayer->EyePosition(), MASK_SHOT, pPlayer, 0, &tr);
+
+									if (tr.fraction == 1.0) // enemy can see this waypoint and is too close, so this route isn't valid
+									{
+										return false;
+									}
 								}
 							}
 						}

@@ -23,13 +23,17 @@ bool AcquireEnemy( CHL2MP_Bot *pBot )
 
 		if (HL2MPRules()->IsTeamplay() == true)
 		{
-			if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer->GetTeamNumber() != pBot->GetTeamNumber())
+			//if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer->GetTeamNumber() != pBot->GetTeamNumber())
+			if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer->GetTeamNumber() != pBot->GetTeamNumber() && pPlayer != pBot && !pPlayer->IsBot()) // acquiring only human players
 			{
 				float dist = (pBot->GetLocalOrigin() - pPlayer->GetLocalOrigin()).Length();
 
 				if (dist < minDist)
 				{
-					minDist = dist;
+					if (minDist == FLT_MAX)
+					{
+						minDist = dist;
+					}
 					pBot->hEnemy.Set(pPlayer);
 					Success = true;
 				}
@@ -37,13 +41,17 @@ bool AcquireEnemy( CHL2MP_Bot *pBot )
 		}
 		else
 		{
-			if (pPlayer && pPlayer != NULL && pPlayer->IsAlive())
+			//if (pPlayer && pPlayer != NULL && pPlayer->IsAlive())
+			if (pPlayer && pPlayer != NULL && pPlayer->IsAlive() && pPlayer != pBot && !pPlayer->IsBot()) // acquiring only human players
 			{
 				float dist = (pBot->GetLocalOrigin() - pPlayer->GetLocalOrigin()).Length();
 
 				if (dist < minDist)
 				{
-					minDist = dist;
+					if (minDist == FLT_MAX)
+					{
+						minDist = dist;
+					}
 					pBot->hEnemy.Set(pPlayer);
 					Success = true;
 				}
@@ -56,13 +64,20 @@ bool AcquireEnemy( CHL2MP_Bot *pBot )
 
 void BotAttack( CHL2MP_Bot *pBot, CUserCmd &cmd )
 {
-	 //EXCEPTIONS
-	if( !pBot->m_bEnemyOnSights || !pBot->m_bInRangeToAttack || pBot->m_flNextBotAttack > gpGlobals->curtime )
-		return;
+#ifdef MFS
+	if (!pBot->RunMimicCommand(cmd) && !bot_zombie.GetBool())
+	{
+#endif
+		//EXCEPTIONS
+		if (!pBot->m_bEnemyOnSights || !pBot->m_bInRangeToAttack || pBot->m_flNextBotAttack > gpGlobals->curtime)
+			return;
 
-	//Make the bot a savage(more than it already is)
-	pBot->StartSprinting();
-	cmd.buttons |= IN_ATTACK;
-	pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
+		//Make the bot a savage(more than it already is)
+		pBot->StartSprinting();
 
+		cmd.buttons |= IN_ATTACK;
+		pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
+#ifdef MFS
+	}
+#endif
 }

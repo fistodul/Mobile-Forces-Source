@@ -18,7 +18,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define	HOLDOUT_SPRITE	"sprites/redglow1.vmt"
+#define	HOLDOUT_SPRITE	"sprites/blueglow1.vmt"
 #define	HOLDOUT_SPRITE2	"sprites/redglow1.vmt"
 
 BEGIN_DATADESC( CHoldout )
@@ -30,11 +30,6 @@ BEGIN_DATADESC( CHoldout )
 	DEFINE_THINKFUNC( HoldoutThink ),
 
 END_DATADESC()
-
-/*IMPLEMENT_SERVERCLASS_ST( CHoldout, DT_Holdout )
-	SendPropFloat( SENDINFO( m_BlueTime ) ),
-	SendPropFloat( SENDINFO( m_RedTime ) ),
-END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( prop_holdout, CHoldout );
 
@@ -70,75 +65,92 @@ void CHoldout::CreateEffects( void )
 	// Dont overlap
 	if ( m_hGlowSprite != NULL )
 		return;
-if ( m_Owner != NULL )
-{
+
 	if ( m_Owner == 2 )
 	{
-	// Create a blue blinking light to show the owner team
-	m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE2, GetAbsOrigin(), false );
+		// Create a blue blinking light to show the owner team
+		m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE, GetAbsOrigin(), false );
 	}
-	else
+	else if (m_Owner == 3)
 	{
-	// Create a red blinking light to show the owner team
-	m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE, GetAbsOrigin(), false );
+		// Create a red blinking light to show the owner team
+		m_hGlowSprite = CSprite::SpriteCreate( HOLDOUT_SPRITE2, GetAbsOrigin(), false );
 	}
 	m_hGlowSprite->SetAttachment( this, 0 );
 	m_hGlowSprite->SetTransparency( kRenderTransAdd, 255, 255, 255, 255, kRenderFxStrobeFast );
 	m_hGlowSprite->SetBrightness( 255, 1.0f );
 	m_hGlowSprite->SetScale( 0.2f, 0.5f );
 	m_hGlowSprite->TurnOn();
-}
+
 }
 
 //-----------------------------------------------------------------------------
-// Purpose:
-// Input  :
+// Purpose: Get's the player's team number, excluding spectators(1)
+// Input  : Idk who tf is the Player here.. pActivator or pCaller
 // Output :
 //-----------------------------------------------------------------------------
-void CHoldout::HoldoutUse(CBaseEntity *pPlayer, CBaseEntity *pCaller, USE_TYPE useType, float value)
+void CHoldout::HoldoutUse(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value)
 {
-	if ( pPlayer->GetTeamNumber() > 1 ) //Shouldnt be owned by spectators even if they somehow "use"
+	if (pActivator->GetTeamNumber() > 1)
 	{
-		if (m_Owner != pPlayer->GetTeamNumber())
+		if (m_Owner != pActivator->GetTeamNumber())
 		{
-		m_Owner = pPlayer->GetTeamNumber();
-		if ( m_hGlowSprite != NULL )
-		{
-		UTIL_Remove( m_hGlowSprite );
-		m_hGlowSprite = NULL;
+			m_Owner = pActivator->GetTeamNumber();
+			if ( m_hGlowSprite != NULL )
+			{
+				UTIL_Remove( m_hGlowSprite );
+				m_hGlowSprite = NULL;
+			}
+			CreateEffects();
 		}
-		CreateEffects();
+	}
+	else if (pCaller->GetTeamNumber() > 1)
+	{
+		if (m_Owner != pCaller->GetTeamNumber())
+		{
+			m_Owner = pCaller->GetTeamNumber();
+			if (m_hGlowSprite != NULL)
+			{
+				UTIL_Remove(m_hGlowSprite);
+				m_hGlowSprite = NULL;
+			}
+			CreateEffects();
 		}
 	}
 }
 
 void CHoldout::HoldoutThink( void )
 {
-	if (m_Owner != NULL)
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+	if (!pPlayer)
 	{
-		if (m_Owner == 2)
+		SetNextThink(gpGlobals->curtime + 0.1f);
+		return;
+	}
+
+	if (m_Owner == 2)
+	{
+		if (pPlayer->GetBlueTime() >= 0.1f)
 		{
-			if (m_BlueTime < hold_time.GetInt())
-			{
-				m_BlueTime = m_BlueTime + 0.1f;
-			}
-			else
-			{
-				HL2MPRules()->GoToIntermission();
-			}
+			pPlayer->m_BlueTime = pPlayer->GetBlueTime() - 0.1f;
 		}
 		else
 		{
-			if (m_RedTime < hold_time.GetInt())
-			{
-				m_RedTime = m_RedTime + 0.1f;
-			}
-			else
-			{
-				HL2MPRules()->GoToIntermission();
-			}
+			HL2MPRules()->GoToIntermission();
 		}
 	}
+	else if (m_Owner == 3)
+	{
+		if (pPlayer->GetRedTime() >= 0.1f)
+		{
+			pPlayer->m_RedTime = pPlayer->GetRedTime() - 0.1f;
+		}
+		else
+		{
+			HL2MPRules()->GoToIntermission();
+		}
+	}
+
 	SetNextThink(gpGlobals->curtime + 0.1f);
 }
 
@@ -157,8 +169,6 @@ void CHoldout::Precache( void )
 CHoldout::CHoldout(void)
 {
 	m_Owner = NULL;
-	m_RedTime = 0;
-	m_BlueTime = 0;
 }
 
 CHoldout::~CHoldout(void)

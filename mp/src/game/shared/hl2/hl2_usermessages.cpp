@@ -55,6 +55,10 @@ void RegisterUserMessages( void )
 		usermessages->Register( "SSPlayerClassesBGCheck", -1 );
 		usermessages->Register( "ShowSSPlayerClasses", -1 );
 		usermessages->Register( "ForceHUDReload", -1 );
+#else
+#ifdef MFS
+	usermessages->Register("ForceHUDReload", -1);
+#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 
 }

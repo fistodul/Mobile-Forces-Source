@@ -1,0 +1,6 @@
+//"LightmappedGeneric"
+"UnlitGeneric"
+{
+	"$baseTexture" "vgui/TitleBarIcon"
+	"$vertexalpha" 1
+}

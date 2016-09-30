@@ -1,30 +1,21 @@
 //******************************************************************
 // Multiplayer AI for Source engine by R_Yell - rebel.y3ll@gmail.com
+// Modded by Filip - Yours Trully xD
 //******************************************************************
 
 #include "cbase.h"
+#define bot_main_cpp
 
 #include "player.h"
 #include "hl2mp_player.h"
-#ifndef MFS
-#include "team.h"
-#endif
 
 #include "in_buttons.h"
 #include "movehelper_server.h"
 #include "gameinterface.h"
 
-#include "bot_main.h"
-#include "bot_combat.h"
-#include "bot_navigation.h"
-
-// support for nav mesh
-#include "nav_mesh.h"
-#include "nav_pathfind.h"
-#include "nav_area.h"
-
-class CHL2MP_Bot;
-void Bot_Think( CHL2MP_Bot *pBot );
+#ifndef MFS
+#include "team.h"
+#endif
 
 #ifdef MFS
 ConVar bot_forcefireweapon("bot_forcefireweapon", "", FCVAR_CHEAT, "Force bots with the specified weapon to fire.");
@@ -47,6 +38,18 @@ extern ConVar bot_mimic;
 ConVar bot_mimic("bot_mimic", "0", FCVAR_CHEAT, "Bot uses usercmd of player by index.");
 #endif
 #endif
+
+#include "bot_main.h"
+#include "bot_combat.h"
+#include "bot_navigation.h"
+
+// support for nav mesh
+#include "nav_mesh.h"
+#include "nav_pathfind.h"
+#include "nav_area.h"
+
+class CHL2MP_Bot;
+void Bot_Think( CHL2MP_Bot *pBot );
 
 #ifndef MFS
 // Handler for the "bot" command.
@@ -135,10 +138,10 @@ static int g_CurBotNumber = 1;
 int g_iLastHideSpot = 0;
 int g_iLastBotName = 0;
 
-/*CHL2MP_Bot::~CHL2MP_Bot( void )
+CHL2MP_Bot::~CHL2MP_Bot( void )
 {
 	//g_CurBotNumber--; //FixMe, Crashes the game
-}*/
+}
 
 // all bot names
 const char *g_ppszRandomBotNames[] =
@@ -487,9 +490,9 @@ void Bot_RunAll( void )
 //			msec - 
 // Output : 	virtual void
 //-----------------------------------------------------------------------------
-static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, const QAngle& viewangles, unsigned short buttons, float frametime)
+static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, float frametime)
 {
-	if ( !fakeclient )
+	if (!fakeclient)
 		return;
 
 	// Store off the globals.. they're gonna get whacked
@@ -497,19 +500,112 @@ static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, const QAngle
 	float flOldCurtime = gpGlobals->curtime;
 
 	float flTimeBase = gpGlobals->curtime + gpGlobals->frametime - frametime;
-	fakeclient->SetTimeBase( flTimeBase );
+	fakeclient->SetTimeBase(flTimeBase);
 
 	Q_memset(&cmd, 0, sizeof(cmd));
 
 #ifdef MFS
-	//if (bot_flipout.GetBool())
-		//VectorCopy(viewangles, cmd.viewangles);
+	//QAngle vecViewAngles;
+	unsigned short buttons = 0;
+
+	CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(fakeclient);
+	//vecViewAngles = pBot->GetLocalAngles();
+
+	if (pBot->RunMimicCommand(cmd))
+	{
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(bot_mimic.GetInt());
+		cmd = *pPlayer->GetLastUserCommand();
+		cmd.viewangles[YAW] += bot_mimic_yaw_offset.GetFloat();
+	}
+	/*else
+	{
+		if ( !bot_zombie.GetBool() )
+			cmd.random_seed = random->RandomInt(0, 0x7fffffff);
+	}*/
+
+	// Is my team being forced to defend?
+	if (bot_defend.GetInt() == fakeclient->GetTeamNumber())
+	{
+		buttons |= IN_ATTACK2;
+	}
+	// If bots are being forced to fire a weapon, see if I have it
+	else if (bot_forcefireweapon.GetString())
+	{
+		CBaseCombatWeapon *pWeapon = fakeclient->Weapon_OwnsThisType(bot_forcefireweapon.GetString());
+		if (pWeapon)
+		{
+			// Switch to it if we don't have it out
+			CBaseCombatWeapon *pActiveWeapon = fakeclient->GetActiveWeapon();
+
+			// Switch?
+			if (pActiveWeapon != pWeapon)
+			{
+				fakeclient->Weapon_Switch(pWeapon);
+			}
+			else
+			{
+				// Start firing
+				// Some weapons require releases, so randomise firing
+				if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
+				{
+					buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
+				}
+			}
+		}
+	}
+
+	if (bot_flipout.GetInt())
+	{
+		if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
+		{
+			buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
+		}
+	}
+
+	if (strlen(bot_sendcmd.GetString()) > 0)
+	{
+		//send the cmd from this bot
+		CCommand args;
+		args.Tokenize(bot_sendcmd.GetString());
+		fakeclient->ClientCommand(args);
+
+		bot_sendcmd.SetValue("");
+	}
 
 	if (bot_crouch.GetInt())
 		cmd.buttons |= IN_DUCK;
 
 	if (bot_attack.GetBool())
 		cmd.buttons |= IN_ATTACK;
+
+	/*if (bot_flipout.GetInt() >= 2)
+	{
+
+	QAngle angOffset = RandomAngle(-1, 1);
+	QAngle LastAngles = (pBot->GetLocalAngles() + angOffset);
+
+	for (int i = 0; i < 2; i++)
+	{
+	if (fabs(LastAngles[i] - pBot->GetLocalAngles[i]) > 15.0f)
+	{
+	if (LastAngles[i] > pBot->GetLocalAngles[i])
+	{
+	LastAngles[i] = pBot->GetLocalAngles[i] + 15;
+	}
+	else
+	{
+	LastAngles[i] = pBot->GetLocalAngles[i] - 15;
+	}
+	}
+	}
+
+	LastAngles[2] = 0;
+
+	pBot->SetLocalAngles(LastAngles);
+	}*/
+
+	//if (bot_flipout.GetBool())
+	//VectorCopy(viewangles, cmd.viewangles);
 #endif
 
 	MoveHelperServer()->SetHost( fakeclient );
@@ -742,11 +838,6 @@ void Bot_Think( CHL2MP_Bot *pBot )
 	if (pBot->ShouldUpdate() == true)
 		pBot->Update(0);
 
-	//QAngle vecViewAngles;
-	unsigned short buttons = 0;
-
-	//vecViewAngles = pBot->GetLocalAngles();
-
 	CUserCmd cmd;
 	Q_memset( &cmd, 0, sizeof( cmd ) );	
 
@@ -760,57 +851,6 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		Vector Forward;
 		AngleVectors(pBot->GetLocalAngles(), &Forward);
 		UTIL_TraceHull( pBot->GetLocalOrigin()+Vector(0,0,5), pBot->GetLocalOrigin() + Vector(0,0,5) + (Forward * 50), pBot->GetPlayerMins(), pBot->GetPlayerMaxs(), MASK_PLAYERSOLID, pBot, COLLISION_GROUP_NONE, &tr_front );
-
-#ifdef MFS
-		// Is my team being forced to defend?
-		if (bot_defend.GetInt() == pBot->GetTeamNumber())
-		{
-			buttons |= IN_ATTACK2;
-		}
-		// If bots are being forced to fire a weapon, see if I have it
-		else if (bot_forcefireweapon.GetString())
-		{
-			CBaseCombatWeapon *pWeapon = pBot->Weapon_OwnsThisType(bot_forcefireweapon.GetString());
-			if (pWeapon)
-			{
-				// Switch to it if we don't have it out
-				CBaseCombatWeapon *pActiveWeapon = pBot->GetActiveWeapon();
-
-				// Switch?
-				if (pActiveWeapon != pWeapon)
-				{
-					pBot->Weapon_Switch(pWeapon);
-				}
-				else
-				{
-					// Start firing
-					// Some weapons require releases, so randomise firing
-					if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
-					{
-						buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
-					}
-				}
-			}
-		}
-
-		if (bot_flipout.GetInt())
-		{
-			if (bot_forceattackon.GetBool() || (RandomFloat(0.0, 1.0) > 0.5))
-			{
-				buttons |= bot_forceattack2.GetBool() ? IN_ATTACK2 : IN_ATTACK;
-			}
-		}
-
-		if (strlen(bot_sendcmd.GetString()) > 0)
-		{
-			//send the cmd from this bot
-			CCommand args;
-			args.Tokenize(bot_sendcmd.GetString());
-			pBot->ClientCommand(args);
-
-			bot_sendcmd.SetValue("");
-		}
-#endif
 
 		// enemy acquisition
 		if( !pBot->GetEnemy() || pBot->RecheckEnemy() || !pBot->GetEnemy()->IsAlive() )
@@ -847,31 +887,5 @@ void Bot_Think( CHL2MP_Bot *pBot )
 		NDebugOverlay::Cross3DOriented( pBot->m_Waypoints[i].Center, QAngle(0,0,0), 5*i+1, 200, 0, 0, false, -1 );
 	}*/
 
-	/*if (bot_flipout.GetInt() >= 2)
-	{
-
-		QAngle angOffset = RandomAngle(-1, 1);
-		QAngle LastAngles = (pBot->GetLocalAngles() + angOffset);
-
-		for (int i = 0; i < 2; i++)
-		{
-			if (fabs(LastAngles[i] - pBot->GetLocalAngles[i]) > 15.0f)
-			{
-				if (LastAngles[i] > pBot->GetLocalAngles[i])
-				{
-					LastAngles[i] = pBot->GetLocalAngles[i] + 15;
-				}
-				else
-				{
-					LastAngles[i] = pBot->GetLocalAngles[i] - 15;
-				}
-			}
-		}
-
-		LastAngles[2] = 0;
-
-		pBot->SetLocalAngles(LastAngles);
-	}*/
-
-	RunPlayerMove(pBot, cmd, pBot->GetLocalAngles(), buttons, gpGlobals->frametime);
+	RunPlayerMove(pBot, cmd, gpGlobals->frametime);
 }

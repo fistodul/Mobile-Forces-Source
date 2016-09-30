@@ -69,6 +69,11 @@ ConVar sv_regeneration_maxarmor("sv_regeneration_maxarmor", "100", FCVAR_REPLICA
 ConVar sv_regeneration_armor("sv_regeneration_armor", "0", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 ConVar sv_regeneration_wait_time("sv_regeneration_wait_time", "1.0", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar sv_regeneration_rate("sv_regeneration_rate", "0.5", FCVAR_REPLICATED | FCVAR_CHEAT);
+#ifndef SecobMod__USE_PLAYERCLASSES
+ConVar hl2_maxmass("hl2_maxmass", "35", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar hl2_maxsize("hl2_maxsize", "128", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+#endif
+extern ConVar player_throwforce;
 
 float     m_fRegenRemander;
 float     m_fRegenRemanderArmor;
@@ -305,61 +310,67 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	BEGIN_LUA_CALL_HOOK( "GiveDefaultItems" );
 		lua_pushhl2mpplayer( L, this );
 	END_LUA_CALL_HOOK( 1, 0 );
-#else
+#endif
 #ifndef SecobMod__USE_PLAYERCLASSES
-	EquipSuit();
-
-	/*CBasePlayer::GiveAmmo( 255,	"Pistol");
-	CBasePlayer::GiveAmmo( 45,	"SMG1");
-	CBasePlayer::GiveAmmo( 1,	"grenade" );
-	CBasePlayer::GiveAmmo( 6,	"Buckshot");
-	CBasePlayer::GiveAmmo( 6,	"357" );*/
-
-	if ( GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER )
+#if defined ( LUA_SDK )
+	if (strcmp(gamemode.GetString(), "default") == 0)
 	{
-#ifdef MFS
-		if ( HL2MPRules()->IsInjustice() == true )
-		GiveGoodItems();
-		else
 #endif
-		GiveNamedItem( "weapon_knife" );
-	}
-	else if ( GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN )
-	{
+		EquipSuit();
+
+		/*CBasePlayer::GiveAmmo( 255,	"Pistol");
+		CBasePlayer::GiveAmmo( 45,	"SMG1");
+		CBasePlayer::GiveAmmo( 1,	"grenade" );
+		CBasePlayer::GiveAmmo( 6,	"Buckshot");
+		CBasePlayer::GiveAmmo( 6,	"357" );*/
+
+		if (GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE || GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER)
+		{
 #ifdef MFS
-		if ( HL2MPRules()->IsInjustice() == true )
-		GiveEvilItems();
-		else
+			if (HL2MPRules()->IsInjustice() == true)
+				GiveGoodItems();
+			else
 #endif
-		GiveNamedItem( "weapon_crowbar" );
-	}
-	
-	//SecobMod__Information: Provide hands.
-	GiveNamedItem( "weapon_hands" );
-	
-	/*GiveNamedItem( "weapon_pistol" );
-	GiveNamedItem( "weapon_smg1" );
-	GiveNamedItem( "weapon_frag" );
-	GiveNamedItem( "weapon_physcannon" );*/
+				GiveNamedItem("weapon_knife");
+		}
+		else if (GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN)
+		{
+#ifdef MFS
+			if (HL2MPRules()->IsInjustice() == true)
+				GiveEvilItems();
+			else
+#endif
+				GiveNamedItem("weapon_crowbar");
+		}
 
-	//SecobMod__Information: Still provide armour for a non-playerclass player.
-	//SetArmorValue(100);
-	SetMaxArmorValue(200);
-	
-	const char *szDefaultWeaponName = engine->GetClientConVarValue( engine->IndexOfEdict( edict() ), "cl_defaultweapon" );
+		//SecobMod__Information: Provide hands.
+		GiveNamedItem("weapon_hands");
 
-	CBaseCombatWeapon *pDefaultWeapon = Weapon_OwnsThisType( szDefaultWeaponName );
+		/*GiveNamedItem( "weapon_pistol" );
+		GiveNamedItem( "weapon_smg1" );
+		GiveNamedItem( "weapon_frag" );
+		GiveNamedItem( "weapon_physcannon" );*/
 
-	if ( pDefaultWeapon )
-	{
-		Weapon_Switch( pDefaultWeapon );
+		//SecobMod__Information: Still provide armour for a non-playerclass player.
+		//SetArmorValue(100);
+		SetMaxArmorValue(200);
+
+		const char *szDefaultWeaponName = engine->GetClientConVarValue(engine->IndexOfEdict(edict()), "cl_defaultweapon");
+
+		CBaseCombatWeapon *pDefaultWeapon = Weapon_OwnsThisType(szDefaultWeaponName);
+
+		if (pDefaultWeapon)
+		{
+			Weapon_Switch(pDefaultWeapon);
+		}
+		else
+		{
+			Weapon_Switch(Weapon_OwnsThisType("weapon_physcannon"));
+		}
+#if defined ( LUA_SDK )
 	}
-	else
-	{
-		Weapon_Switch( Weapon_OwnsThisType( "weapon_physcannon" ) );
-	}
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
-#endif
 }
 
 void CHL2MP_Player::GiveGoodItems( void )
@@ -733,6 +744,16 @@ CBaseEntity *ent = NULL;
 		}
 #endif //SecobMod__ENABLE_DYNAMIC_PLAYER_RESPAWN_CODE	
 
+		if (HL2MPRules()->IsKnifeFight() == true)
+		{
+			player_throwforce.SetValue(99999);
+			sv_regeneration.SetValue(1);
+			sv_regeneration_rate.SetValue(1);
+			sv_regeneration_wait_time.SetValue(0);
+			CBasePlayer::SetNormSpeed(320);
+			CBasePlayer::SetJumpHeight(30);
+		}
+
 	 #ifdef SecobMod__USE_PLAYERCLASSES
 	  PlayerCanChangeClass = true;
 
@@ -767,6 +788,20 @@ CBaseEntity *ent = NULL;
 		RemoveEffects( EF_NODRAW );
 		
 #ifdef MFS
+#ifndef SecobMod__USE_PLAYERCLASSES
+		if (HL2MPRules()->IsTeamplay() == true)
+		{
+			if (GetTeamNumber() == TEAM_COMBINE)
+			{
+				CBasePlayer::KeyValue("targetname", "Blue");
+			}
+			else
+			{
+				CBasePlayer::KeyValue("targetname", "Red");
+			}
+		}
+		ForceHUDReload(this);
+#endif
 			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
 			if (pBot)
 			{
@@ -828,8 +863,18 @@ CBaseEntity *ent = NULL;
 		StopSprinting();	
 		#else
 		#ifdef MFS
-		StartSprinting();
-		StopSprinting();
+#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
+		SetMaxSpeed(CBasePlayer::GetNormSpeed());
+#else
+		if (IsSuitEquipped())
+		{
+			SetMaxSpeed(CBasePlayer::GetNormSpeed());
+		}
+		else
+		{
+			SetMaxSpeed(CBasePlayer::GetWalkSpeed());
+		}
+#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
 		#endif
 		#endif //SecobMod__USE_PLAYERCLASSES
 	}
@@ -952,8 +997,8 @@ void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 			break;
 		}
 	#else
-	if ( CBasePlayer::CanPickupObject( pObject, 35, 128 ) == false )
-			 return;
+		if (CBasePlayer::CanPickupObject(pObject, hl2_maxmass.GetInt(), hl2_maxsize.GetInt()) == false)
+			return;
 	#endif //SecobMod__USE_PLAYERCLASSES
 	}
 
@@ -1194,12 +1239,21 @@ void CHL2MP_Player::PreThink( void )
 void CHL2MP_Player::PostThink( void )
 {
 	BaseClass::PostThink();
-	
+
 	if (sv_regeneration_maxhp.GetInt() > GetMaxHealth())
 		m_iMaxHealth = sv_regeneration_maxhp.GetInt();
 	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
 		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
 #ifdef MFS
+
+	int armor_weight = 0;
+	if (GetArmorValue() < 1)
+		armor_weight = 0;
+	else if (GetArmorValue() > 1 && GetArmorValue() <= 50)
+		armor_weight = 0.5;
+	else if (GetArmorValue() > 50)
+		armor_weight = 1;
+
 	for (int i = 0; i <= MAX_WEAPONS; i++)
 	{
 		if (m_hMyWeapons[i].Get())
@@ -1208,16 +1262,36 @@ void CHL2MP_Player::PostThink( void )
 			weight = pWeapon->weight;
 			if (weight != old_weight)
 			{
-				CBasePlayer::SetWalkSpeed(150 - weight);
-				CBasePlayer::SetNormSpeed(190 - weight);
-				CBasePlayer::SetSprintSpeed(320 - weight);
-				//CBasePlayer::SetJumpHeight(21 - weight);
-				StartSprinting();
-				StopSprinting();
+				CBasePlayer::SetWalkSpeed(150 - (weight + armor_weight) * 2);
+				if (HL2MPRules()->IsKnifeFight() == true)
+					CBasePlayer::SetNormSpeed(320 - (weight + armor_weight) * 2);
+				else
+					CBasePlayer::SetNormSpeed(190 - (weight + armor_weight) * 2);
+				CBasePlayer::SetSprintSpeed(320 - (weight + armor_weight) * 2);
+				//CBasePlayer::SetJumpHeight(21 - (weight + armor_weight) * 2);
+				if (IsSprinting())
+					SetMaxSpeed(CBasePlayer::GetSprintSpeed());
+				else
+				{
+#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
+					SetMaxSpeed(CBasePlayer::GetNormSpeed());
+#else
+					if (IsSuitEquipped())
+					{
+						SetMaxSpeed(CBasePlayer::GetNormSpeed());
+					}
+					else
+					{
+						SetMaxSpeed(CBasePlayer::GetWalkSpeed());
+					}
+#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
+				}
 				old_weight = weight;
 			}
+			break;
 		}
 	}
+
 	if (HL2MPRules()->IsInjustice() == true)
 	{
 		if (GetTeamNumber() == TEAM_REBELS)
@@ -3620,6 +3694,16 @@ user.MakeReliable();
 UserMessageBegin( user, "ForceHUDReload" );
 MessageEnd();
 }
+#else
+#ifdef MFS
+void CHL2MP_Player::ForceHUDReload(CHL2MP_Player *pPlayer)
+{
+	CSingleUserRecipientFilter user( pPlayer );
+	user.MakeReliable();
+	UserMessageBegin( user, "ForceHUDReload" );
+	MessageEnd();
+}
+#endif
  #endif //SecobMod__USE_PLAYERCLASSES
  
  

@@ -198,6 +198,9 @@ CWeaponPistol::CWeaponPistol( void )
 	m_fMinRange2		= 24;
 	m_fMaxRange2		= 200;
 
+#ifdef MFS
+	weight = 1;
+#endif
 	m_bFiresUnderwater	= true;
 }
 

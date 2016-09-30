@@ -2,6 +2,22 @@
 @include "halflife2.fgd"
 @include "hl2mp.fgd"
 
+@PointClass base(BaseDriveableVehicle) studio("models/combine_apc.mdl") = prop_vehicle_apc2 :
+	"APC with mounted guns, besides by player can be driven by a vehicle driver or a npc_apcdriver."
+[
+	missilehint(target_destination) : "Missile Hint Target" : "" : "Name of one or more info_apc_missile_hint entities to use to determine what to hit."
+	
+    //Inputs
+    input FireMissileAt(target_destination) : "A target to fire a missile at"
+	input Destroy(void) : "Causes the APC to blow up."
+
+    // Outputs
+	output OnFiredMissile(void) : "Fired when the APC shoots a missile."
+	output OnDeath(void) : "Fired when the APC is killed."
+	output OnDamaged(void) : "Fired when the APC is damaged."
+	output OnDamagedByPlayer(void) : "Fired when the APC is damaged by the player."
+]
+
 @PointClass base(BaseDriveableVehicle) studio("models/combine_Strider.mdl") = qua_strider :
 	"The Pilotable Strider !!."
 [
@@ -12,7 +28,7 @@
 [
 ]
 
-@SolidClass base(Trigger, TeamNum) = func_buyzone: "Buy zone.  Buy weapons here.\n\n"+
+@SolidClass base(Trigger) = func_buyzone: "Buy zone.  Buy weapons here.\n\n"+
 	"This entity IS NOT RESET upon newround.  Don't put it in movement hierarchies with entities that are.  If you need it to move with an entity that's reset upon newround, use a logic_measure_movement point-entity."
 [
 ]

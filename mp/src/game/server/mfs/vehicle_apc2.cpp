@@ -79,7 +79,7 @@ static const char *s_pGibModelName[APC_MAX_GIBS] =
 };
 
 
-LINK_ENTITY_TO_CLASS( prop_vehicle_apc, CPropAPC2 );
+LINK_ENTITY_TO_CLASS( prop_vehicle_apc2, CPropAPC2 );
 
 
 BEGIN_DATADESC( CPropAPC2 )
@@ -843,7 +843,7 @@ void CPropAPC2::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE use
 void KillAPCs(void)
 {
 CPropAPC2 *pAPC=NULL;
-	while ( ( pAPC = (CPropAPC2*)gEntList.FindEntityByClassname( pAPC, "prop_vehicle_apc" )) != NULL )
+	while ( ( pAPC = (CPropAPC2*)gEntList.FindEntityByClassname( pAPC, "prop_vehicle_apc2" )) != NULL )
 	{
 		// Si el strider esta conducido, entonces no se le mata.
 			CTakeDamageInfo info( pAPC, pAPC, 10000, DMG_BLAST );
@@ -852,7 +852,7 @@ CPropAPC2 *pAPC=NULL;
 			pAPC->TakeDamage( info );
 	}
 }
-static ConCommand sv_killapcs("sv_killapcs", KillAPCs, "Kill and respawn APC's in game",FCVAR_CHEAT);
+static ConCommand sv_killapc2s("sv_killapc2s", KillAPCs, "Kill and respawn APC2's in game",FCVAR_CHEAT);
 
 
 //-----------------------------------------------------------------------------
@@ -1047,7 +1047,7 @@ void CPropAPC2::CreateCorpse( )
 
 //
 
-	CPropAPC2 *pAPC = (CPropAPC2 *)CreateEntityByName( "prop_vehicle_apc" );
+	CPropAPC2 *pAPC = (CPropAPC2 *)CreateEntityByName( "prop_vehicle_apc2" );
 		
 	if ( pAPC )
 	{

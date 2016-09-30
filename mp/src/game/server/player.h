@@ -292,6 +292,12 @@ public:
 	float GetJumpHeight();
 	#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
+#ifdef MFS
+	CNetworkVar(float, m_BlueTime);
+	CNetworkVar(float, m_RedTime);
+	float GetBlueTime() { return m_BlueTime; }
+	float GetRedTime() { return m_RedTime; }
+#endif
 
 	#ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS
 	void SafeVehicleExit(CBasePlayer *pPlayer);

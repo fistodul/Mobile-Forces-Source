@@ -177,6 +177,7 @@ public:
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
 	bool	IsInjustice( void ) { return m_bInjusticeEnabled;	}
 	bool	IsHoldout( void ) { return m_bHoldoutEnabled;	}
+	bool	IsKnifeFight(void) { return m_bHoldoutEnabled; }
 #ifdef LUA_SDK
 #ifndef CLIENT_DLL
 	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info );
@@ -197,6 +198,7 @@ private:
 	CNetworkVar( bool, m_bTeamPlayEnabled );
 	CNetworkVar( bool, m_bInjusticeEnabled );
 	CNetworkVar(bool, m_bHoldoutEnabled);
+	CNetworkVar(bool, m_bKnifeFightEnabled);
 	CNetworkVar( float, m_flGameStartTime );
 	CUtlVector<EHANDLE> m_hRespawnableItemsAndWeapons;
 	float m_tmNextPeriodicThink;

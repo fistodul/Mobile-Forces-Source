@@ -78,6 +78,7 @@ DESCRIPTION SERVER_OPTIONS
 			"Squad Deathmatch" "gamemode\squaddeathmatch"
 			"Holdout" "gamemode\holdout"
 			"Injustice" "gamemode\injustice"
+			"Knife Fight" "gamemode\knifefight"
 		}
 		{ "gamemode\deathmatch" }
 	}

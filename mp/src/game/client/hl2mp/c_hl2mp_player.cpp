@@ -29,6 +29,10 @@
 
 #ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 	#include "iviewrender.h"
+#else
+#ifdef Enable_Nightvision
+	#include "iviewrender.h"
+#endif
 #endif //SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 
 // Don't alias here
@@ -1081,7 +1085,7 @@ void C_HL2MP_Player::PostThink( void )
 	// Store the eye angles pitch so the client can compute its animation state correctly.
 	m_angEyeAngles = EyeAngles();
 }
-#ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
+#ifdef Enable_Nightvision
 	//SecobMod__Information: Currently set to be toggled by the 'N' key.
 	CON_COMMAND( nightvision, "Garths NightVision." )
 	{
@@ -1092,6 +1096,7 @@ void C_HL2MP_Player::PostThink( void )
 		return;
 	}
 		
+#ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 	int ClassValue = pPlayer->m_iClientClass;
 	
 		//SecobMod__Information: Only the Heavy Class has nightvision so we don't do anything if anyone else uses the command.
@@ -1099,6 +1104,7 @@ void C_HL2MP_Player::PostThink( void )
 		{
 		return;
 		}
+#endif //SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 		
 		if (cvar->FindVar("mat_fullbright")->GetInt() == 1)//is it on?
 		{
@@ -1114,4 +1120,4 @@ void C_HL2MP_Player::PostThink( void )
 		cvar->FindVar("mat_fullbright")->SetValue(1);
 		}
 	}
-#endif //SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
+#endif

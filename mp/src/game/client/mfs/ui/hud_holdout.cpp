@@ -1,6 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose: 
+// Purpose: The ugliest there is, but it works
 //
 //=============================================================================//
 
@@ -14,29 +14,12 @@
 #include <vgui/ILocalize.h>
 #include <vgui/ISurface.h>
 #include "ihudlcd.h"
+#include "hl2mp/hl2mp_gamerules.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 using namespace vgui;
-
-class C_Holdout : public C_BaseEntity
-{
-public:
-	DECLARE_CLASS(C_Holdout, C_BaseEntity);
-	DECLARE_CLIENTCLASS();
-
-	float	m_BlueTime;
-	float	m_RedTime;
-
-};
-
-IMPLEMENT_CLIENTCLASS_DT( C_Holdout, DT_Holdout, CHoldout )
-RecvPropFloat(RECVINFO(m_BlueTime)),
-RecvPropFloat(RECVINFO(m_RedTime)),
-END_RECV_TABLE()
-
-LINK_ENTITY_TO_CLASS( prop_holdout, C_Holdout );
 
 //-----------------------------------------------------------------------------
 // Purpose: Displays the holdout time
@@ -56,11 +39,11 @@ public:
 
 protected:
 	virtual void OnThink();
-	void UpdateAmmoDisplays( C_Holdout *pHoldout );
+	void UpdateAmmoDisplays(C_BasePlayer *pPlayer);
 	
 private:
-	float	BlueTime;
-	float	RedTime;
+	int	BlueTime;
+	int	RedTime;
 };
 
 DECLARE_HUDELEMENT(HudHoldout);
@@ -68,7 +51,7 @@ DECLARE_HUDELEMENT(HudHoldout);
 //-----------------------------------------------------------------------------
 // Purpose: Constructor
 //-----------------------------------------------------------------------------
-HudHoldout::HudHoldout(const char *pElementName) : BaseClass(NULL, "HudAmmo"), CHudElement(pElementName)
+HudHoldout::HudHoldout(const char *pElementName) : BaseClass(NULL, "HudHoldout"), CHudElement(pElementName)
 {
 	SetHiddenBits( HIDEHUD_PLAYERDEAD );
 }
@@ -88,10 +71,8 @@ void HudHoldout::Init(void)
 	}
 	else
 	{
-		SetLabelText(L"Holdout Times");
+		SetLabelText(L"Holdout");
 	}
-	SetPaintEnabled(true);
-	SetPaintBackgroundEnabled(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,10 +93,22 @@ void HudHoldout::Reset()
 	RedTime = 0;
 }
 
-void HudHoldout::UpdateAmmoDisplays( C_Holdout *pHoldout )
+void HudHoldout::UpdateAmmoDisplays(C_BasePlayer *pPlayer)
 {
-	BlueTime = pHoldout->m_BlueTime;
-	RedTime = pHoldout->m_RedTime;
+	CHL2MPRules *pRules = HL2MPRules();
+	if (pRules->IsHoldout() == false)
+	{
+		SetPaintEnabled(false);
+		SetPaintBackgroundEnabled(false);
+		return;
+	}
+	else
+	{
+		SetPaintEnabled(true);
+		SetPaintBackgroundEnabled(true);
+	}
+	BlueTime = pPlayer->GetBlueTime();
+	RedTime = pPlayer->GetRedTime();
 	SetAmmo(BlueTime, true);
 	SetAmmo2(RedTime, true);
 }
@@ -125,7 +118,8 @@ void HudHoldout::UpdateAmmoDisplays( C_Holdout *pHoldout )
 //-----------------------------------------------------------------------------
 void HudHoldout::OnThink()
 {
-	UpdateAmmoDisplays();
+	C_BasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+	UpdateAmmoDisplays(pPlayer);
 }
 
 //-----------------------------------------------------------------------------

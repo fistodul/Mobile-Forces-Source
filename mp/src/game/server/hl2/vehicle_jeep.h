@@ -93,7 +93,31 @@ void HeadlightTurnOff( void );
 #endif //SecobMod__ALLOW_JEEP_HEADLIGHTS
 
 private:
+#ifdef MFS
+	COutputEvent m_OnDeath;
 
+	enum
+	{
+		MAX_SMOKE_TRAILS = 4,
+	};
+
+	// Create a corpse 
+	void CreateCorpse();
+
+	// Should we trigger a damage effect?
+	bool ShouldTriggerDamageEffect(int nPrevHealth, int nEffectCount) const;
+
+	// Damage effects
+	int		m_nSmokeTrailCount;
+
+	// Add a smoke trail since we've taken more damage
+	void AddSmokeTrail(const Vector &vecPos);
+
+	void Event_Killed(const CTakeDamageInfo &info);
+
+	// Blows da shizzle up
+	void InputDestroy(inputdata_t &inputdata);
+#endif
 	void		FireCannon( void );
 	void		ChargeCannon( void );
 	void		FireChargedCannon( void );

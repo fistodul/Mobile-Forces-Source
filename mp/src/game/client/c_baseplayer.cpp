@@ -228,7 +228,7 @@ END_RECV_TABLE()
 // This data only gets sent to clients that ARE this player entity.
 // -------------------------------------------------------------------------------- //
 
-	BEGIN_RECV_TABLE_NOBASE( C_BasePlayer, DT_LocalPlayerExclusive )
+BEGIN_RECV_TABLE_NOBASE(C_BasePlayer, DT_LocalPlayerExclusive)
 
 		RecvPropDataTable	( RECVINFO_DT(m_Local),0, &REFERENCE_RECV_TABLE(DT_Local) ),
 
@@ -273,7 +273,6 @@ END_RECV_TABLE()
 
 	END_RECV_TABLE()
 
-	
 // -------------------------------------------------------------------------------- //
 // DT_BasePlayer datatable.
 // -------------------------------------------------------------------------------- //
@@ -317,7 +316,11 @@ END_RECV_TABLE()
 		RecvPropFloat(RECVINFO(m_iJumpHeight)),
 #endif
 		#endif //SecobMod__USE_PLAYERCLASSES
-		
+#ifdef MFS
+		RecvPropFloat(RECVINFO(m_BlueTime)),
+		RecvPropFloat(RECVINFO(m_RedTime)),
+#endif
+
 		RecvPropInt		(RECVINFO(m_fFlags)),
 		
 #ifdef ARGG

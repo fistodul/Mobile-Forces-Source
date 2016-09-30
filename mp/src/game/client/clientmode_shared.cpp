@@ -43,6 +43,10 @@
 
 #ifdef SecobMod__USE_PLAYERCLASSES
 	#include "c_hl2mp_player.h"
+#else
+#ifdef MFS
+#include "c_hl2mp_player.h"
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 #if defined( REPLAY_ENABLED )
@@ -229,6 +233,13 @@ static void __MsgFunc_Rumble( bf_read &msg )
 	{
 			engine->ClientCmd( "hud_reloadscheme" );
 	}
+#else
+#ifdef MFS
+static void __MsgFunc_ForceHUDReload(bf_read &msg)
+{
+	engine->ClientCmd("hud_reloadscheme");
+}
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 static void __MsgFunc_VGUIMenu( bf_read &msg )
@@ -417,8 +428,42 @@ void ClientModeShared::ReloadScheme( bool flushLowLevel )
 		return;
 	}
 	#else
+#ifdef MFS
+	C_HL2MP_Player *pPlayer = C_HL2MP_Player::GetLocalHL2MPPlayer();
+	if (!pPlayer)
+		return;
+
+	if ( pPlayer->GetTeamNumber() == 2)
+	{
+		m_pViewport->ReloadScheme("resource/BlueScheme.res"); //Information: Change the HUD colour scheme for this player class.
+		ClearKeyValuesCache();
+		// Derived ClientMode class must make sure m_Viewport is instantiated
+		Assert(m_pViewport);
+		m_pViewport->LoadControlSettings("scripts/HudLayout.res"); //Information: Change the HUD layout this player class.
+		return;
+	}
+	else if (pPlayer->GetTeamNumber() == 3)
+	{
+		m_pViewport->ReloadScheme("resource/RedScheme.res"); //Information: Change the HUD colour scheme for this player class.
+		ClearKeyValuesCache();
+		// Derived ClientMode class must make sure m_Viewport is instantiated
+		Assert(m_pViewport);
+		m_pViewport->LoadControlSettings("scripts/HudLayout.res"); //Information: Change the HUD layout this player class.
+		return;
+	}
+	else
+	{
+		m_pViewport->ReloadScheme("resource/ClientScheme.res"); //Information: Change the HUD colour scheme for this player class.
+		ClearKeyValuesCache();
+		// Derived ClientMode class must make sure m_Viewport is instantiated
+		Assert(m_pViewport);
+		m_pViewport->LoadControlSettings("scripts/HudLayout.res"); //Information: Change the HUD layout this player class.
+		return;
+	}
+#else
 		m_pViewport->ReloadScheme( "resource/ClientScheme.res" );
 		ClearKeyValuesCache();
+#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 	// Invalidate the global cache first.
@@ -504,6 +549,10 @@ void ClientModeShared::Init()
 		HOOK_MESSAGE( SSPlayerClassesBGCheck);
 		HOOK_MESSAGE( ShowSSPlayerClasses);
 		HOOK_MESSAGE( ForceHUDReload);
+#else
+#ifdef MFS
+	HOOK_MESSAGE(ForceHUDReload);
+#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 }
 

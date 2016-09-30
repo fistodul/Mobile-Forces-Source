@@ -155,6 +155,9 @@ CWeaponFrag::CWeaponFrag( void ) :
 	CBaseHL2MPCombatWeapon()
 {
 	m_bRedraw = false;
+#ifdef MFS
+	weight = 1;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -376,6 +379,21 @@ void CWeaponFrag::DecrementAmmo( CBaseCombatCharacter *pOwner )
 //-----------------------------------------------------------------------------
 void CWeaponFrag::ItemPostFrame( void )
 {
+	if (!HasPrimaryAmmo())
+		weight = 0;
+	else if (GetPrimaryAmmoCount() == 1 )
+		weight = 0.5;
+	else if (GetPrimaryAmmoCount() == 2)
+		weight = 1;
+	else if (GetPrimaryAmmoCount() == 3)
+		weight = 1.5;
+	else if (GetPrimaryAmmoCount() == 4)
+		weight = 2;
+	else if (GetPrimaryAmmoCount() == 5)
+		weight = 2.5;
+	else if (GetPrimaryAmmoCount() == 6)
+		weight = 3;
+
 	if( m_fDrawbackFinished )
 	{
 		CBasePlayer *pOwner = ToBasePlayer( GetOwner() );

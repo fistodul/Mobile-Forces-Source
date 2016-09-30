@@ -24,6 +24,7 @@ extern ConVar	teamplay;
 extern ConVar	injustice;
 extern ConVar	holdout;
 extern ConVar	hold_time;
+extern ConVar	knifefight;
 extern ConVar	fraglimit;
 extern ConVar	falldamage;
 extern ConVar	weaponstay;

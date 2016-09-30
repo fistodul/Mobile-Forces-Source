@@ -28,6 +28,10 @@
 #include "vehicle_jeep.h"
 #include "eventqueue.h"
 #include "rumble_shared.h"
+#ifdef MFS
+#include "smoke_trail.h"
+#include "explode.h"
+#endif
 // NVNT haptic utils
 #include "haptics/haptic_utils.h"
 // memdbgon must be the last include file in a .cpp file!!!
@@ -71,6 +75,18 @@ ConVar	g_jeepexitspeed( "g_jeepexitspeed", "100", FCVAR_CHEAT );
 extern ConVar autoaim_max_dist;
 extern ConVar sv_vehicle_autoaim_scale;
 
+#ifdef MFS
+#define APC_MAX_GIBS	6
+static const char *s_pGibModelName[APC_MAX_GIBS] =
+{
+	"models/combine_apc_destroyed_gib01.mdl",
+	"models/combine_apc_destroyed_gib02.mdl",
+	"models/combine_apc_destroyed_gib03.mdl",
+	"models/combine_apc_destroyed_gib04.mdl",
+	"models/combine_apc_destroyed_gib05.mdl",
+	"models/combine_apc_destroyed_gib06.mdl",
+};
+#endif
 
 //=============================================================================
 //
@@ -122,6 +138,11 @@ BEGIN_DATADESC( CPropJeep )
 	DEFINE_FIELD( m_vecTargetSpeed, FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_bHeadlightIsOn, FIELD_BOOLEAN ),
 	DEFINE_EMBEDDED( m_WaterData ),
+#ifdef MFS
+	DEFINE_FIELD(m_nSmokeTrailCount, FIELD_INTEGER),
+	DEFINE_INPUTFUNC(FIELD_VOID, "Destroy", InputDestroy),
+	DEFINE_OUTPUT(m_OnDeath, "OnDeath"),
+#endif
 
 	DEFINE_FIELD( m_iNumberOfEntries, FIELD_INTEGER ),
 	DEFINE_FIELD( m_nAmmoType, FIELD_INTEGER ),
@@ -141,6 +162,9 @@ END_DATADESC()
 
 IMPLEMENT_SERVERCLASS_ST( CPropJeep, DT_PropJeep )
 	SendPropBool( SENDINFO( m_bHeadlightIsOn ) ),
+#ifdef MFS
+	//SendPropInt(SENDINFO(m_iHealth), 10),
+#endif
 END_SEND_TABLE();
 
 //SecobMod__Information: Use the hl2 vehicle as the base prop_vehicle_jeep when you don't have episodic content defined.
@@ -171,6 +195,9 @@ CPropJeep::CPropJeep( void )
 
 	m_bUnableToFire = true;
 	m_flAmmoCrateCloseTime = 0;
+#ifdef MFS
+	m_iHealth = m_iMaxHealth = 100;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +228,13 @@ void CPropJeep::Precache( void )
 		PrecacheScriptSound( "Airboat_headlight_on" );
 		PrecacheScriptSound( "Airboat_headlight_off" );
 	#endif //SecobMod__ALLOW_JEEP_HEADLIGHTS
-
+#ifdef MFS
+		int i;
+		for (i = 0; i < APC_MAX_GIBS; ++i)
+		{
+			PrecacheModel(s_pGibModelName[i]);
+		}
+#endif
 	PrecacheModel( GAUSS_BEAM_SPRITE );
 
 	BaseClass::Precache();
@@ -212,10 +245,6 @@ void CPropJeep::Precache( void )
 //------------------------------------------------
 void CPropJeep::Spawn( void )
 {
-#ifdef MFS
-	m_takedamage = DAMAGE_YES;
-	m_iHealth = 100;
-#endif
 	// Setup vehicle as a real-wheels car.
 	SetVehicleType( VEHICLE_TYPE_CAR_WHEELS );
 
@@ -314,11 +343,259 @@ float CPropJeep::PassengerDamageModifier( const CTakeDamageInfo &info )
 	return 1.0f;
 }
 
+#ifdef MFS
+//-----------------------------------------------------------------------------
+// Create a corpse 
+//-----------------------------------------------------------------------------
+void CPropJeep::CreateCorpse()
+{
+	m_lifeState = LIFE_DEAD;
+
+	for (int i = 0; i < APC_MAX_GIBS; ++i)
+	{
+		CPhysicsProp *pGib = assert_cast<CPhysicsProp*>(CreateEntityByName("prop_physics_multiplayer"));
+		pGib->SetAbsOrigin(GetAbsOrigin());
+		pGib->SetAbsAngles(GetAbsAngles());
+		pGib->SetAbsVelocity(GetAbsVelocity());
+		pGib->SetModel(s_pGibModelName[i]);
+		pGib->Spawn();
+		pGib->SetMoveType(MOVETYPE_VPHYSICS);
+
+		float flMass = pGib->GetMass();
+		/*if ( flMass < 200 )
+		{*/
+		Vector vecVelocity;
+		pGib->GetMassCenter(&vecVelocity);
+		vecVelocity -= WorldSpaceCenter();
+		vecVelocity.z = fabs(vecVelocity.z);
+		VectorNormalize(vecVelocity);
+
+		// Apply a force that would make a 100kg mass travel 150 - 300 m/s
+		float flRandomVel = random->RandomFloat(150, 300);
+		vecVelocity *= (100 * flRandomVel) / flMass;
+		vecVelocity.z += 100.0f;
+		AngularImpulse angImpulse = RandomAngularImpulse(-500, 500);
+
+		IPhysicsObject *pObj = pGib->VPhysicsGetObject();
+		if (pObj != NULL)
+		{
+			pObj->AddVelocity(&vecVelocity, &angImpulse);
+		}
+		pGib->SetCollisionGroup(COLLISION_GROUP_DEBRIS);
+		/*}*/
+		//pGib->Ignite( 60, false );
+		pGib->Dissolve(NULL, gpGlobals->curtime, false, ENTITY_DISSOLVE_NORMAL);
+	}
+
+	AddSolidFlags(FSOLID_NOT_SOLID);
+	AddEffects(EF_NODRAW);
+	UTIL_Remove(this);
+}
+
+//-----------------------------------------------------------------------------
+// Add a smoke trail since we've taken more damage
+//-----------------------------------------------------------------------------
+void CPropJeep::AddSmokeTrail(const Vector &vecPos)
+{
+	// Start this trail out with a bang!
+	ExplosionCreate(vecPos, vec3_angle, this, 1000, 500.0f, SF_ENVEXPLOSION_NODAMAGE |
+		SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NOSMOKE |
+		SF_ENVEXPLOSION_NOFIREBALLSMOKE, 0);
+	UTIL_ScreenShake(vecPos, 25.0, 150.0, 1.0, 750.0f, SHAKE_START);
+
+	if (m_nSmokeTrailCount == MAX_SMOKE_TRAILS)
+		return;
+
+	SmokeTrail *pSmokeTrail = SmokeTrail::CreateSmokeTrail();
+	if (!pSmokeTrail)
+		return;
+
+	// See if there's an attachment for this smoke trail
+	char buf[32];
+	Q_snprintf(buf, 32, "damage%d", m_nSmokeTrailCount);
+	int nAttachment = LookupAttachment(buf);
+
+	++m_nSmokeTrailCount;
+
+	pSmokeTrail->m_SpawnRate = 20;
+	pSmokeTrail->m_ParticleLifetime = 4.0f;
+	pSmokeTrail->m_StartColor.Init(0.7f, 0.7f, 0.7f);
+	pSmokeTrail->m_EndColor.Init(0.6, 0.6, 0.6);
+	pSmokeTrail->m_StartSize = 15;
+	pSmokeTrail->m_EndSize = 50;
+	pSmokeTrail->m_SpawnRadius = 15;
+	pSmokeTrail->m_Opacity = 0.75f;
+	pSmokeTrail->m_MinSpeed = 10;
+	pSmokeTrail->m_MaxSpeed = 20;
+	pSmokeTrail->m_MinDirectedSpeed = 100.0f;
+	pSmokeTrail->m_MaxDirectedSpeed = 120.0f;
+	pSmokeTrail->SetLifetime(5);
+	pSmokeTrail->SetParent(this, nAttachment);
+
+	Vector vecForward(0, 0, 1);
+	QAngle angles;
+	VectorAngles(vecForward, angles);
+
+	if (nAttachment == 0)
+	{
+		pSmokeTrail->SetAbsOrigin(vecPos);
+		pSmokeTrail->SetAbsAngles(angles);
+	}
+	else
+	{
+		pSmokeTrail->SetLocalOrigin(vec3_origin);
+		pSmokeTrail->SetLocalAngles(angles);
+	}
+
+	pSmokeTrail->SetMoveType(MOVETYPE_NONE);
+}
+
+//-----------------------------------------------------------------------------
+// Should we trigger a damage effect?
+//-----------------------------------------------------------------------------
+inline bool CPropJeep::ShouldTriggerDamageEffect(int nPrevHealth, int nEffectCount) const
+{
+	int nPrevRange = (int)(((float)nPrevHealth / (float)GetMaxHealth()) * nEffectCount);
+	int nRange = (int)(((float)GetHealth() / (float)GetMaxHealth()) * nEffectCount);
+	return (nRange != nPrevRange);
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CPropJeep::Event_Killed(const CTakeDamageInfo &info)
+{
+	CBasePlayer *pPlayer = m_hPlayer;
+	if (pPlayer)
+	{
+		pPlayer->LeaveVehicle(); // Force exit vehicle
+		CBaseEntity *pAPC = this->GetBaseEntity();
+		CTakeDamageInfo playerinfo;
+		if (info.GetAttacker() == pAPC && info.GetInflictor() == pAPC) {
+			playerinfo.SetAttacker(pPlayer);
+			playerinfo.SetInflictor(pPlayer);
+			playerinfo.SetDamage(10000);
+			playerinfo.SetDamageType(DMG_BLAST);
+		}
+		else {
+			playerinfo.SetAttacker(info.GetAttacker());
+			playerinfo.SetInflictor(info.GetInflictor());
+			playerinfo.SetDamage(10000);
+			playerinfo.SetDamageType(DMG_BLAST);
+		}
+		playerinfo.SetDamagePosition(pPlayer->WorldSpaceCenter());
+		playerinfo.SetDamageForce(Vector(0, 0, -1));
+		pPlayer->TakeDamage(playerinfo);
+		m_hPlayer = NULL;
+	}
+	m_OnDeath.FireOutput(info.GetAttacker(), this);
+
+	Vector vecAbsMins, vecAbsMaxs;
+	CollisionProp()->WorldSpaceAABB(&vecAbsMins, &vecAbsMaxs);
+
+	Vector vecNormalizedMins, vecNormalizedMaxs;
+	CollisionProp()->WorldToNormalizedSpace(vecAbsMins, &vecNormalizedMins);
+	CollisionProp()->WorldToNormalizedSpace(vecAbsMaxs, &vecNormalizedMaxs);
+
+	Vector vecAbsPoint;
+	CPASFilter filter(GetAbsOrigin());
+	for (int i = 0; i < 3; i++)
+	{
+		CollisionProp()->RandomPointInBounds(vecNormalizedMins, vecNormalizedMaxs, &vecAbsPoint);
+		te->Explosion(filter, random->RandomFloat(0.0, 1.0), &vecAbsPoint,
+			g_sModelIndexFireball, random->RandomInt(4, 10),
+			random->RandomInt(8, 15),
+			(i < 2) ? TE_EXPLFLAG_NODLIGHTS : TE_EXPLFLAG_NOPARTICLES | TE_EXPLFLAG_NOFIREBALLSMOKE | TE_EXPLFLAG_NODLIGHTS,
+			100, 0);
+	}
+
+	// TODO: make the gibs spawn in sync with the delayed explosions
+	//int nGibs = random->RandomInt( 1, 4 );
+	//for ( i = 0; i < nGibs; i++)
+	//{
+	//	// Throw a flaming, smoking chunk.
+	//	CGib *pChunk = CREATE_ENTITY( CGib, "gib" );
+	//	pChunk->Spawn( "models/gibs/hgibs.mdl" );
+	//	pChunk->SetBloodColor( DONT_BLEED );
+
+	//	QAngle vecSpawnAngles;
+	//	vecSpawnAngles.Random( -90, 90 );
+	//	pChunk->SetAbsOrigin( vecAbsPoint );
+	//	pChunk->SetAbsAngles( vecSpawnAngles );
+
+	//	int nGib = random->RandomInt( 0, 3 - 1 );
+	//	pChunk->Spawn( s_pChunkModelName[nGib] );
+	//	pChunk->SetOwnerEntity( this );
+	//	pChunk->m_lifeTime = random->RandomFloat( 6.0f, 8.0f );
+	//	pChunk->SetCollisionGroup( COLLISION_GROUP_DEBRIS );
+	//	IPhysicsObject *pPhysicsObject = pChunk->VPhysicsInitNormal( SOLID_VPHYSICS, pChunk->GetSolidFlags(), false );
+	//	
+	//	// Set the velocity
+	//	if ( pPhysicsObject )
+	//	{
+	//		pPhysicsObject->EnableMotion( true );
+	//		Vector vecVelocity;
+
+	//		QAngle angles;
+	//		angles.x = random->RandomFloat( -20, 20 );
+	//		angles.y = random->RandomFloat( 0, 360 );
+	//		angles.z = 0.0f;
+	//		AngleVectors( angles, &vecVelocity );
+	//		
+	//		vecVelocity *= random->RandomFloat( 300, 900 );
+	//		vecVelocity += GetAbsVelocity();
+
+	//		AngularImpulse angImpulse;
+	//		angImpulse = RandomAngularImpulse( -180, 180 );
+
+	//		pChunk->SetAbsVelocity( vecVelocity );
+	//		pPhysicsObject->SetVelocity(&vecVelocity, &angImpulse );
+	//	}
+
+	//	CEntityFlame *pFlame = CEntityFlame::Create( pChunk, false );
+	//	if ( pFlame != NULL )
+	//	{
+	//		pFlame->SetLifetime( pChunk->m_lifeTime );
+	//	}
+	//	pChunk->Dissolve( NULL, gpGlobals->curtime, false, ENTITY_DISSOLVE_NORMAL );
+	//}
+
+	UTIL_ScreenShake(vecAbsPoint, 25.0, 150.0, 1.0, 750.0f, SHAKE_START);
+
+	//Ignite( 60, false );
+
+	//m_lifeState = LIFE_DYING;
+
+	// Spawn a lesser amount if the player is close
+	/*m_iRocketSalvoLeft = DEATH_VOLLEY_ROCKET_COUNT;
+	m_flRocketTime = gpGlobals->curtime;*/
+	CreateCorpse();
+}
+
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Blows it up!
+//-----------------------------------------------------------------------------
+void CPropJeep::InputDestroy(inputdata_t &inputdata)
+{
+	CTakeDamageInfo info(this, this, m_iHealth, DMG_BLAST);
+	info.SetDamagePosition(WorldSpaceCenter());
+	info.SetDamageForce(Vector(0, 0, 1));
+	TakeDamage(info);
+}
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 int CPropJeep::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 {
+#ifdef MFS
+	if (m_iHealth == 0)
+		return 0;
+#endif
 	//Do scaled up physics damage to the car
 	CTakeDamageInfo info = inputInfo;
 	info.ScaleDamage( 25 );
@@ -361,27 +638,31 @@ int CPropJeep::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	}
 
 #ifdef MFS
-	//if (inputInfo.GetDamageType() != DMG_BLAST)
-		//return 0;
-	int fTookDamage;
-	fTookDamage = BaseClass::OnTakeDamage(info);
-	if (!fTookDamage)
-		return 0;
-	if (m_iHealth <= 0 )
+	if (info.GetDamageType() & (DMG_BLAST | DMG_AIRBOAT))
 	{
-		CBaseEntity *pEntity = NULL;
+		int nPrevHealth = GetHealth();
 
-		if ((pEntity = gEntList.FindEntityByClassname(pEntity, "prop_vehicle_hl2buggy")) != NULL)
+		m_iHealth -= info.GetDamage();
+		if (m_iHealth <= 0)
 		{
-			CPropJeep *pJeep = dynamic_cast<CPropJeep *>(pEntity);
-			if (pJeep == this)
+			m_iHealth = 0;
+			Event_Killed(info);
+			return 0;
+		}
+
+		// Chain
+		//		BaseClass::OnTakeDamage( dmgInfo );
+
+		// Spawn damage effects
+		if (nPrevHealth != GetHealth())
+		{
+			if (ShouldTriggerDamageEffect(nPrevHealth, MAX_SMOKE_TRAILS))
 			{
-			g_EventQueue.AddEvent(pJeep, "Explode", 0.20, this, this);
-			//UTIL_Remove( this );
+				AddSmokeTrail(info.GetDamagePosition());
 			}
 		}
 	}
-	return fTookDamage;
+	return 1;
 #else
 	return 0;
 #endif

@@ -4311,7 +4311,7 @@
 ]
 
 @PointClass base(BaseDriveableVehicle) studio("models/combine_apc.mdl") = prop_vehicle_apc :
-	"APC with mounted guns, besides by player can be driven by a vehicle driver or a npc_apcdriver."
+	"APC with mounted guns, can be driven by a vehicle driver or a npc_apcdriver."
 [
 	missilehint(target_destination) : "Missile Hint Target" : "" : "Name of one or more info_apc_missile_hint entities to use to determine what to hit."
 	

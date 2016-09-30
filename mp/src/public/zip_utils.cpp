@@ -9,11 +9,7 @@
 #undef PROTECTED_THINGS_ENABLE
 #include <tier0/platform.h>
 #ifdef IS_WINDOWS_PC
-#ifndef LUA_SDK
-#include <windows.h>
-#else
 #include <winlite.h>
-#endif
 #else
 #define INVALID_HANDLE_VALUE (void *)0
 #define FILE_BEGIN SEEK_SET
@@ -26,9 +22,8 @@
 #include "checksum_crc.h"
 #include "byteswap.h"
 #include "utlstring.h"
-#ifdef LUA_SDK
 #include "filesystem.h"
-#endif
+
 
 #include "tier1/lzmaDecoder.h"
 
@@ -1278,34 +1273,19 @@ bool CZipFile::FileExistsInZip( const char *pRelativeName )
 //-----------------------------------------------------------------------------
 void CZipFile::AddFileToZip( const char *relativename, const char *fullpath, IZip::eCompressionType compressionType )
 {
-#ifndef LUA_SDK
-	FILE *temp = fopen( fullpath, "rb" );
-#else
 	FileHandle_t temp = filesystem->Open( fullpath, "rb" );
-#endif
 	if ( !temp )
 		return;
 
 	// Determine length
-#ifndef LUA_SDK
-	fseek( temp, 0, SEEK_END );
-	int size = ftell( temp );
-	fseek( temp, 0, SEEK_SET );
-#else
 	filesystem->Seek( temp, 0, FILESYSTEM_SEEK_TAIL );
 	int size = filesystem->Tell( temp );
 	filesystem->Seek( temp, 0, FILESYSTEM_SEEK_HEAD );
-#endif
 	byte *buf = (byte *)malloc( size + 1 );
 
 	// Read data
-#ifndef LUA_SDK
-	fread( buf, size, 1, temp );
-	fclose( temp );
-#else
 	filesystem->Read( buf, size, temp );
 	filesystem->Close( temp );
-#endif
 
 	// Now add as a buffer
 	AddBufferToZip( relativename, buf, size, false, compressionType );

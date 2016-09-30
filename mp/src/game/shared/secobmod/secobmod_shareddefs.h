@@ -14,7 +14,7 @@
 /*****************/
 #define MFS // MF Specific changes :P(Not having the RPG Laser guiding turned on by default, beeping tripmines :P, Exploding on touch tripmines, weighted weaponry, Exploding_Vehicles, Loadouts, Picking Teams)
 //#define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
-//#define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
+#define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
 #define ARGG // Well Basically it lets u rotate shit with the gravity gun :P
 //#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
 #define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P

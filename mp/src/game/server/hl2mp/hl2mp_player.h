@@ -201,6 +201,10 @@ public:
 		bool (m_bDelayedMessage);
 		float (m_flDelayedMessageTime); 
 		CNetworkVar(int, m_iClientClass); //SecobMod__Information: Lets the client player know its class int.
+#else
+#ifdef MFS
+	void ForceHUDReload(CHL2MP_Player *pPlayer);
+#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 	
 	virtual void Precache( void );

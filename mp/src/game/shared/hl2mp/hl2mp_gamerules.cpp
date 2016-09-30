@@ -94,6 +94,7 @@ BEGIN_NETWORK_TABLE_NOBASE( CHL2MPRules, DT_HL2MPRules )
 		RecvPropBool( RECVINFO( m_bTeamPlayEnabled ) ),
 		RecvPropBool( RECVINFO( m_bInjusticeEnabled ) ),
 		RecvPropBool( RECVINFO( m_bHoldoutEnabled ) ),
+		RecvPropBool( RECVINFO( m_bKnifeFightEnabled ) ),
 		#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
 				RecvPropBool( RECVINFO( m_bMegaPhysgun ) ),
 		#endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN
@@ -101,6 +102,7 @@ BEGIN_NETWORK_TABLE_NOBASE( CHL2MPRules, DT_HL2MPRules )
 		SendPropBool( SENDINFO( m_bTeamPlayEnabled ) ),
 		SendPropBool( SENDINFO( m_bInjusticeEnabled ) ),
 		SendPropBool( SENDINFO( m_bHoldoutEnabled ) ),
+		SendPropBool(SENDINFO(m_bKnifeFightEnabled)),
 		#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN	
 				SendPropBool( SENDINFO( m_bMegaPhysgun ) ),
 		#endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN	
@@ -258,6 +260,7 @@ CHL2MPRules::CHL2MPRules()
 
 			m_bInjusticeEnabled = injustice.GetBool();
 			m_bHoldoutEnabled = holdout.GetBool();
+			m_bKnifeFightEnabled = knifefight.GetBool();
 	if (IsInjustice() == true)
 		InitInjusticeAIRelationships();
 	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
@@ -1360,26 +1363,24 @@ void CHL2MPRules::InitHUD( CBasePlayer *pPlayer )
 
 const char *CHL2MPRules::GetGameDescription( void )
 { 
-#if !defined ( LUA_SDK )
-	if ( IsHoldout() )
-	return "Holdout";
-	if ( IsInjustice() )
-	return "Injustice";
-	//SecobMod__Information: Community fix provided by Alters. Change this to reflect in the game.
-	if ( IsTeamplay() )
-	return "Squad Deathmatch"; //SecobMod__ChangeME! 
-#else
+#if defined ( LUA_SDK )
 	BEGIN_LUA_CALL_HOOK( "GetGameDescription" );
 	END_LUA_CALL_HOOK( 0, 1 );
 
 	RETURN_LUA_STRING();
 #endif
 
-#if defined ( LUA_SDK )
-	return "Mobile Forces Source"; //SecobMod__ChangeME! 
-#else
+	if (IsKnifeFight())
+		return "Knife Fight";
+	if (IsHoldout())
+		return "Holdout";
+	if ( IsInjustice() )
+		return "Injustice";
+	//SecobMod__Information: Community fix provided by Alters. Change this to reflect in the game.
+	if (IsTeamplay())
+		return "Squad Deathmatch"; //SecobMod__ChangeME! 
+
 	return "Deathmatch"; //SecobMod__ChangeME! 
-#endif
 } 
 
 bool CHL2MPRules::IsConnectedUserInfoChangeAllowed( CBasePlayer *pPlayer )
@@ -1824,7 +1825,7 @@ void CHL2MPRules::RestartGame()
 			{
 				pPlayer->SetClassDefault();
 			}
-		#endif //SecobMod__USE_PLAYERCLASSE
+		#endif //SecobMod__USE_PLAYERCLASSES
 		
 		pPlayer->RemoveAllItems( true );
 		respawn( pPlayer, false );

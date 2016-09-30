@@ -1509,6 +1509,9 @@ CWeaponRPG::CWeaponRPG()
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 m_hMissile = NULL;
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
+#ifdef MFS
+weight = 4;
+#endif
 
 	m_fMinRange1 = m_fMinRange2 = 40*12;
 	m_fMaxRange1 = m_fMaxRange2 = 500*12;

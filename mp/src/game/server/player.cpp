@@ -590,6 +590,11 @@ m_bTransition = false;
 m_bTransitionTeleported = false;
 #endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 
+#ifdef MFS
+m_RedTime = hold_time.GetFloat();
+m_BlueTime = hold_time.GetFloat();
+#endif
+
 #ifdef _DEBUG
 	m_vecAutoAim.Init();
 	m_vecAdditionalPVSOrigin.Init();
@@ -6567,7 +6572,7 @@ static void CreateAPC( CBasePlayer *pPlayer )
 	// Cheat to create a jeep in front of the player
 	Vector vecForward;
 	AngleVectors( pPlayer->EyeAngles(), &vecForward );
-	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_apc" );
+	CBaseEntity *pJeep = (CBaseEntity *)CreateEntityByName( "prop_vehicle_apc2" );
 	if ( pJeep )
 	{
 		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0,0,64);
@@ -8989,6 +8994,10 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropEHandle	(SENDINFO(m_hZoomOwner) ),
 		SendPropArray	( SendPropEHandle( SENDINFO_ARRAY( m_hViewModel ) ), m_hViewModel ),
 		SendPropString	(SENDINFO(m_szLastPlaceName) ),
+#ifdef MFS
+		SendPropFloat( SENDINFO( m_BlueTime ) ),
+		SendPropFloat( SENDINFO( m_RedTime ) ),
+#endif
 
 #if defined USES_ECON_ITEMS
 		SendPropUtlVector( SENDINFO_UTLVECTOR( m_hMyWearables ), MAX_WEARABLES_SENT_FROM_SERVER, SendPropEHandle( NULL, 0 ) ),
@@ -10390,9 +10399,13 @@ float CBasePlayer::GetJumpHeight()
 }
 #else
 #ifdef MFS
+extern ConVar hl2_walkspeed;
+extern ConVar hl2_normspeed;
+extern ConVar hl2_sprintspeed;
+ConVar hl2_jumpheight("hl2_jumpheight", "21", FCVAR_CHEAT);
 void CBasePlayer::SetWalkSpeed(int WalkSpeed)
 {
-	m_iWalkSpeed = WalkSpeed;
+		m_iWalkSpeed = WalkSpeed;
 }
 
 void CBasePlayer::SetNormSpeed(int NormSpeed)
@@ -10412,22 +10425,36 @@ void CBasePlayer::SetJumpHeight(float JumpHeight)
 
 int CBasePlayer::GetWalkSpeed()
 {
-	return m_iWalkSpeed;
+	if (hl2_walkspeed.GetInt() <= m_iWalkSpeed + 56)
+		return m_iWalkSpeed;
+	else
+		return hl2_walkspeed.GetInt();
 }
 
 int CBasePlayer::GetNormSpeed()
 {
-	return m_iNormSpeed;
+	if (hl2_normspeed.GetInt() <= m_iWalkSpeed + 56)
+		return m_iNormSpeed;
+	else
+		return hl2_normspeed.GetInt();
+
 }
 
 int CBasePlayer::GetSprintSpeed()
 {
-	return m_iSprintSpeed;
+	if (hl2_sprintspeed.GetInt() <= m_iWalkSpeed + 56)
+		return m_iSprintSpeed;
+	else
+		return hl2_sprintspeed.GetInt();
 }
 
 float CBasePlayer::GetJumpHeight()
 {
-	return m_iJumpHeight;
+	if (hl2_jumpheight.GetInt() <= m_iWalkSpeed + 56)
+		return m_iJumpHeight;
+	else
+		return hl2_jumpheight.GetInt();
+
 }
 #endif
 #endif //SecobMod__USE_PLAYERCLASSES

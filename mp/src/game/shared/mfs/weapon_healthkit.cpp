@@ -139,8 +139,8 @@ PRECACHE_WEAPON_REGISTER(weapon_healthkit);
 CWeaponPHK::CWeaponPHK( void ) :
 	CBaseHL2MPCombatWeapon()
 {
-	#ifdef Weighted_Weaponry
-	Phk_Weight = 1;
+	#ifdef MFS
+	weight = 1;
 	#endif
 	m_bRedraw = false;
 }

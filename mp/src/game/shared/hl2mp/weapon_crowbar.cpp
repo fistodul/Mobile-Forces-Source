@@ -17,6 +17,7 @@
 
 #if defined( CLIENT_DLL )
 	#include "c_hl2mp_player.h"
+	#include "hl2mp/hl2mp_gamerules.h"
 #else
 	#include "hl2mp_player.h"
 	#include "ai_basenpc.h"
@@ -245,7 +246,15 @@ float CWeaponCrowbar::GetRange( void )
 
 float CWeaponCrowbar::GetFireRate( void )
 {
-	return	CROWBAR_REFIRE;	
+#ifdef CLIENT_DLL
+	CHL2MPRules *pRules = HL2MPRules();
+	if (pRules->IsKnifeFight() == true)
+#else
+	if (HL2MPRules()->IsKnifeFight() == true)
+#endif
+		return CROWBAR_REFIRE/2;
+	else
+		return	CROWBAR_REFIRE;	
 }
 
 

@@ -521,6 +521,9 @@ CWeaponSniper::CWeaponSniper( void )
 	m_bFiresUnderwater	= true;
 	m_bInZoom			= false;
 	m_bMustReload		= false;
+#ifdef MFS
+	weight = 3;
+#endif
 }
 
 #define	CROSSBOW_GLOW_SPRITE	"sprites/light_glow02_noz.vmt"

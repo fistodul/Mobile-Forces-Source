@@ -748,6 +748,9 @@ CWeaponShotgun::CWeaponShotgun( void )
 	m_fMaxRange1		= 500;
 	m_fMinRange2		= 0.0;
 	m_fMaxRange2		= 200;
+#ifdef MFS
+	weight = 2;
+#endif
 }
 
 //-----------------------------------------------------------------------------

@@ -261,7 +261,11 @@ if ( HL2MPRules()->IsTeamplay() == true )
 		 KeyValues *pkvWeapon_12_PriClipAmmo = pkvTransitionRestoreFile->FindKey( "Weapon_12_PriClipAmmo" );
 		 KeyValues *pkvWeapon_12_SecClipAmmo = pkvTransitionRestoreFile->FindKey( "Weapon_12_SecClipAmmo" );
 
-
+#ifdef MFS
+#ifndef SecobMod__USE_PLAYERCLASSES
+			 pPlayer->ForceHUDReload(pPlayer);
+#endif
+#endif
 //=====================================================================	
 		#ifdef SecobMod__USE_PLAYERCLASSES
          if ( pszSteamID && pkvCurrentClass && pkvHealth && pkvArmour )

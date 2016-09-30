@@ -131,7 +131,7 @@
 	{
 		"fieldName" "HudHoldout"
 		"xpos"	"r150"
-		"ypos"	"472"
+		"ypos"	"392"
 		"wide"	"136"
 		"tall"  "36"
 		"visible" "1"
