@@ -747,7 +747,6 @@ CBaseEntity *ent = NULL;
 		if (HL2MPRules()->IsKnifeFight() == true)
 		{
 			player_throwforce.SetValue(99999);
-			sv_regeneration.SetValue(1);
 			sv_regeneration_rate.SetValue(1);
 			sv_regeneration_wait_time.SetValue(0);
 			CBasePlayer::SetNormSpeed(320);
@@ -1242,8 +1241,12 @@ void CHL2MP_Player::PostThink( void )
 
 	if (sv_regeneration_maxhp.GetInt() > GetMaxHealth())
 		m_iMaxHealth = sv_regeneration_maxhp.GetInt();
+	//else
+
 	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
 		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
+	//else
+		
 #ifdef MFS
 
 	int armor_weight = 0;
@@ -1254,42 +1257,43 @@ void CHL2MP_Player::PostThink( void )
 	else if (GetArmorValue() > 50)
 		armor_weight = 1;
 
-	for (int i = 0; i <= MAX_WEAPONS; i++)
+	for (int i = 0; i < WeaponCount() ; i++)
 	{
-		if (m_hMyWeapons[i].Get())
+		CBaseCombatWeapon *pWeapon = GetWeapon(i);
+		weight = pWeapon->weight;
+		if (weight != old_weight)
 		{
-			CBaseCombatWeapon *pWeapon = GetWeapon(i);
-			weight = pWeapon->weight;
-			if (weight != old_weight)
+			CBasePlayer::SetWalkSpeed(150 - (weight + armor_weight) * 2);
+			if (HL2MPRules()->IsKnifeFight() == true)
 			{
-				CBasePlayer::SetWalkSpeed(150 - (weight + armor_weight) * 2);
-				if (HL2MPRules()->IsKnifeFight() == true)
-					CBasePlayer::SetNormSpeed(320 - (weight + armor_weight) * 2);
-				else
-					CBasePlayer::SetNormSpeed(190 - (weight + armor_weight) * 2);
+				CBasePlayer::SetNormSpeed(320 - (weight + armor_weight) * 2);
+			}
+			else
+			{
+				CBasePlayer::SetNormSpeed(190 - (weight + armor_weight) * 2);
 				CBasePlayer::SetSprintSpeed(320 - (weight + armor_weight) * 2);
 				//CBasePlayer::SetJumpHeight(21 - (weight + armor_weight) * 2);
-				if (IsSprinting())
-					SetMaxSpeed(CBasePlayer::GetSprintSpeed());
+			}
+			if (IsSprinting())
+				SetMaxSpeed(CBasePlayer::GetSprintSpeed());
+			else
+			{
+#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
+				SetMaxSpeed(CBasePlayer::GetNormSpeed());
+#else
+				if (IsSuitEquipped())
+				{
+					SetMaxSpeed(CBasePlayer::GetNormSpeed());
+				}
 				else
 				{
-#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
-					SetMaxSpeed(CBasePlayer::GetNormSpeed());
-#else
-					if (IsSuitEquipped())
-					{
-						SetMaxSpeed(CBasePlayer::GetNormSpeed());
-					}
-					else
-					{
-						SetMaxSpeed(CBasePlayer::GetWalkSpeed());
-					}
-#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
+					SetMaxSpeed(CBasePlayer::GetWalkSpeed());
 				}
-				old_weight = weight;
+#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
 			}
-			break;
+			old_weight = weight;
 		}
+		break;
 	}
 
 	if (HL2MPRules()->IsInjustice() == true)

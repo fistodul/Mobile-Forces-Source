@@ -42,7 +42,7 @@ return; //Why tf u no work
 }
 #endif
 	Precache( );
-	SetModel( "models/props/holdout.mdl" );
+	SetModel( "models/props/crate.mdl" );
 
 	VPhysicsInitNormal( SOLID_BBOX, GetSolidFlags() | FSOLID_TRIGGER, false );
 
@@ -156,7 +156,7 @@ void CHoldout::HoldoutThink( void )
 
 void CHoldout::Precache( void )
 {
-	PrecacheModel("models/props/holdout.mdl");
+	PrecacheModel("models/props/crate.mdl");
 	PrecacheModel(HOLDOUT_SPRITE);
 	PrecacheModel(HOLDOUT_SPRITE2);
 }
