@@ -177,7 +177,7 @@ public:
 	bool	IsTeamplay( void ) { return m_bTeamPlayEnabled;	}
 	bool	IsInjustice( void ) { return m_bInjusticeEnabled;	}
 	bool	IsHoldout( void ) { return m_bHoldoutEnabled;	}
-	bool	IsKnifeFight(void) { return m_bHoldoutEnabled; }
+	bool	IsKnifeFight(void) { return m_bKnifeFightEnabled; }
 #ifdef LUA_SDK
 #ifndef CLIENT_DLL
 	bool	FPlayerCanTakeDamage( CBasePlayer *pPlayer, CBaseEntity *pAttacker, const CTakeDamageInfo &info );

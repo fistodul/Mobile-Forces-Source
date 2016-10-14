@@ -3263,7 +3263,10 @@ void CAI_BaseNPC::UpdateEfficiency( bool bInPVS )
 				}
 			}
 			
-			iSound = pCurrentSound->NextSound();
+			if (pCurrentSound)
+				iSound = pCurrentSound->NextSound();
+			else
+				break;
 		}
 	}
 
@@ -3453,8 +3456,12 @@ void CAI_BaseNPC::UpdateSleepState( bool bInPVS )
 							Wake();
 							break;
 						}
-
-						iSound = pCurrentSound->NextSound();
+						
+						if (pCurrentSound)
+							
+							iSound = pCurrentSound->NextSound();
+						else
+							break;
 					}
 				}
 			}
