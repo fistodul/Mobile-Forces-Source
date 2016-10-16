@@ -1163,7 +1163,6 @@ CBaseEntity *CBasePlayer::FindUseEntity()
 			Msg( "Line trace found usable entity: %s, distance: %.2f\n", pNearest->GetDebugName(), sqrt( distSquared ) );
 		}
 	}
-
 	else
 	{
 		// Any objects directly in front of us weren't usable and close enough.
