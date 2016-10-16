@@ -196,7 +196,14 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 	weight = 0;
 	old_weight = weight;
 	CBasePlayer::SetWalkSpeed(150);
-	CBasePlayer::SetNormSpeed(190);
+	if (sprintDisable.GetBool() == true)
+	{
+		CBasePlayer::SetNormSpeed(320);
+	}
+	else
+	{
+		CBasePlayer::SetNormSpeed(190);
+	}
 	CBasePlayer::SetSprintSpeed(320);
 	CBasePlayer::SetJumpHeight(21);
 #endif
