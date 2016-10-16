@@ -74,6 +74,7 @@ ConVar hl2_maxmass("hl2_maxmass", "35", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXEC
 ConVar hl2_maxsize("hl2_maxsize", "128", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 #endif
 extern ConVar player_throwforce;
+extern ConVar sprintDisable;
 
 float     m_fRegenRemander;
 float     m_fRegenRemanderArmor;
@@ -1264,16 +1265,16 @@ void CHL2MP_Player::PostThink( void )
 		if (weight != old_weight)
 		{
 			CBasePlayer::SetWalkSpeed(150 - (weight + armor_weight) * 2);
-			if (HL2MPRules()->IsKnifeFight() == true)
+			if (sprintDisable.GetBool() == true)
 			{
 				CBasePlayer::SetNormSpeed(320 - (weight + armor_weight) * 2);
 			}
 			else
 			{
 				CBasePlayer::SetNormSpeed(190 - (weight + armor_weight) * 2);
+			}
 				CBasePlayer::SetSprintSpeed(320 - (weight + armor_weight) * 2);
 				//CBasePlayer::SetJumpHeight(21 - (weight + armor_weight) * 2);
-			}
 			if (IsSprinting())
 				SetMaxSpeed(CBasePlayer::GetSprintSpeed());
 			else
