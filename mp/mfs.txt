@@ -1,12 +1,13 @@
 MFS Story
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 MISSION I - PART I : (music starts playing) {video fades in} (in the middle of the desert....scorching sun and wind blowing {opening credits are shown in white color text as sand\wind blows} 2 humvees and 2 trucks pass (only tires can be seen) Soldiers (player) sitting\arrive at boot-camp (base) in 2 big army trucks (similar to MF trucks) with Humvees on front and back (like a convoy). Once on foot, everybody gather up in 4 lines (8 soldiers in each line) and [other soldier who were already there start bullying new recruits..."fresh meat arrived, boys !" and stuff like that]. Sgt. Patrick (Heywood's guy) comes [with a clipboard in hand] and starts talking ["Welcome to (name of division) base (ask filip), I am Sgt. Patrick and I will be your fucking tour guide. Before we start, we will form groups....Sgt. Patrick takes out 4 small squared shaped colored cards (Blue, red, green and yellow) and starts shuffeling like poker cards"] (starts calling each soldier one by one and slaps a card on their arm) 
 
 ->
 [soldiers names (in-order) = 
 Hank McCoy (Blue) [Player 1], Jake McCoy (Blue) [Player 2]  Sgt. Patrick says **"what is this, a family reunion ?"**
-,Williams (Green), John (Yellow), Simon (Red), Bryan (Green), Sanchez (Red), Bowman (Blue), Filip (Green), Isaac (Yellow), Augustinas (Yellow), Edgaras (Green), Ben (Yellow), Jackson (Red), Gorman (Blue) and Palmer (Red)]. 
+,Williams (Green), John (Yellow), Simon (Red), Bryan (Green), Sanchez (Red), Bowman (Blue), Peter (Green), Blake (Green), Remirez(correction) (Yellow), Santana (Green), Lawrance (Yellow) , Jackson (Red), Gorman (Blue) and Palmer (Red)]. 
 
 ->
 {{P.S: Blue and Green are allies, Red and Yellow are allies but Yellow remains mystery as they died in Ambush....}}
@@ -86,17 +87,76 @@ Heywood pats Patrick on shoulder
 
 (Blackness fades in)
 
+(Mobile Forces Source logo shows up...dramatic\stylish whatever :P)
 ----------------------------------------------------------------------------------------------------------------------------------
 				END OF MISSION I - PART I
 ----------------------------------------------------------------------------------------------------------------------------------
 
-                                                           MISSION I - PART II
+MISSION I - PART II :
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                                                       END OF MISSION I - PART II
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*Desert Area* (controlable *only mouse moves* cutscene)
+
+Sgt. Patrick (standing in front): Alright gentlemen it's your day 2 and today's task is long range target practicing and 			sweeping houses
+
+Sgt. Patrick: Hank...Jake...if you be so kind, pick up your favorite sniper rifle (weapons table on the right of players 	    near a tent) and head to the starting point
+
+*Playable*
+
+Player 1 and 2 go to the table and pick their favorite sniper rifle from wide range of snipers and head to the starting point
+
+Sgt. Patrick: Alright, there are 3 stances known as Standing, Crouch and Prone
+	   When you are standing, you will be visible to the enemy and won't hit shit unless you shoot using a scope
+	   When you are crouching, You will be less visible and your accuracy will increase by 30 percent
+	   When you are in prone, you will be less visible to your enemy than crouching and your accuracy will 	 		increase by 60 percent even when you are not using scope....
+		Hank, Jake...show these people what i meant and try hitting those targets without using scope and try all 3 stances (7 targets pop up behind wrecked car, broken walls....distance is around 1-2 klicks)
+
+{if you use scope, Sgt. Patrick: I said without scopes, you frickin' weasels now try again without scopes using all stances (targets that were shot will pop up again)}
+
+(once all targets are shot down....)
+Sgt. Patrick: That's what i am talking about.....Now, try using scope and all 3 stances
+
+{if you don't use scope, Sgt. Patrick: I said with scopes, you idiots now try again with scopes using all stances (targets that were shot will pop up again)}
+
+(once all targets are shot down....)
+Sgt. Patrick: Piece of cake, isn't it ?
+
+Sgt. Patrick: Let's try something harder.....Hank, Jake...try running through that course and come back here as fast as 	you can and shoot those targets down using all 3 stances
+
+(if you keep doing other things rather than going through that course)
+Sgt. Patrick: Get your asses through that course....
+                    (1 minute later) We have other things to do so you better get your asses through that fucking course....
+	   (1 minute later) Are you guys gonna run through that course or not ?
+	                                                    {(LOOP)}
+(once done...)
+Sgt. Patrick: shoot those targets down.................................................gets harder when you are out of breath, doesn't it ?
+
+(do all 3 stances and run through course 3 times)
+
+(once done...)
+
+Sgt. Patrick: Good job gentlemen........i think you are ready to take on the real challenge now
+
+Sgt. Patrick: Hank, Jake....you see that village down there....i want you to go down there and sweep the village and                    recover the intelligence........by sweeping i mean shoot down every target
+                and remember........team work is necessary
+	i don't want any Rambo shit
+
+*cutscene....players walking while talking shit about Sgt. Patrick*
+
+(once reached....)
+
+Sgt. Patrick: Okay, now....are you ready....on my marks.....GO !
+
+(Sgt. Patrick talks as players play....remember, nice and easy....
+
+**players shoot down targets popping up from windows, roof, behind walls, behind cars, in rooms, in houses**
+
+....windows on your right, 12 O clock on roof, 10 O clock WINDOWS !, STAIRS !....go up the stairs and throw flashbang.....move move move....to the right....jump down......windows ! 1 o clock....move !........Get to that bunker on your left !....be careful...some doors might be rigged.....(players use C4 to blow front door)...(5 targets in room).....(a lot of target practice in bunker)....(underground main room\hall).....Recover that intel and download the co-ordinates for air-strike and get the hell out of there ASAP....(3 minutes to get out of village while shooting targets [3 Targets behind car, Blow up tank by distracting it and using C4, Ts on roof and windows])......Jet comes and drop bombs while you barely got out of the blast radius...
+
+*cutscene* (blasts and players fly cuz of shock wave....) (blackness...)
+
+----------------------------------------------------------------------------------------------------------------------------------
+				END OF MISSION I - PART II
+----------------------------------------------------------------------------------------------------------------------------------
 
 
 red
