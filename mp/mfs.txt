@@ -2,7 +2,9 @@ MFS Story
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MISSION I - PART I : (music starts playing) {video fades in} (in the middle of the desert....scorching sun and wind blowing {opening credits are shown in white color text as sand\wind blows} 2 humvees and 2 trucks pass (only tires can be seen) Soldiers (player) sitting\arrive at boot-camp (base) in 2 big army trucks (similar to MF trucks) with Humvees on front and back (like a convoy). Once on foot, everybody gather up in 4 lines (8 soldiers in each line) and [other soldier who were already there start bullying new recruits..."fresh meat arrived, boys !" and stuff like that]. Sgt. Patrick (Heywood's guy) comes [with a clipboard in hand] and starts talking ["Welcome to (name of division) base (ask filip), I am Sgt. Patrick and I will be your fucking tour guide. Before we start, we will form groups....Sgt. Patrick takes out 4 small squared shaped colored cards (Blue, red, green and yellow) and starts shuffeling like poker cards"] (starts calling each soldier one by one and slaps a card on their arm) 
+MISSION I - PART I : 
+
+(music starts playing) {video fades in} (in the middle of the desert....scorching sun and wind blowing {opening credits are shown in white color text as sand\wind blows} 2 humvees and 2 trucks pass (only tires can be seen) Soldiers (player) sitting\arrive at boot-camp (base) in 2 big army trucks (similar to MF trucks) with Humvees on front and back (like a convoy). Once on foot, everybody gather up in 4 lines (8 soldiers in each line) and [other soldier who were already there start bullying new recruits..."fresh meat arrived, boys !" and stuff like that]. Sgt. Patrick (Heywood's guy) comes [with a clipboard in hand] and starts talking ["Welcome to (name of division) base (ask filip), I am Sgt. Patrick and I will be your fucking tour guide. Before we start, we will form groups....Sgt. Patrick takes out 4 small squared shaped colored cards (Blue, red, green and yellow) and starts shuffeling like poker cards"] (starts calling each soldier one by one and slaps a card on their arm) 
 
 ->
 [soldiers names (in-order) = 
@@ -156,6 +158,120 @@ Sgt. Patrick: Okay, now....are you ready....on my marks.....GO !
 
 ----------------------------------------------------------------------------------------------------------------------------------
 				END OF MISSION I - PART II
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+MISSION II - PART I :
+
+*cutscene*
+Players get up and talk shit about the jet's timing....Hank tries to contact Sgt. Patrick on radio but no one replies and players get worried...Hank to Jake : "why the fuck isn't he responding ?"....Tries again in anger.....Jake to Hank : "Bro, check that out" (sees smoke coming from base)....Hank : "what the fuck ?"....Hank to Jake : "come on !"
+
+*playable*
+Get to the base
+
+*cutscene*
+Base is fucked up, soldiers dead, fire everywhere and smoke
+Hank : "what the fuck happened here ?"
+Jake : "Shit..."
+
+Hank checks out soldiers if they are alive
+
+Distant screaming (crying voice)..."Heeeelp !"...."Please !"....(low crying voice) "Someone help...."
+
+Hank and Jake look at eachother and start running in the direction where voice is coming from
+
+Soldier with his both legs broken cuz of the big metal piece on his legs and shot in upper part of chest....
+Hank and Jake remove the metal piece
+
+Hank : "Jakey, go and find other survivors"
+
+Jake (confused) starts running
+
+Hank to Soldier : "What happened here ?"
+
+Soldier : "I thought it was a friendly gunship.....(grunts)....it attacked us...and more choppers came........everybody started.....(grunts).........." *Soldier dies*
+
+*Jake disappears...*
+
+Hank : "Jake !"
+
+5 seconds later....
+
+Hank : "Jake !"
+
+Hank gets worried about Jake...
+
+Hank : "JAKE !"
+
+Distant voice....Jake : "over here !"
+
+Hank runs\jogs to Jake....
+
+Hank sees Jake sitting down near a soldier...
+
+Hank : "What the fuck ?"...."Definitely not one of us"....."did you search him for anything ?"
+
+Jake opens soldier's shirt
+
+*Foras admonitio written on soldier's chest*
+
+Hank : "Foras admonitio ?"......"Latin !"
+
+Jake : "without warning..."
+
+Hank : "This is fucked up.....this is sooo fucked up"
+
+*Bomb blast from inside bunker*
+
+Hank and Jake get ready....
+
+*Playable*
+
+Get in the building and find the source of bomb blast....
+
+(nothing much happens except in one place....Hank shoots his fellow by mistake because of low-lights (20% visibility))
+
+Hank and Jake scooping the place out while one soldier comes out of the corner with a gun who's hurt
+
+Soldier : "Die, motherfuckers !"
+
+*cutscene*
+
+Hank thinks he's an enemy and shoots him in head....
+
+Hank and Jake walks toward that soldier while on guard and find out that he was friendly
+
+Hank : "Son of a bitch !"....(low voice)"friendly..."
+
+*playable*
+
+(distant sound) something metallic drops 
+
+Hank : (whisper) "let's move !"
+
+*cutscene*
+
+15 seconds later
+
+(Jake stops in front of a door)
+
+Jake to Hank : (whisper)"Hey !".....(tells Hank by hand-sign) *it's coming from here*
+
+(Hank listens in......someone in room grunts and drops something)
+
+Hank to Jake : "ready ?"....
+
+Hank kicks the door and finds out Sgt. Patrick trying to heal himself using medkit *Sgt. Patrick picks up his pistol*
+Sgt. Patrick sees Hank and Jake alive and says
+
+Sgt. Patrick : "You scared the shit out of me"
+
+Hank : "Sir,....what happened here ?"
+
+Sgt. Patrick : ""
+
+----------------------------------------------------------------------------------------------------------------------------------
+				END OF MISSION II - PART I
 ----------------------------------------------------------------------------------------------------------------------------------
 
 
