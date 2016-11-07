@@ -1,10 +1,7 @@
-MFS Story
-
+Story by: Ahmed Isaac Alizai
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-MISSION I - PART I : 
-
-(music starts playing) {video fades in} (in the middle of the desert....scorching sun and wind blowing {opening credits are shown in white color text as sand\wind blows} 2 humvees and 2 trucks pass (only tires can be seen) Soldiers (player) sitting\arrive at boot-camp (base) in 2 big army trucks (similar to MF trucks) with Humvees on front and back (like a convoy). Once on foot, everybody gather up in 4 lines (8 soldiers in each line) and [other soldier who were already there start bullying new recruits..."fresh meat arrived, boys !" and stuff like that]. Sgt. Patrick (Heywood's guy) comes [with a clipboard in hand] and starts talking ["Welcome to (name of division) base (ask filip), I am Sgt. Patrick and I will be your fucking tour guide. Before we start, we will form groups....Sgt. Patrick takes out 4 small squared shaped colored cards (Blue, red, green and yellow) and starts shuffeling like poker cards"] (starts calling each soldier one by one and slaps a card on their arm) 
+MISSION I - PART I : (music starts playing) {video fades in} (in the middle of the desert....scorching sun and wind blowing {opening credits are shown in white color text as sand\wind blows} 2 humvees and 2 trucks pass (only tires can be seen) Soldiers (player) sitting\arrive at boot-camp (base) in 2 big army trucks (similar to MF trucks) with Humvees on front and back (like a convoy). Once on foot, everybody gather up in 4 lines (8 soldiers in each line) and [other soldier who were already there start bullying new recruits..."fresh meat arrived, boys !" and stuff like that]. Sgt. Patrick (Heywood's guy) comes [with a clipboard in hand] and starts talking ["Welcome to (name of division) base (ask filip), I am Sgt. Patrick and I will be your fucking tour guide. Before we start, we will form groups....Sgt. Patrick takes out 4 small squared shaped colored cards (Blue, red, green and yellow) and starts shuffeling like poker cards"] (starts calling each soldier one by one and slaps a card on their arm) 
 
 ->
 [soldiers names (in-order) = 
@@ -160,7 +157,6 @@ Sgt. Patrick: Okay, now....are you ready....on my marks.....GO !
 				END OF MISSION I - PART II
 ----------------------------------------------------------------------------------------------------------------------------------
 
-
 MISSION II - PART I :
 
 *cutscene*
@@ -215,9 +211,9 @@ Jake opens soldier's shirt
 
 *Foras admonitio written on soldier's chest*
 
-Hank : "Foras admonitio ?"......"Latin !"
+Hank : "Foras admonitio ?"
 
-Jake : "without warning..."
+*Hank looks at Jake*
 
 Hank : "This is fucked up.....this is sooo fucked up"
 
@@ -268,14 +264,83 @@ Sgt. Patrick : "You scared the shit out of me"
 
 Hank : "Sir,....what happened here ?"
 
-Sgt. Patrick : ""
+*Sgt. Patrick is hurt and tries to control himself*
+
+Sgt. Patrick : "Coffey's men...."
+
+Hank : "Coffey ?.....who's Coffey ?"
+
+Sgt. Patrick falls down (because he's hurt)
+
+Hank : "Sargent !"
+
+Hank to Jake : "Get him up on the table.......1......2.....3 !"
+
+Hank and Jake try to pick him and set him on table
+
+Hank : "Who's Coffey, Sargent ?"
+
+*Sgt. doesn't reply and breaths steadily*
+
+Hank to Jake : (whisper) "is it bad ?"
+
+Jake : "Well he lost blood but i can heal him up......he'll be alright"
+
+Hank to Sgt. Patrick : (while helping Sgt. lay down flat on table) "lay down...."
+
+*Jake takes out bullets from Sgt.'s leg and uses guaze to cloth his wounds*
+
+*once done...*
+
+Jake : "Where's Heywood ?"
+
+Hank : "Dead ?"
+
+Jake : "I don't think so...."
+
+Hank : "Well, what do you think ?"
+
+Jake : "What if Heywood did this ?"
+
+Hank : "Now you are talking shit.....why would he do it ?"
+
+Jake : "i don't know"
+
+Hank : "Alright !, come on....let's find other survivors"
+
+Jake : "Hey, we can't leave Sarge here..."
+
+Hank : "No ones gonna come here and he's not gonna move either.....we go out and start searching for other survivors"
+
+Jake : "come on, man....he's hurt"
+
+Hank : (angrily) "just lock the door...he'll be alright"
+
+Jake : "Oh yeah ?....how are we supposed to open it back ?"
+
+Hank : "Guess..."
+
+*Playable*
+
+Hank and Jake start looking for survivors...
+they find 3 soldiers and they are in excellent condition...
+
+**Get back to Sgt.
+Pick him up (other soldiers do...not players)
+Get out of the bunker....
+Find a vehicle.....(found humvee)
+Get the fuck out of here.... (player 1 drives)
+
+*cutscene*
+
+whole base is shown.....destroyed
+humvee leaving
+camera goes up...
+glitches and then blackness
 
 ----------------------------------------------------------------------------------------------------------------------------------
 				END OF MISSION II - PART I
 ----------------------------------------------------------------------------------------------------------------------------------
 
+MISSION II - PART II :
 
-red
-:
-== same continuation for blue
-Gets hired to defeat Gabriel, an evil priest who wants to rebirth the world. The player is shown an ancient prophecy picture of how a special soldier comes to banish evil. Characters are semi aware of being in a computer world, sometimes call the player "special" and for being from the prophecy. the player never actually sees Gabriel doing something wrong but is told about it by his "former teacher", the high priest. Some time ahead the player gets captured by Gabriel and tries to attack him only to find out Gabriel is a type of demi-god, and  he says while blocking bullets or whatever(prolly cut scene) that the player is special, and is indeed for now the only thing that can stop him but that soon he will ascend beyond the level of the player and rule the game, to which the player is confused. Player escapes and eventually Gets to a place where Gabriel is starting his ascension, has a talk on how for far too long the world was ruled by simple mechanics and no free choices, but that a bug appeared in this exact spot and that his programming had no way to respond, it was blank and that his free will born from that and that now he's trully gonna be free. Player fails to stop the ascension and Bot Gabriel is added on top of npc Gabriel, boasts how he has gained the powers of and surpassed the player and is the new god of that world, soon that he will know whats the true meaning of it and whats beyond his world. To kill gabriel he has to be killed twice, before the bot him can respawn on top of the npc him, an epic fight starts but proves impossible and Gabriel uses cheat commands and all sorts of hacks, if the player dies early MFS crashes and gabriel "took it over", if not gabriel gets beaten down to npc mode only and chained by a special unpredicted weapon and by usage of a same console computer bug that was used to evolve him to a bot. Player sees comrades and the high priest comming from a distance and Gabriel starts to moan how his life's work is over, how he will never know and how he knew he would get beaten down but tried to escape fate and live free. With gabriel tied up on ur left side theres a knife and the console computer on the right. "This just doesnt feel right" and if the player goes to the pc, s secret ending and achievement starts, the player summons gabriel as a bot again and he gets suprised.. If not grabs the knife and stabs while a freeze moment with a tear coming from his eyes happends, if the player does nothing the ppl come and Gabriel is just in his npc form and this happends for cases:The high priest says that Gabriel was his only nuisance and that he had to be eliminated, thanks the player but says that everything from the players world only causes trouble here and that he will plunge the world into holy darkness to rebirth it clean from filthy false god's.  Player realises the high priest was framing Gabriel who has done nothing wrong, If gabriel is alive he comments how there is no true god who is actively participating in the world they are but that the player is the hand of god, high priest says hes insane and the fight starts.. If gabriel is dead the player has like 10% chance of wining and when he loses gets a message "the lack of proper judgement has caused the end for this world" unless he uses the console thing to summon a bot only gabriel and they manage to defeat the high priest together.. Full npc and bot gabriel destroys the priest and his machinery all alone and npc gabriel behaves as the bot but weaker and when won becomes a bot too and some kind of speech starts and a cut scene starts that shows Gabriel entering the real world and seeing the sun and people, walking... Credits
