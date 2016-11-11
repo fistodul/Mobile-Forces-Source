@@ -2,7 +2,7 @@ $modelname	"props\crate.mdl"
 $body mybody	"crate.smd"
 $staticprop
 $surfaceprop	combine_metal
-$cdmaterials	"models\props"
+$cdmaterials	"models\props\crate"
 
 $sequence idle	"crate.smd"
 

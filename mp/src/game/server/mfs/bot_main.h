@@ -67,6 +67,7 @@ enum BotSchedules_t
 {
 	BOT_SCHED_COMBAT, 
 	BOT_SCHED_HIDE,	
+	//BOT_SCHED_SCOUT,
 };
 
 // these are the basic bot parameters, defined at creation time only
@@ -143,7 +144,7 @@ public:
 
 	float UpdateTime;
 
-	const char *pHideSpot = SPAWN_POINT_DEATHMATCH; //Create an entity "info_hide_spot" and use that by default or use the nav mesh
+	char *pHideSpot = SPAWN_POINT_DEATHMATCH; //Create an entity "info_hide_spot" and use that by default or use the nav mesh
 
 	void Spawn()
 	{
@@ -203,7 +204,170 @@ public:
 			return false;
 	}
 
-	void Update(int mode);
+	void Update(int mode)
+	{
+			CBaseEntity *pSpot = NULL;
+			char *OldHideSpot = pHideSpot;
+
+			if (mode == 0) // in any other cases we're calling this with a mode pre-determined
+			{
+				if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_DEATHMATCH)) == NULL)
+				{
+					if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
+					{
+						if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+							mode = 7;// This map sucks
+						else
+							// This map is racist
+							mode = 8;
+					}
+					else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+					{
+						if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL)
+							mode = 7;// This map sucks
+						else
+							// This map is racist
+							mode = 9;
+					}
+					if (mode < 7)
+					{
+						if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_BLUE)) == NULL)
+						{
+							if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_RED)) == NULL)
+								mode = 3;
+							else
+								mode = 4;
+
+						}
+						else if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_RED)) == NULL)
+						{
+							if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_CAPTAIN_BLUE)) == NULL)
+								mode = 3;
+							else
+								mode = 5;
+
+						}
+						if (mode < 3)
+						{
+							mode = 2;
+						}
+					}
+				}
+
+				if (mode < 2)
+				{
+					if ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_BLUE)) == NULL && (pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_RED)) == NULL)
+						mode = 6;
+					else
+						mode = 1;
+				}
+			}
+
+			if (mode == 1)
+			{
+				int troll = random->RandomInt(1, 5);
+
+				if (troll == 2)
+					pHideSpot = SPAWN_POINT_DEATHMATCH;
+				else if (troll == 2)
+					pHideSpot = SPAWN_POINT_RED;
+				else if (troll == 3)
+					pHideSpot = SPAWN_POINT_BLUE;
+				else if (troll == 4)
+					pHideSpot = SPAWN_POINT_CAPTAIN_BLUE;
+				else if (troll == 5)
+					pHideSpot = SPAWN_POINT_CAPTAIN_RED;
+
+				if (pHideSpot == OldHideSpot)
+					Update(1);
+			}
+			else if (mode == 2) //Highly unlikely, cuz every MFS mapper should include deathmatch spawns
+			{
+				int troll = random->RandomInt(2, 5);
+
+				if (troll == 2)
+					pHideSpot = SPAWN_POINT_RED;
+				else if (troll == 3)
+					pHideSpot = SPAWN_POINT_BLUE;
+				else if (troll == 4)
+					pHideSpot = SPAWN_POINT_CAPTAIN_BLUE;
+				else if (troll == 5)
+					pHideSpot = SPAWN_POINT_CAPTAIN_RED;
+
+				if (pHideSpot == OldHideSpot)
+					Update(2);
+			}
+			else if (mode == 3)
+			{
+				int troll = random->RandomInt(2, 3);
+
+				if (troll == 2)
+					pHideSpot = SPAWN_POINT_RED;
+				else if (troll == 3)
+					pHideSpot = SPAWN_POINT_BLUE;
+
+				if (pHideSpot == OldHideSpot)
+					Update(3);
+			}
+			else if (mode == 4) // i also dunno why would this ever happen
+			{
+				int troll = random->RandomInt(2, 4);
+
+				if (troll == 2)
+					pHideSpot = SPAWN_POINT_RED;
+				else if (troll == 3)
+					pHideSpot = SPAWN_POINT_BLUE;
+				else if (troll == 4)
+					pHideSpot = SPAWN_POINT_CAPTAIN_RED;
+
+				if (pHideSpot == OldHideSpot)
+					Update(4);
+			}
+			else if (mode == 5) // or this
+			{
+				int troll = random->RandomInt(2, 4);
+
+				if (troll == 2)
+					pHideSpot = SPAWN_POINT_RED;
+				else if (troll == 3)
+					pHideSpot = SPAWN_POINT_BLUE;
+				else if (troll == 4)
+					pHideSpot = SPAWN_POINT_CAPTAIN_BLUE;
+
+				if (pHideSpot == OldHideSpot)
+					Update(5);
+			}
+			else if (mode == 6)
+			{
+				pHideSpot = SPAWN_POINT_DEATHMATCH;
+
+				/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+				Update(6);*/
+			}
+			else if (mode == 7) // This actually happends
+			{
+				pHideSpot = "info_player_start";
+
+				/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+				Update(7);*/
+			}
+			else if (mode == 8)
+			{
+				pHideSpot = SPAWN_POINT_RED;
+
+				/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+				Update(8);*/
+			}
+			else if (mode == 9)
+			{
+				pHideSpot = SPAWN_POINT_BLUE;
+
+				/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
+				Update(9);*/
+			}
+
+			UpdateTime = gpGlobals->curtime;
+	}
 
 #ifdef MFS
 	bool RunMimicCommand(CUserCmd& cmd)

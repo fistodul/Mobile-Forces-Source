@@ -1,5 +1,7 @@
 weapon drop system
 fix credits and buymenu
+https://github.com/ValveSoftware/source-sdk-2013/pull/336
+https://github.com/ValveSoftware/source-sdk-2013/pull/283
 
 // Important Shit:
 Vector vNearestPlayerPos = UTIL_GetNearestPlayer(ppAIs[i]->GetAbsOrigin())->GetAbsOrigin();

@@ -31,6 +31,7 @@
 @SolidClass base(Trigger) = func_buyzone: "Buy zone.  Buy weapons here.\n\n"+
 	"This entity IS NOT RESET upon newround.  Don't put it in movement hierarchies with entities that are.  If you need it to move with an entity that's reset upon newround, use a logic_measure_movement point-entity."
 [
+	TeamNum(integer) : "0 = anyone can use it 2=only the red team can use it 3=only the blue team can use it" : 0
 ]
 @PointClass base(Weapon) studio("models/weapons/w_smg1.mdl") = weapon_smg3: "SMG3" []
 @PointClass base(Weapon) studio("models/weapons/w_smg1.mdl") = weapon_troll: "troll gun" []

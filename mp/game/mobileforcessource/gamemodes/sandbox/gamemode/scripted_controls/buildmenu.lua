@@ -31,7 +31,7 @@ function CBuildMenu:Init(pViewPort)
 
 if false then
 	self.m_pMainMenu = CBuildSubMenu( self, "mainmenu" );
-	self.m_pMainMenu:LoadControlSettings( "Resource/UI/MainBuyMenu.res" );
+	self.m_pMainMenu:LoadControlSettings( "Resource/UI/BuildMenu.res" );
 	self.m_pMainMenu:SetVisible( false );
 end
 	self:SetVisible( false )

@@ -101,6 +101,7 @@ ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 #define HL2_WALK_SPEED CBasePlayer::GetWalkSpeed()
 #define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
 #define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
+#define HL2_PRONE_SPEED CBasePlayer::GetProneSpeed()
 #else
 	#ifdef HL2MP
 	#define HL2_WALK_SPEED 150

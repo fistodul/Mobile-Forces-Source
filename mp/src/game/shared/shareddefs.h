@@ -112,10 +112,17 @@ public:
 #define TIME_TO_UNDUCK		0.2
 #define TIME_TO_UNDUCK_MS	200.0f
 
+#ifdef MFS
+#define TIME_TO_PRONE	1.2f
+#define VEC_PRONE_HULL_MIN	HL2MPRules()->GetHL2MPViewVectors()->m_vProneHullMin
+#define VEC_PRONE_HULL_MAX	HL2MPRules()->GetHL2MPViewVectors()->m_vProneHullMax
+#define VEC_PRONE_VIEW HL2MPRules()->GetHL2MPViewVectors()->m_vProneView
+#endif
+
 //MFS
 #define MAX_WEAPON_SLOTS		7	// hud item selection slots
 #define MAX_WEAPON_POSITIONS	20	// max number of items within a slot
-#define MAX_ITEM_TYPES			6	// hud item selection slots
+#define MAX_ITEM_TYPES			7	// hud item selection slots
 #define MAX_WEAPONS				48	// Max number of weapons available
 
 #define MAX_ITEMS				5	// hard coded item types

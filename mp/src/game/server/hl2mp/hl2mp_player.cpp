@@ -205,6 +205,7 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 		CBasePlayer::SetNormSpeed(190);
 	}
 	CBasePlayer::SetSprintSpeed(320);
+	CBasePlayer::SetProneSpeed(50);
 	CBasePlayer::SetJumpHeight(21);
 #endif
 //	UseClientSideAnimation();

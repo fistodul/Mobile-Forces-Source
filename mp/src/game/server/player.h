@@ -277,18 +277,21 @@ public:
 	void SetWalkSpeed(int WalkSpeed);
 	void SetNormSpeed(int NormSpeed);
 	void SetSprintSpeed(int SprintSpeed);
+	void SetProneSpeed(int ProneSpeed);
 	void SetJumpHeight(float JumpHeight);
 
 	// Spielergeschwindigkeit:
 	int m_iWalkSpeed;
 	int m_iNormSpeed;
 	int m_iSprintSpeed;
+	int m_iProneSpeed;
 
 	CNetworkVar(float, m_iJumpHeight);
 
 	int GetWalkSpeed();
 	int GetNormSpeed();
 	int GetSprintSpeed();
+	int GetProneSpeed();
 	float GetJumpHeight();
 	#endif
 	#endif //SecobMod__USE_PLAYERCLASSES

@@ -12,7 +12,6 @@
 #endif
 
 #include "lua.hpp"
-
 #define LUA_ROOT					"lua" // Can't be "LUA_PATH" because luaconf.h uses it.
 #define LUA_PATH_CACHE				"lua_cache"
 #define LUA_PATH_ADDONS				"addons"
@@ -32,11 +31,7 @@
 #define LUA_BASE_ENTITY_CLASS		"prop_scripted"
 #define LUA_BASE_ENTITY_FACTORY		"CBaseAnimating"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
-#ifdef MFS
-#define LUA_BASE_GAMEMODE			"default"
-#else
 #define LUA_BASE_GAMEMODE			"deathmatch"
-#endif
 
 
 #define LUA_MAX_WEAPON_ACTIVITIES	32
@@ -303,7 +298,7 @@
 	  lua_pop(L, 1); \
   }
 
-#ifndef luamanager_cpp
+#ifndef luamanager_cpp //MFS
 extern ConVar gamemode;
 #endif
 

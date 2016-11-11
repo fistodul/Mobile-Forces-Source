@@ -2252,21 +2252,25 @@ bool CBasePlayer::IsOnLadder( void )
 
 bool CBasePlayer::IsinBuyzone(void)
 {
-	CBaseEntity *pEntity = NULL;
-
-	if ((pEntity = gEntList.FindEntityByClassname(pEntity, "func_buyzone")) != NULL)
+	int c = CBuyZone::GetBuyZoneCount();
+	if (c == 0)
 	{
-		/*CBuyZone *pBuyZone = NULL;
+		return false;
+	}
+
+	for (int i = 0; i < c; i++)
+	{
+		CBuyZone *pBuyZone = CBuyZone::GetBuyZone(i);
+		
 		float flDist = this->GetAbsOrigin().DistTo(pBuyZone->GetAbsOrigin());
 
 		if (flDist < 60)
 			return pBuyZone->isinbuyzone;
 
-		return false;*/
-		return true;
-	}
-	
 		return false;
+	}
+
+	return false;
 }
 
 float CBasePlayer::GetWaterJumpTime() const
@@ -10403,6 +10407,7 @@ extern ConVar hl2_walkspeed;
 extern ConVar hl2_normspeed;
 extern ConVar hl2_sprintspeed;
 ConVar hl2_jumpheight("hl2_jumpheight", "21", FCVAR_CHEAT);
+ConVar hl2_pronespeed("hl2_pronespeed", "50", FCVAR_CHEAT);
 void CBasePlayer::SetWalkSpeed(int WalkSpeed)
 {
 		m_iWalkSpeed = WalkSpeed;
@@ -10416,6 +10421,11 @@ void CBasePlayer::SetNormSpeed(int NormSpeed)
 void CBasePlayer::SetSprintSpeed(int SprintSpeed)
 {
 	m_iSprintSpeed = SprintSpeed;
+}
+
+void CBasePlayer::SetProneSpeed(int ProneSpeed)
+{
+	m_iProneSpeed = ProneSpeed;
 }
 
 void CBasePlayer::SetJumpHeight(float JumpHeight)
@@ -10446,6 +10456,14 @@ int CBasePlayer::GetSprintSpeed()
 		return m_iSprintSpeed;
 	else
 		return hl2_sprintspeed.GetInt();
+}
+
+int CBasePlayer::GetProneSpeed()
+{
+	if (hl2_pronespeed.GetInt() <= m_iProneSpeed + 56)
+		return m_iProneSpeed;
+	else
+		return hl2_pronespeed.GetInt();
 }
 
 float CBasePlayer::GetJumpHeight()

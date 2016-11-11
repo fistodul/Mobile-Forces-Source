@@ -5,7 +5,7 @@
 	developer_url	"http://world-gamers.forumotion.net"
 	Manual	"http://world-gamers.forumotion.net/t19-manual"
 	icon "MFSIcon"
-	//gamelogo "1"
+	gamelogo "1"
 	title	""
 	title2	""
 	nomodels "0"

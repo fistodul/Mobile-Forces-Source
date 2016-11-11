@@ -494,7 +494,7 @@ void SelectSchedule( CHL2MP_Bot *pBot, bool forcePath = false )
 		{
 			AddRandomPath(pBot);
 			pBot->m_nBotState = BOT_NAVIG_PATH;
-			pBot->m_nBotSchedule = BOT_SCHED_COMBAT;
+			pBot->m_nBotSchedule = BOT_SCHED_COMBAT; //SCOUT
 		}
 	}
 	else // if everything else fails, just move randomly 
@@ -553,7 +553,7 @@ void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 	// Direct navigation, only one waypoint is set at enemy position, no extra WP are needed since there's a straight path with no obstacles in between. Shouldn't be used...
 	if( pBot->m_flNextPathCheck < gpGlobals->curtime && // inmediately after some waypoints have been generated
 		pBot->m_nBotState != BOT_NAVIG_UNSTUCK && // when bot is trying to get unstuck
-		pBot->m_nBotSchedule == BOT_SCHED_COMBAT && // when bot is in the way to hide or something
+		pBot->m_nBotSchedule == BOT_SCHED_COMBAT && // || BOT_SCHED_SCOUT // when bot is in the way to hide or something
 		pBot->m_nBotState != BOT_NAVIG_PATH_ENFORCED && 
 		pBot->m_bEnemyOnSights && // when bot/enemy have no direct vision over each other
 		pBot->m_flDontUseDirectNav < gpGlobals->curtime ) // when told specifically for whatever reason, like using ladders
@@ -571,8 +571,7 @@ void BotNavigation( CHL2MP_Bot *pBot, CUserCmd &cmd  )
 			if( BotToEnemyDist2d < 16 ) // we are on top of enemy, forget about combat and get down there 
 			{					
 				pBot->m_flDontUseDirectNav = gpGlobals->curtime + 2.5f;
-				DevMsg("!I'm on top of enemy, literally\n");
- //Why tf not, not like they wouldnt know already xd
+				DevMsg("!I'm on top of enemy, literally\n"); //Why tf not, not like they wouldnt know already xd
 				if( pBot->GetLocalOrigin().z > pBot->GetEnemy()->GetLocalOrigin().z ) // let's only move if we are on top
 					AddRandomPath( pBot );
 				else

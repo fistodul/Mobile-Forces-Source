@@ -69,11 +69,36 @@ void BotAttack( CHL2MP_Bot *pBot, CUserCmd &cmd )
 	{
 #endif
 		//EXCEPTIONS
-		if (!pBot->m_bEnemyOnSights || !pBot->m_bInRangeToAttack || pBot->m_flNextBotAttack > gpGlobals->curtime)
+		if (!pBot->m_bEnemyOnSights || pBot->m_flNextBotAttack > gpGlobals->curtime)
 			return;
 
 		//Make the bot a savage(more than it already is)
-		pBot->StartSprinting();
+		if (!pBot->m_bInRangeToAttack)
+		{
+			if (pBot->m_flBotToEnemyDist < 80.0f && pBot->FInViewCone(pBot->GetEnemy()))
+			{
+				if (pBot->CanSprint() == true)
+					pBot->StartSprinting();
+				else
+					return;
+			}
+			else
+				return;
+		}
+
+		if ( pBot->IsSprinting() == false )
+		{
+			CBasePlayer *pPlayer = pBot->GetEnemy();
+#ifdef MFS
+			if (pPlayer->MaxSpeed() >= pPlayer->GetSprintSpeed()) //Close in on the bastard, he's trying to escape
+#else
+			if (pPlayer->MaxSpeed() >= 320) //Close in on the bastard, he's trying to escape
+#endif
+			{
+				if (pBot->CanSprint() == true)
+					pBot->StartSprinting();
+			}
+		}
 
 		cmd.buttons |= IN_ATTACK;
 		pBot->m_flNextBotAttack = gpGlobals->curtime + 0.75f;
