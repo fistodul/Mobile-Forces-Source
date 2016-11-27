@@ -19,7 +19,7 @@ __________________________________________________________________
 Assault Rifle :
 
 1- FAL
-2- M27 (MF)
+2- M4 (MF)
 3- SCAR-L
 4- CM901
 5- Austyr
@@ -46,7 +46,7 @@ Light Machine Gun :
 2- M60E4
 3- Type 99
 4- Browning M1919A6
-5-  MG36
+5- MG36
 6- minigun (MF)
 
 ____________________________________________________________________
@@ -113,3 +113,9 @@ Armor :
 1- Light Armor w\ Helmet (walks fast but armor is less)
 2- Medium Armor w\ Helmet (walks at normal rate and armor is good)
 3- Heavy Armor w\ Helmet (walks slow but armor is heavily-plated)
+
+_______________________________________________________________________
+
+Hidden :
+
+Case > For Launching Nuke
