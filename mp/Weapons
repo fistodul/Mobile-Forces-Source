@@ -1,49 +1,52 @@
 			          MFS Multiplayer Weapons Categories
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	                               
-		Fists and Combat knife already in inventory (depends on Player what he uses)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	                  
+	    Fists and Combat knife already in inventory (depends on Player what he uses)
 
 				*for violence\gore....use Fists*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Pistol : *available both in single and dual depending on Player
+				    7 SLOTS AVAILABLE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Pistol : *available both in single and dual depending on Player  [requires 1 slot]
 
 1- M9 (MF)
 2- Desert Eagle
-3- .44 magnum
+3- Taurus .44
 4- USP
 5- Glock
-6- FMG9
-7- MP9
+6- Five Seven
+7- Beretta Px4 Storm
 __________________________________________________________________
 
-Assault Rifle :
+Assault Rifle :	[requires 2 slot]
 
-1- FAL
+1- FN FAL
 2- M4 (MF)
 3- SCAR-L
 4- CM901
 5- Austyr
-6- ACR 6.8
+6- HK-416
 7- MK14
 8- G36C
-9- G3
+9- Galil ACE 23
+10- AKM
 ___________________________________________________________________
 
-Sub Machine Gun :
+Sub Machine Gun :		[requires 2 slot]
 
-1- P90
+1- MAC-11
 2- AK-74u
 3- MP5
 4- MP7
-5- Scorpion
-6- PP90M1 (bizon)
-
+5- TDI Vector
+6- PP-19 BIZON-2
+7- UMP45
 ____________________________________________________________________
 
-Light Machine Gun :
+Light Machine Gun :		[requires 5 slot]
 
 1- MK46
-2- M60E4
+2- H&K MG4
 3- Type 99
 4- Browning M1919A6
 5- MG36
@@ -51,19 +54,20 @@ Light Machine Gun :
 
 ____________________________________________________________________
 
-Shotgun :
+Shotgun :		[requires 2 slot]
 
 1- Sawed-off (MF)
-2- Lever action
+2- RMB-93
 3- Striker
 4- USAS
 5- SPAZ-12
+6- M1014
 
 _____________________________________________________________________
 
-Sniper Rifle :
+Sniper Rifle :		[requires 3 slot]
 
-1- Dragunov
+1- Knight's Armament SR-25 Enhanced Match Rifle
 2- Barrett 50.cal
 3- R700
 4- L118A (MF)
@@ -71,19 +75,19 @@ Sniper Rifle :
 
 _____________________________________________________________________
 
-Explosives\Grenades : (any 2x2 grenades per spawn....e.g 2 HE and 2 Smoke)
+Explosives\Grenades : (any 2x2 grenades per spawn....e.g 2 HE and 2 Smoke)	[requires 1 slot]
 
 1- HE grenade (MF)
 2- Flashbang
 3- Smoke grenade
-4- Napalm grenade
+4- Incendiary grenade
 5- Semtex
 6- Trip mine (MF)
 7- C4
-8- Breach Charge
+
 ______________________________________________________________________
 
-Rocket Launchers :
+Rocket Launchers :		[requires 4 slot]
 
 1- SMAW (MF)
 2- RPG7
@@ -93,13 +97,13 @@ _____________________________________________________________________
 
 Special Weapons :
 
-1- Flamethrower
-2- Crossbow (explosive arrows)
-3- Combat Axe (retrievable)
-4- Machete
+1- Flamethrower			[requires 3 slot]
+2- Crossbow (explosive arrows)		[requires 2 slot]
+3- Combat Axe (retrievable)		[requires 1 slot]
+4- Machete			[requires 1 slot]
 ______________________________________________________________________
 
-Syringe\Boost : (one syringe\boost per spawn)
+Syringe\Boost : (one syringe\boost per spawn)		[requires 1 slot]
 
 1- Health Booster (full health)
 2- Berserk (Lesser damage for 10 seconds\Melee (fists) damage 100%)
@@ -108,7 +112,7 @@ Syringe\Boost : (one syringe\boost per spawn)
 
 _______________________________________________________________________
 
-Armor :
+Armor :		[requires 1 slot]
 
 1- Light Armor w\ Helmet (walks fast but armor is less)
 2- Medium Armor w\ Helmet (walks at normal rate and armor is good)
@@ -118,4 +122,4 @@ _______________________________________________________________________
 
 Hidden :
 
-Case > For Launching Nuke
+Case > For Launching Nuke (randomly spawns anywhere but inside buildings)
