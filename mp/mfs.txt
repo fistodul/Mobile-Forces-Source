@@ -2,33 +2,96 @@ Story by: Ahmed Isaac Alizai
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 				         CAMPAIGN COOP
 
-Mission 1
+1-	Mission xxxxxx, Aleppo 1
+______________________________________
 
 **cutscene**
 
-*[black screen....whispers can be heard]*
-[voice 1: Cutting power]
-[voice 2: Breach charge set]
+(*Weather = Night, Raining and Thunder*)
+
+
+[*In Iraqi terrorist hive (low security), Heywood,Chris and Patrick get out of sea\water and make it towards base while hiding from patrol cars.They see 2 guards guarding the building's door in which the target went. Patrick throws stone at the steel plate which makes a lot of noise and it gets both guards attention and they check it out while Heywood, Chris and Patrick quickly hide in dense grass near a building which 2 guards were guarding it's door*]
+
+
+**playable**
+Heywood and Chris shoot the guards...
+
+
+**cutscene**
+[*Patrick goes for power supply to cut it off and Heywood and Chris hide guards body and wait at the building's door for Patrick to complete his task*]
+
+[Heywood: Breach charge set !]
+[Patrick: Cutting power !]
 [Terrorist voice 1: *speaks arabic* what the fuck is going on ?]
 [Terrorist voice 2: *speaks arabic* Rahimi, go and check it out]
 [Terrorist voice 3: *speaks arabic* Why me ?]
 [Terrorist voice 2: *speaks arabic* Go !]
 [Terrorist voice 3: *speaks arabic (whispers)* Motherfucker...]
-[voice 2: Get ready !]
-[voice 2: 3........2........1 BOOM !] *[Breach charge explodes]*
+[Heywood: Get ready !]
+[Heywood: 3........2........1 !] *[Breach charge explodes]*
 
-**game is playable**
+
+**playable**
 [slo-mo] (objective 1) Clear room
-              (objective 2) Capture HVT Al-xxxxx
+              (objective 2) Capture HVT "Hamza Ibn Fanoos" [kill anything that gets in your way *fight in city*]
               (objective 3) Get to the LZ
 
+
 **cutscene**
+[*All 3 and HVT get in car and make for LZ.....Patrick uses Mounted Machine Gun and kills anything that follows*]
+
+
+**playable**
+Heywood drives car and Chris helps Patrick eliminate threat
+
+
+**cutscene**
+Once reached....Helicopter and 2 soldiers (at the back of helicopter near loading bay) are waiting....
 *MFS theme music plays*
+Enter helicopter and get out of city.....while entering helicopter from loading bay, Heywood fistbumps one of the soldier
+*Screen goes black and WG [world gamers present] logo shows up* 
+Chris and Heywood shake hand inside helicopter * nigga style xD *
+*Screen goes black once again and mfs logo shows up [mobile forces source]...music still playing*
 
-Enter helicopter and get out of city (while entering helicopter from loading bay, Heywood fistbumps some soldier) *screen goes black and WG [world gamers present] logo shows up* (loading stuff and closing loading bay) *screen goes black once again and mfs logo shows up [mobile forces source]...music still playing*
+				""END OF MISSION 1""
+_______________________________________________________________________________________
 
-							END OF MISSION 1
+MISSION 2:-
 
+**cutscene**
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+1(2)-	Mission xxxxx, Aleppo 2
+3-	Mission xxxxx, Afghanistan 1
+3(2)-	Mission xxxxx, Afghanistan 2
+4-	Mission Dubai 1
+4(2)-	Mission Dubai 2
+5-	Mission [split](Hank and Jake....Patrick and Heywood) 1
+5(2)-	Mission [split] 2
+6-	Mission Iraq
+7-	Mission waters [capt phillips] 1
+7(2)-	Mission land [capt phillips] 2
+7(3)-	Mission waters[capt phillips] 3
+8-	Mission Iraqi (seaport) 1
+8(2)- 	Mission iraq (meet) 2
+9-  	Mission iraq (battlefield)
+9 (2)-  	Mission iraq [team captured and Patrick killed by coffey]
+10-  	Mission (kill coffey before he gets away [fail])
+10(2)-  	Mission (find coffey)
+10(3)-  	Mission (Kill coffey's men and capture coffey)
+10(4)-   	Mission (kill or spare coffey [fights back and dies anyway])
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ending 1: kill coffey > Heywood, Jake and Hank leave (heywood hurt pretty bad)......Music
+Ending 2: spare coffey > coffey dies...same ending as ending 1.......Music
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Credits....Music
 
 _____________________________________________________________________________________________________________________________________
 _____________________________________________________________________________________________________________________________________
