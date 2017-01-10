@@ -5,7 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
-#define luamanager_cpp //MFS
+//#define luamanager_cpp //MFS
 #ifdef LUA_SDK
 #include "filesystem.h"
 #ifndef CLIENT_DLL

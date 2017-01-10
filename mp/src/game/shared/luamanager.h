@@ -31,7 +31,7 @@
 #define LUA_BASE_ENTITY_CLASS		"prop_scripted"
 #define LUA_BASE_ENTITY_FACTORY		"CBaseAnimating"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
-#define LUA_BASE_GAMEMODE			"deathmatch"
+#define LUA_BASE_GAMEMODE			"deathmatch" //mfs
 
 
 #define LUA_MAX_WEAPON_ACTIVITIES	32
@@ -298,9 +298,9 @@
 	  lua_pop(L, 1); \
   }
 
-#ifndef luamanager_cpp //MFS
+//#ifndef luamanager_cpp //MFS
 extern ConVar gamemode;
-#endif
+//#endif
 
 LUALIB_API int luaL_checkboolean (lua_State *L, int narg);
 LUALIB_API int luaL_optboolean (lua_State *L, int narg,

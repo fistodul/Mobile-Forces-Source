@@ -4,12 +4,13 @@
 --
 --===========================================================================--
 
-GM.Name       = "base"
+GM.Name       = "Deathmatch"
 GM.Homepage   = "http://www.steampowered.com/"
 GM.Developer  = "Valve"
 GM.Manual     = nil
 
 function GM:Initialize()
+  self.m_bTeamPlayEnabled = cvar.FindVar( "mp_teamplay" ):GetBool()
 end
 
 function GM:Shutdown()
@@ -45,6 +46,10 @@ function GM:GetGameDescription()
 end
 
 function GM:GetMapRemainingTime()
+  -- if timelimit is disabled, return 0
+  if ( cvar.FindVar( "mp_timelimit" ):GetInt() <= 0 ) then
+    return 0;
+  end
 end
 
 function GM:GoToIntermission()
@@ -54,6 +59,7 @@ function GM:IsIntermission()
 end
 
 function GM:IsTeamplay()
+  return self.m_bTeamPlayEnabled
 end
 
 function GM:LevelShutdown()
@@ -79,6 +85,7 @@ function GM:PlayerUse( pPlayer )
 end
 
 function GM:Precache()
+  _R.CBaseEntity.PrecacheScriptSound( "AlyxEmp.Charge" );
 end
 
 function GM:ShouldCollide( collisionGroup0, collisionGroup1 )
