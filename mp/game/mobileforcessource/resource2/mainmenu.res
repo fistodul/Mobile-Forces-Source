@@ -1,6 +1,6 @@
 "MainMenu"
 {	
-	"cvar say ready"
+	"say ready"
 	{
 		"text"			"#MFS_Vote_Restart"
 		"description"	"#MFS_Vote_Restart"

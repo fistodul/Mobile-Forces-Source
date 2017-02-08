@@ -32,14 +32,15 @@ DESCRIPTION INFO_OPTIONS
 	{
 		"mat_dxlevel, advanced users only pls xD(default value is 90)"
 		{
-		LIST
-		"70" "70"
-		"80" "80"
-		"81" "81"
-		"90" "90"
-		"95" "95"
-		"98" "98"
+			LIST
+			"70" "70"
+			"80" "80"
+			"81" "81"
+			"90" "90"
+			"95" "95"
+			"98" "98"
 		}
+		{ "90" }
 	}
 	
 	"mat_clipz"
