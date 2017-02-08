@@ -2,7 +2,7 @@ $modelname	"items\dogtagred.mdl"
 $body mybody	"dogtagred.smd"
 $staticprop
 $surfaceprop	combine_metal
-$cdmaterials	"models\items\dogtagred"
+$cdmaterials	"models\items\dogtag"
 
 $sequence idle	"dogtagred.smd"
 

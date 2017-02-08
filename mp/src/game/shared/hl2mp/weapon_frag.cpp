@@ -379,6 +379,7 @@ void CWeaponFrag::DecrementAmmo( CBaseCombatCharacter *pOwner )
 //-----------------------------------------------------------------------------
 void CWeaponFrag::ItemPostFrame( void )
 {
+#ifdef MFS
 	if (!HasPrimaryAmmo())
 		weight = 0;
 	else if (GetPrimaryAmmoCount() == 1 )
@@ -393,6 +394,7 @@ void CWeaponFrag::ItemPostFrame( void )
 		weight = 2.5;
 	else if (GetPrimaryAmmoCount() == 6)
 		weight = 3;
+#endif
 
 	if( m_fDrawbackFinished )
 	{

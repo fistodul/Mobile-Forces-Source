@@ -134,7 +134,7 @@
 		"specifics"		"shared"
 	}
 	
-	"cvar mp3"
+	"Mp3"
 	{
 		"text"			"#MFS_MP3Player"
 		"description"	"#MFS_MP3Player"

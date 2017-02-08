@@ -1642,6 +1642,7 @@ CAmmoDef *GetAmmoDef()
 			def.AddAmmoType("SniperBolt", DMG_BULLET | DMG_SNIPER, TRACER_LINE, "sk_plr_dmg_sniper", "sk_npc_dmg_sniper", "sk_max_sniper", BULLET_IMPULSE(800, 8000), 0);
 			def.AddAmmoType("SMG3",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg3",			"sk_npc_dmg_smg3",			"sk_max_smg3",			BULLET_IMPULSE(200, 1225), 0 );
 			def.AddAmmoType("Dualies",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_dualies",		"sk_npc_dmg_dualies",		"sk_max_dualies",		BULLET_IMPULSE(200, 1225), 0 );
+			def.AddAmmoType("M16A4", DMG_BULLET, TRACER_LINE_AND_WHIZ, "sk_plr_dmg_m16a4", "sk_npc_dmg_m16a4", "sk_max_m16a4", BULLET_IMPULSE(200, 1225), 0);
 	}
 
 	return &def;

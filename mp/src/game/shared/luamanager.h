@@ -31,7 +31,7 @@
 #define LUA_BASE_ENTITY_CLASS		"prop_scripted"
 #define LUA_BASE_ENTITY_FACTORY		"CBaseAnimating"
 #define LUA_BASE_WEAPON				"weapon_hl2mpbase_scriptedweapon"
-#define LUA_BASE_GAMEMODE			"deathmatch" //mfs
+#define LUA_BASE_GAMEMODE			"mfs" //mfs
 
 
 #define LUA_MAX_WEAPON_ACTIVITIES	32

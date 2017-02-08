@@ -27,7 +27,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-ConVar gamemode( "gamemode", "sandbox", FCVAR_ARCHIVE | FCVAR_REPLICATED );
+ConVar gamemode( "gamemode", "deathmatch", FCVAR_ARCHIVE | FCVAR_REPLICATED );
 static char contentSearchPath[MAX_PATH];
 
 static void tag_error (lua_State *L, int narg, int tag) {

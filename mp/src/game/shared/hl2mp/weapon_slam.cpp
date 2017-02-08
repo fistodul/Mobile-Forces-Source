@@ -768,6 +768,7 @@ void CWeapon_SLAM::ItemPostFrame( void )
 		return;
 	}
 
+#ifdef MFS
 	if (!HasPrimaryAmmo())
 		weight = 0;
 	else if (GetPrimaryAmmoCount() == 1)
@@ -782,6 +783,7 @@ void CWeapon_SLAM::ItemPostFrame( void )
 		weight = 2.5;
 	else if (GetPrimaryAmmoCount() == 6)
 		weight = 3;
+#endif
 
 	SLAMThink();
 

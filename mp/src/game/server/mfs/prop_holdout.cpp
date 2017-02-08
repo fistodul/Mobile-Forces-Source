@@ -121,6 +121,7 @@ void CHoldout::HoldoutUse(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 
 void CHoldout::HoldoutThink( void )
 {
+#ifdef MFS
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
 	if (!pPlayer)
 	{
@@ -152,6 +153,7 @@ void CHoldout::HoldoutThink( void )
 	}
 
 	SetNextThink(gpGlobals->curtime + 0.1f);
+#endif
 }
 
 void CHoldout::Precache( void )

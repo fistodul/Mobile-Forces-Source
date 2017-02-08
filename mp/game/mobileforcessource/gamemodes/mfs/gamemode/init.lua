@@ -6,6 +6,10 @@
 
 include( "shared.lua" )
 
+local PLAYER_SOUNDS_CITIZEN = 0
+local PLAYER_SOUNDS_COMBINESOLDIER = 1
+local PLAYER_SOUNDS_METROPOLICE = 2
+
 function GM:AddLevelDesignerPlacedObject( pEntity )
 end
 
@@ -16,6 +20,11 @@ function GM:CanEnterVehicle( pPlayer, pVehicle, nRole )
 end
 
 function GM:CanHavePlayerItem( pPlayer, pItem )
+  if ( cvar.FindVar( "mp_weaponstay" ):GetInt() > 0 ) then
+    if ( pPlayer:Weapon_OwnsThisType( pItem:GetClassname(), pItem:GetSubType() ) ) then
+	  return false;
+	end
+  end
 end
 
 function GM:CanPlayerHearPlayer( pListener, pTalker, bProximity )
@@ -37,6 +46,7 @@ function GM:ClientDisconnected( pClient )
 end
 
 function GM:FlItemRespawnTime( pItem )
+  return cvar.FindVar( "sv_hl2mp_item_respawn_time" ):GetFloat();
 end
 
 function GM:FlPlayerFallDamage( pPlayer )
@@ -55,6 +65,36 @@ function GM:FShouldSwitchWeapon( pPlayer, pWeapon )
 end
 
 function GM:GiveDefaultItems( pPlayer )
+	pPlayer:EquipSuit();
+
+	if ( pPlayer:GetPlayerModelType() == PLAYER_SOUNDS_METROPOLICE or pPlayer:GetPlayerModelType() == PLAYER_SOUNDS_COMBINESOLDIER ) then
+		if ( self:IsInjustice() ) then
+			pPlayer:GiveGoodItems();
+		else
+			pPlayer:GiveNamedItem( "weapon_knife" );
+		end
+	elseif ( pPlayer:GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN ) then
+		if ( self:IsInjustice() ) then
+			pPlayer:GiveEvilItems();
+		else
+			pPlayer:GiveNamedItem( "weapon_crowbar" );
+		end
+	end
+	
+	--SecobMod__Information: Provide hands.
+	pPlayer:GiveNamedItem( "weapon_hands" );
+	
+	pPlayer:SetMaxArmorValue(200);
+	
+	local szDefaultWeaponName = engine.GetClientConVarValue( engine.IndexOfEdict( pPlayer ), "cl_defaultweapon" );
+
+	local pDefaultWeapon = pPlayer:Weapon_OwnsThisType( szDefaultWeaponName );
+
+	if ( ToBaseEntity( pDefaultWeapon ) ~= NULL ) then
+		pPlayer:Weapon_Switch( pDefaultWeapon );
+	else
+		pPlayer:Weapon_Switch( pPlayer:Weapon_OwnsThisType( "weapon_physcannon" ) );
+	end
 end
 
 function GM:Host_Say( pPlayer, p, teamonly )

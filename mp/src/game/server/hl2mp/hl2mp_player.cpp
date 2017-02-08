@@ -256,6 +256,11 @@ void CHL2MP_Player::Precache( void )
 void CHL2MP_Player::GiveAllItems( void )
 {
 #ifdef SecobMod__ALLOW_VALVE_APPROVED_CHEATING
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "GiveAllItems" );
+		lua_pushhl2mpplayer( L, this );
+	END_LUA_CALL_HOOK( 1, 0 );
+#endif
 	
 	EquipSuit();
 
@@ -277,16 +282,17 @@ void CHL2MP_Player::GiveAllItems( void )
 	CBasePlayer::GiveAmmo(	100,	"Extinguisher"	);
 	CBasePlayer::GiveAmmo( 192, "SMG3" );
 	CBasePlayer::GiveAmmo( 255, "Dualies" );
+	CBasePlayer::GiveAmmo(90, "M16A4");
 	GiveNamedItem( "weapon_knife" );
 	GiveNamedItem( "weapon_smg3" );
 	GiveNamedItem( "weapon_minigun" );
 	GiveNamedItem( "weapon_healthkit" );
 	GiveNamedItem( "weapon_troll" );
 	GiveNamedItem( "weapon_gauss" );
-	GiveNamedItem( "weapon_dualies" );
 	GiveNamedItem( "weapon_portalgun" );
 	GiveNamedItem( "weapon_bugbait" );
 	GiveNamedItem("weapon_dualies");
+	GiveNamedItem("weapon_m16a4");
 	GiveNamedItem( "weapon_grapple" );
 	GiveNamedItem("weapon_sniper");
 	GiveNamedItem("weapon_physgun");
@@ -321,10 +327,7 @@ void CHL2MP_Player::GiveDefaultItems( void )
 	END_LUA_CALL_HOOK( 1, 0 );
 #endif
 #ifndef SecobMod__USE_PLAYERCLASSES
-#if defined ( LUA_SDK )
-	if (strcmp(gamemode.GetString(), "default") == 0)
-	{
-#endif
+#if !defined ( LUA_SDK )
 		EquipSuit();
 
 		/*CBasePlayer::GiveAmmo( 255,	"Pistol");
@@ -376,14 +379,18 @@ void CHL2MP_Player::GiveDefaultItems( void )
 		{
 			Weapon_Switch(Weapon_OwnsThisType("weapon_physcannon"));
 		}
-#if defined ( LUA_SDK )
-	}
 #endif
 #endif //SecobMod__USE_PLAYERCLASSES
 }
 
 void CHL2MP_Player::GiveGoodItems( void )
 {
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "GiveGoodItems" );
+		lua_pushhl2mpplayer( L, this );
+	END_LUA_CALL_HOOK( 1, 0 );
+#endif
+
 	EquipSuit();
 
 	CBasePlayer::GiveAmmo(	1,	"healthkit" );
@@ -391,12 +398,19 @@ void CHL2MP_Player::GiveGoodItems( void )
 	GiveNamedItem( "weapon_healthkit" );
 	GiveNamedItem( "weapon_bugbait" );
 	GiveNamedItem( "weapon_physcannon" );
+	GiveNamedItem("weapon_portalgun");
 	GiveNamedItem( "weapon_troll" );
 	GiveNamedItem( "weapon_grapple" );
 	
 }
 void CHL2MP_Player::GiveEvilItems( void )
 {
+#if defined ( LUA_SDK )
+	BEGIN_LUA_CALL_HOOK( "GiveEvilItems" );
+		lua_pushhl2mpplayer( L, this );
+	END_LUA_CALL_HOOK( 1, 0 );
+#endif
+
 	EquipSuit();
 
 	CBasePlayer::GiveAmmo( 255,	"Pistol");
@@ -415,11 +429,13 @@ void CHL2MP_Player::GiveEvilItems( void )
 	CBasePlayer::GiveAmmo(	150,	"GaussEnergy1" );
 	CBasePlayer::GiveAmmo( 192, "SMG3" );
 	CBasePlayer::GiveAmmo( 255, "Dualies" );
+	CBasePlayer::GiveAmmo(90, "M16A4");
 	GiveNamedItem( "weapon_knife" );
 	GiveNamedItem( "weapon_smg3" );
 	GiveNamedItem( "weapon_minigun" );
 	GiveNamedItem( "weapon_gauss" );
 	GiveNamedItem( "weapon_dualies" );
+	GiveNamedItem("weapon_m16a4");
 	GiveNamedItem( "weapon_smg3" );
 	GiveNamedItem( "weapon_sniper" );
 	
@@ -758,8 +774,10 @@ CBaseEntity *ent = NULL;
 			player_throwforce.SetValue(99999);
 			sv_regeneration_rate.SetValue(1);
 			sv_regeneration_wait_time.SetValue(0);
+#ifdef MFS
 			CBasePlayer::SetNormSpeed(320);
 			CBasePlayer::SetJumpHeight(30);
+#endif
 		}
 
 	 #ifdef SecobMod__USE_PLAYERCLASSES
@@ -3534,7 +3552,7 @@ m_iPlayerSoundType = (int)PLAYER_SOUNDS_METROPOLICE;
 		m_iMaxHealth = 500;
 		SetArmorValue(500);
 		SetMaxArmorValue(1000);
-				GiveNamedItem( "weapon_hands" );
+		GiveNamedItem( "weapon_hands" );
 		GiveNamedItem( "weapon_stunstick" );
 		GiveNamedItem( "weapon_pistol" );
 		GiveNamedItem( "weapon_ar2" );

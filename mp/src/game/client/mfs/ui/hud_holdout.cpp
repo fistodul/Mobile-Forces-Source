@@ -107,8 +107,10 @@ void HudHoldout::UpdateAmmoDisplays(C_BasePlayer *pPlayer)
 		SetPaintEnabled(true);
 		SetPaintBackgroundEnabled(true);
 	}
+#ifdef MFS
 	BlueTime = pPlayer->GetBlueTime();
 	RedTime = pPlayer->GetRedTime();
+#endif
 	SetAmmo(BlueTime, true);
 	SetAmmo2(RedTime, true);
 }

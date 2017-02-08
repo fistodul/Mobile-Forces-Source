@@ -29,5 +29,6 @@ weapon_manifest
 	"file"		"scripts/weapon_smg3.txt"
 	"file"		"scripts/weapon_troll.txt"
 	"file"		"scripts/weapon_sniper.txt"
+	"file"		"scripts/weapon_m16a4.txt"
 
 }
