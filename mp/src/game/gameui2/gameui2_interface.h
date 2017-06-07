@@ -3,7 +3,7 @@
 #include "igameui2.h"
 
 #include "cdll_int.h"
-#include "engine/ienginesound.h"
+#include "engine/IEngineSound.h"
 #include "ienginevgui.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "ivrenderview.h"

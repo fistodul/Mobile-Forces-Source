@@ -165,7 +165,10 @@ int CPropVehiclePassenger::GetNumPassengers( void )
 
 void CPropVehiclePassenger::NullifyPassenger( int iRole )
 {
+	//FixMe, wtf?
+	#ifndef DEBUG
 	Assert( iRole != VEHICLE_DRIVER );
+	#endif
 
 	/*switch( iRole )
 	{

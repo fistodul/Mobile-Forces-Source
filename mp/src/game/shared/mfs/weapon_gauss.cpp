@@ -7,7 +7,7 @@
 
 #include "cbase.h"
 #include "beam_shared.h"
-#include "AmmoDef.h"
+#include "ammodef.h"
 #include "in_buttons.h"
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 #include "soundenvelope.h"
@@ -15,7 +15,7 @@
 
 #ifdef CLIENT_DLL
 #include "c_hl2mp_player.h"
-#include "ClientEffectPrecacheSystem.h"
+#include "clienteffectprecachesystem.h"
 #else
 #include "hl2mp_player.h"
 

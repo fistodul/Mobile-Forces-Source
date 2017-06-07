@@ -1310,9 +1310,10 @@ float CAPC2FourWheelServerVehicle::Weapon_SecondaryCanFireAt( void )
 
 void CAPC2FourWheelServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
 {
-
-
+	//FixMe, wtf?
+	#ifndef DEBUG
 	Assert( nRole == VEHICLE_DRIVER );
+	#endif
 	CBaseCombatCharacter *pPlayer = GetPassenger( VEHICLE_ROLE_DRIVER );
 	Assert( pPlayer );
 

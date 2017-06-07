@@ -35,8 +35,8 @@
 //#define LUA_SDK // for screwing around
 //#define VGUI_FIX // This is mostly implemented but i put under a define stuff that caused problems(documented)
 #define GAMEUI2 // Ported Alien Swarm Gameui2
-#define pilotable // Pilotable Strider
-#define passengers // Multi-Passenger Vehicles
+//#define pilotable // Pilotable Strider
+//#define passengers // Multi-Passenger Vehicles
 
 /*****************/
 /* Base Defines. */

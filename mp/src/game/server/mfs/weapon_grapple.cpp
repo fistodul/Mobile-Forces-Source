@@ -171,7 +171,7 @@ m_hPlayer->SetPhysicsFlag( PFLAG_VPHYSICS_MOTIONCONTROLLER, true );
 IPhysicsObject *pRootPhysObject = VPhysicsGetObject();
 Assert( pRootPhysObject );
 #ifndef DEBUG //FixMe, idk
-Assert( pPhysObject );
+//Assert( pPhysObject );
 #endif
 pRootPhysObject->EnableMotion( false );
 // Root has huge mass, tip has little

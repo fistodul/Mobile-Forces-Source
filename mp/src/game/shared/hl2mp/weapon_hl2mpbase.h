@@ -15,7 +15,7 @@
 #include "hl2mp_weapon_parse.h"
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	#ifndef CLIENT_DLL 
-		#include "AI_BaseNPC.h" 
+		#include "ai_basenpc.h" 
 	#endif 
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
 

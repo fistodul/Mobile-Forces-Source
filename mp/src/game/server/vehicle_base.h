@@ -218,7 +218,10 @@ public:
 	virtual int			GetNumPassengers( void ){ return (GetDriver()) ? 1 : 0; }
 	virtual void		PassengerEnterVehicle( CBasePlayer *pPlayer, int nRole )
 	{	
+		//FixMe, wtf?
+		#ifndef DEBUG
 		Assert(nRole == VEHICLE_DRIVER); 
+		#endif
 		EnterVehicle( pPlayer ); 
 	}
 	#endif

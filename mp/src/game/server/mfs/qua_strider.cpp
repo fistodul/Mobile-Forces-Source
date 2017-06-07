@@ -1907,11 +1907,14 @@ void CQUAServerVehicle::NPC_DriveVehicle( void ) {
 	// nada que hacer aqui
 }
 //-----------------------------------------------------------------------------
-// Purpose: TODO: Revisar bien que pasa aqui 
+// Purpose: TODO: Review what happens here
 //-----------------------------------------------------------------------------
 void CQUAServerVehicle::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
 {
+	//FixMe, wtf?
+	#ifndef DEBUG
 	Assert( nRole == VEHICLE_DRIVER );
+	#endif
 	CBasePlayer *pPlayer = ToBasePlayer( GetDrivableVehicle()->GetDriver() );
 	Assert( pPlayer );
 

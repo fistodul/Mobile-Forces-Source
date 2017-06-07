@@ -1364,7 +1364,7 @@ protected:
 	CNetworkVar( bool, m_bIsCurrentlyUpgrading );
 	CNetworkVar( float, m_flTimeForceView );
 	bool				m_bPhyscannonState;
-#endif SecobMod__ALLOW_SUPER_GRAVITY_GUN
+#endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN
 	
 	bool	m_bResetOwnerEntity;
 	
