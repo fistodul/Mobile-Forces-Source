@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "vgui\logos\Spray_Octo"
+	"$translucent" "1"
+	"$decal" "1"
+	"$decalscale" "0.250"
+}

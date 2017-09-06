@@ -24,6 +24,8 @@ ipch
 *.vcxproj.vpc_crc
 *.vpc.sentinel
 *.sln
+glshaders.cfg
+videoconfig_linux.cfg
 mp/src/game/client/Release_mobileforcessource
 mp/src/game/server/Release_mobileforcessource
 mp/src/game/client/Debug_mobileforcessource

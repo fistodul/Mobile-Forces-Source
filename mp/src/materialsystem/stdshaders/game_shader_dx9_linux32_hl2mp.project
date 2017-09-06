@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="shaders (hl2mp)" InternalType="">
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Dynamic Library">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="">
+        <IncludePath Value=""/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value=""/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <CustomBuild Enabled="yes">
+        <RebuildCommand>make CFG=debug -f game_shader_dx9_linux32_hl2mp.mak clean all</RebuildCommand>
+        <CleanCommand>make CFG=debug -f game_shader_dx9_linux32_hl2mp.mak clean</CleanCommand>
+        <BuildCommand>make CFG=debug -f game_shader_dx9_linux32_hl2mp.mak -j `getconf _NPROCESSORS_ONLN`</BuildCommand>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
+      </CustomBuild>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Dynamic Library" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <CustomBuild Enabled="yes">
+        <RebuildCommand>make -f game_shader_dx9_linux32_hl2mp.mak clean all</RebuildCommand>
+        <CleanCommand>make -f game_shader_dx9_linux32_hl2mp.mak clean</CleanCommand>
+        <BuildCommand>make -f game_shader_dx9_linux32_hl2mp.mak -j `getconf _NPROCESSORS_ONLN`</BuildCommand>
+        <WorkingDirectory>$(ProjectPath)</WorkingDirectory>
+      </CustomBuild>
+    </Configuration>
+  </Settings>
+    <VirtualDirectory Name="Source Files">
+      <File Name="../../public/tier0/memoverride.cpp"/>
+      <File Name="BaseVSShader.cpp"/>
+      <File Name="Bloom.cpp"/>
+      <File Name="example_model_dx9.cpp"/>
+      <File Name="example_model_dx9_helper.cpp"/>
+      <File Name="screenspace_general.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Header Files">
+      <File Name="BaseVSShader.h"/>
+      <File Name="common_fxc.h"/>
+      <File Name="common_hlsl_cpp_consts.h"/>
+      <File Name="common_ps_fxc.h"/>
+      <File Name="common_vertexlitgeneric_dx9.h"/>
+      <File Name="common_vs_fxc.h"/>
+      <File Name="example_model_dx9_helper.h"/>
+      <File Name="shader_constant_register_map.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Resources">
+    </VirtualDirectory>
+    <VirtualDirectory Name="VPC Files">
+      <File Name="../../materialsystem/stdshaders/game_shader_dx9_base.vpc"/>
+      <File Name="../../vpc_scripts/platform_dirs.vpc"/>
+      <File Name="../../vpc_scripts/source_base.vpc"/>
+      <File Name="../../vpc_scripts/source_dll_base.vpc"/>
+      <File Name="../../vpc_scripts/source_dll_posix_base.vpc"/>
+      <File Name="../../vpc_scripts/source_posix_base.vpc"/>
+      <File Name="../../vpc_scripts/source_video_base.vpc"/>
+      <File Name="../../vpc_scripts/version.vpc"/>
+      <File Name="../../vpc_scripts/version.vpc"/>
+      <File Name="game_shader_dx9_mfs.vpc"/>
+      <File Name="game_shader_dx9_mfs.vpc"/>
+    </VirtualDirectory>
+</CodeLite_Project>
