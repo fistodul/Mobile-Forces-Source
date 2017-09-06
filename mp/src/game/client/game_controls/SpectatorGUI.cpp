@@ -6,7 +6,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "C_Team.h"
+#include "c_team.h"
 #include <cdll_client_int.h>
 #include <globalvars_base.h>
 #include <cdll_util.h>

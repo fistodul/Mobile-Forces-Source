@@ -7,6 +7,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lrandom_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
@@ -93,4 +94,4 @@ LUALIB_API int luaopen_random (lua_State *L) {
   // luaL_register(L, "_G", random_funcs);
   return 1;
 }
-
+#endif

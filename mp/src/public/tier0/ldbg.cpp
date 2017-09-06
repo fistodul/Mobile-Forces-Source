@@ -7,6 +7,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define ldbg_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
@@ -166,3 +167,4 @@ LUALIB_API int luaopen_dbg (lua_State *L) {
   return 1;
 }
 
+#endif

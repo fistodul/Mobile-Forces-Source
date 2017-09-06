@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -12,6 +12,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define linetchannelinfo_cpp
 
 #include "inetchannelinfo.h"
@@ -248,3 +249,4 @@ LUALIB_API int luaopen_INetChannelInfo (lua_State *L) {
   return 1;
 }
 
+#endif

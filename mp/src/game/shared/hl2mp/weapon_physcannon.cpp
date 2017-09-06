@@ -2430,7 +2430,7 @@ bool CWeaponPhysCannon::AttachObject( CBaseEntity *pObject, const Vector &vPosit
 	if ( bIsMegaPhysCannon )
 	{
 			//SecobMod__Information: This prevents the secondary fire being used to grab ragdolls out of certain NPCs: Dog, Monk, Vortigaunt.
-			if ( pObject->IsNPC() && ( pObject->Classify() == CLASS_PLAYER_ALLY_VITAL ) || pObject->ClassMatches("npc_vortigaunt") )
+			if ( (pObject->IsNPC()) && ( pObject->Classify() == CLASS_PLAYER_ALLY_VITAL ) || (pObject->ClassMatches("npc_vortigaunt")) )
 			{	
 			return false;
 			}

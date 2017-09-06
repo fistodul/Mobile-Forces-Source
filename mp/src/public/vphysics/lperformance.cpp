@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lperformance_cpp
 #include "performance.h"
 #include "lua.hpp"
@@ -85,3 +86,4 @@ LUA_API void lua_pushperformanceparams (lua_State *L, lua_Physics_performancepar
   lua_setfield(L, -2, "maxFrictionMass");
 }
 
+#endif

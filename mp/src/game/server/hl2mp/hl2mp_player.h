@@ -134,13 +134,13 @@ int m_iSprintSpeed;
 	void	SetMaxArmorValue( int MaxArmorValue );
 	
 // Armor gets.
-int CHL2MP_Player::GetArmorValue()
+int /*CHL2MP_Player::*/GetArmorValue()
 {
 	return m_iArmor;
 }
 
 
-int CHL2MP_Player::GetMaxArmorValue()
+int /*CHL2MP_Player::*/GetMaxArmorValue()
 {
 	return m_iMaxArmor;
 }
@@ -151,27 +151,27 @@ private:
 	bool IsFirstSpawn();
 #ifdef SecobMod__USE_PLAYERCLASSES
 
-void CHL2MP_Player::SetHealthValue( int value )
+void /*CHL2MP_Player::*/SetHealthValue( int value )
 {
 	m_iHealth = value;
 }
 
-void CHL2MP_Player::SetMaxHealthValue( int MaxValue )
+void /*CHL2MP_Player::*/SetMaxHealthValue( int MaxValue )
 {
 	m_iMaxHealth = MaxValue;
 }
 
-int CHL2MP_Player::GetHealthValue()
+int /*CHL2MP_Player::*/GetHealthValue()
 {
 	return m_iHealth;
 }
 
-int CHL2MP_Player::GetMaxHealthValue()
+int /*CHL2MP_Player::*/GetMaxHealthValue()
 {
 	return m_iMaxHealth;
 }
 
-void CHL2MP_Player::IncrementHealthValue( int nCount )
+void /*CHL2MP_Player::*/IncrementHealthValue( int nCount )
 { 
 	m_iHealth += nCount;
 	if (m_iMaxHealth > 0 && m_iHealth > m_iMaxHealth)

@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #include "c_prop_vehicle.h"
 #include "c_vehicle_jeep.h"
 #include "movevars_shared.h"
@@ -131,3 +132,4 @@ void C_PropJeepEpisodic::OnEnteredVehicle( C_BasePlayer *pPlayer )
 {
 	BaseClass::OnEnteredVehicle( pPlayer );
 }
+#endif

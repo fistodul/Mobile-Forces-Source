@@ -7,6 +7,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lvector_cpp
 #include "vector.h"
 #include "fmtstr.h"
@@ -460,3 +461,4 @@ LUALIB_API int luaopen_QAngle (lua_State *L) {
   return 1;
 }
 
+#endif

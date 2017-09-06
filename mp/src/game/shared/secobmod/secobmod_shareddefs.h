@@ -123,6 +123,10 @@
 #define SecobMod__BG_FIX //Stops the MOTD/Briefing Panel and the Class Menu from showing on main menu maps.
 #define SecobMod__FIX_SHOTGUN_FAST_SWITCH_BUG //Fixes a bug in the shotgun code - Community fix submitted fix by SubZero.
 
+#ifdef linux
+#undef LUA_SDK
+#undef SSE
+#endif
 #ifdef SSE
 #define SOURCE_2013
 #endif

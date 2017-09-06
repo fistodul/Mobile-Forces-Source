@@ -5,6 +5,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lmathlib_cpp
 #include "mathlib.h"
 #include "lua.hpp"
@@ -196,4 +197,4 @@ LUALIB_API int luaopen_mathlib (lua_State *L) {
   luaL_register(L, LUA_MATHLIBLIBNAME, mathliblib);
   return 1;
 }
-
+#endif

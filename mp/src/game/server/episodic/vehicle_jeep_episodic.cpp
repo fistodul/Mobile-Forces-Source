@@ -371,6 +371,7 @@ BEGIN_DATADESC( CPropJeepEpisodic )
 
 END_DATADESC();
 
+#ifndef linux
 IMPLEMENT_SERVERCLASS_ST(CPropJeepEpisodic, DT_CPropJeepEpisodic)
 	//CNetworkVar( int, m_iNumRadarContacts );
 	SendPropInt( SENDINFO(m_iNumRadarContacts), 8 ),
@@ -381,7 +382,7 @@ IMPLEMENT_SERVERCLASS_ST(CPropJeepEpisodic, DT_CPropJeepEpisodic)
 	//CNetworkArray( int, m_iRadarContactType, RADAR_MAX_CONTACTS );
 	SendPropArray( SendPropInt(SENDINFO_ARRAY(m_iRadarContactType), RADAR_CONTACT_TYPE_BITS ), m_iRadarContactType ),
 END_SEND_TABLE()
-
+#endif
 
 //=============================================================================
 // Episodic jeep

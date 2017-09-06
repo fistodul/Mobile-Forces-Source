@@ -14,7 +14,7 @@
 #endif
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 //#include "basehlcombatweapon.h"
-#include "sprite.h"
+#include "Sprite.h"
 #include "props.h"
 #ifndef CLIENT_DLL
 #include "rope.h"
@@ -26,7 +26,7 @@
 #ifndef CLIENT_DLL
 class CWeaponGrapple;
 //-----------------------------------------------------------------------------
-// Grapple Hook
+// Grapple Hook, its cool
 //-----------------------------------------------------------------------------
 class CGrappleHook : public CBaseCombatCharacter
 {

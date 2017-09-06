@@ -64,7 +64,7 @@ CHudAmmo::CHudAmmo( const char *pElementName ) : BaseClass(NULL, "HudAmmo"), CHu
 		SetHiddenBits( HIDEHUD_PLAYERDEAD );
 	#else
 		SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT | HIDEHUD_WEAPONSELECTION );
-	#endif;
+	#endif
 
 	hudlcd->SetGlobalStat( "(ammo_primary)", "0" );
 	hudlcd->SetGlobalStat( "(ammo_secondary)", "0" );

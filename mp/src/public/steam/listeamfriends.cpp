@@ -6,6 +6,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define listeamfriends_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
@@ -111,4 +112,4 @@ LUALIB_API int luaopen_ISteamFriends (lua_State *L) {
   lua_setfield(L, -2, "__type");  /* metatable.__type = "steamfriends" */
   return 1;
 }
-
+#endif

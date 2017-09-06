@@ -1,4 +1,4 @@
-//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
+//========= Copyright ï¿½ 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: 
 //
@@ -7,6 +7,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lin_buttons_cpp
 #include "in_buttons.h"
 #include "luamanager.h"
@@ -46,3 +47,4 @@ LUALIB_API int luaopen_IN (lua_State *L) {
   END_LUA_SET_ENUM_LIB(L);
   return 0;
 }
+#endif

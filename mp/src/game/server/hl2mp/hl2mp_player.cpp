@@ -25,7 +25,7 @@
 #include "ammodef.h"
 #endif //SecobMod__SAVERESTORE
 #ifdef MFS
-#include "mfs\bot_main.h"
+#include "mfs/bot_main.h"
 #endif
 
 #ifdef LUA_SDK

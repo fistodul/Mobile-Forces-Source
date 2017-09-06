@@ -10,6 +10,7 @@
 //===========================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define liconvar_cpp
 #include "luamanager.h"
 #include "luasrclib.h"
@@ -52,3 +53,4 @@ LUALIB_API int luaopen_FCVAR (lua_State *L) {
   END_LUA_SET_ENUM_LIB(L);
   return 0;
 }
+#endif

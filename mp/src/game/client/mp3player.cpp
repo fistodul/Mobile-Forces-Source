@@ -1313,12 +1313,13 @@ void CMP3Player::PopulateTree()
 
 	PopulateLists();
 }
-
+#ifndef linux
 // Instead of including windows.h
 extern "C"
 {
 	extern int __stdcall CopyFileA( char *pszSource, char *pszDest, int bFailIfExists );
 };
+#endif
 
 void CMP3Player::GetLocalCopyOfSong( const MP3File_t &mp3, char *outsong, size_t outlen )
 {
@@ -1374,11 +1375,13 @@ void CMP3Player::GetLocalCopyOfSong( const MP3File_t &mp3, char *outsong, size_t
 
 		// !!!HACK HACK:
 		// Total hack right now, using windows OS calls to copy file to full destination
+#ifndef linux
 		int success = ::CopyFileA( sourcepath, destpath, TRUE );
 		if ( success > 0 )
 		{
 			Q_snprintf( outsong, outlen, "_mp3/%s.mp3", hexname );
 		}
+#endif
 	}
 
 	Q_FixSlashes( outsong );

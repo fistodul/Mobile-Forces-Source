@@ -1844,7 +1844,7 @@ class CChatBubble : public CBaseAnimating
 {
 public:
 	DECLARE_CLASS(CChatBubble, CBaseAnimating);
-	CChatBubble::CChatBubble()
+	/*CChatBubble::*/CChatBubble()
 	{
 		UseClientSideAnimation();
 	}
@@ -5746,7 +5746,7 @@ bool CBasePlayer::GetInVehicle( IServerVehicle *pVehicle, int nRole )
 	{
 		#ifndef SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
 		AddEffects( EF_NODRAW ); //SecobMod__Information: This causes players to have invisible third person models in vehicles.
-		#endif SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
+		#endif //SecobMod__ALLOW_PLAYER_MODELS_IN_VEHICLES
 	}
 
 	// Put us in the vehicle

@@ -5,6 +5,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lsteam_api_cpp
 #include "steam_api.h"
 #include "lua.hpp"
@@ -34,3 +35,4 @@ LUALIB_API int luaopen_steamapicontext (lua_State *L) {
   return 1;
 }
 
+#endif

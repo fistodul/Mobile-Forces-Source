@@ -6,10 +6,11 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lvgui_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
-#include "lvgui.h"
+#include "LVGUI.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -126,3 +127,5 @@ LUALIB_API int luaopen_HFont (lua_State *L) {
   lua_setglobal(L, "INVALID_FONT");  /* set global INVALID_FONT */
   return 1;
 }
+
+#endif

@@ -912,7 +912,10 @@ void CVGuiScreenPanel::OnCommand( const char *command)
 		|| stricmp( command, "out16" ) == 0 )
 	{
 		char entindex[8];
+		#ifndef linux //FIXME
 		itoa( this->GetEntity()->entindex(), entindex, 10 ); //Radix is base 10 (decimal)
+		//snprintf(target_string, size_of_target_string_in_bytes, "%d", source_int)
+		#endif
 		char newcommand[16] = { ' ' };
 		strcat( newcommand, command );
 		strcat( newcommand, " " );

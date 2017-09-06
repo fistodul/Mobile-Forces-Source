@@ -282,7 +282,7 @@ private:
 
 #ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	CUtlFixedLinkedList< LagRecord >	m_EntityTrack[MAX_AIS];
-#endif SecobMod__Enable_Fixed_Multiplayer_AI
+#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 
 	// Scratchpad for determining what needs to be restored
 	CBitVec<MAX_PLAYERS>	m_RestorePlayer;

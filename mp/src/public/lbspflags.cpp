@@ -8,6 +8,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lbspflags_cpp
 #include "bspflags.h"
 #include "luamanager.h"
@@ -124,3 +125,4 @@ LUALIB_API int luaopen_MASK (lua_State *L) {
   END_LUA_SET_ENUM_LIB(L);
   return 0;
 }
+#endif

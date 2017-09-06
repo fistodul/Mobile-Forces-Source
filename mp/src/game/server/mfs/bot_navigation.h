@@ -381,7 +381,11 @@ bool CreateHidePath( CHL2MP_Bot *pBot, Vector &HiDeSpot )
 
 	CBaseEntity *pSpot = NULL;	
 
+	#ifndef linux
 	while ((pSpot = gEntList.FindEntityByClassname(pSpot, pBot->pHideSpot)) != NULL && &CHL2MP_Bot::ShouldUpdate == false)
+	#else
+	while ((pSpot = gEntList.FindEntityByClassname(pSpot, SPAWN_POINT_DEATHMATCH)) != NULL && &CHL2MP_Bot::ShouldUpdate == false)
+	#endif
 	{
 		if ( pSpot )
 		{

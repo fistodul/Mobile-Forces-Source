@@ -144,7 +144,11 @@ public:
 
 	float UpdateTime;
 
+#ifndef linux
 	char *pHideSpot = SPAWN_POINT_DEATHMATCH; //Create an entity "info_hide_spot" and use that by default or use the nav mesh
+//#else
+	//#define pHideSpot "SPAWN_POINT_DEATHMATCH"
+#endif
 
 	void Spawn()
 	{
@@ -193,10 +197,12 @@ public:
 
 	bool ShouldUpdate() 	
 	{
+#ifndef linux
 		CBaseEntity *pSpot = NULL;
 
 		if ((pSpot = gEntList.FindEntityByClassname(pSpot, pHideSpot)) == NULL)
 			return true;
+#endif
 
 		if ( gpGlobals->curtime - UpdateTime > 3600 )
 			return true; 
@@ -206,6 +212,7 @@ public:
 
 	void Update(int mode)
 	{
+#ifndef linux
 			CBaseEntity *pSpot = NULL;
 			char *OldHideSpot = pHideSpot;
 
@@ -365,6 +372,7 @@ public:
 				/*if (pHideSpot == OldHideSpot) // Not really much to do about it currently
 				Update(9);*/
 			}
+#endif
 
 			UpdateTime = gpGlobals->curtime;
 	}

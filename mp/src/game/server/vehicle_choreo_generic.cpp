@@ -105,7 +105,9 @@ class CPropVehicleChoreoGeneric : public CDynamicProp, public IDrivableVehicle
 
 public:
 	DECLARE_DATADESC();
+	#ifndef linux
 	DECLARE_SERVERCLASS();
+	#endif
 
 	CPropVehicleChoreoGeneric( void )
 	{
@@ -265,7 +267,7 @@ BEGIN_DATADESC( CPropVehicleChoreoGeneric )
 	DEFINE_EMBEDDED( m_savedVehicleView ),
 
 END_DATADESC()
-
+#ifndef linux
 IMPLEMENT_SERVERCLASS_ST(CPropVehicleChoreoGeneric, DT_PropVehicleChoreoGeneric)
 	SendPropEHandle(SENDINFO(m_hPlayer)),
 	SendPropBool(SENDINFO(m_bEnterAnimOn)),
@@ -282,7 +284,7 @@ IMPLEMENT_SERVERCLASS_ST(CPropVehicleChoreoGeneric, DT_PropVehicleChoreoGeneric)
 	SendPropFloat( SENDINFO_STRUCTELEM( m_vehicleView.flPitchMin ) ),
 	SendPropFloat( SENDINFO_STRUCTELEM( m_vehicleView.flPitchMax ) ),
 END_SEND_TABLE();
-
+#endif
 
 bool ShouldVehicleIgnoreEntity( CBaseEntity *pVehicle, CBaseEntity *pCollide )
 {

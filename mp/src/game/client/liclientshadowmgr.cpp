@@ -7,6 +7,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define liclientshadowmgr_cpp
 #include "luamanager.h"
 #include "mathlib/lvector.h"
@@ -83,4 +84,4 @@ LUALIB_API int luaopen_g_pClientShadowMgr (lua_State *L) {
   luaL_register(L, "g_pClientShadowMgr", g_pClientShadowMgrlib);
   return 1;
 }
-
+#endif

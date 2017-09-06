@@ -373,11 +373,11 @@ void CWeaponM16A4::AddViewKick(void)
         m_bInZoom = false;
  
         // Send a message to hide the scope
-        /* CSingleUserRecipientFilter filter(pPlayer);
-        UserMessageBegin(filter, "ShowScope");
-        WRITE_BYTE(0);
-        MessageEnd();*/
-     /* }
+        // CSingleUserRecipientFilter filter(pPlayer);
+        //UserMessageBegin(filter, "ShowScope");
+        //WRITE_BYTE(0);
+        //MessageEnd();
+      }
     }
     else
     {
@@ -386,11 +386,11 @@ void CWeaponM16A4::AddViewKick(void)
         m_bInZoom = true;
  
         // Send a message to Show the scope
-        /* CSingleUserRecipientFilter filter(pPlayer);
-        UserMessageBegin(filter, "ShowScope");
-        WRITE_BYTE(1);
-        MessageEnd();*/
-    /*  }
+        // CSingleUserRecipientFilter filter(pPlayer);
+        //UserMessageBegin(filter, "ShowScope");
+        //WRITE_BYTE(1);
+        //MessageEnd();
+      }
     }
   #endif
 }

@@ -11,7 +11,7 @@
 #include "ai_basenpc.h"
 #include "decals.h"
 #include "filters.h"
-#include "npc_SecobModportal1.h"
+#include "npc_secobmodportal1.h"
 #include "hl2mp_player.h"
 #include "collisionutils.h"
 #include "igamesystem.h"

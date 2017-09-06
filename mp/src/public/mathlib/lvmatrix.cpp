@@ -24,6 +24,7 @@
 //=============================================================================
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lvmatrix_cpp
 #include <string.h>
 #include "mathlib/vmatrix.h"
@@ -641,4 +642,4 @@ LUALIB_API int luaopen_VMatrix (lua_State *L) {
   return 1;
 }
 
-
+#endif

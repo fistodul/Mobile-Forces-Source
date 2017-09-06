@@ -6,6 +6,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lColor_cpp
 #include "Color.h"
 #include "fmtstr.h"
@@ -146,4 +147,4 @@ LUALIB_API int luaopen_Color (lua_State *L) {
   lua_pop(L, 1);
   return 1;
 }
-
+#endif

@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifndef linux
 #include "c_vehicle_jeep.h"
 #include "movevars_shared.h"
 #include "view.h"
@@ -326,3 +327,4 @@ void WheelDustCallback( const CEffectData &data )
 }
 
 DECLARE_CLIENT_EFFECT( "WheelDust", WheelDustCallback );
+#endif

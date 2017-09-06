@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 #include "model_types.h"
-#include "ClientEffectPrecacheSystem.h"
+#include "clienteffectprecachesystem.h"
 #include "fx.h"
 #include "c_te_effect_dispatch.h"
 #include "beamdraw.h"

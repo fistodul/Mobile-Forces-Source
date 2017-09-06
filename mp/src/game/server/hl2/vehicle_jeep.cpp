@@ -160,12 +160,14 @@ BEGIN_DATADESC( CPropJeep )
 	DEFINE_THINKFUNC( JeepSeagullThink ),
 END_DATADESC()
 
+#ifndef linux
 IMPLEMENT_SERVERCLASS_ST( CPropJeep, DT_PropJeep )
 	SendPropBool( SENDINFO( m_bHeadlightIsOn ) ),
 #ifdef MFS
 	//SendPropInt(SENDINFO(m_iHealth), 10),
 #endif
 END_SEND_TABLE();
+#endif
 
 //SecobMod__Information: Use the hl2 vehicle as the base prop_vehicle_jeep when you don't have episodic content defined.
 #ifndef HL2_EPISODIC

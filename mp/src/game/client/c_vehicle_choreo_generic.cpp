@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifndef linux
 #include "hud.h"		
 #include "c_props.h"
 #include "iclientvehicle.h"
@@ -33,7 +34,7 @@ extern float RemapAngleRange( float startInterval, float endInterval, float valu
 //-----------------------------------------------------------------------------
 class C_PropVehicleChoreoGeneric : public C_DynamicProp, public IClientVehicle
 {
-	DECLARE_CLASS( C_PropVehicleChoreoGeneric, C_DynamicProp );
+	DECLARE_CLASS(C_PropVehicleChoreoGeneric, C_DynamicProp);
 
 public:
 
@@ -110,7 +111,7 @@ IMPLEMENT_CLIENTCLASS_DT(C_PropVehicleChoreoGeneric, DT_PropVehicleChoreoGeneric
 END_RECV_TABLE()
 
 
-BEGIN_DATADESC( C_PropVehicleChoreoGeneric )
+BEGIN_DATADESC(C_PropVehicleChoreoGeneric)
 	DEFINE_EMBEDDED( m_ViewSmoothingData ),
 END_DATADESC()
 
@@ -133,7 +134,7 @@ C_PropVehicleChoreoGeneric::C_PropVehicleChoreoGeneric( void )
 // Purpose: 
 // Input  : updateType - 
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::PreDataUpdate( DataUpdateType_t updateType )
+void C_PropVehicleChoreoGeneric::PreDataUpdate(DataUpdateType_t updateType)
 {
 	BaseClass::PreDataUpdate( updateType );
 
@@ -143,7 +144,7 @@ void C_PropVehicleChoreoGeneric::PreDataUpdate( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::PostDataUpdate( DataUpdateType_t updateType )
+void C_PropVehicleChoreoGeneric::PostDataUpdate(DataUpdateType_t updateType)
 {
 	BaseClass::PostDataUpdate( updateType );
 
@@ -180,7 +181,7 @@ void C_PropVehicleChoreoGeneric::PostDataUpdate( DataUpdateType_t updateType )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-C_BaseCombatCharacter *C_PropVehicleChoreoGeneric::GetPassenger( int nRole )
+C_BaseCombatCharacter *C_PropVehicleChoreoGeneric::GetPassenger(int nRole)
 {
 	if ( nRole == VEHICLE_ROLE_DRIVER )
 		return m_hPlayer.Get();
@@ -192,7 +193,7 @@ C_BaseCombatCharacter *C_PropVehicleChoreoGeneric::GetPassenger( int nRole )
 //-----------------------------------------------------------------------------
 // Returns the role of the passenger
 //-----------------------------------------------------------------------------
-int	C_PropVehicleChoreoGeneric::GetPassengerRole( C_BaseCombatCharacter *pPassenger )
+int	C_PropVehicleChoreoGeneric::GetPassengerRole(C_BaseCombatCharacter *pPassenger)
 {
 	if ( m_hPlayer.Get() == pPassenger )
 		return VEHICLE_ROLE_DRIVER;
@@ -204,7 +205,7 @@ int	C_PropVehicleChoreoGeneric::GetPassengerRole( C_BaseCombatCharacter *pPassen
 //-----------------------------------------------------------------------------
 // Purpose: Modify the player view/camera while in a vehicle
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles, float *pFOV /*=NULL*/ )
+void C_PropVehicleChoreoGeneric::GetVehicleViewPosition(int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles, float *pFOV /*=NULL*/)
 {
 	SharedVehicleViewSmoothing( m_hPlayer, 
 								pAbsOrigin, pAbsAngles, 
@@ -220,7 +221,7 @@ void C_PropVehicleChoreoGeneric::GetVehicleViewPosition( int nRole, Vector *pAbs
 // Input  : pLocalPlayer - 
 //			pCmd - 
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserCmd *pCmd )
+void C_PropVehicleChoreoGeneric::UpdateViewAngles(C_BasePlayer *pLocalPlayer, CUserCmd *pCmd)
 {
 	int eyeAttachmentIndex = LookupAttachment( "vehicle_driver_eyes" );
 	Vector vehicleEyeOrigin;
@@ -242,7 +243,7 @@ void C_PropVehicleChoreoGeneric::UpdateViewAngles( C_BasePlayer *pLocalPlayer, C
 //-----------------------------------------------------------------------------
 // Futzes with the clip planes
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::GetVehicleClipPlanes( float &flZNear, float &flZFar ) const
+void C_PropVehicleChoreoGeneric::GetVehicleClipPlanes(float &flZNear, float &flZFar) const
 {
 	// Pod doesn't need to adjust the clip planes.
 	//flZNear = 6;
@@ -252,8 +253,8 @@ void C_PropVehicleChoreoGeneric::GetVehicleClipPlanes( float &flZNear, float &fl
 //-----------------------------------------------------------------------------
 // Renders hud elements
 //-----------------------------------------------------------------------------
-void C_PropVehicleChoreoGeneric::DrawHudElements( )
+void C_PropVehicleChoreoGeneric::DrawHudElements()
 {
 }
 
-
+#endif

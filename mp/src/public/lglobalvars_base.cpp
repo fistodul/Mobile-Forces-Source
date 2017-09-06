@@ -5,6 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
+#ifdef LUA_SDK
 #define lglobalvars_base_cpp
 #include "lua.hpp"
 #include "luasrclib.h"
@@ -93,4 +94,4 @@ LUALIB_API int luaopen_gpGlobals (lua_State *L) {
   luaL_register(L, LUA_GLOBALSLIBNAME, gpGlobalslib);
   return 1;
 }
-
+#endif
