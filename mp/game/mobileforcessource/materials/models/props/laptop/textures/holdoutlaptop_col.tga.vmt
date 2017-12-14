@@ -1,6 +1,0 @@
-"LightmappedGeneric"
-{
-	"$basetexture" "models/props/laptop/textures/holdoutlaptop_col.tga"
-	"$surfaceprop" "metal"
-	"$bumpmap" "models/props/laptop/textures/holdoutlaptop_nml.tga"
-}
