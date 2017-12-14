@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "models/props/laptop/textures/holdoutlaptop_scr"
+	"$surfaceprop" "metal"
+}

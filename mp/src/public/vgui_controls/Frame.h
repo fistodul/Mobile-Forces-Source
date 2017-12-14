@@ -17,6 +17,7 @@
 #include <vgui_controls/Panel.h>
 #include <vgui_controls/EditablePanel.h>
 #include <vgui_controls/FocusNavGroup.h>
+#include "../../game/shared/shareddefs.h"
 
 namespace vgui
 {
@@ -29,7 +30,14 @@ class FrameSystemButton;
 //-----------------------------------------------------------------------------
 class Frame : public EditablePanel
 {
-	DECLARE_CLASS_SIMPLE( Frame, EditablePanel );
+	DECLARE_CLASS_SIMPLE(Frame, EditablePanel)
+#ifndef keypad
+	;
+#endif
+#ifdef keypad
+		static int CheckDeclareClass(const char *pShouldBe); \
+
+#endif
 
 public:
 	Frame(Panel *parent, const char *panelName, bool showTaskbarIcon = true, bool bPopup = true );

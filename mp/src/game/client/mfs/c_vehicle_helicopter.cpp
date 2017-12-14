@@ -240,7 +240,11 @@ void C_QUA_helicopter::ReceiveMessage( int classID, bf_read &msg )
 
 void C_QUA_helicopter::GetVehicleViewPosition(int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles, float *pFOV)
 {
+#ifndef pilotable2
+	SharedVehicleViewSmoothing(m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL);
+#else
 	VehicleViewSmoothingHLC( m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, &m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL );
+#endif
 }
 void C_QUA_helicopter::RestrictView( float *pYawBounds, float *pPitchBounds,
 										   float *pRollBounds, QAngle &vecViewAngles )

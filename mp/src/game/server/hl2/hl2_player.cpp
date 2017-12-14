@@ -88,7 +88,11 @@ ConVar sv_autojump( "sv_autojump", "0" );
 
 ConVar hl2_walkspeed( "hl2_walkspeed", "150", FCVAR_CHEAT);
 ConVar hl2_normspeed("hl2_normspeed", "190", FCVAR_CHEAT);
+#ifdef MFS
+ConVar hl2_sprintspeed("hl2_sprintspeed", "300", FCVAR_CHEAT);
+#else
 ConVar hl2_sprintspeed("hl2_sprintspeed", "320", FCVAR_CHEAT);
+#endif
 
 ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 
@@ -1050,20 +1054,24 @@ Class_T  CHL2_Player::Classify( void )
 		if (IsInAVehicle())
 		{
 			IServerVehicle *pVehicle = GetVehicle();
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			if (GetTeamNumber() == 2)
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_RED);
 			else if (GetTeamNumber() == 3)
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER_BLUE);
+#endif
 			
 				return pVehicle->ClassifyPassenger(this, CLASS_PLAYER);
 		}
 		else
 		{
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			if (GetTeamNumber() == 2)
 				return CLASS_PLAYER_RED;
 			else if (GetTeamNumber() == 3)
 				return CLASS_PLAYER_BLUE;
-			
+#endif
+
 				return CLASS_PLAYER;
 		}
 	}
@@ -1227,21 +1235,27 @@ void CHL2_Player::InitSprinting( void )
 	StopSprinting();
 }
 
+#ifdef MFS
 ConVar sprintDisable("sprintDisable", "0", FCVAR_SERVER_CAN_EXECUTE);
+#endif
 //-----------------------------------------------------------------------------
 // Purpose: Returns whether or not we are allowed to sprint now.
 //-----------------------------------------------------------------------------
 bool CHL2_Player::CanSprint()
 {
+#ifdef MFS
 	if(sprintDisable.GetInt() == 0)
 	{
+#endif
 	return ( m_bSprintEnabled &&										// Only if sprint is enabled 
 			!IsWalking() &&												// Not if we're walking
 			!( m_Local.m_bDucked && !m_Local.m_bDucking ) &&			// Nor if we're ducking
 			(GetWaterLevel() != 3) &&									// Certainly not underwater
 			(GlobalEntity_GetState("suit_no_sprint") != GLOBAL_ON) );			// Out of the question without the sprint module
+#ifdef MFS
 	}
 	else
+#endif
 		return false;
 }
 

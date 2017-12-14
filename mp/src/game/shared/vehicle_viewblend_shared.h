@@ -80,7 +80,7 @@ void SharedVehicleViewSmoothing(CBasePlayer *pPlayer,
 								ViewSmoothingData_t *pData, 
 								float *pFOV );
 
-#ifdef pilotable
+#ifdef pilotable2
 void VehicleViewSmoothingSTR(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);
 void VehicleViewSmoothingAPC(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);
 void VehicleViewSmoothingHLC(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV);

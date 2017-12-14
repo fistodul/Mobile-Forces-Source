@@ -1302,8 +1302,10 @@ bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 		{
 			case CLASS_NONE:			return "CLASS_NONE";
 			case CLASS_PLAYER:			return "CLASS_PLAYER";
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			case CLASS_PLAYER_RED:		return "CLASS_PLAYER_RED";
 			case CLASS_PLAYER_BLUE:		return "CLASS_PLAYER_BLUE";
+#endif
 			case CLASS_ANTLION:			return "CLASS_ANTLION";
 			case CLASS_BARNACLE:		return "CLASS_BARNACLE";
 			case CLASS_BULLSEYE:		return "CLASS_BULLSEYE";

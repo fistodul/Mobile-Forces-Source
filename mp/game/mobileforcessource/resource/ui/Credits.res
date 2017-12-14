@@ -15,7 +15,7 @@ echo Seco-7 Multiplayer mod
 echo Valve
 echo Junaid Malik (Various help)
 echo The Obsidian Conflict Team(For the epic grapple hook xD)
-echo Maestro Fenix and SysOp for the Coded keypad
+echo Maestro Fenix and SysOp for the Coded keypad, advisor, missile defense and smg1 improvements
 echo The Internet xD
 wait 5
 echo any referenced content from other games, series belongs to the respected owners

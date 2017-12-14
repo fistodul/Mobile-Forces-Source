@@ -336,6 +336,10 @@ void CalculateBulletDamageForce( CTakeDamageInfo *info, int iBulletType, const V
 	vecForce *= phys_pushscale.GetFloat();
 	vecForce *= flScale;
 	info->SetDamageForce( vecForce );
+/*#ifdef MFS
+	CBaseCombatWeapon *pWeapon = GetWeapon();
+	if (!pWeapon)
+#endif*/
 	Assert(vecForce!=vec3_origin);
 }
 

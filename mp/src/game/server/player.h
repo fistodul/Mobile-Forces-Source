@@ -296,10 +296,11 @@ public:
 	#endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
-	CNetworkVar(float, m_BlueTime);
-	CNetworkVar(float, m_RedTime);
-	float GetBlueTime() { return m_BlueTime; }
-	float GetRedTime() { return m_RedTime; }
+	CNetworkVar(int, m_BlueTime);
+	CNetworkVar(int, m_RedTime);
+	int GetBlueTime() { return m_BlueTime; }
+	int GetRedTime() { return m_RedTime; }
+	bool IsCaptain;
 #endif
 
 	#ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS

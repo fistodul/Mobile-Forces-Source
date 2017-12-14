@@ -455,6 +455,22 @@ protected:
 
 public:
 	CNetworkVar( float, m_flNextAttack );			// cannot attack again until this time
+#ifdef cloak
+	CNetworkVar(int, m_intCloakStatus);
+	CNetworkVar(float, m_floatCloakFactor);
+	int		GetCloakStatus(void)	{ return	m_intCloakStatus; }
+	void		SetCloakStatus(int cloakstatus)
+	{
+		SetTransmitState(FL_EDICT_ALWAYS);
+		m_intCloakStatus.Set(cloakstatus);
+	}
+	float		GetCloakFactor(void)	{ return m_floatCloakFactor; }
+	void		SetCloakFactor(float cloakfactor)
+	{
+		SetTransmitState(FL_EDICT_ALWAYS);
+		m_floatCloakFactor.Set(cloakfactor);
+	}
+#endif
 
 #ifdef GLOWS_ENABLE
 protected:

@@ -419,7 +419,7 @@ void SharedVehicleViewSmoothing(CBasePlayer *pPlayer,
 	}
 }
 
-#ifdef pilotable
+#ifdef pilotable2
 void VehicleViewSmoothingSTR(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *pAbsAngles, bool bEnterAnimOn, bool bExitAnimOn, Vector *vecEyeExitEndpoint, ViewSmoothingData_t *pData, float *pFOV)
 {
 	int eyeAttachmentIndex = pData->pVehicle->LookupAttachment("vehicle_driver_eyes");
@@ -784,7 +784,7 @@ void VehicleViewSmoothingHLC(CBasePlayer *pPlayer, Vector *pAbsOrigin, QAngle *p
 	vehicleEyeOrigin += (forward * 215) + (up * 10);
 	vehicleEyeAngles = pData->pVehicle->GetAbsAngles();
 	AngleMatrix(vehicleEyeAngles, vehicleEyePosToWorld);
-	// Dampen the eye positional change as we drive around.
+	// Dampen the eye positional change as we drive around. Crash lol
 	*pAbsAngles = pPlayer->EyeAngles();
 	if (r_VehicleViewDampen.GetInt() && pData->bDampenEyePosition)
 	{

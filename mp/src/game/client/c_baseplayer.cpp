@@ -317,8 +317,8 @@ BEGIN_RECV_TABLE_NOBASE(C_BasePlayer, DT_LocalPlayerExclusive)
 #endif
 		#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
-		RecvPropFloat(RECVINFO(m_BlueTime)),
-		RecvPropFloat(RECVINFO(m_RedTime)),
+		RecvPropInt(RECVINFO(m_BlueTime)),
+		RecvPropInt(RECVINFO(m_RedTime)),
 #endif
 
 		RecvPropInt		(RECVINFO(m_fFlags)),

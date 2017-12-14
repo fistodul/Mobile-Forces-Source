@@ -2209,8 +2209,8 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 		saveRenderTarget = g_pSourceVR->GetRenderTarget( (ISourceVirtualReality::VREye)(view.m_eStereoEye - 1), ISourceVirtualReality::RT_Color );
 	}
 
-#ifdef GAMEUI2
-	if (g_pGameUI2)
+#ifdef GAMEUI2 //Broken, Just cuz i dont have the texture... lazy i know right
+	/*if (g_pGameUI2)
 	{
 		ITexture* maskTexture = materials->FindTexture("_rt_MaskGameUI", TEXTURE_GROUP_RENDER_TARGET);
 		if (maskTexture)
@@ -2225,7 +2225,7 @@ void CViewRender::RenderView( const CViewSetup &view, int nClearFlags, int whatT
 			g_pGameUI2->SetView(view);
 			g_pGameUI2->SetMaskTexture(maskTexture);
 		}
-	}
+	}*/
 #endif
 	
 	// Draw the 2D graphics

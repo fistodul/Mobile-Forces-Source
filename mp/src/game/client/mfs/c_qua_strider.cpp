@@ -1391,9 +1391,12 @@ C_BaseCombatCharacter* C_QUA_Strider::GetPassenger( int nRole )
 
 void C_QUA_Strider::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles, float *pFOV )
 {
+#ifndef pilotable2
+	SharedVehicleViewSmoothing(m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL);
+#else
+	//Crash lol
 	VehicleViewSmoothingSTR( m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, &m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL );
-	
-
+#endif
 }
 
 //STRIDERRAGDOLL

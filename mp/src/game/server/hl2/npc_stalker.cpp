@@ -158,9 +158,11 @@ int	CNPC_Stalker::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	if ( (info.GetAttacker()->GetFlags() & FL_CLIENT) )
 	{
 		AddClassRelationship( CLASS_PLAYER, D_HT, 0 );
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		//This expecially can be prolly done better
 		AddClassRelationship(CLASS_PLAYER_RED, D_HT, 0);
 		AddClassRelationship(CLASS_PLAYER_BLUE, D_HT, 0);
+#endif
 	}
 	return ret;
 }
@@ -218,7 +220,11 @@ bool CNPC_Stalker::IsValidEnemy( CBaseEntity *pEnemy )
 {
 	Class_T enemyClass = pEnemy->Classify();
 
-	if (enemyClass == CLASS_PLAYER || CLASS_PLAYER_RED || CLASS_PLAYER_BLUE || enemyClass == CLASS_PLAYER_ALLY || enemyClass == CLASS_PLAYER_ALLY_VITAL)
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+	if (enemyClass == CLASS_PLAYER || enemyClass == CLASS_PLAYER_RED || enemyClass == CLASS_PLAYER_BLUE || enemyClass == CLASS_PLAYER_ALLY || enemyClass == CLASS_PLAYER_ALLY_VITAL)
+#else
+	if (enemyClass == CLASS_PLAYER || enemyClass == CLASS_PLAYER_ALLY || enemyClass == CLASS_PLAYER_ALLY_VITAL)
+#endif
 	{
 		// Don't get angry at these folks unless provoked.
 		if( m_iPlayerAggression < STALKER_PLAYER_AGGRESSION )

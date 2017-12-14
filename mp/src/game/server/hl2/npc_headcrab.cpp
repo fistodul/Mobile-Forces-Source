@@ -2175,7 +2175,11 @@ void CBaseHeadcrab::ClearBurrowPoint( const Vector &origin )
 	//Iterate on all entities in the vicinity.
 	for ( CEntitySphereQuery sphere( origin, 128 ); ( pEntity = sphere.GetCurrentEntity() ) != NULL; sphere.NextEntity() )
 	{
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		if (pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->Classify() != CLASS_PLAYER_RED && pEntity->Classify() != CLASS_PLAYER_BLUE && pEntity->VPhysicsGetObject())
+#else
+		if (pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->VPhysicsGetObject())
+#endif
 		{
 			vecSpot	 = pEntity->BodyTarget( origin );
 			vecForce = ( vecSpot - origin ) + Vector( 0, 0, 16 );

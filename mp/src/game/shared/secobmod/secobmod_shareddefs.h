@@ -16,14 +16,14 @@
 //#define Proximity_Voice // It makes player voices not to be heard around the entire server but close to the player who is talking
 #define Enable_Nightvision // Well it Enables the nightvision console command xD(should be toggled on/off by "N")
 #define ARGG // Well Basically it lets u rotate shit with the gravity gun :P
-//#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another(lol it rhymes) this makes it that they can talk to one another xD
-#define Fading_Ragdolls // NPCS fade away after they die after 10 secs of being dead :P
+//#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another by default
+#define Fading_Ragdolls // NPCS fade away 10 secs after dying :P
 #define SSE // Source shader editor
 //#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
 //#define hitmarkers // it enables battlefield style hitmarkers :P
 #define muzzlelightning // it makes muzzleflashes more realistic, makes them light up a small area around them
-//#define TaskList // lets u use a vgui task list :P
-//#define cloak // allows use of a magical cloak xD
+#define TaskList // lets u use a vgui task list :P https://developer.valvesoftware.com/wiki/VGUI_Task_List
+#define cloak // allows the use of a magical cloak xD https://developer.valvesoftware.com/wiki/Player_and_NPC_Cloak
 #define Far_Clipping // fades particles when u get far away from them
 #define viewmodelshadow // https://developer.valvesoftware.com/wiki/Env_projectedtexture/fixes
 //#define af // add's flashlights on viewmodels, http://forums.steampowered.com/forums/showthread.php?t=848105
@@ -35,8 +35,10 @@
 //#define LUA_SDK // for screwing around
 //#define VGUI_FIX // This is mostly implemented but i put under a define stuff that caused problems(documented)
 #define GAMEUI2 // Ported Alien Swarm Gameui2
-//#define pilotable // Pilotable Strider
-//#define passengers // Multi-Passenger Vehicles
+#define pilotable // Pilotable Strider
+//#define passengers // Multi-Passenger Vehicles, move into MFS
+#define real_magz // Realistic wep magazines
+#define keypad // a keypad
 
 /*****************/
 /* Base Defines. */

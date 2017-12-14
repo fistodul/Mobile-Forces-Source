@@ -21,10 +21,13 @@ extern ConVar	lservercfgfile;
 
 // multiplayer server rules
 extern ConVar	teamplay;
+#ifdef MFS
 extern ConVar	injustice;
 extern ConVar	holdout;
 extern ConVar	hold_time;
 extern ConVar	knifefight;
+extern ConVar	captains;
+#endif
 extern ConVar	fraglimit;
 extern ConVar	falldamage;
 extern ConVar	weaponstay;

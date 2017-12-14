@@ -189,6 +189,7 @@ public:
 
 #ifdef MFS
 	int weight;
+	int GetWepWeight() { return weight; }
 #endif
 
 	// A derived weapon class should return true here so that weapon sounds, etc, can
@@ -630,6 +631,9 @@ public:
 	CNetworkVar( int, m_iSecondaryAmmoType );	// "secondary" ammo index into the ammo info array
 	CNetworkVar( int, m_iClip1 );				// number of shots left in the primary weapon clip, -1 it not used
 	CNetworkVar( int, m_iClip2 );				// number of shots left in the secondary weapon clip, -1 it not used
+#ifdef real_magz
+	bool	m_bMagazineStyleReloads;	// true if this weapon reloads by removing magazines (remaining bullets)
+#endif
 	bool					m_bFiresUnderwater;		// true if this weapon can fire underwater
 	bool					m_bAltFiresUnderwater;		// true if this weapon can fire underwater
 	float					m_fMinRange1;			// What's the closest this weapon can be used?

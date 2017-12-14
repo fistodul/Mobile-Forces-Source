@@ -45,20 +45,25 @@ void RegisterUserMessages( void )
 	usermessages->Register( "LogoTimeMsg", 4 );
 	usermessages->Register( "AchievementEvent", -1 );
 	usermessages->Register( "UpdateJalopyRadar", -1 );
+#ifdef keypad
+	usermessages->Register("KeypadHandler", -1); //Keypad
+#endif
+#ifdef TaskList
+	usermessages->Register( "TaskList", -1 );
+#endif
+#ifdef SecobMod__USE_PLAYERCLASSES
+	usermessages->Register("SSPlayerClassesBGCheck", -1);
+	usermessages->Register("ShowSSPlayerClasses", -1);
+	usermessages->Register("ForceHUDReload", -1);
+#else
+#ifdef MFS
+	usermessages->Register("ForceHUDReload", -1);
+#endif
+#endif //SecobMod__USE_PLAYERCLASSES
 
 #ifndef _X360
 	// NVNT register haptic user messages
 	RegisterHapticMessages();
 #endif
-
-	#ifdef SecobMod__USE_PLAYERCLASSES
-		usermessages->Register( "SSPlayerClassesBGCheck", -1 );
-		usermessages->Register( "ShowSSPlayerClasses", -1 );
-		usermessages->Register( "ForceHUDReload", -1 );
-#else
-#ifdef MFS
-	usermessages->Register("ForceHUDReload", -1);
-#endif
-	#endif //SecobMod__USE_PLAYERCLASSES
 
 }

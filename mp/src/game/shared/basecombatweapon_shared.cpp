@@ -74,6 +74,9 @@ CBaseCombatWeapon::CBaseCombatWeapon()
 	m_fMaxRange2		= 1024;
 
 	m_bReloadsSingly	= false;
+#ifdef real_magz
+	m_bMagazineStyleReloads = true;
+#endif
 
 	// Defaults to zero
 	m_nViewModelIndex	= 0;
@@ -1676,6 +1679,24 @@ void CBaseCombatWeapon::ItemPreFrame( void )
 		}
 	}
 #endif
+#ifdef cloak
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (!pOwner)
+		return;
+
+#ifndef CLIENT_DLL //Only done on the server, since the client won't be transmitting anything
+	if (pOwner->GetCloakStatus() == 1 || pOwner->GetCloakStatus() == 2 || pOwner->GetCloakStatus() == 3)
+	{
+		pOwner->DisableButtons(IN_ATTACK);
+		pOwner->DisableButtons(IN_ATTACK2);
+	}
+	else
+	{
+		pOwner->EnableButtons(IN_ATTACK);
+		pOwner->EnableButtons(IN_ATTACK2);
+	}
+#endif
+#endif
 }
 
 bool CBaseCombatWeapon::CanPerformSecondaryAttack() const
@@ -2197,7 +2218,18 @@ void CBaseCombatWeapon::FinishReload( void )
 		{
 			int primary	= MIN( GetMaxClip1() - m_iClip1, pOwner->GetAmmoCount(m_iPrimaryAmmoType));	
 			m_iClip1 += primary;
-			pOwner->RemoveAmmo( primary, m_iPrimaryAmmoType);
+#ifdef real_magz
+			if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) >= GetMaxClip1()){
+				m_iClip1 = m_bMagazineStyleReloads ? GetMaxClip1() : m_iClip1 + primary;
+				pOwner->RemoveAmmo( m_bMagazineStyleReloads ? GetMaxClip1() : primary, m_iPrimaryAmmoType);
+			}
+			else{
+				m_iClip1 = pOwner->GetAmmoCount(m_iPrimaryAmmoType);
+				pOwner->RemoveAmmo(GetMaxClip1(), m_iPrimaryAmmoType);
+			}
+#else
+			pOwner->RemoveAmmo(primary, m_iPrimaryAmmoType);
+#endif
 		}
 
 		// If I use secondary clips, reload secondary
@@ -2662,6 +2694,9 @@ BEGIN_DATADESC( CBaseCombatWeapon )
 	DEFINE_FIELD( m_iClip1, FIELD_INTEGER ),
 	DEFINE_FIELD( m_iClip2, FIELD_INTEGER ),
 	DEFINE_FIELD( m_bFiresUnderwater, FIELD_BOOLEAN ),
+#ifdef real_magz
+	DEFINE_FIELD(m_bMagazineStyleReloads, FIELD_BOOLEAN),
+#endif
 	DEFINE_FIELD( m_bAltFiresUnderwater, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_fMinRange1, FIELD_FLOAT ),
 	DEFINE_FIELD( m_fMinRange2, FIELD_FLOAT ),

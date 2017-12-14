@@ -790,10 +790,12 @@ ConVarRef suitcharger( "sk_suitcharger" );
 		{
 			if ( pKiller->Classify() == CLASS_PLAYER )
 				return (CBasePlayer*)pKiller;
+			#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			else if (pKiller->Classify() == CLASS_PLAYER_RED)
 				return (CBasePlayer*)pKiller;
 			else if (pKiller->Classify() == CLASS_PLAYER_BLUE)
 				return (CBasePlayer*)pKiller;
+			#endif
 
 			// Killing entity might be specifying a scorer player
 			IScorer *pScorerInterface = dynamic_cast<IScorer*>( pKiller );

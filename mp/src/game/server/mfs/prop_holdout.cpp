@@ -7,12 +7,12 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "player.h"
-#include "soundenvelope.h"
-#include "engine/IEngineSound.h"
+//#include "player.h"
+//#include "soundenvelope.h"
+//#include "engine/IEngineSound.h"
+//#include "game.h"
+//#include "team.h"
 #include "Sprite.h"
-#include "game.h"
-#include "team.h"
 #include "prop_holdout.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -38,15 +38,15 @@ void CHoldout::Spawn( void )
 #ifdef MFS
 if (HL2MPRules()->IsHoldout() == false)
 {
-return; //Why tf u no work
+return;
 }
 #endif
 	Precache( );
-	SetModel( "models/props/crate.mdl" );
+	SetModel( "models/objectives/holdout/holdout.mdl" );
 
 	VPhysicsInitNormal( SOLID_BBOX, GetSolidFlags() | FSOLID_TRIGGER, false );
 
-	SetCollisionGroup( COLLISION_GROUP_WEAPON );
+	SetCollisionGroup(COLLISION_GROUP_INTERACTIVE);
 
 	//UTIL_SetSize(this, Vector( -6, -6, -2), Vector(6, 6, 2));
 
@@ -86,29 +86,23 @@ void CHoldout::CreateEffects( void )
 
 //-----------------------------------------------------------------------------
 // Purpose: Get's the player's team number, excluding spectators(1)
-// Input  : Idk who tf is the Player here.. pActivator or pCaller
+// Input  : The player here is.. pActivator
 // Output :
 //-----------------------------------------------------------------------------
 void CHoldout::HoldoutUse(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value)
 {
-	if (pActivator->GetTeamNumber() > 1)
+	// if it's not a player, ignore
+	if (!pActivator || !pActivator->IsPlayer())
+		return;
+
+	m_hActivator = pActivator;
+	CBasePlayer *pPlayer = (CBasePlayer *)m_hActivator.Get();
+
+	if (pPlayer->GetTeamNumber() != TEAM_SPECTATOR)
 	{
-		if (m_Owner != pActivator->GetTeamNumber())
+		if (m_Owner != pPlayer->GetTeamNumber())
 		{
-			m_Owner = pActivator->GetTeamNumber();
-			if ( m_hGlowSprite != NULL )
-			{
-				UTIL_Remove( m_hGlowSprite );
-				m_hGlowSprite = NULL;
-			}
-			CreateEffects();
-		}
-	}
-	else if (pCaller->GetTeamNumber() > 1)
-	{
-		if (m_Owner != pCaller->GetTeamNumber())
-		{
-			m_Owner = pCaller->GetTeamNumber();
+			m_Owner = pPlayer->GetTeamNumber();
 			if (m_hGlowSprite != NULL)
 			{
 				UTIL_Remove(m_hGlowSprite);
@@ -122,43 +116,46 @@ void CHoldout::HoldoutUse(CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYP
 void CHoldout::HoldoutThink( void )
 {
 #ifdef MFS
-	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
-	if (!pPlayer)
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
-		SetNextThink(gpGlobals->curtime + 0.1f);
-		return;
-	}
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
 
-	if (m_Owner == 2)
-	{
-		if (pPlayer->GetBlueTime() >= 0.1f)
+		if (!pPlayer)
 		{
-			pPlayer->m_BlueTime = pPlayer->GetBlueTime() - 0.1f;
+			SetNextThink(gpGlobals->curtime + 0.1f);
+			return;
 		}
-		else
-		{
-			HL2MPRules()->GoToIntermission();
-		}
-	}
-	else if (m_Owner == 3)
-	{
-		if (pPlayer->GetRedTime() >= 0.1f)
-		{
-			pPlayer->m_RedTime = pPlayer->GetRedTime() - 0.1f;
-		}
-		else
-		{
-			HL2MPRules()->GoToIntermission();
-		}
-	}
 
+		if (m_Owner == TEAM_COMBINE)
+		{
+			if (pPlayer->GetBlueTime() >= 0.1f)
+			{
+				pPlayer->m_BlueTime = pPlayer->GetBlueTime() - 0.1f;
+			}
+			else
+			{
+				HL2MPRules()->GoToIntermission();
+			}
+		}
+		else if (m_Owner == TEAM_REBELS)
+		{
+			if (pPlayer->GetRedTime() >= 0.1f)
+			{
+				pPlayer->m_RedTime = pPlayer->GetRedTime() - 0.1f;
+			}
+			else
+			{
+				HL2MPRules()->GoToIntermission();
+			}
+		}
+	}
 	SetNextThink(gpGlobals->curtime + 0.1f);
 #endif
 }
 
 void CHoldout::Precache( void )
 {
-	PrecacheModel("models/props/crate.mdl");
+	PrecacheModel("models/objectives/holdout/holdout.mdl");
 	PrecacheModel(HOLDOUT_SPRITE);
 	PrecacheModel(HOLDOUT_SPRITE2);
 }

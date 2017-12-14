@@ -92,17 +92,23 @@ BEGIN_NETWORK_TABLE_NOBASE( CHL2MPRules, DT_HL2MPRules )
 
 	#ifdef CLIENT_DLL
 		RecvPropBool( RECVINFO( m_bTeamPlayEnabled ) ),
+#ifdef MFS
 		RecvPropBool( RECVINFO( m_bInjusticeEnabled ) ),
 		RecvPropBool( RECVINFO( m_bHoldoutEnabled ) ),
 		RecvPropBool( RECVINFO( m_bKnifeFightEnabled ) ),
+		RecvPropBool( RECVINFO( m_bCaptainsEnabled ) ),
+#endif
 		#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN
 				RecvPropBool( RECVINFO( m_bMegaPhysgun ) ),
 		#endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN
 	#else
 		SendPropBool( SENDINFO( m_bTeamPlayEnabled ) ),
+#ifdef MFS
 		SendPropBool( SENDINFO( m_bInjusticeEnabled ) ),
 		SendPropBool( SENDINFO( m_bHoldoutEnabled ) ),
 		SendPropBool(SENDINFO(m_bKnifeFightEnabled)),
+		SendPropBool(SENDINFO(m_bCaptainsEnabled)),
+#endif
 		#ifdef SecobMod__ALLOW_SUPER_GRAVITY_GUN	
 				SendPropBool( SENDINFO( m_bMegaPhysgun ) ),
 		#endif //SecobMod__ALLOW_SUPER_GRAVITY_GUN	
@@ -258,24 +264,35 @@ CHL2MPRules::CHL2MPRules()
 		g_Teams.AddToTail( pTeam );
 	}
 
+#ifdef MFS
 			m_bInjusticeEnabled = injustice.GetBool();
 			m_bHoldoutEnabled = holdout.GetBool();
 			m_bKnifeFightEnabled = knifefight.GetBool();
+			m_bCaptainsEnabled = captains.GetBool();
+			BlueCaptain = MAX_PLAYERS;
+			RedCaptain = MAX_PLAYERS;
 	if (IsInjustice() == true)
 		InitInjusticeAIRelationships();
+#endif
 	#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+#ifdef MFS
 	else
+#endif
 		InitDefaultAIRelationships();
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 	
 	#ifdef SecobMod__FORCE_TEAMPLAY_AS_ALWAYS_ON
 			m_bTeamPlayEnabled = true;
 	#else
+#ifdef MFS
 		if (IsInjustice() == true)
 			m_bTeamPlayEnabled = true;
 		else if (IsHoldout() == true)
 			m_bTeamPlayEnabled = true;
+		else if (IsCaptains() == true)
+			m_bTeamPlayEnabled = true;
 		else
+#endif
 			m_bTeamPlayEnabled = teamplay.GetBool();
 	#endif //SecobMod__FORCE_TEAMPLAY_AS_ALWAYS_ON
 	
@@ -587,6 +604,28 @@ void CHL2MPRules::Think( void )
 		return;
 	}
 
+	if (IsCaptains() == true)
+	{
+		while (BlueCaptain == MAX_PLAYERS)
+		{
+			int i = RandomInt(1, gpGlobals->maxClients);
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+			if (pPlayer && pPlayer->GetTeamNumber() == TEAM_COMBINE/* && pPlayer->IsAlive()*/)
+			{
+				MakeCaptain(pPlayer, i, TEAM_COMBINE);
+			}
+		}
+		while (RedCaptain == MAX_PLAYERS)
+		{
+			int i = RandomInt(1, gpGlobals->maxClients);
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+			if (pPlayer && pPlayer->GetTeamNumber() == TEAM_REBELS/* && pPlayer->IsAlive()*/)
+			{
+				MakeCaptain(pPlayer, i, TEAM_REBELS);
+			}
+		}
+	}
+
 	if ( flFragLimit )
 	{
 		if( IsTeamplay() == true )
@@ -640,6 +679,21 @@ void CHL2MPRules::Think( void )
 	ManageObjectRelocation();
 
 #endif
+}
+
+void CHL2MPRules::MakeCaptain(CBasePlayer *pPlayer, int index, int team )
+{
+#ifndef CLIENT_DLL
+	pPlayer->IsCaptain = true;
+#ifdef GLOWS_ENABLE
+	pPlayer->AddGlowEffect();
+#endif
+	//engine->ClientCmd("Say Truuuulllllll");
+#endif
+	if (team == TEAM_COMBINE)
+		BlueCaptain = index;
+	else
+		RedCaptain = index;
 }
 
 void CHL2MPRules::GoToIntermission( void )
@@ -1370,12 +1424,16 @@ const char *CHL2MPRules::GetGameDescription( void )
 	RETURN_LUA_STRING();
 #endif
 
+#ifdef MFS
 	if (IsKnifeFight())
 		return "Knife Fight";
 	if (IsHoldout())
 		return "Holdout";
+	if (IsCaptains())
+		return "Captains";
 	if ( IsInjustice() )
 		return "Injustice";
+#endif
 	//SecobMod__Information: Community fix provided by Alters. Change this to reflect in the game.
 	if (IsTeamplay())
 		return "Squad Deathmatch"; //SecobMod__ChangeME! 
@@ -1687,6 +1745,7 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 		}
 		else
 		{
+#ifdef MFS
 			if (HL2MPRules()->IsInjustice() == true)
 			{
 				if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers() * 9)
@@ -1704,6 +1763,7 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 			}
 			else
 			{
+#endif
 				if (pCombine->GetNumPlayers() > pRebels->GetNumPlayers())
 				{
 					iTeam = TEAM_REBELS;
@@ -1716,7 +1776,9 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 				{
 					iTeam = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
 				}
+#ifdef MFS
 			}
+#endif
 		}
 	}
 
@@ -3145,6 +3207,7 @@ void CHL2MPRules::InitDefaultAIRelationships( void )
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE,			CLASS_HACKED_ROLLERMINE,D_LI, 0);
 }
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
+#ifdef MFS
 void CHL2MPRules::InitInjusticeAIRelationships(void)
 {
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANTLION, CLASS_PLAYER_BLUE, D_LI, 0);
@@ -3365,6 +3428,7 @@ void CHL2MPRules::InitInjusticeAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_METROPOLICE, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_MILITARY, D_NU, 0);
 }
+#endif
 #endif
 
 //SecobMod__MiscFixes: Here we add darkness mode so that it now works.

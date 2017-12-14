@@ -27,11 +27,9 @@ ConVar bot_defend("bot_defend", "0", FCVAR_CHEAT, "Set to a team number, and tha
 ConVar bot_zombie("bot_zombie", "0", FCVAR_CHEAT, "Brraaaaaiiiins.");
 ConVar bot_mimic_yaw_offset("bot_mimic_yaw_offset", "0", FCVAR_CHEAT, "Offsets the bot yaw.");
 ConVar bot_attack("bot_attack", "0", FCVAR_CHEAT, "Shoot!");
-
+ConVar bot_randomize("bot_randomize", "0", FCVAR_SERVER_CAN_EXECUTE, "Makes bot's have random profiles");
 ConVar bot_sendcmd("bot_sendcmd", "", FCVAR_CHEAT, "Forces bots to send the specified command.");
-
 ConVar bot_crouch("bot_crouch", "0", FCVAR_CHEAT, "Bot crouches");
-
 #ifdef NEXT_BOT
 extern ConVar bot_mimic;
 #else
@@ -106,26 +104,35 @@ CON_COMMAND_F( bot_add, "Add a bot.", FCVAR_SERVER_CAN_EXECUTE )
 }
 #endif
 
-void bot_kick_f (const CCommand &args)
+static int g_CurBotNumber = 0;
+
+int g_iLastHideSpot = 0;
+int g_iLastBotName = 0;
+int g_iLastBlueBotName = 0;
+int g_iLastRedBotName = 0;
+
+void bot_kick_f(const CCommand &args)
 {
-	int name = atoi(args.Arg(1));
-	if ( name )
+	if (args[1] != UTIL_VarArgs("all"))
 	{
-		engine->ServerCommand(UTIL_VarArgs("kick %s\n", name));
-		return;
+		engine->ServerCommand(UTIL_VarArgs("kick %s\n", atoi(args[1])));
+		g_CurBotNumber--;
 	}
-
-	for (int i = 1; i <= gpGlobals->maxClients; i++)
+	else
 	{
-		CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
-
-		// Ignore plugin bots
-		if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT))
+		for (int i = 1; i <= gpGlobals->maxClients; i++)
 		{
-			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
-			if (pBot)
+			CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+
+			// Ignore plugin bots
+			if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT))
 			{
-				engine->ClientCommand(pBot->edict(), "disconnect");
+				CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+				if (pBot)
+				{
+					engine->ClientCommand(pBot->edict(), "disconnect");
+					g_CurBotNumber--;
+				}
 			}
 		}
 	}
@@ -133,18 +140,13 @@ void bot_kick_f (const CCommand &args)
 
 ConCommand bot_kick("bot_kick", bot_kick_f, "kick a bot", FCVAR_SERVER_CAN_EXECUTE);
 
-static int g_CurBotNumber = 1;
-
-int g_iLastHideSpot = 0;
-int g_iLastBotName = 0;
-
 CHL2MP_Bot::~CHL2MP_Bot( void )
 {
-	//g_CurBotNumber--; //FixMe, Crashes the game
+	
 }
 
 // all bot names
-const char *g_ppszRandomBotNames[] =
+const char *g_ppszBotNames[] =
 {
 	"Heywood",
 	"Coffey",
@@ -181,7 +183,7 @@ const char *g_ppszRandomBotNames[] =
 };
 
 // Blue bot names
-const char *g_ppszRandomBlueBotNames[] =
+const char *g_ppszBlueBotNames[] =
 {
 	"Heywood",
 	"Jackson",
@@ -202,7 +204,7 @@ const char *g_ppszRandomBlueBotNames[] =
 };
 
 // Red bot names
-const char *g_ppszRandomRedBotNames[] =
+const char *g_ppszRedBotNames[] =
 {
 	"Coffey",
 	"Dillon",
@@ -221,6 +223,10 @@ const char *g_ppszRandomRedBotNames[] =
 	"Biltcliffe",
 	"Fitzsimmons",
 };
+
+int nHeadsAll = ARRAYSIZE(g_ppszBotNames);
+int nHeadsBlue = ARRAYSIZE(g_ppszBlueBotNames);
+int nHeadsRed = ARRAYSIZE(g_ppszRedBotNames);
 
 LINK_ENTITY_TO_CLASS( bot, CHL2MP_Bot );
 
@@ -242,6 +248,45 @@ public:
 	}
 };
 
+#ifdef MFS
+#pragma warning( disable : 4706 )
+void bot_quota_f(const CCommand &args)
+{
+	int bot_quota = atoi(args[1]);
+	if (g_CurBotNumber < bot_quota)
+	{
+		for (int i = g_CurBotNumber; i = bot_quota; i++)
+		{
+			engine->ServerCommand("bot_add");
+		}
+	}
+	else if (g_CurBotNumber > bot_quota)
+	{
+		for (int i = g_CurBotNumber; i = bot_quota; i--)
+		{
+			for (int i = 1; i <= gpGlobals->maxClients; i++)
+			{
+				CHL2MP_Player *pPlayer = ToHL2MPPlayer(UTIL_PlayerByIndex(i));
+				// Ignore plugin bots
+				if (pPlayer && (pPlayer->GetFlags() & FL_FAKECLIENT))
+				{
+					CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(pPlayer);
+					if (pBot)
+					{
+						if (pBot->GetBotNumber() == g_CurBotNumber)
+						{
+							engine->ServerCommand(UTIL_VarArgs("bot_kick %s\n", pBot->GetPlayerName()));
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+ConCommand bot_quota("bot_quota", bot_quota_f, "amount of bots", FCVAR_SERVER_CAN_EXECUTE);
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Create a new Bot and put it in the game.
 // Output : Pointer to the new Bot, or NULL if there's no free clients.
@@ -252,85 +297,121 @@ CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 	char botname2[64];
 	if (HL2MPRules()->IsTeamplay() == false)
 	{
-		int nHeads = ARRAYSIZE(g_ppszRandomBotNames);
-		if (nHeads >= 1)
+		if (nHeadsAll >= 1)
 		{
-			g_iLastBotName = (g_iLastBotName + 1) % nHeads;
-			botname = g_ppszRandomBotNames[g_iLastBotName];
-
-			for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+			if (bot_randomize.GetBool() == true)
 			{
-				if (g_ppszRandomBotNames[i] == botname) // If we find the item to delete...
+				botname = g_ppszBotNames[(random->RandomInt(0, nHeadsAll - 1)+ ++g_iLastBotName) % nHeadsAll];
+			}
+			else
+			{
+				botname = g_ppszBotNames[g_iLastBotName++];
+			}
+
+			for (int i = 0; i < nHeadsAll; i++) // Loop to find the item to delete.
+			{
+				if (g_ppszBotNames[i] == botname) // If we find the item to delete...
 				{
-					for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+					if (bot_randomize.GetBool() == true)
 					{
-						g_ppszRandomBotNames[j] = g_ppszRandomBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+						g_ppszBotNames[i] = g_ppszBotNames[nHeadsAll - 1]; //We set the current element with the last, cheaper and randomizes a bit
 					}
-					g_ppszRandomBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
-					nHeads--; // Reduce the array size by one.
+					else
+					{
+						for (int j = i; j < nHeadsAll - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+						{
+							g_ppszBotNames[j] = g_ppszBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+						}
+					}
+					g_ppszBotNames[nHeadsAll - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+					nHeadsAll--; // Reduce the array size by one.
 					break; // Exit out of the 'find item to delete' loop.	
 				}
 			}
 		}
 		else
 		{
-			Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
+			Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber+1);
 		}
 	}
 	else
 	{
 		if (iTeam == TEAM_COMBINE)
 		{
-			int nHeads = ARRAYSIZE(g_ppszRandomBlueBotNames);
-			if (nHeads >= 1)
+			if (nHeadsBlue >= 1)
 			{
-				g_iLastBotName = (g_iLastBotName + 1) % nHeads;
-				botname = g_ppszRandomBlueBotNames[g_iLastBotName];
-
-				for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+				if (bot_randomize.GetBool() == true)
 				{
-					if (g_ppszRandomBlueBotNames[i] == botname) // If we find the item to delete...
+					botname = g_ppszBlueBotNames[(random->RandomInt(0, nHeadsBlue - 1)+ ++g_iLastRedBotName) % nHeadsBlue];
+				}
+				else
+				{
+					botname = g_ppszBlueBotNames[g_iLastBotName++];
+				}
+
+				for (int i = 0; i < nHeadsBlue; i++) // Loop to find the item to delete.
+				{
+					if (g_ppszBlueBotNames[i] == botname) // If we find the item to delete...
 					{
-						for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+						if (bot_randomize.GetBool() == true)
 						{
-							g_ppszRandomBlueBotNames[j] = g_ppszRandomBlueBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+							g_ppszBlueBotNames[i] = g_ppszBlueBotNames[nHeadsBlue - 1]; //We set the current element with the last, cheaper and randomizes a bit
 						}
-						g_ppszRandomBlueBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
-						nHeads--; // Reduce the array size by one.
+						else
+						{
+							for (int j = i; j < nHeadsBlue - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+							{
+								g_ppszBlueBotNames[j] = g_ppszBlueBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+							}
+						}
+						g_ppszBlueBotNames[nHeadsBlue - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+						nHeadsBlue--; // Reduce the array size by one.
 						break; // Exit out of the 'find item to delete' loop.	
 					}
 				}
 			}
 			else
 			{
-				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
+				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber+1);
 			}
 		}
 		else
 		{
-			int nHeads = ARRAYSIZE(g_ppszRandomRedBotNames);
-			if (nHeads >= 1)
+			if (nHeadsRed >= 1)
 			{
-				g_iLastBotName = (g_iLastBotName + 1) % nHeads;
-				botname = g_ppszRandomRedBotNames[g_iLastBotName];
-
-				for (int i = 0; i < nHeads; i++) // Loop to find the item to delete.
+				if (bot_randomize.GetBool() == true)
 				{
-					if (g_ppszRandomRedBotNames[i] == botname) // If we find the item to delete...
+					botname = g_ppszRedBotNames[(random->RandomInt(0, nHeadsRed - 1)+ ++g_iLastRedBotName) % nHeadsRed];
+				}
+				else
+				{
+					botname = g_ppszRedBotNames[g_iLastRedBotName++];
+				}
+
+				for (int i = 0; i < nHeadsRed; i++) // Loop to find the item to delete.
+				{
+					if (g_ppszRedBotNames[i] == botname) // If we find the item to delete...
 					{
-						for (int j = i; j < nHeads - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+						if (bot_randomize.GetBool() == true)
 						{
-							g_ppszRandomRedBotNames[j] = g_ppszRandomRedBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+							g_ppszRedBotNames[i] = g_ppszRedBotNames[nHeadsRed - 1]; //We set the current element with the last, cheaper and randomizes a bit
 						}
-						g_ppszRandomRedBotNames[nHeads - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
-						nHeads--; // Reduce the array size by one.
+						else
+						{
+							for (int j = i; j < nHeadsRed - 1; j++) // Iterate through the remaining elements, stopping one before the end.
+							{
+								g_ppszRedBotNames[j] = g_ppszRedBotNames[j + 1]; // Overwrite the current element with the next. This effectively deletes the item to delete, and moves everything else down one.
+							}
+						}
+						g_ppszRedBotNames[nHeadsRed - 1] = NULL; // Set the last item in the array to null, (or some other appropriate null value). This may not necessarily be needed, but is good practice.
+						nHeadsRed--; // Reduce the array size by one.
 						break; // Exit out of the 'find item to delete' loop.	
 					}
 				}
 			}
 			else
 			{
-				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber);
+				Q_snprintf(botname2, sizeof(botname2), "Bot%02i", g_CurBotNumber+1);
 			}
 		}
 	}
@@ -363,8 +444,10 @@ CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 		if (bFrozen)
 			pPlayer->AddEFlags(EFL_BOT_FROZEN);
 
-		//pPlayer->ChangeTeam( iTeam ); // Modified Hl2DM's pickdefaultspawnteam to not check for bots
+#ifndef MFS
+		pPlayer->ChangeTeam( iTeam ); // In MFS we modified Hl2DM's pickdefaultspawnteam to not check for bots
 		//pPlayer->RemoveAllItems( true ); //Why
+#endif
 
 		// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
 		//pPlayer->Spawn();
@@ -394,7 +477,9 @@ CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 		}*/
 
 		g_CurBotNumber++;
-
+#ifdef MFS
+		pPlayer->botnumber = g_CurBotNumber;
+#endif
 		return pPlayer;
 	}
 	else
@@ -421,8 +506,10 @@ CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 		if (bFrozen)
 			pPlayer->AddEFlags(EFL_BOT_FROZEN);
 
-		//pPlayer->ChangeTeam( iTeam ); // Modified Hl2DM's pickdefaultspawnteam to not check for bots
+#ifndef MFS
+		pPlayer->ChangeTeam( iTeam ); // In MFS we modified Hl2DM's pickdefaultspawnteam to not check for bots
 		//pPlayer->RemoveAllItems( true ); //Why
+#endif
 
 		// Spawn() doesn't work with MP template codebase, even if this line is part of default bot template...
 		//pPlayer->Spawn();
@@ -452,7 +539,9 @@ CBasePlayer *BotPutInServer(bool  bFrozen, int iTeam)
 		}*/
 
 		g_CurBotNumber++;
-
+#ifdef MFS
+		pPlayer->botnumber = g_CurBotNumber;
+#endif
 		return pPlayer;
 	}
 }
@@ -517,11 +606,11 @@ static void RunPlayerMove(CHL2MP_Player *fakeclient, CUserCmd &cmd, float framet
 		cmd = *pPlayer->GetLastUserCommand();
 		cmd.viewangles[YAW] += bot_mimic_yaw_offset.GetFloat();
 	}
-	/*else
+	
+	if (bot_zombie.GetBool())
 	{
-		if ( !bot_zombie.GetBool() )
-			cmd.random_seed = random->RandomInt(0, 0x7fffffff);
-	}*/
+		cmd.random_seed = random->RandomInt(0, 0x7fffffff);
+	}
 
 	// Is my team being forced to defend?
 	if (bot_defend.GetInt() == fakeclient->GetTeamNumber())

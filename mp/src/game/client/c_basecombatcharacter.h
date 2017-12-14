@@ -94,6 +94,16 @@ public:
 
 	virtual void		DoMuzzleFlash();
 
+#ifdef cloak
+	//Cloak functions
+	int    GetCloakStatus(void)    { return m_intCloakStatus; }
+	float    GetCloakFactor(void)    { return    m_floatCloakFactor; }
+
+	//Cloak variables
+	int                m_intCloakStatus;
+	float            m_floatCloakFactor;
+#endif
+
 #ifdef GLOWS_ENABLE
 	CGlowObject			*GetGlowObject( void ){ return m_pGlowEffect; }
 	virtual void		GetGlowEffectColor( float *r, float *g, float *b );
@@ -103,7 +113,9 @@ public:
 	bool				IsClientSideGlowEnabled( void ){ return m_bClientSideGlowEnabled; }
 #endif // GLOWS_ENABLE
 
+#ifndef SecobMod__MiscFixes //uh, a second public right after the first one?
 public:
+#endif
 
 	float			m_flNextAttack;
 

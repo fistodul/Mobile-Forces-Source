@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "models/props/textures/holdoutlaptop_spc_occ-l.tga"
+	"$surfaceprop" "metal"
+}

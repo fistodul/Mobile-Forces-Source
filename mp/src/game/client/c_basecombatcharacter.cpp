@@ -176,6 +176,10 @@ BEGIN_RECV_TABLE(C_BaseCombatCharacter, DT_BaseCombatCharacter)
 	RecvPropDataTable( "bcc_localdata", 0, 0, &REFERENCE_RECV_TABLE(DT_BCCLocalPlayerExclusive) ),
 	RecvPropEHandle( RECVINFO( m_hActiveWeapon ) ),
 	RecvPropArray3( RECVINFO_ARRAY(m_hMyWeapons), RecvPropEHandle( RECVINFO( m_hMyWeapons[0] ) ) ),
+#ifdef cloak
+	RecvPropInt(RECVINFO(m_intCloakStatus)),
+	RecvPropFloat(RECVINFO(m_floatCloakFactor)),
+#endif
 #ifdef GLOWS_ENABLE
 	RecvPropBool( RECVINFO( m_bGlowEnabled ) ),
 #endif // GLOWS_ENABLE
@@ -189,6 +193,10 @@ END_RECV_TABLE()
 
 BEGIN_PREDICTION_DATA( C_BaseCombatCharacter )
 
+#ifdef cloak
+DEFINE_PRED_FIELD(m_intCloakStatus, FIELD_INTEGER, FTYPEDESC_INSENDTABLE),
+DEFINE_PRED_FIELD(m_floatCloakFactor, FIELD_FLOAT, FTYPEDESC_INSENDTABLE),
+#endif
 	DEFINE_PRED_ARRAY( m_iAmmo, FIELD_INTEGER,  MAX_AMMO_TYPES, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_flNextAttack, FIELD_FLOAT, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_hActiveWeapon, FIELD_EHANDLE, FTYPEDESC_INSENDTABLE ),

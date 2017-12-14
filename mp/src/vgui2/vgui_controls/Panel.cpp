@@ -915,6 +915,7 @@ void Panel::SetPos(int x, int y)
 	{
 		Assert( abs(x) < 32768 && abs(y) < 32768 );
 	}
+	//fix when turning off cuz of gameui2
 	ipanel()->SetPos(GetVPanel(), x, y);
 }
 
@@ -5901,6 +5902,7 @@ bool Panel::IsKeyBoardInputEnabled()
 
 bool Panel::IsMouseInputEnabled()
 {
+	//May have a gameui2 problem
 	return ipanel()->IsMouseInputEnabled( GetVPanel() );
 }
 

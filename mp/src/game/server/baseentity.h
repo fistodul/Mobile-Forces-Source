@@ -93,9 +93,11 @@ typedef CUtlVector< CBaseEntity* > EntityList_t;
 enum Class_T
 {
 	CLASS_NONE=0,				
-	CLASS_PLAYER,		
+	CLASS_PLAYER,	
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	CLASS_PLAYER_RED,
 	CLASS_PLAYER_BLUE,
+#endif
 	CLASS_PLAYER_ALLY,
 	CLASS_PLAYER_ALLY_VITAL,
 	CLASS_ANTLION,

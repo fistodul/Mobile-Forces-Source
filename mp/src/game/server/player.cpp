@@ -92,6 +92,10 @@
 #include "weapon_physcannon.h"
 #endif
 
+#ifdef keypad
+#include "mfs/point_keypad.h"
+#endif
+
 #include "vguiscreen.h"
 
 ConVar autoaim_max_dist( "autoaim_max_dist", "2160" ); // 2160 = 180 feet
@@ -591,8 +595,9 @@ m_bTransitionTeleported = false;
 #endif //SecobMod__MULTIPLAYER_LEVEL_TRANSITIONS
 
 #ifdef MFS
-m_RedTime = hold_time.GetFloat();
-m_BlueTime = hold_time.GetFloat();
+m_RedTime = hold_time.GetInt();
+m_BlueTime = hold_time.GetInt();
+IsCaptain = false;
 #endif
 
 #ifdef _DEBUG
@@ -2401,6 +2406,11 @@ void CBasePlayer::PlayerDeathThink(void)
 		return;
 	}
 
+	#ifdef MFS
+	if (IsCaptain == true)
+		respawn(this, !IsObserver());// don't copy a corpse if we're in deathcam.
+#endif
+
 // if the player has been dead for one second longer than allowed by forcerespawn, 
 // forcerespawn isn't on. Send the player off to an intermission camera until they 
 // choose to respawn.
@@ -3162,10 +3172,12 @@ void CBasePlayer::Duck( )
 //
 Class_T  CBasePlayer::Classify ( void )
 {
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 if (GetTeamNumber() == 2)
   	return CLASS_PLAYER_RED;
 else if (GetTeamNumber() == 3)
   	return CLASS_PLAYER_BLUE;
+#endif
 
 	return CLASS_PLAYER;
 }
@@ -7108,6 +7120,62 @@ bool CBasePlayer::ClientCommand( const CCommand &args )
 		}
 		return true;
 	}
+#ifdef keypad
+	//Keypad
+	else if (stricmp(cmd, "keypad_codematch"))
+	{
+
+		CBaseEntity *pEntity = NULL;
+
+		//while ((pEntity = gEntList.FindEntityByClassnameWithin(pEntity, "player", GetLocalOrigin(), 512)) != NULL)
+		//	CBasePlayer *pPlayer = ToBasePlayer(pEntity);
+
+
+		while ((pEntity = gEntList.FindEntityInSphere(pEntity, GetLocalOrigin(), 512)) != NULL)//512 
+		{
+			if (FClassnameIs(pEntity, "point_keypad"))
+			{
+				edict_t *pFind;
+				pFind = pEntity->edict();
+
+				CBaseEntity *pEnt = CBaseEntity::Instance(pFind);
+				CPointKeypad *pKeypadSettings = (CPointKeypad *)pEnt;
+
+				//DevMsg("code_match - firing FireTarget\n");
+
+				pKeypadSettings->FireTarget();
+
+				return true;
+			}
+		}
+	}
+	else if (stricmp(cmd, "keypad_codedismatch"))
+	{
+		CBaseEntity *pEntity = NULL;
+
+		//	while ((pEntity = gEntList.FindEntityByClassnameWithin(pEntity, "player", GetLocalOrigin(), 512)) != NULL)
+		//	CBasePlayer *pPlayer = ToBasePlayer(pEntity);
+
+		//same as above, but calls a different function
+		while ((pEntity = gEntList.FindEntityInSphere(pEntity, GetLocalOrigin(), 512)) != NULL)//512
+		{
+			if (FClassnameIs(pEntity, "point_keypad"))
+			{
+				edict_t *pFind;
+				pFind = pEntity->edict();
+
+				CBaseEntity *pEnt = CBaseEntity::Instance(pFind);
+				CPointKeypad *pKeypadSettings = (CPointKeypad *)pEnt;
+
+				//DevMsg("code_dismatch - firing WrongCode\n");
+
+				pKeypadSettings->WrongCode();
+
+				return true;
+			}
+		}
+	}
+#endif
 	else if ( stricmp( cmd, "out1" ) == 0 )
 	{
 		int entindex = atoi( args[1] );
@@ -8999,8 +9067,8 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropArray	( SendPropEHandle( SENDINFO_ARRAY( m_hViewModel ) ), m_hViewModel ),
 		SendPropString	(SENDINFO(m_szLastPlaceName) ),
 #ifdef MFS
-		SendPropFloat( SENDINFO( m_BlueTime ) ),
-		SendPropFloat( SENDINFO( m_RedTime ) ),
+		SendPropInt(SENDINFO(m_BlueTime)),
+		SendPropInt(SENDINFO(m_RedTime)),
 #endif
 
 #if defined USES_ECON_ITEMS
@@ -10403,11 +10471,6 @@ float CBasePlayer::GetJumpHeight()
 }
 #else
 #ifdef MFS
-extern ConVar hl2_walkspeed;
-extern ConVar hl2_normspeed;
-extern ConVar hl2_sprintspeed;
-ConVar hl2_jumpheight("hl2_jumpheight", "21", FCVAR_CHEAT);
-ConVar hl2_pronespeed("hl2_pronespeed", "50", FCVAR_CHEAT);
 void CBasePlayer::SetWalkSpeed(int WalkSpeed)
 {
 		m_iWalkSpeed = WalkSpeed;
@@ -10435,44 +10498,27 @@ void CBasePlayer::SetJumpHeight(float JumpHeight)
 
 int CBasePlayer::GetWalkSpeed()
 {
-	if (hl2_walkspeed.GetInt() <= m_iWalkSpeed + 56)
 		return m_iWalkSpeed;
-	else
-		return hl2_walkspeed.GetInt();
 }
 
 int CBasePlayer::GetNormSpeed()
 {
-	if (hl2_normspeed.GetInt() <= m_iWalkSpeed + 56)
 		return m_iNormSpeed;
-	else
-		return hl2_normspeed.GetInt();
-
 }
 
 int CBasePlayer::GetSprintSpeed()
 {
-	if (hl2_sprintspeed.GetInt() <= m_iWalkSpeed + 56)
 		return m_iSprintSpeed;
-	else
-		return hl2_sprintspeed.GetInt();
 }
 
 int CBasePlayer::GetProneSpeed()
 {
-	if (hl2_pronespeed.GetInt() <= m_iProneSpeed + 56)
 		return m_iProneSpeed;
-	else
-		return hl2_pronespeed.GetInt();
 }
 
 float CBasePlayer::GetJumpHeight()
 {
-	if (hl2_jumpheight.GetInt() <= m_iWalkSpeed + 56)
 		return m_iJumpHeight;
-	else
-		return hl2_jumpheight.GetInt();
-
 }
 #endif
 #endif //SecobMod__USE_PLAYERCLASSES

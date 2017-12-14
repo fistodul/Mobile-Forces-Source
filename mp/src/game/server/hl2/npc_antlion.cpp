@@ -3112,6 +3112,7 @@ void CNPC_Antlion::ClearBurrowPoint( const Vector &origin )
 			bPlayerInSphere = true;
 			continue;
 		}
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		else if (pEntity->Classify() == CLASS_PLAYER_RED)
 		{
 			bPlayerInSphere = true;
@@ -3124,6 +3125,9 @@ void CNPC_Antlion::ClearBurrowPoint( const Vector &origin )
 		}
 
 		if (pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->Classify() != CLASS_PLAYER_RED && pEntity->Classify() != CLASS_PLAYER_BLUE && pEntity->VPhysicsGetObject())
+#else
+		if (pEntity->m_takedamage != DAMAGE_NO && pEntity->Classify() != CLASS_PLAYER && pEntity->VPhysicsGetObject())
+#endif
 		{
 			vecSpot	 = pEntity->BodyTarget( origin );
 			vecForce = ( vecSpot - origin ) + Vector( 0, 0, 16 );

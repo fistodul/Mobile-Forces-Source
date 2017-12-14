@@ -74,7 +74,14 @@ ConVar hl2_maxmass("hl2_maxmass", "35", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXEC
 ConVar hl2_maxsize("hl2_maxsize", "128", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 #endif
 extern ConVar player_throwforce;
+extern ConVar hl2_walkspeed;
+extern ConVar hl2_normspeed;
+extern ConVar hl2_sprintspeed;
+ConVar hl2_jumpheight("hl2_jumpheight", "21", FCVAR_CHEAT);
+ConVar hl2_pronespeed("hl2_pronespeed", "50", FCVAR_CHEAT);
+#ifdef MFS
 extern ConVar sprintDisable;
+#endif
 
 float     m_fRegenRemander;
 float     m_fRegenRemanderArmor;
@@ -91,9 +98,11 @@ LINK_ENTITY_TO_CLASS( player, CHL2MP_Player );
 
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
+#ifdef MFS
 LINK_ENTITY_TO_CLASS(info_player_captain_blue, CPointEntity);
 LINK_ENTITY_TO_CLASS(info_player_captain_red, CPointEntity);
 LINK_ENTITY_TO_CLASS( info_player_god, CPointEntity );
+#endif
 
 //SecobMod__Information: Here we allow each class to have their own spawn point.
 #ifdef SecobMod__USE_PLAYERCLASSES
@@ -193,20 +202,21 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 	PlayerCanChangeClass = false;
 #endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
-	weight = 0;
-	old_weight = weight;
-	CBasePlayer::SetWalkSpeed(150);
+	pWeight = 0;
+	armor_weight = 0;
+	old_pWepcount = WeaponCount();
+	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt());
 	if (sprintDisable.GetBool() == true)
 	{
-		CBasePlayer::SetNormSpeed(320);
+		CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt());
 	}
 	else
 	{
-		CBasePlayer::SetNormSpeed(190);
+		CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt());
 	}
-	CBasePlayer::SetSprintSpeed(320);
-	CBasePlayer::SetProneSpeed(50);
-	CBasePlayer::SetJumpHeight(21);
+	CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt());
+	CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt());
+	CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
 #endif
 //	UseClientSideAnimation();
 }
@@ -1262,7 +1272,7 @@ void CHL2MP_Player::PreThink( void )
 	SetLocalAngles( vOldAngles );
 }
 
-void CHL2MP_Player::PostThink( void )
+void CHL2MP_Player::PostThink(void)
 {
 	BaseClass::PostThink();
 
@@ -1273,54 +1283,49 @@ void CHL2MP_Player::PostThink( void )
 	if (sv_regeneration_maxarmor.GetInt() > GetMaxArmorValue())
 		SetMaxArmorValue(sv_regeneration_maxarmor.GetInt());
 	//else
-		
+
 #ifdef MFS
-
-	int armor_weight = 0;
-	if (GetArmorValue() < 1)
-		armor_weight = 0;
-	else if (GetArmorValue() > 1 && GetArmorValue() <= 50)
-		armor_weight = 0.5;
-	else if (GetArmorValue() > 50)
-		armor_weight = 1;
-
-	for (int i = 0; i < WeaponCount() ; i++)
+	if (WeaponCount() != old_pWepcount || armor_weight != GetArmorValue() / 10)
 	{
-		CBaseCombatWeapon *pWeapon = GetWeapon(i);
-		weight = pWeapon->weight;
-		if (weight != old_weight)
+		if (WeaponCount() != old_pWepcount)
 		{
-			CBasePlayer::SetWalkSpeed(150 - (weight + armor_weight) * 2);
-			if (sprintDisable.GetBool() == true)
+			pWeight = 0;
+			for (int i = 0; i < WeaponCount(); i++)
 			{
-				CBasePlayer::SetNormSpeed(320 - (weight + armor_weight) * 2);
+				CBaseCombatWeapon *pWeapon = GetWeapon(i);
+				pWeight = pWeight + pWeapon->GetWepWeight();
 			}
-			else
-			{
-				CBasePlayer::SetNormSpeed(190 - (weight + armor_weight) * 2);
-			}
-				CBasePlayer::SetSprintSpeed(320 - (weight + armor_weight) * 2);
-				//CBasePlayer::SetJumpHeight(21 - (weight + armor_weight) * 2);
-			if (IsSprinting())
-				SetMaxSpeed(CBasePlayer::GetSprintSpeed());
-			else
-			{
-#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
-				SetMaxSpeed(CBasePlayer::GetNormSpeed());
-#else
-				if (IsSuitEquipped())
-				{
-					SetMaxSpeed(CBasePlayer::GetNormSpeed());
-				}
-				else
-				{
-					SetMaxSpeed(CBasePlayer::GetWalkSpeed());
-				}
-#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
-			}
-			old_weight = weight;
 		}
-		break;
+
+		armor_weight = GetArmorValue() / 10;
+		CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt() - (pWeight + armor_weight));
+		if (sprintDisable.GetBool() == true)
+		{
+			CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight));
+		}
+		else
+		{
+			CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() - (pWeight + armor_weight));
+		}
+		CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight));
+		//CBasePlayer::SetJumpHeight(21 - (pWeight + armor_weight));
+		if (IsSprinting())
+			SetMaxSpeed(CBasePlayer::GetSprintSpeed());
+		else
+		{
+#ifdef SecobMod__CAN_SPRINT_WITHOUT_SUIT
+			SetMaxSpeed(CBasePlayer::GetNormSpeed());
+#else
+			if (IsSuitEquipped())
+			{
+				SetMaxSpeed(CBasePlayer::GetNormSpeed());
+			}
+			else
+			{
+				SetMaxSpeed(CBasePlayer::GetWalkSpeed());
+			}
+#endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
+		}
 	}
 
 	if (HL2MPRules()->IsInjustice() == true)
@@ -1618,8 +1623,6 @@ Activity CHL2MP_Player::TranslateTeamActivity( Activity ActToTranslate )
 
 	return ActToTranslate;
 }
-
-extern ConVar hl2_normspeed;
 
 // Set the activity based on an event or current state
 void CHL2MP_Player::SetAnimation( PLAYER_ANIM playerAnim )
@@ -2309,20 +2312,42 @@ if (GetTeamNumber() != TEAM_SPECTATOR)
 		}
 	}
 #endif
-	
+
 	CBaseEntity *pAttacker = info.GetAttacker();
 
-	if ( pAttacker )
-	{
-		int iScoreToAdd = 1;
-
-		if ( pAttacker == this )
+		if (pAttacker)
 		{
-			iScoreToAdd = -1;
-		}
+			int iScoreToAdd = 1;
 
-		GetGlobalTeam( pAttacker->GetTeamNumber() )->AddScore( iScoreToAdd );
-	}
+			if (pAttacker == this)
+			{
+				iScoreToAdd = -1;
+			}
+
+			#ifdef MFS
+			if (HL2MPRules()->IsCaptains() == true)
+			{
+				if (IsCaptain)
+				{
+					GetGlobalTeam(pAttacker->GetTeamNumber())->AddScore(iScoreToAdd);
+					IsCaptain = false;
+#ifdef GLOWS_ENABLE
+					RemoveGlowEffect();
+#endif
+					if (GetTeamNumber() == TEAM_COMBINE)
+						HL2MPRules()->BlueCaptain = MAX_PLAYERS;
+					else
+						HL2MPRules()->RedCaptain = MAX_PLAYERS;
+				}
+			}
+			else
+			{
+#endif
+				GetGlobalTeam(pAttacker->GetTeamNumber())->AddScore(iScoreToAdd);
+#ifdef MFS
+			}
+#endif
+		}
 
 	FlashlightTurnOff();
 
@@ -3735,7 +3760,7 @@ void CHL2MP_Player::ForceHUDReload(CHL2MP_Player *pPlayer)
 	MessageEnd();
 }
 #endif
- #endif //SecobMod__USE_PLAYERCLASSES
+#endif //SecobMod__USE_PLAYERCLASSES
  
  
 #ifdef SecobMod__SAVERESTORE

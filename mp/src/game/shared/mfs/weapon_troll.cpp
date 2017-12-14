@@ -11,7 +11,7 @@
 #ifdef CLIENT_DLL
 	#include "c_hl2mp_player.h"
 #else
-	#include "grenade_ar2.h"
+	//#include "grenade_ar2.h"
 	#include "hl2mp_player.h"
 	#include "basegrenade_shared.h"
 #endif
@@ -26,8 +26,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define SMG1_GRENADE_DAMAGE 100.0f
-#define SMG1_GRENADE_RADIUS 250.0f
+//#define SMG1_GRENADE_DAMAGE 100.0f
+//#define SMG1_GRENADE_RADIUS 250.0f
 
 class CWeaponTroll : public CHL2MPMachineGun
 {
@@ -79,10 +79,10 @@ public:
 #endif //SecobMod__Enable_Fixed_Multiplayer_AI
 #endif
 
-protected:
+//protected:
 
-	Vector	m_vecTossVelocity;
-	float	m_flNextGrenadeCheck;
+	//Vector	m_vecTossVelocity;
+	//float	m_flNextGrenadeCheck;
 	
 private:
 	CWeaponTroll( const CWeaponTroll & );
@@ -367,9 +367,9 @@ void CWeaponTroll::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCha
 //-----------------------------------------------------------------------------
 void CWeaponTroll::Precache( void )
 {
-#ifndef CLIENT_DLL
+/*#ifndef CLIENT_DLL
 	UTIL_PrecacheOther("grenade_ar2");
-#endif
+#endif*/
 
 	BaseClass::Precache();
 }

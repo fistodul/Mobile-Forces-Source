@@ -69,11 +69,13 @@ server_blacklist.txt
 *.prt
 *.lin
 *_old.bsp
+*.dat
 gamestate.txt
 demoheader.tmp
 graphs/
 downloadlists/
-ep1_gamestats.dat
+user_custom/
+textwindow_temp.html
 
 # shader files
 *.tmp

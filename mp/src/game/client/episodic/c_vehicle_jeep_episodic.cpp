@@ -5,7 +5,7 @@
 //=============================================================================//
 
 #include "cbase.h"
-#ifdef LUA_SDK
+#ifndef linux
 #include "c_prop_vehicle.h"
 #include "c_vehicle_jeep.h"
 #include "movevars_shared.h"

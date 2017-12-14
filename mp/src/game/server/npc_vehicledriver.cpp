@@ -548,6 +548,7 @@ Disposition_t CNPC_VehicleDriver::IRelationType(CBaseEntity *pTarget)
 			return(D_NU);
 		}
 	}
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	else if (pTarget && pTarget->Classify() == CLASS_PLAYER_RED)
 	{
 		if (GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON)
@@ -562,6 +563,7 @@ Disposition_t CNPC_VehicleDriver::IRelationType(CBaseEntity *pTarget)
 			return(D_NU);
 		}
 	}
+#endif
 
 	return(BaseClass::IRelationType(pTarget));
 }

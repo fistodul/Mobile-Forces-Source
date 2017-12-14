@@ -438,6 +438,7 @@ void CAPCController::TrackTarget( void )
 					m_OnFireAtTarget.Set(forward, this, this);		// tell apc to fire rockets, and what direction
 				}
 			}
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 			else if (pVehicle->ClassifyPassenger(pPlayer, CLASS_PLAYER_RED) == CLASS_PLAYER_RED)
 			{
 				if (!m_bFireDelayed)
@@ -464,6 +465,7 @@ void CAPCController::TrackTarget( void )
 					m_OnFireAtTarget.Set(forward, this, this);		// tell apc to fire rockets, and what direction
 				}
 			}
+#endif
 		}
 	}
 	else

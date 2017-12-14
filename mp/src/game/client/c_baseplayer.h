@@ -270,8 +270,8 @@ public:
 #endif
 	#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
-	float	m_BlueTime;
-	float	m_RedTime;
+	int	m_BlueTime;
+	int	m_RedTime;
 	int GetBlueTime() { return m_BlueTime; }
 	int GetRedTime() { return m_RedTime; }
 #endif

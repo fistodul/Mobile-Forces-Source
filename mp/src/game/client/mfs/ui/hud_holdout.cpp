@@ -1,6 +1,6 @@
 //========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Purpose: The ugliest there is, but it works
+// Purpose: The ugliest there is, but it should work
 //
 //=============================================================================//
 
@@ -120,7 +120,7 @@ void HudHoldout::UpdateAmmoDisplays(C_BasePlayer *pPlayer)
 //-----------------------------------------------------------------------------
 void HudHoldout::OnThink()
 {
-	C_BasePlayer *pPlayer = UTIL_PlayerByIndex(1);
+	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();//UTIL_PlayerByIndex(1);
 	UpdateAmmoDisplays(pPlayer);
 }
 

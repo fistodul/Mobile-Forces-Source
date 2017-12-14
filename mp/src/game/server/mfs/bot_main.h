@@ -378,6 +378,11 @@ public:
 	}
 
 #ifdef MFS
+	int botnumber;
+	int GetBotNumber()
+	{
+		return botnumber;
+	}
 	bool RunMimicCommand(CUserCmd& cmd)
 	{
 		if (bot_mimic.GetInt() <= 0)

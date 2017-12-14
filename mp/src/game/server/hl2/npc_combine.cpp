@@ -372,7 +372,7 @@ bool CNPC_Combine::CreateBehaviors()
 //-----------------------------------------------------------------------------
 void CNPC_Combine::PostNPCInit()
 {
-	if( IsElite() )
+	/*if( IsElite() )
 	{
 		// Give a warning if a Combine Soldier is equipped with anything other than
 		// an AR2. 
@@ -380,7 +380,7 @@ void CNPC_Combine::PostNPCInit()
 		{
 			DevWarning("**Combine Elite Soldier MUST be equipped with AR2\n");
 		}
-	}
+	}*/
 
 	BaseClass::PostNPCInit();
 }
@@ -1416,12 +1416,14 @@ void CNPC_Combine::AnnounceEnemyType( CBaseEntity *pEnemy )
 	case CLASS_PLAYER:
 		pSentenceName = "COMBINE_ALERT";
 		break;
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	case CLASS_PLAYER_RED:
 		pSentenceName = "COMBINE_ALERT";
 		break;
 	case CLASS_PLAYER_BLUE:
 		pSentenceName = "COMBINE_ALERT";
 		break;
+#endif
 
 	case CLASS_PLAYER_ALLY:
 	case CLASS_CITIZEN_REBEL:
@@ -1462,12 +1464,14 @@ void CNPC_Combine::AnnounceEnemyKill( CBaseEntity *pEnemy )
 	case CLASS_PLAYER:
 		pSentenceName = "COMBINE_PLAYER_DEAD";
 		break;
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	case CLASS_PLAYER_RED:
 		pSentenceName = "COMBINE_PLAYER_DEAD";
 		break;
 	case CLASS_PLAYER_BLUE:
 		pSentenceName = "COMBINE_PLAYER_DEAD";
 		break;
+#endif
 
 		// no sentences for these guys yet
 	case CLASS_PLAYER_ALLY:
@@ -2336,7 +2340,19 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 	{
 		if ( pEvent->event == COMBINE_AE_BEGIN_ALTFIRE )
 		{
-			EmitSound( "Weapon_CombineGuard.Special1" );
+			 //We want it use different sounds depending of the weapon	
+	        if (FClassnameIs(GetActiveWeapon(), "weapon_ar2"))			
+	        {
+				EmitSound( "Weapon_CombineGuard.Special1" );
+			}			
+			else if (FClassnameIs(GetActiveWeapon(), "weapon_smg1"))			
+            {			
+				EmitSound("Weapon_SMG1.Double");			
+            }			
+            else			
+            {			
+				EmitSound("Weapon_CombineGuard.Special1"); //We left this play by default			
+            }
 			handledEvent = true;
 		}
 		else if ( pEvent->event == COMBINE_AE_ALTFIRE )

@@ -76,11 +76,26 @@ DESCRIPTION SERVER_OPTIONS
 			LIST
 			"Deathmatch" "gamemode\deathmatch"
 			"Squad Deathmatch" "gamemode\squaddeathmatch"
+			"Captains" "gamemode\captains"
 			"Holdout" "gamemode\holdout"
 			"Injustice" "gamemode\injustice"
 			"Knife Fight" "gamemode\knifefight"
 		}
 		{ "gamemode\deathmatch" }
+	}
+	
+	"bot_quota"
+	{
+		"#Valve_Max_Players"
+		{ NUMBER 1 32 }
+		{ "0" }
+	}
+	
+	"bot_randomize"
+	{
+		"Randomize bot profiles?"
+		{ BOOL }
+		{ "0" }
 	}
 	
 	"mp_timelimit"

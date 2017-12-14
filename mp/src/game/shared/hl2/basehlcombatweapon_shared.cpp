@@ -68,7 +68,9 @@ void CBaseHLCombatWeapon::ItemHolsterFrame( void )
 	if ( ( gpGlobals->curtime - m_flHolsterTime ) > sk_auto_reload_time.GetFloat() )
 	{
 		// Just load the clip with no animations
+#ifndef real_magz
 		FinishReload();
+#endif
 		m_flHolsterTime = gpGlobals->curtime;
 	}
 }

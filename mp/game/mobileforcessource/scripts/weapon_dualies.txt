@@ -76,9 +76,6 @@ ExpOffset
       "x"   "-15"
       "y"   "-5.5"
       "z"   "4.2"
-     // "xori"   "-2.9" //Does not work
-     // "yori"   "1.1" //Does not work
-     // "zori"   "2.0" // Does not work
    }
 	}
 }

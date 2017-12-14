@@ -26,9 +26,9 @@
 #define CWeaponDualies C_WeaponDualies
 #endif
 
-ConVar	sk_plr_dmg_dualies("sk_plr_dmg_dualies", "20", FCVAR_REPLICATED);
-ConVar	sk_npc_dmg_dualies("sk_npc_dmg_dualies", "18", FCVAR_REPLICATED);
-ConVar	sk_max_dualies("sk_max_dualies", "80", FCVAR_REPLICATED);
+ConVar	sk_plr_dmg_dualies("sk_plr_dmg_dualies", "20", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar	sk_npc_dmg_dualies("sk_npc_dmg_dualies", "18", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
+ConVar	sk_max_dualies("sk_max_dualies", "80", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 
 //-----------------------------------------------------------------------------
 // CWeaponDualies
@@ -209,7 +209,7 @@ CWeaponDualies::CWeaponDualies( void )
 
 	m_bFiresUnderwater	= true;
 	#ifdef Weighted_Weaponry
-	Dualies_Weight = 1;
+	weight = 1;
 	#endif
 	LeftAmmo = GetMaxClip1()/2;
 	RightAmmo = LeftAmmo;

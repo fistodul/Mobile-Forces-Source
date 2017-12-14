@@ -439,7 +439,11 @@ void QUA_MuzzleFlash_APC(ClientEntityHandle_t hEntity, int attachmentIndex)
 
 void C_PropAPC2::GetVehicleViewPosition( int nRole, Vector *pAbsOrigin, QAngle *pAbsAngles )
 {	
+#ifndef pilotable2
+	SharedVehicleViewSmoothing(m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL);
+#else
 	VehicleViewSmoothingAPC( m_hPlayer, pAbsOrigin, pAbsAngles, m_bEnterAnimOn, m_bExitAnimOn, &m_vecEyeExitEndpoint, &m_ViewSmoothingData, NULL );
+#endif
 }
 
 void QUA_APCMuzzleFlashCallback( const CEffectData &data )

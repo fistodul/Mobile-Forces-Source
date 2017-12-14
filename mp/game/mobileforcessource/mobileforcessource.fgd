@@ -370,3 +370,27 @@ model(studio) : "World model" : "models/ss_passenger_cube.mdl"
 	output OnCorrectCode(void) : "Fired when the code is correct."
 	output OnIncorrectCode(void) : "Fired when the code is incorrect."
 ]
+@NPCClass base(BaseNPC) studio("models/missile_defense.mdl") = npc_missiledefense : "A turret which takes down rockets"
+[
+	spawnflags(flags) = 
+	[
+		65536  :  "Vulnerable to bullets" : 0
+	]
+
+	Health(Integer) : "Health" : 10
+	TurretModel(studio) : "Turret Model" : "models/missile_defense.mdl"
+	GibModel(studio) : "Gib Model" : "models/gibs/manhack_gib01.mdl"
+	FireSound(sound) : "Fire Sound" : "npc/turret_floor/shoot1.wav"
+	RotateSound(sound) :	"Rotate Sound": "npc/turret_floor/ping.wav"
+	ReloadSound(sound) :	"Reload Sound": "vehicles/tank_readyfire1.wav"
+	
+	StartOn(choices) : "Start On" : 1 =
+	[
+		0 : "No"
+		1 : "Yes"
+	]
+	
+	// Inputs
+	input TurnOn(void) : "Turn on: Look for enemies"
+	input TurnOff(void) : "Turn off: Stop looking for enemies"
+]

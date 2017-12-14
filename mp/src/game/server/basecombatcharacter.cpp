@@ -78,7 +78,16 @@ ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
 #define ShouldUseVisibilityCache() true
 #endif
 
+#ifdef cloak
+ConVar player_cloak_custom("player_cloak_custom", "0", FCVAR_CHEAT, "Enable cloak factor modification");
+ConVar player_cloak_factor("player_cloak_factor", "0.0", FCVAR_CHEAT, "Cloak factor");
+#endif
+
 BEGIN_DATADESC( CBaseCombatCharacter )
+#ifdef cloak
+DEFINE_FIELD(m_intCloakStatus, FIELD_INTEGER),
+DEFINE_FIELD( m_floatCloakFactor, FIELD_FLOAT ),
+#endif
 
 #ifdef INVASION_DLL
 	DEFINE_FIELD( m_iPowerups, FIELD_INTEGER ),
@@ -196,6 +205,10 @@ IMPLEMENT_SERVERCLASS_ST(CBaseCombatCharacter, DT_BaseCombatCharacter)
 #ifdef GLOWS_ENABLE
 	SendPropBool( SENDINFO( m_bGlowEnabled ) ),
 #endif // GLOWS_ENABLE
+#ifdef cloak
+	SendPropInt(SENDINFO(m_intCloakStatus)),
+	SendPropFloat(SENDINFO(m_floatCloakFactor)),
+#endif
 	// Data that only gets sent to the local player.
 	SendPropDataTable( "bcc_localdata", 0, &REFERENCE_SEND_TABLE(DT_BCCLocalPlayerExclusive), SendProxy_SendBaseCombatCharacterLocalDataTable ),
 
@@ -238,8 +251,10 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 		 myClass == CLASS_COMBINE			||
 		 myClass == CLASS_CONSCRIPT			||
 		 myClass == CLASS_METROPOLICE		||
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		 myClass == CLASS_PLAYER_RED ||
 		 myClass == CLASS_PLAYER_BLUE ||
+#endif
 		 myClass == CLASS_PLAYER )	
 		 return true;
 
@@ -248,6 +263,10 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 	if (	myClass == CLASS_HUMAN_MILITARY		||
 			myClass == CLASS_PLAYER_ALLY		||
 			myClass == CLASS_HUMAN_PASSIVE		||
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
+			myClass == CLASS_PLAYER_RED ||
+			myClass == CLASS_PLAYER_BLUE ||
+#endif
 			myClass == CLASS_PLAYER )
 	{
 		return true;
@@ -259,6 +278,7 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 	{
 		return true;
 	}
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	if (myClass == CLASS_PLAYER_RED)
 	{
 		return true;
@@ -267,6 +287,7 @@ bool CBaseCombatCharacter::HasHumanGibs( void )
 	{
 		return true;
 	}
+#endif
 
 #endif
 
@@ -724,6 +745,10 @@ CBaseCombatCharacter::CBaseCombatCharacter( void )
 	// necessary since in debug, we initialize vectors to NAN for debugging
 	m_HackedGunPos.Init();
 #endif
+#ifdef cloak
+	m_intCloakStatus.Set(0);
+	m_floatCloakFactor.Set(0.0f);
+#endif
 
 	// Zero the damage accumulator.
 	m_flDamageAccumulator = 0.0f;
@@ -1088,6 +1113,61 @@ void CBaseCombatCharacter::Weapon_FrameUpdate( void )
 	{
 		m_hActiveWeapon->Operator_FrameUpdate( this );
 	}
+#ifdef cloak
+	if (!engine->IsPaused())
+	{
+		if (player_cloak_custom.GetInt() == 0 && !dynamic_cast< CBasePlayer *>(this))
+		{
+			if (GetCloakStatus() == 1 && m_floatCloakFactor.Get() == 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get())
+				SetCloakStatus(0);
+			if (GetCloakStatus() == 3 && m_floatCloakFactor.Get() == 1.0f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() >= 1.0f)
+				SetCloakStatus(2);
+			if (GetCloakStatus() == 0)
+			{
+				m_floatCloakFactor.Set(0.0f);
+				RemoveEffects(EF_NOSHADOW);
+			}
+			if (GetCloakStatus() == 2)
+			{
+				m_floatCloakFactor.Set(1.0f);
+				AddEffects(EF_NOSHADOW);
+			}
+			if (GetCloakStatus() == 1 && m_floatCloakFactor.Get() != 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() >= 0.0f)
+			{
+				m_floatCloakFactor.Set(m_floatCloakFactor.Get() - 0.005f);
+			}
+			if (GetCloakStatus() == 3 && m_floatCloakFactor.Get() != 1.0f || GetCloakStatus() == 3 && m_floatCloakFactor.Get())
+			{
+				m_floatCloakFactor.Set(m_floatCloakFactor.Get() + 0.005f);
+			}
+		}
+
+		if (player_cloak_custom.GetInt() == 0 && dynamic_cast< CBasePlayer *>(this))
+		{
+			if (GetCloakStatus() == 1 && m_floatCloakFactor.Get() == 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get())
+				SetCloakStatus(0);
+			if (GetCloakStatus() == 3 && m_floatCloakFactor.Get() == 0.75f || GetCloakStatus() == 3 && m_floatCloakFactor.Get() >= 0.75f)
+				SetCloakStatus(2);
+			if (GetCloakStatus() == 0)
+				m_floatCloakFactor.Set(0.0f);
+			if (GetCloakStatus() == 2)
+				m_floatCloakFactor.Set(0.75f);
+			if (GetCloakStatus() == 1 && m_floatCloakFactor.Get() != 0.0f || GetCloakStatus() == 1 && m_floatCloakFactor.Get() >= 0.0f)
+			{
+				m_floatCloakFactor.Set(m_floatCloakFactor.Get() - 0.005f);
+			}
+			if (GetCloakStatus() == 3 && m_floatCloakFactor.Get() != 0.75f || GetCloakStatus() == 3 && m_floatCloakFactor.Get())
+			{
+				m_floatCloakFactor.Set(m_floatCloakFactor.Get() + 0.005f);
+			}
+		}
+
+		if (player_cloak_custom.GetInt() == 1)
+		{
+			m_floatCloakFactor = player_cloak_factor.GetFloat();
+		}
+	}
+#endif
 }
 
 

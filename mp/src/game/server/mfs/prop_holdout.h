@@ -14,16 +14,16 @@
 #pragma once
 #endif
 
-#include "basegrenade_shared.h"
+//#include "basegrenade_shared.h"
 #include "hl2mp/weapon_slam.h"
 
-class CSoundPatch;
-class CSprite;
+//class CSoundPatch;
+//class CSprite;
 
-class CHoldout : public CBaseGrenade
+class CHoldout : public CBaseToggle
 {
 public:
-	DECLARE_CLASS( CHoldout, CBaseGrenade );
+	DECLARE_CLASS(CHoldout, CBaseToggle);
 
 	void			Spawn( void );
 	void			Precache( void );

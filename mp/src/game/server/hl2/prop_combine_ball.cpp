@@ -1372,8 +1372,10 @@ bool CPropCombineBall::IsAttractiveTarget( CBaseEntity *pEntity )
 			if( GetOwnerEntity()->IsPlayer() ) 
 			{
 				if( pEntity->Classify() == CLASS_PLAYER				||
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 					pEntity->Classify() == CLASS_PLAYER_RED				||
 					pEntity->Classify() == CLASS_PLAYER_BLUE				||
+#endif
 					pEntity->Classify() == CLASS_PLAYER_ALLY		||
 					pEntity->Classify() == CLASS_PLAYER_ALLY_VITAL )
 				{

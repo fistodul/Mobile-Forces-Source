@@ -975,6 +975,7 @@ void CNPC_MetroPolice::AnnounceEnemyType( CBaseEntity *pEnemy )
 					pSentenceName = "METROPOLICE_MONST_PLAYER";
 				}
 			}
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 		case CLASS_PLAYER_RED:
 		{
 			CBasePlayer *pPlayer = assert_cast<CBasePlayer*>(pEnemy);
@@ -999,6 +1000,7 @@ void CNPC_MetroPolice::AnnounceEnemyType( CBaseEntity *pEnemy )
 				pSentenceName = "METROPOLICE_MONST_PLAYER";
 			}
 		}
+#endif
 			break;
 
 		case CLASS_PLAYER_ALLY:
@@ -1054,12 +1056,14 @@ void CNPC_MetroPolice::AnnounceEnemyKill( CBaseEntity *pEnemy )
 	case CLASS_PLAYER:
 		pSentenceName = "METROPOLICE_KILL_PLAYER";
 		break;
+#ifdef SecobMod__Enable_Fixed_Multiplayer_AI
 	case CLASS_PLAYER_RED:
 		pSentenceName = "METROPOLICE_KILL_PLAYER";
 		break;
 	case CLASS_PLAYER_BLUE:
 		pSentenceName = "METROPOLICE_KILL_PLAYER";
 		break;
+#endif
 
 	// no sentences for these guys yet
 	case CLASS_PLAYER_ALLY:
