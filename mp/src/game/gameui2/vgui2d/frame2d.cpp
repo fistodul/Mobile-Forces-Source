@@ -1,33 +1,55 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #include "gameui2_interface.h"
 #include "frame2d.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-Frame2D::Frame2D(vgui::Panel* parent, const char* panelName, bool showTaskbarIcon, bool bPopup) : BaseClass(parent, panelName, showTaskbarIcon, bPopup)
+Frame2D::Frame2D(vgui::Panel* Parent, const char* PanelName, bool bShowTaskbarIcon, bool bPopUp) : BaseClass(Parent, PanelName, bShowTaskbarIcon, bPopUp)
 {
-
+	SetBounds(0, 0, 0, 0);
+	
+	bSchemeLoaded = false;
 }
 
 void Frame2D::Paint()
 {
+	if (bSchemeLoaded == false)
+		return;
+	
 	BaseClass::Paint();
 
-	if (materials && render && GameUI2().GetMaskTexture() && GameUI2().GetFrustum())
+	if (GetGameUI2().GetMaterialSystem() != nullptr &&
+		GetGameUI2().GetRenderView() != nullptr &&
+		GetGameUI2().GetMaskTexture() != nullptr &&
+		GetGameUI2().GetFrustum() != nullptr)
 	{
-		m_bBlurEnabled = true;
+		bBlurEnabled = true;
 
-		render->Push2DView(GameUI2().GetView(), NULL, GameUI2().GetMaskTexture(), GameUI2().GetFrustum());
-
+		GetGameUI2().GetRenderView()->Push2DView(GetGameUI2().GetView(), 0, GetGameUI2().GetMaskTexture(), GetGameUI2().GetFrustum());
 		PaintBlurMask();
-
-		render->PopView(GameUI2().GetFrustum());
+		GetGameUI2().GetRenderView()->PopView(GetGameUI2().GetFrustum());
 	}
 
-	m_bBlurEnabled = false;
+	bBlurEnabled = false;
 }
 
 void Frame2D::PaintBlurMask()
 {
 	
+}
+
+void Frame2D::ApplySchemeSettings(vgui::IScheme* Scheme)
+{
+	BaseClass::ApplySchemeSettings(Scheme);
+
+	bSchemeLoaded = true;
 }

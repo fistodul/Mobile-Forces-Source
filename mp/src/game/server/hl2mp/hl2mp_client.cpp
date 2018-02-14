@@ -28,10 +28,6 @@
 
 #include "tier0/vprof.h"
 
-#ifdef MFS
-#include "mfs/bot_main.h"
-#endif
-
 #ifdef SecobMod__SAVERESTORE
 #include "filesystem.h"
 #endif //SecobMod__SAVERESTORE
@@ -1121,7 +1117,11 @@ const char *GetGameDescription()
 	if ( g_pGameRules ) // this function may be called before the world has spawned, and the game rules initialized
 		return g_pGameRules->GetGameDescription();
 	else
+#ifdef MFS
 		return "Mobile Forces Source";
+#else
+		return "Half Lyfe twu dm";
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -1190,16 +1190,9 @@ void GameStartFrame( void )
 		return;
 
 	gpGlobals->teamplay = (teamplay.GetInt() != 0);
-#ifdef MFS
-	Bot_RunAll();
-#else
-#ifdef DEBUG
+#if defined DEBUG && !defined MFS
 	extern void Bot_RunAll();
 	Bot_RunAll();
-#else
-	extern void Bot_RunAll();
-	Bot_RunAll();
-#endif
 #endif
 }
 

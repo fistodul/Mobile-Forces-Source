@@ -14,8 +14,8 @@
 #define ASSASSINSMOKE_ENTITYNAME	"env_assassinsmoke"
 
 
-IMPLEMENT_SERVERCLASS_ST(CAssassinSmoke, DT_AssassinSmoke)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CAssassinSmoke, DT_AssassinSmoke)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS(env_assassinsmoke, CAssassinSmoke);
 

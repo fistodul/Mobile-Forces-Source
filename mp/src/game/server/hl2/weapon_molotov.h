@@ -23,7 +23,7 @@ class CWeaponMolotov : public CBaseHLCombatWeapon
 public:
 	DECLARE_CLASS( CWeaponMolotov, CBaseHLCombatWeapon );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 private:
 	int					m_nNumAmmoTypes;

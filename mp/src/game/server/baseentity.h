@@ -65,6 +65,9 @@ class CBaseCombatWeapon;
 class IPhysicsObject;
 class IPhysicsShadowController;
 class CBaseCombatCharacter;
+#ifdef MFS
+class CBuyZone;
+#endif
 class CTeam;
 class Vector;
 struct gamevcollisionevent_t;
@@ -107,14 +110,18 @@ enum Class_T
 	CLASS_SecobModportal2,
 #endif //SecobMod__ENABLE_IN_TESTING_ITEMS
 	CLASS_BULLSEYE,
-	//CLASS_BULLSQUID,	
+#ifdef MFS
+	CLASS_BULLSQUID,
+#endif
 	CLASS_CITIZEN_PASSIVE,	
 	CLASS_CITIZEN_REBEL,
 	CLASS_COMBINE,
 	CLASS_COMBINE_GUNSHIP,
 	CLASS_CONSCRIPT,
 	CLASS_HEADCRAB,
-	//CLASS_HOUNDEYE,
+#ifdef MFS
+	CLASS_HOUNDEYE,
+#endif
 	CLASS_MANHACK,
 	CLASS_METROPOLICE,		
 	CLASS_MILITARY,		
@@ -942,6 +949,9 @@ public:
 	virtual bool			IsNPC( void ) const { return false; }
 	CAI_BaseNPC				*MyNPCPointer( void ); 
 	virtual CBaseCombatCharacter *MyCombatCharacterPointer( void ) { return NULL; }
+#ifdef MFS
+	virtual CBuyZone *MyBuyZonePointer(void) { return NULL; }
+#endif
 	virtual INextBot		*MyNextBotPointer( void ) { return NULL; }
 	virtual float			GetDelay( void ) { return 0; }
 	virtual bool			IsMoving( void );

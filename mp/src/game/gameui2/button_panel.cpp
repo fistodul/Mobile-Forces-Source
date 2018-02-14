@@ -1,13 +1,18 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #include "gameui2_interface.h"
 #include "button_panel.h"
 
 #include "vgui/ILocalize.h"
 #include "vgui/ISurface.h"
 #include "vgui/IVGui.h"
-
-#include <string>
-#include <algorithm>
-#include <functional>
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -16,30 +21,32 @@ DECLARE_BUILD_FACTORY_DEFAULT_TEXT(Button_Panel, Button_Panel);
 
 extern CUtlSymbolTable g_ButtonSoundNames;
 
-Button_Panel::Button_Panel(vgui::Panel* parent, vgui::Panel* pActionSignalTarget, const char* pCmd) : BaseClass(parent, "", "", pActionSignalTarget, pCmd)
+Button_Panel::Button_Panel(vgui::Panel* Parent, vgui::Panel* ActionSignalTarget, const char* Command) : BaseClass(Parent, "", "", ActionSignalTarget, Command)
 {
-	Init();
-	m_pCmd = pCmd;
+	// Use Initialize() instead
 }
 
-void Button_Panel::SetButtonText(const char* text)
+void Button_Panel::SetButtonText(const char* Text)
 {
-	m_ButtonText = GameUI2().GetLocalizedString(text);
+	ButtonText = GetGameUI2().ConvertToLocalizedString(Text);
+	ButtonText = wcsupr(ButtonText);
 }
 
-void Button_Panel::SetButtonDescription(const char* description)
+void Button_Panel::SetButtonDescription(const char* Description)
 {
-	m_ButtonDescription = GameUI2().GetLocalizedString(description);
+	ButtonDescription = GetGameUI2().ConvertToLocalizedString(Description);
 }
 
-void Button_Panel::Init()
+void Button_Panel::Initialize()
 {
+	BaseClass::Initialize();
+	
+#ifdef MFS
+	vgui::HScheme Scheme = vgui::scheme()->LoadSchemeFromFile("resource/schemepanel.res", "SchemePanel");
+#else
 	vgui::HScheme Scheme = vgui::scheme()->LoadSchemeFromFile("resource2/schemepanel.res", "SchemePanel");
+#endif
 	SetScheme(Scheme);
-
-	m_pAnimController = new vgui::AnimationController(this);
-	m_pAnimController->SetScheme(Scheme);
-	m_pAnimController->SetProportional(false);
 
 	SetProportional(false);
 	SetPaintBorderEnabled(false);
@@ -48,9 +55,9 @@ void Button_Panel::Init()
 	SetVisible(false);
 }
 
-void Button_Panel::ApplySchemeSettings(vgui::IScheme* pScheme)
+void Button_Panel::ApplySchemeSettings(vgui::IScheme* Scheme)
 {
-	BaseClass::ApplySchemeSettings(pScheme);
+	BaseClass::ApplySchemeSettings(Scheme);
 
 	SetDefaultColor(Color(0, 0, 0, 0), Color(0, 0, 0, 0));
 	SetArmedColor(Color(0, 0, 0, 0), Color(0, 0, 0, 0));
@@ -61,190 +68,181 @@ void Button_Panel::ApplySchemeSettings(vgui::IScheme* pScheme)
 	SetDepressedSound("interface/ui/button_click.wav");
 	SetReleasedSound("interface/ui/button_release.wav");
 
-	m_fWidth = m_fWidthOut = atof(pScheme->GetResourceString("Panel.Button.Width.Out"));
-	m_fWidthOver = atof(pScheme->GetResourceString("Panel.Button.Width.Over"));
-	m_fWidthPressed = atof(pScheme->GetResourceString("Panel.Button.Width.Pressed"));
-	m_fWidthReleased = atof(pScheme->GetResourceString("Panel.Button.Width.Released"));
+	Width = WidthOut = atof(Scheme->GetResourceString("Panel.Button.Width.Out"));
+	WidthOver = atof(Scheme->GetResourceString("Panel.Button.Width.Over"));
+	WidthPressed = atof(Scheme->GetResourceString("Panel.Button.Width.Pressed"));
+	WidthReleased = atof(Scheme->GetResourceString("Panel.Button.Width.Released"));
 
-	m_fHeight = m_fHeightOut = atof(pScheme->GetResourceString("Panel.Button.Height.Out"));
-	m_fHeightOver = atof(pScheme->GetResourceString("Panel.Button.Height.Over"));
-	m_fHeightPressed = atof(pScheme->GetResourceString("Panel.Button.Height.Pressed"));
-	m_fHeightReleased = atof(pScheme->GetResourceString("Panel.Button.Height.Released"));
+	Height = HeightOut = atof(Scheme->GetResourceString("Panel.Button.Height.Out"));
+	HeightOver = atof(Scheme->GetResourceString("Panel.Button.Height.Over"));
+	HeightPressed = atof(Scheme->GetResourceString("Panel.Button.Height.Pressed"));
+	HeightReleased = atof(Scheme->GetResourceString("Panel.Button.Height.Released"));
 
-	m_fTextOffsetX = atof(pScheme->GetResourceString("Panel.Button.Text.OffsetX"));
-	m_fTextOffsetY = atof(pScheme->GetResourceString("Panel.Button.Text.OffsetY"));
+	TextOffsetX = atof(Scheme->GetResourceString("Panel.Button.Text.OffsetX"));
+	TextOffsetY = atof(Scheme->GetResourceString("Panel.Button.Text.OffsetY"));
 
-	m_fDescriptionOffsetX = atof(pScheme->GetResourceString("Panel.Button.Description.OffsetX"));
-	m_fDescriptionOffsetY = atof(pScheme->GetResourceString("Panel.Button.Description.OffsetY"));
+	DescriptionOffsetX = atof(Scheme->GetResourceString("Panel.Button.Description.OffsetX"));
+	DescriptionOffsetY = atof(Scheme->GetResourceString("Panel.Button.Description.OffsetY"));
 
-	m_bDescriptionHideOut = atoi(pScheme->GetResourceString("Panel.Button.Description.Hide.Out"));
-	m_bDescriptionHideOver = atoi(pScheme->GetResourceString("Panel.Button.Description.Hide.Over"));
-	m_bDescriptionHidePressed = atoi(pScheme->GetResourceString("Panel.Button.Description.Hide.Pressed"));
-	m_bDescriptionHideReleased = atoi(pScheme->GetResourceString("Panel.Button.Description.Hide.Released"));
+	bDescriptionHideOut = atoi(Scheme->GetResourceString("Panel.Button.Description.Hide.Out"));
+	bDescriptionHideOver = atoi(Scheme->GetResourceString("Panel.Button.Description.Hide.Over"));
+	bDescriptionHidePressed = atoi(Scheme->GetResourceString("Panel.Button.Description.Hide.Pressed"));
+	bDescriptionHideReleased = atoi(Scheme->GetResourceString("Panel.Button.Description.Hide.Released"));
 
-	m_fAnimationWidth = atof(pScheme->GetResourceString("Panel.Button.Animation.Width"));
-	m_fAnimationHeight = atof(pScheme->GetResourceString("Panel.Button.Animation.Height"));
-	m_fAnimationBackground = atof(pScheme->GetResourceString("Panel.Button.Animation.Background"));
-	m_fAnimationText = atof(pScheme->GetResourceString("Panel.Button.Animation.Text"));
-	m_fAnimationDescription = atof(pScheme->GetResourceString("Panel.Button.Animation.Description"));
+	AnimationWidth = atof(Scheme->GetResourceString("Panel.Button.Animation.Width"));
+	AnimationHeight = atof(Scheme->GetResourceString("Panel.Button.Animation.Height"));
+	AnimationBackground = atof(Scheme->GetResourceString("Panel.Button.Animation.Background"));
+	AnimationText = atof(Scheme->GetResourceString("Panel.Button.Animation.Text"));
+	AnimationDescription = atof(Scheme->GetResourceString("Panel.Button.Animation.Description"));
 
-	m_cBackground = m_cBackgroundOut = GetSchemeColor("Panel.Button.Background.Out", pScheme);
-	m_cBackgroundOver = GetSchemeColor("Panel.Button.Background.Over", pScheme);
-	m_cBackgroundPressed = GetSchemeColor("Panel.Button.Background.Pressed", pScheme);
-	m_cBackgroundReleased = GetSchemeColor("Panel.Button.Background.Released", pScheme);
+	BackgroundColor = BackgroundColorOut = GetSchemeColor("Panel.Button.Background.Out", Scheme);
+	BackgroundColorOver = GetSchemeColor("Panel.Button.Background.Over", Scheme);
+	BackgroundColorPressed = GetSchemeColor("Panel.Button.Background.Pressed", Scheme);
+	BackgroundColorReleased = GetSchemeColor("Panel.Button.Background.Released", Scheme);
 
-	m_cBackgroundOutline = m_cBackgroundOutlineOut = GetSchemeColor("Panel.Button.Background.Outline.Out", pScheme);
-	m_cBackgroundOutlineOver = GetSchemeColor("Panel.Button.Background.Outline.Over", pScheme);
-	m_cBackgroundOutlinePressed = GetSchemeColor("Panel.Button.Background.Outline.Pressed", pScheme);
-	m_cBackgroundOutlineReleased = GetSchemeColor("Panel.Button.Background.Outline.Released", pScheme);
+	BackgroundOutlineColor = BackgroundOutlineColorOut = GetSchemeColor("Panel.Button.Background.Outline.Out", Scheme);
+	BackgroundOutlineColorOver = GetSchemeColor("Panel.Button.Background.Outline.Over", Scheme);
+	BackgroundOutlineColorPressed = GetSchemeColor("Panel.Button.Background.Outline.Pressed", Scheme);
+	BackgroundOutlineColorReleased = GetSchemeColor("Panel.Button.Background.Outline.Released", Scheme);
 
-	m_cText = m_cTextOut = GetSchemeColor("Panel.Button.Text.Out", pScheme);
-	m_cTextOver = GetSchemeColor("Panel.Button.Text.Over", pScheme);
-	m_cTextPressed = GetSchemeColor("Panel.Button.Text.Pressed", pScheme);
-	m_cTextReleased = GetSchemeColor("Panel.Button.Text.Released", pScheme);
+	TextColor = TextColorOut = GetSchemeColor("Panel.Button.Text.Out", Scheme);
+	TextColorOver = GetSchemeColor("Panel.Button.Text.Over", Scheme);
+	TextColorPressed = GetSchemeColor("Panel.Button.Text.Pressed", Scheme);
+	TextColorReleased = GetSchemeColor("Panel.Button.Text.Released", Scheme);
 
-	m_cDescription = m_cDescriptionOut = GetSchemeColor("Panel.Button.Description.Out", pScheme);
-	m_cDescriptionOver = GetSchemeColor("Panel.Button.Description.Over", pScheme);
-	m_cDescriptionPressed = GetSchemeColor("Panel.Button.Description.Pressed", pScheme);
-	m_cDescriptionReleased = GetSchemeColor("Panel.Button.Description.Released", pScheme);
+	DescriptionColor = DescriptionColorOut = GetSchemeColor("Panel.Button.Description.Out", Scheme);
+	DescriptionColorOver = GetSchemeColor("Panel.Button.Description.Over", Scheme);
+	DescriptionColorPressed = GetSchemeColor("Panel.Button.Description.Pressed", Scheme);
+	DescriptionColorReleased = GetSchemeColor("Panel.Button.Description.Released", Scheme);
 
-	m_cBackgroundBlurAlpha = Color(0, 0, 0, 0);
-	m_bBackgroundBlurOut = atoi(pScheme->GetResourceString("Panel.Button.Background.Blur.Out"));
-	m_bBackgroundBlurOver = atoi(pScheme->GetResourceString("Panel.Button.Background.Blur.Over"));
-	m_bBackgroundBlurPressed = atoi(pScheme->GetResourceString("Panel.Button.Background.Blur.Pressed"));
-	m_bBackgroundBlurReleased = atoi(pScheme->GetResourceString("Panel.Button.Background.Blur.Released"));
+	BackgroundBlurAlpha = Color(0, 0, 0, 0);
+	bBackgroundBlurOut = atoi(Scheme->GetResourceString("Panel.Button.Background.Blur.Out"));
+	bBackgroundBlurOver = atoi(Scheme->GetResourceString("Panel.Button.Background.Blur.Over"));
+	bBackgroundBlurPressed = atoi(Scheme->GetResourceString("Panel.Button.Background.Blur.Pressed"));
+	bBackgroundBlurReleased = atoi(Scheme->GetResourceString("Panel.Button.Background.Blur.Released"));
 
-	m_fTextFont = pScheme->GetFont("Panel.Button.Text.Font");
-	m_fDescriptionFont = pScheme->GetFont("Panel.Button.Description.Font");
+	TextFont = Scheme->GetFont("Panel.Button.Text.Font");
+	DescriptionFont = Scheme->GetFont("Panel.Button.Description.Font");
 
-	m_sButtonState = m_sButtonStateOld = Out;
+	PreviousState = State;
 }
 
 void Button_Panel::Animations()
 {
-	if (m_pAnimController != nullptr)
-		m_pAnimController->UpdateAnimations(GameUI2().GetTime()); // (gpGlobals->realtime);
-
-	if (m_sButtonStateOld != m_sButtonState && m_pAnimController != nullptr)
+	if (PreviousState != State)
 	{
-		switch (m_sButtonState)
+		switch (State)
 		{
 			case Out:
-				m_pAnimController->RunAnimationCommand(this, "m_fWidth", m_fWidthOut, 0.0f, m_fAnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_fHeight", m_fHeightOut, 0.0f, m_fAnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackground", m_cBackgroundOut, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundOutline", m_cBackgroundOutlineOut, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cText", m_cTextOut, 0.0f, m_fAnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cDescription", m_cDescriptionOut, 0.0f, m_fAnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundBlurAlpha", m_bBackgroundBlurOut ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Width", WidthOut, 0.0f, AnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Height", HeightOut, 0.0f, AnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundColor", BackgroundColorOut, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundOutlineColor", BackgroundOutlineColorOut, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "TextColor", TextColorOut, 0.0f, AnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "DescriptionColor", DescriptionColorOut, 0.0f, AnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundBlurAlpha", bBackgroundBlurOut ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
 				break;
 
 			case Over:
-				m_pAnimController->RunAnimationCommand(this, "m_fWidth", m_fWidthOver, 0.0f, m_fAnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_fHeight", m_fHeightOver, 0.0f, m_fAnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackground", m_cBackgroundOver, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundOutline", m_cBackgroundOutlineOver, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cText", m_cTextOver, 0.0f, m_fAnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cDescription", m_cDescriptionOver, 0.0f, m_fAnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundBlurAlpha", m_bBackgroundBlurOver ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Width", WidthOver, 0.0f, AnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Height", HeightOver, 0.0f, AnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundColor", BackgroundColorOver, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundOutlineColor", BackgroundOutlineColorOver, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "TextColor", TextColorOver, 0.0f, AnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "DescriptionColor", DescriptionColorOver, 0.0f, AnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundBlurAlpha", bBackgroundBlurOver ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
 				break;
 
 			case Pressed:
-				m_pAnimController->RunAnimationCommand(this, "m_fWidth", m_fWidthPressed, 0.0f, m_fAnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_fHeight", m_fHeightPressed, 0.0f, m_fAnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackground", m_cBackgroundPressed, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundOutline", m_cBackgroundOutlinePressed, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cText", m_cTextPressed, 0.0f, m_fAnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cDescription", m_cDescriptionPressed, 0.0f, m_fAnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundBlurAlpha", m_bBackgroundBlurPressed ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Width", WidthPressed, 0.0f, AnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Height", HeightPressed, 0.0f, AnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundColor", BackgroundColorPressed, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundOutlineColor", BackgroundOutlineColorPressed, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "TextColor", TextColorPressed, 0.0f, AnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "DescriptionColor", DescriptionColorPressed, 0.0f, AnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundBlurAlpha", bBackgroundBlurPressed ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
 				break;
 
 			case Released:
-				m_pAnimController->RunAnimationCommand(this, "m_fWidth", m_fWidthReleased, 0.0f, m_fAnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_fHeight", m_fHeightReleased, 0.0f, m_fAnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackground", m_cBackgroundReleased, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundOutline", m_cBackgroundOutlineReleased, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cText", m_cTextReleased, 0.0f, m_fAnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cDescription", m_cDescriptionReleased, 0.0f, m_fAnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundBlurAlpha", m_bBackgroundBlurReleased ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Width", WidthReleased, 0.0f, AnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Height", HeightReleased, 0.0f, AnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundColor", BackgroundColorReleased, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundOutlineColor", BackgroundOutlineColorReleased, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "TextColor", TextColorReleased, 0.0f, AnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "DescriptionColor", DescriptionColorReleased, 0.0f, AnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundBlurAlpha", bBackgroundBlurReleased ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
 				break;
 
 			default:
-				m_pAnimController->RunAnimationCommand(this, "m_fWidth", m_fWidthOut, 0.0f, m_fAnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_fHeight", m_fHeightOut, 0.0f, m_fAnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackground", m_cBackgroundOut, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundOutline", m_cBackgroundOutlineOut, 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cText", m_cTextOut, 0.0f, m_fAnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cDescription", m_cDescriptionOut, 0.0f, m_fAnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
-				m_pAnimController->RunAnimationCommand(this, "m_cBackgroundBlurAlpha", m_bBackgroundBlurOut ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, m_fAnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Width", WidthOut, 0.0f, AnimationWidth, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "Height", HeightOut, 0.0f, AnimationHeight, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundColor", BackgroundColorOut, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundOutlineColor", BackgroundOutlineColorOut, 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "TextColor", TextColorOut, 0.0f, AnimationText, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "DescriptionColor", DescriptionColorOut, 0.0f, AnimationDescription, vgui::AnimationController::INTERPOLATOR_LINEAR);
+				GetGameUI2().GetAnimationController()->RunAnimationCommand(this, "BackgroundBlurAlpha", bBackgroundBlurOut ? Color(255, 255, 255, 255) : Color(0, 0, 0, 0), 0.0f, AnimationBackground, vgui::AnimationController::INTERPOLATOR_LINEAR);
 				break;
 		}
 
-		m_sButtonStateOld = m_sButtonState;
+		PreviousState = State;
 	}
 
-	SetSize(m_fWidth, m_fHeight);
+	SetSize(Width, Height);
 }
 
 void Button_Panel::OnThink()
 {
 	BaseClass::OnThink();
 
-	AdditionalCursorCheck();
 	Animations();
-
-	if (IsVisible() == false)
-	{
-		ConColorMsg(Color(0, 148, 255, 255), "Panel button is not visible, running all animations to completion...\n");
-
-		if (m_pAnimController != nullptr)
-			m_pAnimController->RunAllAnimationsToCompletion();
-	}
 }
 
 void Button_Panel::DrawButton()
 {
-	vgui::surface()->DrawSetColor(m_cBackground);
-	vgui::surface()->DrawFilledRect(0, 0, m_fWidth + 0, m_fHeight + 0);
+	vgui::surface()->DrawSetColor(BackgroundColor);
+	vgui::surface()->DrawFilledRect(0, 0, Width + 0, Height + 0);
 
-	vgui::surface()->DrawSetColor(m_cBackgroundOutline);
-	vgui::surface()->DrawOutlinedRect(0, 0, m_fWidth + 0, m_fHeight + 0);
+	vgui::surface()->DrawSetColor(BackgroundOutlineColor);
+	vgui::surface()->DrawOutlinedRect(0, 0, Width + 0, Height + 0);
 }
 
 void Button_Panel::DrawButton_Blur()
 {
-	vgui::surface()->DrawSetColor(m_cBackgroundBlurAlpha);
-	vgui::surface()->DrawFilledRect(0, 0, m_fWidth + 0, m_fHeight + 0);
+	vgui::surface()->DrawSetColor(BackgroundBlurAlpha);
+	vgui::surface()->DrawFilledRect(0, 0, Width + 0, Height + 0);
 }
 
 void Button_Panel::DrawText()
 {
-	std::wstring panel_title = m_ButtonText;
-	std::transform(panel_title.begin(), panel_title.end(), panel_title.begin(), std::function<int32(int32)>(::toupper));
+	if (ButtonText == nullptr)
+		return;
 	
-	vgui::surface()->DrawSetTextColor(m_cText);
-	vgui::surface()->DrawSetTextFont(m_fTextFont);
+	vgui::surface()->DrawSetTextColor(TextColor);
+	vgui::surface()->DrawSetTextFont(TextFont);
 
-	vgui::surface()->GetTextSize(m_fTextFont, panel_title.data(), m_iTextSizeX, m_iTextSizeY);
-	m_iTextPositionX = m_fTextOffsetX;
-	m_iTextPositionY = m_fHeight / 2 - m_iTextSizeY / 2 + m_fTextOffsetY;
+	vgui::surface()->GetTextSize(TextFont, ButtonText, TextSizeX, TextSizeY);
+	TextPositionX = TextOffsetX;
+	TextPositionY = Height / 2 - TextSizeY / 2 + TextOffsetY;
 
-	vgui::surface()->DrawSetTextPos(m_iTextPositionX, m_iTextPositionY);
-	vgui::surface()->DrawPrintText(panel_title.data(), wcslen(panel_title.data()));
+	vgui::surface()->DrawSetTextPos(TextPositionX, TextPositionY);
+	vgui::surface()->DrawPrintText(ButtonText, wcslen(ButtonText));
 }
 
 void Button_Panel::DrawDescription()
 {
-	if (m_sButtonState == Out && m_bDescriptionHideOut == true ||
-		m_sButtonState == Over && m_bDescriptionHideOver == true ||
-		m_sButtonState == Pressed && m_bDescriptionHidePressed == true ||
-		m_sButtonState == Released && m_bDescriptionHideReleased == true)
+	if (ButtonDescription == nullptr)
+		return;
+	
+	if (State == Out && bDescriptionHideOut == true ||
+		State == Over && bDescriptionHideOver == true ||
+		State == Pressed && bDescriptionHidePressed == true ||
+		State == Released && bDescriptionHideReleased == true)
 		return;
 
-	vgui::surface()->DrawSetTextColor(m_cDescription);
-	vgui::surface()->DrawSetTextFont(m_fDescriptionFont);
-	vgui::surface()->DrawSetTextPos(m_iTextPositionX + m_fDescriptionOffsetX, m_iTextPositionY + m_iTextSizeY + m_fDescriptionOffsetY);
-	vgui::surface()->DrawPrintText(m_ButtonDescription, wcslen(m_ButtonDescription));
+	vgui::surface()->DrawSetTextColor(DescriptionColor);
+	vgui::surface()->DrawSetTextFont(DescriptionFont);
+	vgui::surface()->DrawSetTextPos(TextPositionX + DescriptionOffsetX, TextPositionY + TextSizeY + DescriptionOffsetY);
+	vgui::surface()->DrawPrintText(ButtonDescription, wcslen(ButtonDescription));
 }
 
 void Button_Panel::Paint()
@@ -260,51 +258,30 @@ void Button_Panel::PaintBlurMask()
 {
 	BaseClass::PaintBlurMask();
 
-	DrawButton_Blur();
+	if (GetGameUI2().IsInBackgroundLevel() == true)
+		DrawButton_Blur();
 }
 
-void Button_Panel::OnCursorExited()
+void Button_Panel::OnMousePressed(vgui::MouseCode MouseCode)
 {
-	BaseClass::OnCursorExited();
-
-	m_sButtonState = Out;
-}
-
-void Button_Panel::OnCursorEntered()
-{
-	BaseClass::OnCursorEntered();
-
-	m_sButtonState = Over;
-}
-
-void Button_Panel::AdditionalCursorCheck()
-{
-	if (IsCursorOver() == false)
-		m_sButtonState = Out;
-	else if (IsCursorOver() == true && m_sButtonState == Out)
-		m_sButtonState = Over;
-}
-
-void Button_Panel::OnMousePressed(vgui::MouseCode code)
-{
-	if (code == MOUSE_LEFT)
+	BaseClass::OnMousePressed(MouseCode);
+	
+	if (MouseCode == MOUSE_LEFT)
 	{
 		if (m_sDepressedSoundName != UTL_INVAL_SYMBOL)
 			vgui::surface()->PlaySound(g_ButtonSoundNames.String(m_sDepressedSoundName));
-
-		m_sButtonState = Pressed;
 	}
 }
 
-void Button_Panel::OnMouseReleased(vgui::MouseCode code)
+void Button_Panel::OnMouseReleased(vgui::MouseCode MouseCode)
 {
-	if (code == MOUSE_LEFT)
+	BaseClass::OnMouseReleased(MouseCode);
+	
+	if (MouseCode == MOUSE_LEFT)
 	{
 		if (m_sReleasedSoundName != UTL_INVAL_SYMBOL)
 			vgui::surface()->PlaySound(g_ButtonSoundNames.String(m_sReleasedSoundName));
 
-		m_sButtonState = Released;
-
-		GetParent()->OnCommand(m_pCmd);
+		GetParent()->OnCommand(CommandShared);
 	}
 }

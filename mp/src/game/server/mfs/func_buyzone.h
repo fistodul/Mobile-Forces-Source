@@ -17,12 +17,14 @@ public:
 	virtual void Spawn();
 
 	int	TeamNum;
-	static CBuyZone *GetBuyZone(int index);
-	static CUtlVector< CBuyZone * >	s_BuyZone;
-	static int GetBuyZoneCount();
+	CBuyZone* GetBuyZone(int index);
+	virtual CBuyZone *MyBuyZonePointer( void ) { return this; }
+	static CUtlVector<CBuyZone *>	s_BuyZone;
+	int GetBuyZoneCount();
+#ifdef lol
 	void	BuyZoneTouch(CBaseEntity *pOther);
-	bool	isinbuyzone;
-
+	bool	isplayerinbuyzone;
+	/*virtual */void	BuyZoneThink(void);
+#endif
 };
-
 #endif

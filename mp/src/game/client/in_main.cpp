@@ -64,6 +64,12 @@ ConVar cl_yawspeed( "cl_yawspeed", "210", FCVAR_NONE, "Client yaw speed.", true,
 ConVar cl_pitchspeed( "cl_pitchspeed", "225", FCVAR_NONE, "Client pitch speed.", true, -100000, true, 100000 );
 ConVar cl_pitchdown( "cl_pitchdown", "89", FCVAR_CHEAT );
 ConVar cl_pitchup( "cl_pitchup", "89", FCVAR_CHEAT );
+#ifdef MFS // Clearly we are insane, followed secobmod's example of sv_maxspeed - 1000 tho(but in their case it was apsolute default max*10)
+ConVar cl_sidespeed( "cl_sidespeed", "8999", FCVAR_CHEAT );
+ConVar cl_upspeed( "cl_upspeed", "8999", FCVAR_CHEAT );
+ConVar cl_forwardspeed( "cl_forwardspeed", "8999", FCVAR_CHEAT );
+ConVar cl_backspeed( "cl_backspeed", "8999", FCVAR_CHEAT );
+#else
 #if defined( CSTRIKE_DLL )
 ConVar cl_sidespeed( "cl_sidespeed", "400", FCVAR_CHEAT );
 ConVar cl_upspeed( "cl_upspeed", "320", FCVAR_ARCHIVE|FCVAR_CHEAT );
@@ -82,6 +88,7 @@ ConVar cl_backspeed( "cl_backspeed", "400", FCVAR_ARCHIVE|FCVAR_CHEAT );
 		ConVar cl_backspeed( "cl_backspeed", "450", FCVAR_CHEAT );
 	#endif //SecobMod__USE_PLAYERCLASSES
 #endif // CSTRIKE_DLL
+#endif
 ConVar lookspring( "lookspring", "0", FCVAR_ARCHIVE );
 ConVar lookstrafe( "lookstrafe", "0", FCVAR_ARCHIVE );
 ConVar in_joystick( "joystick","0", FCVAR_ARCHIVE );

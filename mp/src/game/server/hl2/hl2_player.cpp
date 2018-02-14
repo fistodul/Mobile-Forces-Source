@@ -85,38 +85,32 @@ extern ConVar autoaim_max_dist;
 extern int gEvilImpulse101;
 
 ConVar sv_autojump( "sv_autojump", "0" );
-
-ConVar hl2_walkspeed( "hl2_walkspeed", "150", FCVAR_CHEAT);
-ConVar hl2_normspeed("hl2_normspeed", "190", FCVAR_CHEAT);
 #ifdef MFS
-ConVar hl2_sprintspeed("hl2_sprintspeed", "300", FCVAR_CHEAT);
+ConVar hl2_walkspeed("hl2_walkspeed", "150", FCVAR_CHEAT | FCVAR_SERVER_CAN_EXECUTE);
+ConVar hl2_normspeed("hl2_normspeed", "190", FCVAR_CHEAT | FCVAR_SERVER_CAN_EXECUTE);
+ConVar hl2_sprintspeed("hl2_sprintspeed", "300", FCVAR_CHEAT | FCVAR_SERVER_CAN_EXECUTE);
 #else
+ConVar hl2_walkspeed("hl2_walkspeed", "150", FCVAR_CHEAT);
+ConVar hl2_normspeed("hl2_normspeed", "190", FCVAR_CHEAT);
 ConVar hl2_sprintspeed("hl2_sprintspeed", "320", FCVAR_CHEAT);
 #endif
 
 ConVar hl2_darkness_flashlight_factor ( "hl2_darkness_flashlight_factor", "1" );
 
-#ifdef SecobMod__USE_PLAYERCLASSES
+#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 #define HL2_WALK_SPEED CBasePlayer::GetWalkSpeed()
 #define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
 #define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
 #else
-#ifdef MFS
-#define HL2_WALK_SPEED CBasePlayer::GetWalkSpeed()
-#define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
-#define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
-#define HL2_PRONE_SPEED CBasePlayer::GetProneSpeed()
+#ifdef HL2MP
+#define HL2_WALK_SPEED 150
+#define HL2_NORM_SPEED 190
+#define HL2_SPRINT_SPEED 320
 #else
-	#ifdef HL2MP
-	#define HL2_WALK_SPEED 150
-	#define HL2_NORM_SPEED 190
-	#define HL2_SPRINT_SPEED 320
-	#else
-	#define	HL2_WALK_SPEED hl2_walkspeed.GetFloat()
-	#define	HL2_NORM_SPEED hl2_normspeed.GetFloat()
-	#define	HL2_SPRINT_SPEED hl2_sprintspeed.GetFloat()
-	#endif //HL2MP
-#endif
+#define	HL2_WALK_SPEED hl2_walkspeed.GetFloat()
+#define	HL2_NORM_SPEED hl2_normspeed.GetFloat()
+#define	HL2_SPRINT_SPEED hl2_sprintspeed.GetFloat()
+#endif //HL2MP
 #endif //SecobMod__USE_PLAYERCLASSES
 
 ConVar player_showpredictedposition( "player_showpredictedposition", "0" );
@@ -426,10 +420,14 @@ CHL2_Player::CHL2_Player()
 //
 #define SUITPOWER_CHARGE_RATE	12.5											// 100 units in 8 seconds
 
+#ifdef MFS
+	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
+#else
 #ifdef HL2MP
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 25.0f );				// 100 units in 4 seconds
 #else
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
+#endif
 #endif
 
 #ifdef HL2_EPISODIC

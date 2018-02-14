@@ -1,6 +1,6 @@
 "LightmappedGeneric"
 {
-	"$basetexture" "Nature/rockwall_cave01a"
+	"$basetexture" "lostcoast/nature/rockwall022a" // lostcoast/nature/rockwall019a or Nature/rockwall_cave01a
 	"$surfaceprop" "concrete"
 	"$bumpmap" "Nature/rockwall_cave_01a_ssbump"
         "$ssbump" "1"
@@ -8,7 +8,7 @@
 	"$normalmapalphaenvmapmask" 1
 	"$envmaptint" "[ .09 .09 .09 ]"
 	"$envmap" "env_cubemap"
-	"$detail" "Nature/cave_detail"
+	"$detail" "Nature/cave_detail" //lostcoast/nature/rockwall021_detail
 	"$detaiblendmode" "0"
 	"$detailscale" "2"
     "$parallaxmap"	"Nature/rockwall_cave01a_parallax"

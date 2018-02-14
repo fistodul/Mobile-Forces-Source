@@ -30,6 +30,9 @@ public:
 	#endif //SecobMod__Enable_Fixed_Multiplayer_AI
 };
 
+#ifdef simulated_bullets
+int GetTargetTick(CBasePlayer *player = NULL, CUserCmd *cmd = NULL);
+#endif
 extern ILagCompensationManager *lagcompensation;
 
 #endif // ILAGCOMPENSATIONMANAGER_H

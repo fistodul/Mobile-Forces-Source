@@ -18,7 +18,11 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef MFS
+ConVar hopwire_vortex("hopwire_vortex", "1", FCVAR_REPLICATED); //Ofc we want this
+#else
 ConVar hopwire_vortex( "hopwire_vortex", "0" );
+#endif
 ConVar hopwire_trap( "hopwire_trap", "1" );
 ConVar hopwire_strider_kill_dist_h( "hopwire_strider_kill_dist_h", "300" );
 ConVar hopwire_strider_kill_dist_v( "hopwire_strider_kill_dist_v", "256" );

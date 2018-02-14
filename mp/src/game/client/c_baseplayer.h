@@ -260,14 +260,33 @@ public:
 	virtual void				ItemPreFrame( void );
 	virtual void				ItemPostFrame( void );
 	
-	#ifdef SecobMod__USE_PLAYERCLASSES
-		float GetJumpHeight();
-		CNetworkVar( float, m_iJumpHeight );
-#else
-#ifdef MFS
-	float GetJumpHeight();
+/*#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
+	// Here are the players speed is set:
+	void SetWalkSpeed(int WalkSpeed);
+	void SetNormSpeed(int NormSpeed);
+	void SetSprintSpeed(int SprintSpeed);
+	void SetJumpHeight(float JumpHeight);
+
+	// Spielergeschwindigkeit:
+	int m_iWalkSpeed;
+	int m_iNormSpeed;
+	int m_iSprintSpeed;
+
 	CNetworkVar(float, m_iJumpHeight);
-#endif
+
+	int GetWalkSpeed();
+	int GetNormSpeed();
+	int GetSprintSpeed();
+#endif //SecobMod__USE_PLAYERCLASSES
+#ifdef MFS
+	void SetProneSpeed(int ProneSpeed);
+	int m_iProneSpeed;
+	int GetProneSpeed();
+#endif*/
+
+	#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
+	float GetJumpHeight();
+	CNetworkVar( float, m_iJumpHeight );
 	#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
 	int	m_BlueTime;

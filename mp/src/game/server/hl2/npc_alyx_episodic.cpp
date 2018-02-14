@@ -320,7 +320,6 @@ bool CNPC_Alyx::CreateBehaviors()
 void CNPC_Alyx::Spawn()
 {
 	BaseClass::Spawn();
-	AddGlowEffect();
 	
 	// If Alyx has a parent, she's currently inside a pod. Prevent her from moving.
 	if ( GetMoveParent() )

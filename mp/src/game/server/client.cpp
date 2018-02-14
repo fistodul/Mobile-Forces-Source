@@ -35,6 +35,9 @@
 #include "datacache/imdlcache.h"
 #include "basemultiplayerplayer.h"
 #include "voice_gamemgr.h"
+#ifdef MFS
+#include "ammodef.h"
+#endif
 
 #ifdef TF_DLL
 #include "tf_player.h"
@@ -928,12 +931,21 @@ CON_COMMAND( give, "Give item to player.\n\tArguments: <item_name>" )
 	}
 }
 
+#ifdef MFS
 // Buyable items
 const char *g_ppszBuyableItems[] =
 {
-	"item_suit",
-	"armor",
 	"weapon_pistol",
+	"weapon_smg3",
+	"weapon_shotgun",
+	"weapon_sniper",
+	"weapon_minigun",
+	"weapon_rpg",
+	"weapon_frag",
+	"weapon_slam",
+	"weapon_healthkit",
+	"armor",
+	"item_suit",
 };
 
 ConVar buyablearmor("buyablearmor", "100", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
@@ -942,9 +954,7 @@ ConVar buyablearmor("buyablearmor", "100", FCVAR_REPLICATED | FCVAR_SERVER_CAN_E
 CON_COMMAND(buy, "Buy's buyable items if the player is in the buy zone.")
 {
 	CBasePlayer *pPlayer = ToBasePlayer(UTIL_GetCommandClient());
-	if (pPlayer
-		&& (pPlayer->IsinBuyzone() == true )
-		&& args.ArgC() >= 2)
+	if (pPlayer && pPlayer->IsinBuyzone() == true && args.ArgC() >= 2)
 	{
 		char item_to_give[256];
 		Q_strncpy(item_to_give, args[1], sizeof(item_to_give));
@@ -955,6 +965,12 @@ CON_COMMAND(buy, "Buy's buyable items if the player is in the buy zone.")
 		{
 			if (g_ppszBuyableItems[i] == item_to_give) // If we find the item to buy...
 			{
+				if (!Q_stricmp(item_to_give, "armor"))
+				{
+					pPlayer->IncrementArmorValue(100, buyablearmor.GetInt());
+					return;
+				}
+
 				// Dirty hack to avoid suit playing it's pickup sound
 				if (!Q_stricmp(item_to_give, "item_suit"))
 				{
@@ -962,24 +978,51 @@ CON_COMMAND(buy, "Buy's buyable items if the player is in the buy zone.")
 					return;
 				}
 
-				if (!Q_stricmp(item_to_give, "armor"))
+				string_t iszItem = AllocPooledString(item_to_give);	// Make a copy of the classname, idk why we are doing this...but it was in the give code
+				if (!pPlayer->Weapon_OwnsThisType(STRING(iszItem)))
 				{
-					pPlayer->IncrementArmorValue(100, buyablearmor.GetInt());
-					return;
+					pPlayer->GiveNamedItem(STRING(iszItem));
 				}
 
-				string_t iszItem = AllocPooledString(item_to_give);	// Make a copy of the classname
-				pPlayer->GiveNamedItem(STRING(iszItem));
-				break; // Exit out of the 'find item to buy' loop.	
-			}
-			else
-			{
-				engine->ClientCommand(pPlayer->edict(), "ToggleBuyMenu");
-				break; // Exit out of the 'find item to buy' loop.	
+				CBaseCombatWeapon *pWeapon = pPlayer->Weapon_OwnsThisType(STRING(iszItem));
+
+				if (pWeapon) // I aint taking no risks, who knows if it might not be existing
+				{
+					if (pWeapon->UsesPrimaryAmmo())
+					{
+						int ammoIndex = pWeapon->GetPrimaryAmmoType();
+
+						if (ammoIndex != -1)
+						{
+							int giveAmount;
+							giveAmount = GetAmmoDef()->MaxCarry(ammoIndex);
+							pPlayer->GiveAmmo(giveAmount, GetAmmoDef()->GetAmmoOfIndex(ammoIndex)->pName);
+						}
+					}
+					if (pWeapon->UsesSecondaryAmmo() && pWeapon->HasSecondaryAmmo())
+					{
+						// Give secondary ammo out, as long as the player already has some
+						// from a presumeably natural source. This prevents players on XBox
+						// having Combine Balls and so forth in areas of the game that
+						// were not tested with these items.
+						int ammoIndex = pWeapon->GetSecondaryAmmoType();
+
+						if (ammoIndex != -1)
+						{
+							int giveAmount;
+							giveAmount = GetAmmoDef()->MaxCarry(ammoIndex);
+							pPlayer->GiveAmmo(giveAmount, GetAmmoDef()->GetAmmoOfIndex(ammoIndex)->pName);
+						}
+					}
+				}
+				/*goto */break/*ed*/; // Exit out of the 'find item to buy' loop.	
 			}
 		}
+		//engine->ClientCommand(pPlayer->edict(), "ToggleBuyMenu"); //tf was this supposed to do if amongst the items is not the requested one?
+		//breaked:
 	}
 }
+#endif
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

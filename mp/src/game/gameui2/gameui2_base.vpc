@@ -94,6 +94,24 @@ $Project "GameUI2"
 
 	$Folder	"Source Files"
 	{
+		$Folder	"MFS"
+		{
+			$File	"$SRCDIR\game\gameui2\VControlsListPanel.cpp"
+			$File	"$SRCDIR\game\gameui2\VControlsListPanel.h"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubAudio.ccp"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubAudio.h"
+			$File	"$SRCDIR\game\gameui2\panel_options_SubKeyboard.cpp"
+			$File	"$SRCDIR\game\gameui2\panel_options_SubKeyboard.h"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubMouse.cpp"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubMouse.h"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubVideo.cpp"
+			//$File	"$SRCDIR\game\gameui2\panel_options_SubVideo.h"
+			$File	"$SRCDIR\game\gameui2\panel_sp.cpp"
+			$File	"$SRCDIR\game\gameui2\panel_sp.h"
+			$File	"$SRCDIR\game\gameui2\panel_mp.cpp"
+			$File	"$SRCDIR\game\gameui2\panel_mp.h"
+		}
+		
 		$Folder	"Buttons"
 		{
 			$File	"$SRCDIR\game\gameui2\button_mainmenu.cpp"
@@ -112,6 +130,8 @@ $Project "GameUI2"
 		{
 			$File	"$SRCDIR\game\gameui2\panel_options.cpp"
 			$File	"$SRCDIR\game\gameui2\panel_options.h"
+			$File	"$SRCDIR\game\gameui2\panel_quitgame.cpp"
+			$File	"$SRCDIR\game\gameui2\panel_quitgame.h"
 		}
 
 		$Folder	"VGUI 2D"

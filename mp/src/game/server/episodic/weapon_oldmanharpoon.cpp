@@ -14,13 +14,13 @@ class CWeaponOldManHarpoon : public CWeaponCitizenPackage
 {
 	DECLARE_CLASS( CWeaponOldManHarpoon, CWeaponCitizenPackage );
 public:
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 	DECLARE_DATADESC();	
 	DECLARE_ACTTABLE();
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeaponOldManHarpoon, DT_WeaponOldManHarpoon )
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST( CWeaponOldManHarpoon, DT_WeaponOldManHarpoon )
+END_SEND_TABLE()*/
 
 BEGIN_DATADESC( CWeaponOldManHarpoon )
 END_DATADESC()

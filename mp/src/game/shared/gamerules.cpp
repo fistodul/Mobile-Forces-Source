@@ -10,6 +10,9 @@
 #include "tier0/vprof.h"
 #include "KeyValues.h"
 #include "iachievementmgr.h"
+#ifdef simulated_bullets
+#include "bullet_manager.h"
+#endif
 
 #ifdef CLIENT_DLL
 
@@ -571,7 +574,11 @@ void CGameRules::FrameUpdatePostEntityThink()
 }
 
 // Hook into the convar from the engine
+#ifdef MFS
+ConVar skill( "skill", "2" ); //we pump it up a bit in MFS
+#else
 ConVar skill( "skill", "1" );
+#endif
 
 void CGameRules::Think()
 {
@@ -621,6 +628,9 @@ float CGameRules::WeaponTraceEntity( CBaseEntity *pEntity, const Vector &vecStar
 void CGameRules::CreateStandardEntities()
 {
 	g_pPlayerResource = (CPlayerResource*)CBaseEntity::Create( "player_manager", vec3_origin, vec3_angle );
+#ifdef simulated_bullets
+	g_pBulletManager = (CBulletManager*)CBaseEntity::Create("bullet_manager", vec3_origin, vec3_angle);
+#endif
 	g_pPlayerResource->AddEFlags( EFL_KEEP_ON_RECREATE_ENTITIES );
 }
 

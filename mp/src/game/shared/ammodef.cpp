@@ -218,6 +218,9 @@ bool CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, int
 //-----------------------------------------------------------------------------
 void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, 
 	char const* plr_cvar, char const* npc_cvar, char const* carry_cvar, 
+#ifdef simulated_bullets
+	float bulletSpeed,
+#endif
 	float physicsForceImpulse, int nFlags, int minSplashSize, int maxSplashSize)
 {
 	if ( AddAmmoType( name, damageType, tracerType, nFlags, minSplashSize, maxSplashSize ) == false )
@@ -250,6 +253,9 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 		}
 		m_AmmoType[m_nAmmoIndex].pMaxCarry = USE_CVAR;
 	}
+#ifdef simulated_bullets
+	m_AmmoType[m_nAmmoIndex].bulletSpeed = bulletSpeed;
+#endif
 	m_AmmoType[m_nAmmoIndex].physicsForceImpulse = physicsForceImpulse;
 	m_nAmmoIndex++;
 }
@@ -258,7 +264,11 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 // Purpose: Add an ammo type with it's damage & carrying capability specified via integers
 //-----------------------------------------------------------------------------
 void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, 
-	int plr_dmg, int npc_dmg, int carry, float physicsForceImpulse, 
+	int plr_dmg, int npc_dmg, int carry, 
+#ifdef simulated_bullets
+	float bulletSpeed,
+#endif
+	float physicsForceImpulse, 
 	int nFlags, int minSplashSize, int maxSplashSize )
 {
 	if ( AddAmmoType( name, damageType, tracerType, nFlags, minSplashSize, maxSplashSize ) == false )
@@ -267,6 +277,9 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 	m_AmmoType[m_nAmmoIndex].pPlrDmg = plr_dmg;
 	m_AmmoType[m_nAmmoIndex].pNPCDmg = npc_dmg;
 	m_AmmoType[m_nAmmoIndex].pMaxCarry = carry;
+#ifdef simulated_bullets
+	m_AmmoType[m_nAmmoIndex].bulletSpeed = bulletSpeed;
+#endif
 	m_AmmoType[m_nAmmoIndex].physicsForceImpulse = physicsForceImpulse;
 
 	m_nAmmoIndex++;

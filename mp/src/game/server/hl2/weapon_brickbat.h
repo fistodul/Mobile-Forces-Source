@@ -32,7 +32,7 @@ class CWeaponBrickbat : public CBaseHLCombatWeapon
 public:
 	DECLARE_CLASS( CWeaponBrickbat, CBaseHLCombatWeapon );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 public:
 	int					m_iCurrentAmmoType;

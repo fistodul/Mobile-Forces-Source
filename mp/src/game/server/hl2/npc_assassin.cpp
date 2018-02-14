@@ -708,7 +708,8 @@ void CNPC_Assassin::StartTask( const Task_t *pTask )
 	
 			hint.SetFlag( bits_HINT_NODE_NEAREST );
 
-			CAI_Hint *pHint = CAI_HintManager::FindHint( this, GetEnemy()->GetAbsOrigin(), &hint );
+			//MFS, it was &hint
+			CAI_Hint *pHint = CAI_HintManager::FindHint( this, GetEnemy()->GetAbsOrigin(), hint );
 
 			if ( pHint == NULL )
 			{

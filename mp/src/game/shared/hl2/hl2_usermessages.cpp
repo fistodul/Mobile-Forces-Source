@@ -15,6 +15,13 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#ifdef MFS
+//================================================================================
+// Logging System
+//================================================================================
+//DEFINE_LOGGING_CHANNEL_NO_TAGS(LOG_BOTS, "Bots", 0, LS_MESSAGE, { 245, 169, 242, 255 }); // Pink
+#endif
+
 void RegisterUserMessages( void )
 {
 	usermessages->Register( "Geiger", 1 );

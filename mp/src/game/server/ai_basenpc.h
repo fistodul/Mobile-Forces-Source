@@ -2720,6 +2720,154 @@ public:
 // class CAI_Component
 //=============================================================================
 
+#ifdef MFS
+inline const Vector &CAI_Component::GetLocalOrigin() const
+{
+	return GetCharacter()->GetLocalOrigin();
+}
+
+//-----------------------------------------------------------------------------
+
+inline void CAI_Component::SetLocalOrigin(const Vector &origin)
+{
+	GetCharacter()->SetLocalOrigin(origin);
+}
+
+//-----------------------------------------------------------------------------
+
+inline const Vector &CAI_Component::GetAbsOrigin() const
+{
+	return GetCharacter()->GetAbsOrigin();
+}
+
+//-----------------------------------------------------------------------------
+
+inline const QAngle &CAI_Component::GetAbsAngles() const
+{
+	return GetCharacter()->GetAbsAngles();
+}
+
+//-----------------------------------------------------------------------------
+
+inline void CAI_Component::SetSolid(SolidType_t val)
+{
+	GetCharacter()->SetSolid(val);
+}
+
+//-----------------------------------------------------------------------------
+
+inline SolidType_t CAI_Component::GetSolid() const
+{
+	return GetCharacter()->GetSolid();
+}
+
+//-----------------------------------------------------------------------------
+
+inline const Vector &CAI_Component::WorldAlignMins() const
+{
+	return GetCharacter()->WorldAlignMins();
+}
+
+//-----------------------------------------------------------------------------
+
+inline const Vector &CAI_Component::WorldAlignMaxs() const
+{
+	return GetCharacter()->WorldAlignMaxs();
+}
+
+//-----------------------------------------------------------------------------
+
+inline CAI_Component::CAI_Component(CAI_BaseNPC * pOuter)
+{
+	if (pOuter) {
+		m_pOuter = pOuter->MyCombatCharacterPointer();
+	}
+}
+
+inline CAI_BaseNPC * CAI_Component::GetOuter()
+{
+	if (m_pOuter == NULL)
+		return NULL;
+
+	return m_pOuter->MyNPCPointer();
+}
+
+inline const CAI_BaseNPC * CAI_Component::GetOuter() const
+{
+	if (m_pOuter == NULL)
+		return NULL;
+
+	return m_pOuter->MyNPCPointer();
+}
+
+inline Hull_t CAI_Component::GetHullType() const
+{
+	return GetOuter()->GetHullType();
+}
+
+//-----------------------------------------------------------------------------
+
+inline Vector CAI_Component::WorldSpaceCenter() const
+{
+	return GetCharacter()->WorldSpaceCenter();
+}
+
+//-----------------------------------------------------------------------------
+
+inline float CAI_Component::GetGravity() const
+{
+	return GetCharacter()->GetGravity();
+}
+
+//-----------------------------------------------------------------------------
+
+inline void CAI_Component::SetGravity(float flGravity)
+{
+	GetCharacter()->SetGravity(flGravity);
+}
+
+//-----------------------------------------------------------------------------
+
+inline float CAI_Component::GetHullWidth() const
+{
+	return NAI_Hull::Width(GetCharacter()->GetHullType());
+}
+
+//-----------------------------------------------------------------------------
+
+inline float CAI_Component::GetHullHeight() const
+{
+	return NAI_Hull::Height(GetCharacter()->GetHullType());
+}
+
+//-----------------------------------------------------------------------------
+
+inline const Vector &CAI_Component::GetHullMins() const
+{
+	return NAI_Hull::Mins(GetCharacter()->GetHullType());
+}
+
+//-----------------------------------------------------------------------------
+
+inline const Vector &CAI_Component::GetHullMaxs() const
+{
+	return NAI_Hull::Maxs(GetCharacter()->GetHullType());
+}
+
+//-----------------------------------------------------------------------------
+
+inline int CAI_Component::GetCollisionGroup() const
+{
+	return GetCharacter()->GetCollisionGroup();
+}
+
+//-----------------------------------------------------------------------------
+
+inline CBaseEntity *CAI_Component::GetEnemy()
+{
+	return GetCharacter()->GetEnemy();
+}
+#else
 inline const Vector &CAI_Component::GetLocalOrigin() const
 {
 	return GetOuter()->GetLocalOrigin();
@@ -2843,6 +2991,7 @@ inline CBaseEntity *CAI_Component::GetEnemy()
 {
 	return GetOuter()->GetEnemy();
 }
+#endif
 
 //-----------------------------------------------------------------------------
 

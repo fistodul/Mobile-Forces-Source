@@ -107,7 +107,9 @@ static const char *s_pGibModelName[HELICOPTER_MAX_GIBS] =
 
 #define	HELICOPTER_MSG_MACHINEGUN		1
 
-ConVar	sk_Vehiclehelicopter_health( "sk_Vehiclehelicopter_health", "0" );
+#define HELI_MODEL "models/combine_Helicopter.mdl"
+
+ConVar	sk_Vehiclehelicopter_health( "sk_Vehiclehelicopter_health", "200" );
 
 //==================================================
 // QUA_helicopter::m_DataDesc
@@ -149,7 +151,7 @@ QUA_helicopter::QUA_helicopter()
 void QUA_helicopter::Precache( void )
 {
 	BaseClass::Precache();
-	PrecacheModel( "models/combine_Helicopter.mdl" );
+	PrecacheModel( HELI_MODEL );
 	m_pServerVehicle.Initialize( STRING(m_vehicleScript) );
 
 	int i;
@@ -195,7 +197,7 @@ void QUA_helicopter::Spawn( void )
 	m_flSiguienteAtaque=gpGlobals->curtime;
 	m_flSiguienteSummon=gpGlobals->curtime;
 	Precache();
-	SetModel("models/combine_Helicopter.mdl");
+	SetModel(HELI_MODEL);
 	//SetVehicleType( VEHICLE_TYPE_CAR_RAYCAST );
 	BaseClass::Spawn();
 	SetCollisionGroup(COLLISION_GROUP_VEHICLE);

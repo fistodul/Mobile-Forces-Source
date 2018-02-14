@@ -1173,6 +1173,51 @@ bool CHLClient::ReplayPostInit()
 #endif
 }
 
+#ifdef GAMEUI2
+void gameui2_load_f()
+{
+#ifdef MFS
+	if (gpGlobals->curtime > 100) //This number is honestly made up but lets say that after it the Gameui loaded for the first time for sure
+	{
+		g_pGameUI2->Shutdown();
+	}
+#endif
+	const int16 modulePathLength = 2048;
+	char modulePath[modulePathLength];
+	Q_snprintf(modulePath, modulePathLength, "%s\\bin\\gameui2.dll", engine->GetGameDirectory());
+
+	CSysModule* dllModule = Sys_LoadModule(modulePath);
+	if (dllModule)
+	{
+		ConColorMsg(Color(0, 148, 255, 255), "Loaded gameui2.dll\n");
+
+		CreateInterfaceFn appSystemFactory = Sys_GetFactory(dllModule);
+
+		g_pGameUI2 = appSystemFactory ? ((IGameUI2*)appSystemFactory(GAMEUI2_DLL_INTERFACE_VERSION, NULL)) : NULL;
+		if (g_pGameUI2)
+		{
+			ConColorMsg(Color(0, 148, 255, 255), "Initializing IGameUI2 interface...\n");
+
+			factorylist_t factories;
+			FactoryList_Retrieve(factories);
+			g_pGameUI2->Initialize(factories.appSystemFactory);
+			g_pGameUI2->OnInitialize();
+		}
+		else
+		{
+			ConColorMsg(Color(0, 148, 255, 255), "Unable to pull IGameUI2 interface.\n");
+		}
+	}
+	else
+	{
+		ConColorMsg(Color(0, 148, 255, 255), "Unable to load gameui2.dll from:\n%s\n", modulePath);
+	}
+}
+
+//MFS
+ConCommand gameui2_reload("gameui2_reload", gameui2_load_f, "Reloads the main menu\n", FCVAR_CHEAT);
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: Called after client & server DLL are loaded and all systems initialized
 //-----------------------------------------------------------------------------
@@ -1206,36 +1251,7 @@ void CHLClient::PostInit()
 #ifdef GAMEUI2
 	if (!CommandLine()->CheckParm("-nogameui2"))
 	{
-		const int16 modulePathLength = 2048;
-		char modulePath[modulePathLength];
-		Q_snprintf(modulePath, modulePathLength, "%s\\bin\\gameui2.dll", engine->GetGameDirectory());
-
-		CSysModule* dllModule = Sys_LoadModule(modulePath);
-		if (dllModule)
-		{
-			ConColorMsg(Color(0, 148, 255, 255), "Loaded gameui2.dll\n");
-
-			CreateInterfaceFn appSystemFactory = Sys_GetFactory(dllModule);
-
-			g_pGameUI2 = appSystemFactory ? ((IGameUI2*)appSystemFactory(GAMEUI2_DLL_INTERFACE_VERSION, NULL)) : NULL;
-			if (g_pGameUI2)
-			{
-				ConColorMsg(Color(0, 148, 255, 255), "Initializing IGameUI2 interface...\n");
-
-				factorylist_t factories;
-				FactoryList_Retrieve(factories);
-				g_pGameUI2->Initialize(factories.appSystemFactory);
-				g_pGameUI2->OnInitialize();
-			}
-			else
-			{
-				ConColorMsg(Color(0, 148, 255, 255), "Unable to pull IGameUI2 interface.\n");
-			}
-		}
-		else
-		{
-			ConColorMsg(Color(0, 148, 255, 255), "Unable to load gameui2.dll from:\n%s\n", modulePath);
-		}
+		gameui2_load_f();
 	}
 #endif
 

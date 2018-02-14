@@ -1,5 +1,6 @@
 #include "cbase.h"
 #include "func_buyzone.h"
+//#include "saverestore_utlvector.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -8,8 +9,13 @@ BEGIN_DATADESC(CBuyZone)
 
 DEFINE_FIELD(TeamNum, FIELD_INTEGER),
 
+//DEFINE_UTLVECTOR(s_BuyZone, FIELD_EMBEDDED),
+
 // Function Pointers
+#ifdef lol
 DEFINE_FUNCTION(BuyZoneTouch),
+DEFINE_THINKFUNC(BuyZoneThink),
+#endif
 
 END_DATADESC()
 
@@ -18,13 +24,14 @@ LINK_ENTITY_TO_CLASS(func_buyzone, CBuyZone);
 CUtlVector< CBuyZone * >	CBuyZone::s_BuyZone;
 CBuyZone::CBuyZone(void)
 {
-	SetTouch(&CBuyZone::BuyZoneTouch);
+	TeamNum = 0;
 	s_BuyZone.AddToTail(this);
 }
 
 CBuyZone::~CBuyZone()
 {
 	s_BuyZone.FindAndRemove(this);
+	//UTIL_Remove(this);
 }
 
 int CBuyZone::GetBuyZoneCount()
@@ -39,6 +46,7 @@ CBuyZone *CBuyZone::GetBuyZone(int index)
 
 	return s_BuyZone[index];
 }
+
 
 void CBuyZone::Spawn()
 {
@@ -56,19 +64,30 @@ void CBuyZone::Spawn()
 	AddEffects(EF_NODRAW);
 	// No model but should still network
 	AddEFlags(EFL_FORCE_CHECK_TRANSMIT);
+#ifdef lol
+	SetTouch(&CBuyZone::BuyZoneTouch);
+	SetThink(&CBuyZone::BuyZoneThink);
+	SetNextThink(gpGlobals->curtime + 0.1f);
+#endif
 }
 
+#ifdef lol
 void CBuyZone::BuyZoneTouch(CBaseEntity *pOther)
 {
 	CBaseEntity *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
 	if (pOther == pPlayer)
-	{
-		if (TeamNum != 0)
-		{
-			if (pPlayer->GetTeamNumber() == TeamNum)
-				isinbuyzone = true;
-		}
-		else
-			isinbuyzone = true;
-	}
+		isplayerinbuyzone = true;
 }
+
+void CBuyZone::BuyZoneThink()
+{
+	if (isplayerinbuyzone == true)
+	{
+		CBaseEntity *pPlayer = UTIL_GetNearestPlayer(GetAbsOrigin());
+		float flDist = this->GetAbsOrigin().DistTo(pPlayer->GetAbsOrigin());
+		if (flDist > 60)
+			isplayerinbuyzone = false;
+	}
+	SetNextThink(gpGlobals->curtime + 0.1f);
+}
+#endif

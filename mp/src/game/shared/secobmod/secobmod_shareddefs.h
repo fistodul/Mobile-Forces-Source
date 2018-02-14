@@ -18,6 +18,7 @@
 #define ARGG // Well Basically it lets u rotate shit with the gravity gun :P
 //#define NPCS_Talk_To_Non_Friendly_Entities // Basically NPCS that dont like each other dont talk to one another by default
 #define Fading_Ragdolls // NPCS fade away 10 secs after dying :P
+#define dynamic_speed // Players dont have the same walk&run speeds
 #define SSE // Source shader editor
 //#define Grass_Clusters // Grass clusters will always be created whenever you create a detail sprite
 //#define hitmarkers // it enables battlefield style hitmarkers :P
@@ -25,6 +26,7 @@
 #define TaskList // lets u use a vgui task list :P https://developer.valvesoftware.com/wiki/VGUI_Task_List
 #define cloak // allows the use of a magical cloak xD https://developer.valvesoftware.com/wiki/Player_and_NPC_Cloak
 #define Far_Clipping // fades particles when u get far away from them
+#define evil // Something you may or may not want to get involved with
 #define viewmodelshadow // https://developer.valvesoftware.com/wiki/Env_projectedtexture/fixes
 //#define af // add's flashlights on viewmodels, http://forums.steampowered.com/forums/showthread.php?t=848105
 #define css_muzzle_tweaks // https://developer.valvesoftware.com/wiki/Importing_CSS_Weapons_Into_HL2

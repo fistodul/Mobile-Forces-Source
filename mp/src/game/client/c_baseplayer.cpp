@@ -309,12 +309,8 @@ BEGIN_RECV_TABLE_NOBASE(C_BasePlayer, DT_LocalPlayerExclusive)
 
 		RecvPropFloat	(RECVINFO(m_flMaxspeed)),
 		
-		#ifdef SecobMod__USE_PLAYERCLASSES
-			RecvPropFloat	(RECVINFO(m_iJumpHeight)),
-#else
-#ifdef MFS
-		RecvPropFloat(RECVINFO(m_iJumpHeight)),
-#endif
+		#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
+		RecvPropFloat	(RECVINFO(m_iJumpHeight)),
 		#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
 		RecvPropInt(RECVINFO(m_BlueTime)),
@@ -398,6 +394,7 @@ BEGIN_PREDICTION_DATA( C_BasePlayer )
 	DEFINE_PRED_FIELD( m_iFOVStart, FIELD_INTEGER, 0 ),
 
 	DEFINE_PRED_FIELD( m_hVehicle, FIELD_EHANDLE, FTYPEDESC_INSENDTABLE ),
+	//#ifdef MFS
 	DEFINE_PRED_FIELD_TOL( m_flMaxspeed, FIELD_FLOAT, FTYPEDESC_INSENDTABLE, 0.5f ),
 	DEFINE_PRED_FIELD( m_iHealth, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
 	DEFINE_PRED_FIELD( m_iBonusProgress, FIELD_INTEGER, FTYPEDESC_INSENDTABLE ),
@@ -3136,19 +3133,58 @@ void CC_DumpClientSoundscapeData( const CCommand& args )
 }
 static ConCommand soundscape_dumpclient("soundscape_dumpclient", CC_DumpClientSoundscapeData, "Dumps the client's soundscape data.\n", FCVAR_CHEAT);
 
-#ifdef SecobMod__USE_PLAYERCLASSES
+/*#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
+void C_BasePlayer::SetWalkSpeed(int WalkSpeed)
+{
+	m_iWalkSpeed = WalkSpeed;
+}
+
+void C_BasePlayer::SetNormSpeed(int NormSpeed)
+{
+	m_iNormSpeed = NormSpeed;
+}
+
+void C_BasePlayer::SetSprintSpeed(int SprintSpeed)
+{
+	m_iSprintSpeed = SprintSpeed;
+}
+
+void C_BasePlayer::SetJumpHeight(float JumpHeight)
+{
+	m_iJumpHeight = JumpHeight;
+}
+
+int C_BasePlayer::GetWalkSpeed()
+{
+	return m_iWalkSpeed;
+}
+
+int C_BasePlayer::GetNormSpeed()
+{
+	return m_iNormSpeed;
+}
+
+int C_BasePlayer::GetSprintSpeed()
+{
+	return m_iSprintSpeed;
+}
+#endif //SecobMod__USE_PLAYERCLASSES
+#ifdef MFS
+void C_BasePlayer::SetProneSpeed(int ProneSpeed)
+{
+	m_iProneSpeed = ProneSpeed;
+}
+
+int C_BasePlayer::GetProneSpeed()
+{
+	return m_iProneSpeed;
+}
+#endif*/
+#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 	float C_BasePlayer::GetJumpHeight()
 	{
 	        return m_iJumpHeight;
 	}
-#else
-#ifdef MFS
-float C_BasePlayer::GetJumpHeight()
-{
-	return m_iJumpHeight;
-}
-#else
-#endif
 #endif //SecobMod__USE_PLAYERCLASSES
 
 

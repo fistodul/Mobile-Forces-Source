@@ -32,9 +32,9 @@ public:
 	float			MaxYawSpeed ( void );
 	void			WarmUpSound ( void );
 	void			AlertSound( void );
-	void			DeathSound( const CTakeDamageInfo &info );
+	void			DeathSound( /*const CTakeDamageInfo &info*/ );
 	void			WarnSound( void );
-	void			PainSound( const CTakeDamageInfo &info );
+	void			PainSound( /*const CTakeDamageInfo &info*/ ); //MFS:The only reason i think they'd do this on purpose was to confuse ppl
 	void			IdleSound( void );
 	void			StartTask( const Task_t *pTask );
 	void			RunTask( const Task_t *pTask );

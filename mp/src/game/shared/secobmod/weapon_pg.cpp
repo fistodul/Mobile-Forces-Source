@@ -862,8 +862,8 @@ CWeaponPortalGun::CWeaponPortalGun( void )
 	m_bReloadsSingly	= true;
 	m_bFiresUnderwater	= true;
 	m_bMustReload		= false;
-	#ifdef Weighted_Weaponry
-	Pg_Weight = 0;
+	#ifdef MFS
+	weight = 0;
 	#endif
 }
 

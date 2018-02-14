@@ -273,6 +273,11 @@ enum CastVote
 #define SKILL_EASY		1
 #define SKILL_MEDIUM	2
 #define SKILL_HARD		3
+#ifdef MFS
+#define SKILL_VERY_HARD		4
+#define SKILL_ULTRA_HARD	5
+#define SKILL_IMPOSIBLE		6
+#endif
 
 
 // Weapon flags
@@ -719,6 +724,9 @@ struct FireBulletsInfo_t
 		m_nFlags = 0;
 		m_pAdditionalIgnoreEnt = NULL;
 		m_flDamageForceScale = 1.0f;
+#ifdef	simulated_bullets
+		m_flLatency = 0.0f;
+#endif
 		m_bPrimaryAttack = bPrimaryAttack;
 		m_bUseServerRandomSeed = false;
 	}
@@ -734,6 +742,9 @@ struct FireBulletsInfo_t
 	int m_iPlayerDamage;	// Damage to be used instead of m_flDamage if we hit a player
 	int m_nFlags;			// See FireBulletsFlags_t
 	float m_flDamageForceScale;
+#ifdef simulated_bullets
+	float m_flLatency;
+#endif
 	CBaseEntity *m_pAttacker;
 	CBaseEntity *m_pAdditionalIgnoreEnt;
 	bool m_bPrimaryAttack;

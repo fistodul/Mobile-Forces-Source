@@ -194,8 +194,8 @@ IMPLEMENT_ACTTABLE(CWeaponTroll);
 //=========================================================//
 CWeaponTroll::CWeaponTroll( )
 {
-	#ifdef Weighted_Weaponry
-	Troll_Weight = 0;
+	#ifdef MFS
+	weight = 3;
 	#endif
 	m_bDropped = 0; // This is to make sure the Medic drops it one at a time
 	m_fMinRange1		= 0;// No minimum range. 

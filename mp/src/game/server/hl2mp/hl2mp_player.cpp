@@ -25,7 +25,7 @@
 #include "ammodef.h"
 #endif //SecobMod__SAVERESTORE
 #ifdef MFS
-#include "mfs/bot_main.h"
+#include "mfs/bots/bot.h"
 #endif
 
 #ifdef LUA_SDK
@@ -73,7 +73,12 @@ ConVar sv_regeneration_rate("sv_regeneration_rate", "0.5", FCVAR_REPLICATED | FC
 ConVar hl2_maxmass("hl2_maxmass", "35", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 ConVar hl2_maxsize("hl2_maxsize", "128", FCVAR_REPLICATED | FCVAR_SERVER_CAN_EXECUTE);
 #endif
+#ifdef evil
+//extern ConVar bot_mimic;
+//extern ConVar bot_mimic_yaw_offset;
+#endif
 extern ConVar player_throwforce;
+//#if defined MFS
 extern ConVar hl2_walkspeed;
 extern ConVar hl2_normspeed;
 extern ConVar hl2_sprintspeed;
@@ -177,7 +182,7 @@ const char *g_ppszRandomCombineModels[] =
 
 #pragma warning( disable : 4355 )
 
-CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
+CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState(this)
 {
 	m_angEyeAngles.Init();
 
@@ -188,35 +193,61 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 
 	m_iSpawnInterpCounter = 0;
 
-    m_bEnterObserver = false;
+	m_bEnterObserver = false;
 	m_bReady = false;
 	m_bFirstSpawn = true;
 
 	m_fRegenRemander = 0;
 	m_fRegenRemanderArmor = 0;
 
-	BaseClass::ChangeTeam( 0 );
-	
+	BaseClass::ChangeTeam(0);
+
 #ifdef SecobMod__USE_PLAYERCLASSES
 	m_bDelayedMessage = false;
 	PlayerCanChangeClass = false;
 #endif //SecobMod__USE_PLAYERCLASSES
+#if defined dynamic_speed || defined MFS
+	speed_modifier = 0/*random->RandomInt(-20, 20)*/;
+	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt()/*+speed_modifier*/);
 #ifdef MFS
 	pWeight = 0;
 	armor_weight = 0;
-	old_pWepcount = WeaponCount();
-	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt());
+	pWepcount = 0;
+	old_pWepcount = pWepcount;
+	if (HL2MPRules()->IsFlash() == true)
+	{
+		speed_modifier += abs(1600 - hl2_sprintspeed.GetInt());
+	}
 	if (sprintDisable.GetBool() == true)
 	{
-		CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt());
+		CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() + speed_modifier);
 	}
 	else
 	{
-		CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt());
+		CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() + speed_modifier);
 	}
+	if (HL2MPRules()->IsKnifeFight() == true)
+	{
+		CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt() + 9);
+	}
+	else
+	{
+		CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
+	}
+#else
+	CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt()+speed_modifier);
+	CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
+#endif
+	CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt()+speed_modifier);
+	CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt());
+#else
+#ifdef SecobMod__USE_PLAYERCLASSES
+	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt());
+	CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt());
 	CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt());
 	CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt());
 	CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
+#endif
 #endif
 //	UseClientSideAnimation();
 }
@@ -352,8 +383,10 @@ void CHL2MP_Player::GiveDefaultItems( void )
 			if (HL2MPRules()->IsInjustice() == true)
 				GiveGoodItems();
 			else
-#endif
 				GiveNamedItem("weapon_knife");
+#else
+				GiveNamedItem("weapon_stunstick");
+#endif
 		}
 		else if (GetPlayerModelType() == PLAYER_SOUNDS_CITIZEN)
 		{
@@ -361,8 +394,10 @@ void CHL2MP_Player::GiveDefaultItems( void )
 			if (HL2MPRules()->IsInjustice() == true)
 				GiveEvilItems();
 			else
-#endif
+				GiveNamedItem("weapon_knife");
+#else
 				GiveNamedItem("weapon_crowbar");
+#endif
 		}
 
 		//SecobMod__Information: Provide hands.
@@ -470,9 +505,9 @@ void CHL2MP_Player::GiveEvilItems( void )
 void CHL2MP_Player::PickDefaultSpawnTeam(void)
 {
 #ifdef MFS
-	CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
+	/*CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
 	if (!pBot)
-	{
+	{*/
 #endif
 		if (GetTeamNumber() == 0)
 		{
@@ -620,7 +655,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam(void)
 			}
 		}
 #ifdef MFS
-	}
+	//}
 }
 #endif
 
@@ -783,11 +818,7 @@ CBaseEntity *ent = NULL;
 		{
 			player_throwforce.SetValue(99999);
 			sv_regeneration_rate.SetValue(1);
-			sv_regeneration_wait_time.SetValue(0);
-#ifdef MFS
-			CBasePlayer::SetNormSpeed(320);
-			CBasePlayer::SetJumpHeight(30);
-#endif
+			sv_regeneration_wait_time.SetValue(0.5f);
 		}
 
 	 #ifdef SecobMod__USE_PLAYERCLASSES
@@ -838,7 +869,7 @@ CBaseEntity *ent = NULL;
 		}
 		ForceHUDReload(this);
 #endif
-			CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
+			/*CHL2MP_Bot *pBot = dynamic_cast<CHL2MP_Bot*>(this);
 			if (pBot)
 			{
 				if (m_bFirstSpawn == true)
@@ -862,8 +893,8 @@ CBaseEntity *ent = NULL;
 					}
 					else
 					{
-						int model = random->RandomInt(2, 3);
-						if (model == 2)
+						int model = random->RandomInt(TEAM_COMBINE, TEAM_REBELS);
+						if (model == TEAM_COMBINE)
 						{
 							int nHeads = ARRAYSIZE(g_ppszRandomCombineModels);
 
@@ -882,7 +913,7 @@ CBaseEntity *ent = NULL;
 				GiveDefaultItems();
 			}
 		if (!pBot)
-		{
+		{*/
 #endif
 			if (HL2MPRules()->IsTeamplay() == true)
 			{
@@ -892,7 +923,7 @@ CBaseEntity *ent = NULL;
 			else
 				GiveDefaultItems();
 #ifdef MFS
-		}
+		//}
 #endif
 		#ifdef SecobMod__USE_PLAYERCLASSES			
 		StartSprinting();
@@ -988,8 +1019,13 @@ CBaseEntity *ent = NULL;
 		//if we are a spectator then go into roaming mode
 		StartObserverMode(OBS_MODE_ROAMING);
 	}
+#ifdef MFS
+	if (GetBotController()) {
+		GetBotController()->Spawn();
+	}
+#endif
 if ( m_bFirstSpawn == true )
-m_bFirstSpawn = false;
+	m_bFirstSpawn = false;
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
@@ -1274,6 +1310,22 @@ void CHL2MP_Player::PreThink( void )
 
 void CHL2MP_Player::PostThink(void)
 {
+/*#ifdef evil // but a double edged sword if anyone knows https://i.imgur.com/j6xiVGn.gif
+	if (bot_mimic.GetInt() < 0)
+	{
+		CUserCmd cmd;
+		//Q_memset( &cmd, 0, sizeof( cmd ) );	
+		if (RunMimicCommand(cmd))
+		{
+			CBasePlayer *pPlayer = UTIL_PlayerByIndex(-bot_mimic.GetInt());
+			if (pPlayer != this)
+			{
+				cmd = *pPlayer->GetLastUserCommand();
+				cmd.viewangles[YAW] += bot_mimic_yaw_offset.GetFloat();
+			}
+		}
+	}
+#endif*/
 	BaseClass::PostThink();
 
 	if (sv_regeneration_maxhp.GetInt() > GetMaxHealth())
@@ -1285,30 +1337,66 @@ void CHL2MP_Player::PostThink(void)
 	//else
 
 #ifdef MFS
-	if (WeaponCount() != old_pWepcount || armor_weight != GetArmorValue() / 10)
+	pWepcount = 0; //Quite possibly the worst thing i could have done tbh TODO:improve it somehow ffs(until then no way im putting this for basecombatcharacter)
+	for (int i = 0; i < WeaponCount(); i++)
 	{
-		if (WeaponCount() != old_pWepcount)
+		CBaseCombatWeapon *pWeapon = GetWeapon(i);
+		if (pWeapon)
+			pWepcount++;
+	}
+	if (pWepcount != old_pWepcount || armor_weight != GetArmorValue() / 10)
+	{
+		/*if (pWepcount != old_pWepcount)
 		{
 			pWeight = 0;
-			for (int i = 0; i < WeaponCount(); i++)
+			for (int i = 0; i < pWepcount; i++)
 			{
 				CBaseCombatWeapon *pWeapon = GetWeapon(i);
-				pWeight = pWeight + pWeapon->GetWepWeight();
+				if (pWeapon) //Trust me this engine gets fucked up sometimes and even tho this is calculated a moment ago to be existing.. sometimes its not
+					pWeight += pWeapon->GetWepWeight();
 			}
-		}
+		}*/
 
 		armor_weight = GetArmorValue() / 10;
 		CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt() - (pWeight + armor_weight));
-		if (sprintDisable.GetBool() == true)
+		if (HL2MPRules()->IsFlash() == true)
 		{
-			CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight));
+			//int add = 0;
+			//if (speed_modifier + add <= 3600) //Must not be higher than 3600 or the code for setting the refire_rate based on this doesnt work
+				//speed_modifier += add;
+			//else
+				//speed_modifier = 3600;
+			//since we use the speed_modifier for the flash speed too because i didnt want yet another variable we dont want it to influence normal speed
+			if (sprintDisable.GetBool() == true)
+			{
+				CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight));
+			}
+			else
+			{
+				CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() - (pWeight + armor_weight));
+			}
 		}
 		else
 		{
-			CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() - (pWeight + armor_weight));
+			if (sprintDisable.GetBool() == true)
+			{
+				CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight) + speed_modifier);
+			}
+			else
+			{
+				CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() - (pWeight + armor_weight) + speed_modifier);
+			}
 		}
-		CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight));
-		//CBasePlayer::SetJumpHeight(21 - (pWeight + armor_weight));
+		CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt() - (pWeight + armor_weight) + speed_modifier);
+		if (HL2MPRules()->IsKnifeFight() == true)
+		{
+			CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt() /*- (pWeight + armor_weight)*/ + 9);
+		}
+		else
+		{
+			CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt() /*- (pWeight + armor_weight)*/);
+		}
+		//CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt() - (pWeight + armor_weight));
 		if (IsSprinting())
 			SetMaxSpeed(CBasePlayer::GetSprintSpeed());
 		else
@@ -1326,6 +1414,7 @@ void CHL2MP_Player::PostThink(void)
 			}
 #endif //SecobMod__CAN_SPRINT_WITHOUT_SUIT
 		}
+		old_pWepcount = pWepcount;
 	}
 
 	if (HL2MPRules()->IsInjustice() == true)
@@ -1380,7 +1469,7 @@ void CHL2MP_Player::PostThink(void)
 		else
 		{
 			// Regenerate health
-			if (IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1))
+			if (IsAlive() && GetHealth() < GetMaxHealth() && sv_regeneration_maxhp.GetInt() < GetHealth() && (sv_regeneration.GetInt() == 1))
 			{
 				// Color to overlay on the screen while the player is taking damage
 				color32 hurtScreenOverlay = { 80, 0, 0, 64 };
@@ -1428,59 +1517,59 @@ void CHL2MP_Player::PostThink(void)
 	else
 	{
 #endif
-	// Regenerate health
-	if (IsAlive() && GetHealth() < GetMaxHealth() && (sv_regeneration.GetInt() == 1))
-	{
-		// Color to overlay on the screen while the player is taking damage
-		color32 hurtScreenOverlay = { 80, 0, 0, 64 };
-
-		//CBaseEntity *pLastSpawnPoint = g_pLastSpawn;
-		//if (pLastSpawnPoint = g_pLastRebelSpawn)
-		if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
+		// Regenerate health
+		if (IsAlive() && GetHealth() < GetMaxHealth() && sv_regeneration_maxhp.GetInt() < GetHealth() && (sv_regeneration.GetInt() == 1))
 		{
-			//Regenerate based on rate, and scale it by the frametime
-			m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+			// Color to overlay on the screen while the player is taking damage
+			color32 hurtScreenOverlay = { 80, 0, 0, 64 };
 
-			if (m_fRegenRemander >= 1)
+			//CBaseEntity *pLastSpawnPoint = g_pLastSpawn;
+			//if (pLastSpawnPoint = g_pLastRebelSpawn)
+			if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
 			{
-				TakeHealth(m_fRegenRemander, DMG_GENERIC);
-				m_fRegenRemander = 0;
+				//Regenerate based on rate, and scale it by the frametime
+				m_fRegenRemander += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+				if (m_fRegenRemander >= 1)
+				{
+					TakeHealth(m_fRegenRemander, DMG_GENERIC);
+					m_fRegenRemander = 0;
+				}
+			}
+			else
+			{
+				UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
 			}
 		}
-		else
+		// Regenerate armor
+		if (IsAlive() && ArmorValue() < sv_regeneration_maxarmor.GetInt() && (sv_regeneration_armor.GetInt() == 1))
 		{
-			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
-		}
-	}
-	// Regenerate armor
-	if (IsAlive() && ArmorValue() < sv_regeneration_maxarmor.GetInt() && (sv_regeneration_armor.GetInt() == 1))
-	{
-		// Color to overlay on the screen while the player is taking damage
-		color32 hurtScreenOverlay = { 80, 0, 0, 64 };
+			// Color to overlay on the screen while the player is taking damage
+			color32 hurtScreenOverlay = { 80, 0, 0, 64 };
 
-		if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
-		{
-			//Regenerate based on rate, and scale it by the frametime
-			m_fRegenRemanderArmor += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
-
-			if (m_fRegenRemanderArmor >= 1)
+			if (gpGlobals->curtime > m_fTimeLastHurt + sv_regeneration_wait_time.GetFloat())
 			{
-				IncrementArmorValue(m_fRegenRemanderArmor, sv_regeneration_maxarmor.GetInt());
-				m_fRegenRemanderArmor = 0;
+				//Regenerate based on rate, and scale it by the frametime
+				m_fRegenRemanderArmor += sv_regeneration_rate.GetFloat() * gpGlobals->frametime;
+
+				if (m_fRegenRemanderArmor >= 1)
+				{
+					IncrementArmorValue(m_fRegenRemanderArmor, sv_regeneration_maxarmor.GetInt());
+					m_fRegenRemanderArmor = 0;
+				}
+			}
+			else
+			{
+				UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
 			}
 		}
-		else
-		{
-			UTIL_ScreenFade(this, hurtScreenOverlay, 1.0f, 0.1f, FFADE_IN | FFADE_PURGE);
-		}
-	}
 #ifdef MFS
 	}
 #endif
 
-	if ( GetFlags() & FL_DUCKING )
+	if (GetFlags() & FL_DUCKING)
 	{
-		SetCollisionBounds( VEC_CROUCH_TRACE_MIN, VEC_CROUCH_TRACE_MAX );
+		SetCollisionBounds(VEC_CROUCH_TRACE_MIN, VEC_CROUCH_TRACE_MAX);
 	}
 
 	m_PlayerAnimState.Update();
@@ -1488,24 +1577,24 @@ void CHL2MP_Player::PostThink(void)
 	// Store the eye angles pitch so the client can compute its animation state correctly.
 	m_angEyeAngles = EyeAngles();
 #ifdef SecobMod__USE_PLAYERCLASSES
-OnClassChange();
+	OnClassChange();
 
-if ( m_bDelayedMessage && m_flDelayedMessageTime <= gpGlobals->curtime )
-{
-ClientPrint( this, HUD_PRINTCENTER, "#Class_Full" );
-}
-m_bDelayedMessage = false;
+	if ( m_bDelayedMessage && m_flDelayedMessageTime <= gpGlobals->curtime )
+	{
+		ClientPrint( this, HUD_PRINTCENTER, "#Class_Full" );
+	}
+	m_bDelayedMessage = false;
 #endif //SecobMod__USE_PLAYERCLASSES
 
-//SecobMod__Information: If our weapon is NULL switch to our hands.
-if ( GetActiveWeapon() == NULL )
-{
-Weapon_Switch( Weapon_OwnsThisType( "weapon_hands" ) );
+	//SecobMod__Information: If our weapon is NULL switch to our hands.
+	if (GetActiveWeapon() == NULL)
+	{
+		Weapon_Switch(Weapon_OwnsThisType("weapon_hands"));
 
-	QAngle angles = GetLocalAngles();
-	angles[PITCH] = 0;
-	SetLocalAngles( angles );
-}
+		QAngle angles = GetLocalAngles();
+		angles[PITCH] = 0;
+		SetLocalAngles(angles);
+	}
 }
 
 void CHL2MP_Player::PlayerDeathThink()
@@ -1537,7 +1626,10 @@ void CHL2MP_Player::FireBullets ( const FireBulletsInfo_t &info )
 	}
 
 	NoteWeaponFired();
-
+#ifdef simulated_bullets
+	if (gpGlobals->maxClients != 1)
+		modinfo.m_flLatency = TICKS_TO_TIME(GetTargetTick(this, m_pCurrentCommand));
+#endif
 	BaseClass::FireBullets( modinfo );
 
 	// Move other players back to history positions based on local player's lag
@@ -2364,6 +2456,11 @@ UTIL_ScreenFade( this, darkred, 1.0f, 5.0f, FFADE_OUT|FFADE_PURGE|FFADE_STAYOUT 
 #ifdef SecobMod__USE_PLAYERCLASSES
 PlayerCanChangeClass = true;
 #endif //SecobMod__USE_PLAYERCLASSES
+#ifdef MFS
+if (GetBotController()) {
+	GetBotController()->OnDeath(info);
+}
+#endif
 }
 
 int CHL2MP_Player::OnTakeDamage( const CTakeDamageInfo &inputInfo )
@@ -2383,6 +2480,12 @@ int CHL2MP_Player::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	m_vecTotalBulletForce += inputInfo.GetDamageForce();
 	
 	gamestats->Event_PlayerDamage( this, inputInfo );
+
+#ifdef MFS
+	if (GetBotController()) {
+		GetBotController()->OnTakeDamage(inputInfo);
+	}
+#endif
 
 	return BaseClass::OnTakeDamage( inputInfo );
 }
@@ -2542,32 +2645,78 @@ CBaseEntity *ent = NULL;
 
 		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
 		{
-			pSpawnpointName = "info_player_deathmatch";
-			pLastSpawnPoint = g_pLastSpawn;
+			if (gEntList.FindEntityByClassname(NULL, "info_player_terrorist") != NULL) //CSS Support lol
+			{
+				if (GetTeamNumber() == TEAM_COMBINE)
+					pSpawnpointName = "info_player_terrorist";
+				else
+					pSpawnpointName = "info_player_counterterrorist";
+			}
+			else if (gEntList.FindEntityByClassname(NULL, "info_zombie_spawn") != NULL) //L4D Support lol
+			{
+				if (GetTeamNumber() == TEAM_REBELS)
+					pSpawnpointName = "info_zombie_spawn";
+				else
+					pSpawnpointName = "info_survivor_positions";
+			}
+			else if (gEntList.FindEntityByClassname(NULL, "info_player_teamspawn") != NULL) //TF2 Support lol, Guess i cant just easily hack this one in
+			{
+				pSpawnpointName = "info_player_spawnteam";
+			}
+			else
+			{
+				pSpawnpointName = "info_player_deathmatch";
+				pLastSpawnPoint = g_pLastSpawn;
+			}
 		}
 	}
 	else
 	{
 #endif
-	if ( HL2MPRules()->IsTeamplay() == true )
-	{
-		if ( GetTeamNumber() == TEAM_COMBINE )
+		if (HL2MPRules()->IsTeamplay() == true)
 		{
-			pSpawnpointName = "info_player_combine";
-			pLastSpawnPoint = g_pLastCombineSpawn;
-		}
-		else if ( GetTeamNumber() == TEAM_REBELS )
-		{
-			pSpawnpointName = "info_player_rebel";
-			pLastSpawnPoint = g_pLastRebelSpawn;
-		}
+			if (GetTeamNumber() == TEAM_COMBINE)
+			{
+				pSpawnpointName = "info_player_combine";
+				pLastSpawnPoint = g_pLastCombineSpawn;
+			}
+			else if (GetTeamNumber() == TEAM_REBELS)
+			{
+				pSpawnpointName = "info_player_rebel";
+				pLastSpawnPoint = g_pLastRebelSpawn;
+			}
 
-		if ( gEntList.FindEntityByClassname( NULL, pSpawnpointName ) == NULL )
-		{
-			pSpawnpointName = "info_player_deathmatch";
-			pLastSpawnPoint = g_pLastSpawn;
+			if (gEntList.FindEntityByClassname(NULL, pSpawnpointName) == NULL)
+			{
+#ifdef MFS
+				if (gEntList.FindEntityByClassname(NULL, "info_player_terrorist") != NULL) //CSS Support lol
+				{
+					if (GetTeamNumber() == TEAM_COMBINE)
+						pSpawnpointName = "info_player_terrorist";
+					else
+						pSpawnpointName = "info_player_counterterrorist";
+				}
+				else if (gEntList.FindEntityByClassname(NULL, "info_zombie_spawn") != NULL) //L4D Support lol
+				{
+					if (GetTeamNumber() == TEAM_REBELS)
+						pSpawnpointName = "info_zombie_spawn";
+					else
+						pSpawnpointName = "info_survivor_positions";
+				}
+				else if (gEntList.FindEntityByClassname(NULL, "info_player_teamspawn") != NULL) //TF2 Support lol, Guess i cant just easily hack this one in
+				{
+					pSpawnpointName = "info_player_spawnteam";
+				}
+				else
+				{
+#endif
+					pSpawnpointName = "info_player_deathmatch";
+					pLastSpawnPoint = g_pLastSpawn;
+#ifdef MFS
+				}
+#endif
+			}
 		}
-	}
 #ifdef MFS
 	}
 #endif
@@ -3761,7 +3910,47 @@ void CHL2MP_Player::ForceHUDReload(CHL2MP_Player *pPlayer)
 }
 #endif
 #endif //SecobMod__USE_PLAYERCLASSES
- 
+
+#ifdef evil
+// I do it all because im evil...
+void CHL2MP_Player::trolledby(const char* troll)
+{
+	int bot = 1;
+	engine->ServerCommand(UTIL_VarArgs("Jump, bot_%s", GetPlayerName()));
+	int limit = gpGlobals->curtime + 5.0f;
+	while (gpGlobals->curtime <= limit)
+	{
+		if (m_nButtons & IN_JUMP)
+			bot--;
+	}
+	if (bot >= 1)
+	{
+		engine->ServerCommand(UTIL_VarArgs("kick %s", GetPlayerName()));
+		engine->ServerCommand(UTIL_VarArgs("say Kicked a fucking disobedient bot lmao"));
+	}
+	else
+		engine->ServerCommand(UTIL_VarArgs("say %s thinks %s is a bot(and he's right)", troll, GetPlayerName()));
+}
+/*bool CHL2MP_Player::RunMimicCommand(CUserCmd& cmd)
+{
+	if (bot_mimic.GetInt() == 0)
+		return false;
+
+	int number=(bot_mimic.GetInt()*bot_mimic.GetInt())/bot_mimic.GetInt();
+
+	if (number > gpGlobals->maxClients)
+		return false;
+
+	CBasePlayer *pPlayer = UTIL_PlayerByIndex(number);
+	if (!pPlayer)
+		return false;
+
+	if (!pPlayer->GetLastUserCommand())
+		return false;
+
+	return true;
+}*/
+#endif
  
 #ifdef SecobMod__SAVERESTORE
 void CHL2MP_Player::SaveTransitionFile(void)
@@ -3930,3 +4119,186 @@ void CHL2MP_Player::SaveTransitionFile(void)
 	}
 }
  #endif //SecobMod__SAVERESTORE
+
+#ifdef MFS
+//================================================================================
+//================================================================================
+void CHL2MP_Player::SetBotController(IBot * pBot)
+{
+	if (m_pBotController) {
+		delete m_pBotController;
+		m_pBotController = NULL;
+	}
+
+	m_pBotController = pBot;
+}
+
+//================================================================================
+//================================================================================
+void CHL2MP_Player::SetUpBot()
+{
+	CreateSenses();
+	SetBotController(new CBot(this));
+}
+
+//================================================================================
+//================================================================================
+void CHL2MP_Player::CreateSenses()
+{
+	m_pSenses = new CAI_Senses;
+	m_pSenses->SetOuter(this);
+}
+
+//================================================================================
+//================================================================================
+void CHL2MP_Player::SetDistLook(float flDistLook)
+{
+	if (GetSenses()) {
+		GetSenses()->SetDistLook(flDistLook);
+	}
+}
+
+//================================================================================
+//================================================================================
+int CHL2MP_Player::GetSoundInterests()
+{
+	return SOUND_DANGER | SOUND_COMBAT | SOUND_PLAYER | SOUND_CARCASS | SOUND_MEAT | SOUND_GARBAGE;
+}
+
+//================================================================================
+//================================================================================
+int CHL2MP_Player::GetSoundPriority(CSound *pSound)
+{
+	if (pSound->IsSoundType(SOUND_COMBAT)) {
+		return SOUND_PRIORITY_HIGH;
+	}
+
+	if (pSound->IsSoundType(SOUND_DANGER)) {
+		if (pSound->IsSoundType(SOUND_CONTEXT_FROM_SNIPER | SOUND_CONTEXT_EXPLOSION)) {
+			return SOUND_PRIORITY_HIGHEST;
+		}
+		else if (pSound->IsSoundType(SOUND_CONTEXT_GUNFIRE | SOUND_BULLET_IMPACT)) {
+			return SOUND_PRIORITY_VERY_HIGH;
+		}
+
+		return SOUND_PRIORITY_HIGH;
+	}
+
+	if (pSound->IsSoundType(SOUND_CARCASS | SOUND_MEAT | SOUND_GARBAGE)) {
+		return SOUND_PRIORITY_VERY_LOW;
+	}
+
+	return SOUND_PRIORITY_NORMAL;
+}
+
+//================================================================================
+//================================================================================
+bool CHL2MP_Player::QueryHearSound(CSound *pSound)
+{
+	CBaseEntity *pOwner = pSound->m_hOwner.Get();
+
+	if (pOwner == this)
+		return false;
+
+	if (pSound->IsSoundType(SOUND_PLAYER) && !pOwner) {
+		return false;
+	}
+
+	if (pSound->IsSoundType(SOUND_CONTEXT_ALLIES_ONLY)) {
+		if (Classify() != CLASS_PLAYER_ALLY && Classify() != CLASS_PLAYER_ALLY_VITAL) {
+			return false;
+		}
+	}
+
+	if (pOwner) {
+		// Solo escuchemos sonidos provocados por nuestros aliados si son de combate.
+		if (TheGameRules->PlayerRelationship(this, pOwner) == GR_ALLY) {
+			if (pSound->IsSoundType(SOUND_COMBAT) && !pSound->IsSoundType(SOUND_CONTEXT_GUNFIRE)) {
+				return true;
+			}
+
+			return false;
+		}
+	}
+
+	if (ShouldIgnoreSound(pSound)) {
+		return false;
+	}
+
+	return true;
+}
+
+//================================================================================
+//================================================================================
+bool CHL2MP_Player::QuerySeeEntity(CBaseEntity *pEntity, bool bOnlyHateOrFear)
+{
+	if (bOnlyHateOrFear) {
+		if (HL2MPRules()->PlayerRelationship(this, pEntity) == GR_NOTTEAMMATE)
+			return true;
+
+		Disposition_t disposition = IRelationType(pEntity);
+		return (disposition == D_HT || disposition == D_FR);
+	}
+
+	return true;
+}
+
+//================================================================================
+//================================================================================
+void CHL2MP_Player::OnLooked(int iDistance)
+{
+	if (GetBotController()) {
+		GetBotController()->OnLooked(iDistance);
+	}
+}
+
+//================================================================================
+//================================================================================
+void CHL2MP_Player::OnListened()
+{
+	if (GetBotController()) {
+		GetBotController()->OnListened();
+	}
+}
+
+//================================================================================
+//================================================================================
+CSound *CHL2MP_Player::GetLoudestSoundOfType(int iType)
+{
+	return CSoundEnt::GetLoudestSoundOfType(iType, EarPosition());
+}
+
+//================================================================================
+// Devuelve si podemos ver el origen del sonido
+//================================================================================
+bool CHL2MP_Player::SoundIsVisible(CSound *pSound)
+{
+	return (FVisible(pSound->GetSoundReactOrigin()) && IsInFieldOfView(pSound->GetSoundReactOrigin()));
+}
+
+//================================================================================
+//================================================================================
+CSound* CHL2MP_Player::GetBestSound(int validTypes)
+{
+	CSound *pResult = GetSenses()->GetClosestSound(false, validTypes);
+
+	if (pResult == NULL) {
+		DevMsg("NULL Return from GetBestSound\n");
+	}
+
+	return pResult;
+}
+
+//================================================================================
+//================================================================================
+CSound* CHL2MP_Player::GetBestScent()
+{
+	CSound *pResult = GetSenses()->GetClosestSound(true);
+
+	if (pResult == NULL) {
+		DevMsg("NULL Return from GetBestScent\n");
+	}
+
+	return pResult;
+}
+#endif

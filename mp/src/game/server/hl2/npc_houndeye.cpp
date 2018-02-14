@@ -690,8 +690,11 @@ void CNPC_Houndeye::SonicAttack ( void )
 	m_pEnergyWave->SetAbsVelocity( 100*vFacingDir );
 
 	CBaseEntity *pEntity = NULL;
+	//MFS
+	CEntitySphereQuery sphere(GetAbsOrigin(), HOUNDEYE_MAX_ATTACK_RADIUS);
+	pEntity = sphere.GetCurrentEntity();
 	// iterate on all entities in the vicinity.
-	for ( CEntitySphereQuery sphere( GetAbsOrigin(), HOUNDEYE_MAX_ATTACK_RADIUS ); pEntity = sphere.GetCurrentEntity(); sphere.NextEntity() )
+	for ( sphere; pEntity; sphere.NextEntity() )
 	{
 		if (pEntity->Classify()	== CLASS_HOUNDEYE)
 		{
@@ -802,7 +805,9 @@ void CNPC_Houndeye::StartTask( const Task_t *pTask )
 			Vector vTargetPos = GetEnemyLKP();
 			vTargetPos.z	= GetFloorZ(vTargetPos);
 
-			if (GetNavigator()->SetRadialGoal(vTargetPos, random->RandomInt(50,500), 90, 175, m_bLoopClockwise))
+			if (GetNavigator()->SetRadialGoal(vTargetPos, vTargetPos, 90, 175, m_bLoopClockwise, false))
+			//FixMe lmao
+			//if (GetNavigator()->SetRadialGoal(vTargetPos, random->RandomInt(50,500), 90, 175, m_bLoopClockwise))
 			{
 				TaskComplete();
 				return;

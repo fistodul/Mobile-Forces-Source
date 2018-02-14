@@ -26,8 +26,8 @@ BEGIN_DATADESC( CGrenadeEnergy )
 	DEFINE_FIELD( m_flLaunchTime, FIELD_TIME ),		
 
 	// Function pointers
-	DEFINE_FUNCTION( Animate ),
-	DEFINE_FUNCTION( GrenadeEnergyTouch ),
+	//DEFINE_FUNCTION( Animate ), //FixMe
+	//DEFINE_FUNCTION( GrenadeEnergyTouch ),
 
 END_DATADESC()
 
@@ -41,8 +41,8 @@ void CGrenadeEnergy::Spawn( void )
 
 	SetModel( "Models/weapons/w_energy_grenade.mdl" );
 
-	SetUse( DetonateUse );
-	SetTouch( GrenadeEnergyTouch );
+	SetUse(&CGrenadeEnergy::DetonateUse);
+	SetTouch(&CGrenadeEnergy::GrenadeEnergyTouch);
 	SetNextThink( gpGlobals->curtime + 0.1f );
 
 	m_flDamage			= sk_dmg_energy_grenade.GetFloat();
@@ -75,7 +75,7 @@ void CGrenadeEnergy::Shoot( CBaseEntity* pOwner, const Vector &vStart, Vector vV
 	pEnergy->SetAbsVelocity( vVelocity );
 	pEnergy->SetOwnerEntity( pOwner );
 
-	pEnergy->SetThink ( Animate );
+	pEnergy->SetThink(&CGrenadeEnergy::Animate);
 	pEnergy->SetNextThink( gpGlobals->curtime + 0.1f );
 
 	pEnergy->m_nRenderMode = kRenderTransAdd;

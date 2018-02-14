@@ -252,10 +252,17 @@ public:
 		{
 			iLevel = 1;
 		}
+#ifdef MFS
+		else if ( iLevel > 6 )
+		{
+			iLevel = 6; 
+		}
+#else
 		else if ( iLevel > 3 )
 		{
 			iLevel = 3; 
 		}
+#endif
 
 		g_iSkillLevel = iLevel;
 

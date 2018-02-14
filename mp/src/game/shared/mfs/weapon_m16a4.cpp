@@ -166,8 +166,8 @@ CWeaponM16A4::CWeaponM16A4(void)
   m_bFiresUnderwater = false;
   m_bDelayedAttack = false;
   m_flDelayedAttackTime = 0.0f;
-  #ifdef Weighted_Weaponry
-  Weight = 5;
+  #ifdef MFS
+  weight = 3;
   #endif
 }
  

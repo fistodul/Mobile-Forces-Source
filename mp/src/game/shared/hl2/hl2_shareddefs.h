@@ -14,6 +14,9 @@
 
 #include "const.h"
 
+#ifdef MFS
+//DECLARE_LOGGING_CHANNEL(LOG_BOTS);
+#endif
 
 //--------------------------------------------------------------------------
 // Collision groups

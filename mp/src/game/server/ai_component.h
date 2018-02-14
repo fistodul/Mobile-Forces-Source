@@ -28,18 +28,36 @@ class CAI_Component
 {
 	DECLARE_CLASS_NOBASE( CAI_Component );
 protected:
-	CAI_Component( CAI_BaseNPC *pOuter = NULL )
+	CAI_Component(CAI_BaseNPC *pOuter = NULL)
+#ifdef MFS
+	;
+#else
 	 : m_pOuter(pOuter)
 	{
 	}
+#endif
 
 	virtual ~CAI_Component() {}
 
 public:
-	virtual void SetOuter( CAI_BaseNPC *pOuter )	{ m_pOuter = pOuter; }
+#ifdef MFS
+	virtual void SetOuter( CBaseCombatCharacter *pOuter )	{ m_pOuter = pOuter; }
 
+	CAI_BaseNPC *		GetOuter();
+    const CAI_BaseNPC *	GetOuter() const;
+
+    CBaseCombatCharacter *GetCharacter() {
+		return m_pOuter;
+	}
+
+	const CBaseCombatCharacter *GetCharacter() const {
+		return m_pOuter;
+	}
+#else
+	virtual void SetOuter( CAI_BaseNPC *pOuter )	{ m_pOuter = pOuter; }
 	CAI_BaseNPC *		GetOuter() 			{ return m_pOuter; }
 	const CAI_BaseNPC *	GetOuter() const 	{ return m_pOuter; }
+#endif
 
 	Hull_t				GetHullType() const;
 	float 				GetHullWidth() const;
@@ -138,7 +156,11 @@ public:
 	}
 
 private:
+#ifdef MFS
+	CBaseCombatCharacter *m_pOuter;
+#else
 	CAI_BaseNPC *m_pOuter;
+#endif
 };
 
 //-----------------------------------------------------------------------------

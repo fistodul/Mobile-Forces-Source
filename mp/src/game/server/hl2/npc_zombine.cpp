@@ -25,7 +25,7 @@
 #include "movevars_shared.h"
 #include "IEffects.h"
 #include "props.h"
-#include "physics_npc_solver.h"]
+#include "physics_npc_solver.h"
 #include "hl2_player.h"
 #include "hl2_gamerules.h"
 
@@ -73,7 +73,9 @@ int ACT_ZOMBINE_GRENADE_FLINCH_EAST;
 
 int AE_ZOMBINE_PULLPIN;
 
+#ifndef MFS
 extern bool IsAlyxInDarknessMode();
+#endif
 
 ConVar	sk_zombie_soldier_health( "sk_zombie_soldier_health","0");
 
@@ -617,12 +619,16 @@ bool CNPC_Zombine::AllowedToSprint( void )
 	int iChance = SPRINT_CHANCE_VALUE;
 
 	//Secobmod FixMe ?? also changed to HL2MPRules
-	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( UTIL_GetNearestPlayer(GetAbsOrigin() );
+	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( UTIL_GetNearestPlayer(GetAbsOrigin() ));
 	//CHL2MP_Player *pPlayer = dynamic_cast<CHL2MP_Player *>( UTIL_GetNearestPlayer(GetAbsOrigin() );
 
 	if ( pPlayer )
 	{
+#ifdef MFS
 		if ( HL2MPRules()->IsAlyxInDarknessMode() && pPlayer->FlashlightIsOn() == false )
+#else
+		if (IsAlyxInDarknessMode() && pPlayer->FlashlightIsOn() == false)
+#endif
 		{
 			iChance = SPRINT_CHANCE_VALUE_DARKNESS;
 		}

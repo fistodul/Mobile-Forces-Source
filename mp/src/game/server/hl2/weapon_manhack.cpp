@@ -24,7 +24,7 @@ class CWeapon_Manhack : public CBaseHLCombatWeapon
 public:
 	DECLARE_CLASS( CWeapon_Manhack, CBaseHLCombatWeapon );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	void			Spawn( void );
 	void			Precache( void );
@@ -36,8 +36,8 @@ public:
 	float			m_flBladeYaw;
 };
 
-IMPLEMENT_SERVERCLASS_ST( CWeapon_Manhack, DT_Weapon_Manhack)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST( CWeapon_Manhack, DT_Weapon_Manhack)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_manhack, CWeapon_Manhack );
 PRECACHE_WEAPON_REGISTER(weapon_manhack);

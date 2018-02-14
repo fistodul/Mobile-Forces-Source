@@ -1,10 +1,17 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #include "gameui2_interface.h"
 #include "basepanel.h"
 
-//#include "mainmenu.h"
-
 #include "vgui/IVGui.h"
-#include "vgui/ISurface.h"
+// MFS #include "vgui/ISurface.h"
 #include "vgui/ILocalize.h"
 
 #include "tier0/icommandline.h"
@@ -12,30 +19,37 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static BasePanel* g_pBasePanel;
+ConVar gameui2_background_music_duck("gameui2_background_music_duck", "0.15", FCVAR_ARCHIVE);
+
+static BasePanel* gBasePanel;
 BasePanel* GetBasePanel()
 {
-	return g_pBasePanel;
+	return gBasePanel;
 }
 
-BasePanel::BasePanel(vgui::VPANEL parent) : BaseClass(NULL)
+BasePanel::BasePanel(vgui::VPANEL Parent) : BaseClass(nullptr)
 {
-	SetParent(parent);
+	SetParent(Parent);
 	SetPaintBorderEnabled(false);
 	SetPaintBackgroundEnabled(false);
 	SetKeyBoardInputEnabled(true);
 	SetMouseInputEnabled(true);
 	SetProportional(false);
-	SetVisible(true);
+	SetVisible(false);
 	SetPostChildPaintEnabled(true);
+	
+	BackgroundMusic = "Interface.Music";
+	BackgroundMusicGUID = 0;
 
-	m_backgroundMusic = "Interface.Music";
-	m_nBackgroundMusicGUID = 0;
-
+#ifdef MFS
+	g_pVGuiLocalize->AddFile("resource/localization/gameui2_%language%.txt");
+#else
 	g_pVGuiLocalize->AddFile("resource2/localization/gameui2_%language%.txt");
+#endif
 
-	MainMenuHelper* pMMHelper = new MainMenuHelper(new MainMenu(NULL), NULL);
-	pMMHelper->SetParent(this);
+	MainMenuPanel = new MainMenu(nullptr);
+	MainMenuHelperPanel = new MainMenuHelper(MainMenuPanel, nullptr);
+	MainMenuHelperPanel->SetParent(this);
 }
 
 vgui::VPANEL BasePanel::GetVPanel()
@@ -47,9 +61,9 @@ void BasePanel::Create()
 {
 	ConColorMsg(Color(0, 148, 255, 255), "Trying to create BasePanel...\n");
 
-	if (g_pBasePanel == nullptr)
+	if (gBasePanel == nullptr)
 	{
-		g_pBasePanel = new BasePanel(GameUI2().GetRootPanel());
+		gBasePanel = new BasePanel(GetGameUI2().GetRootPanel());
 		ConColorMsg(Color(0, 148, 255, 255), "BasePanel created.\n");
 	}
 	else
@@ -60,84 +74,82 @@ void BasePanel::Create()
 
 void BasePanel::OnThink()
 {
-	BaseClass::OnThink();
-
-	SetBounds(0, 0, GameUI2().GetViewport().x, GameUI2().GetViewport().y);
+	SetBounds(0, 0, GetGameUI2().GetViewport().x, GetGameUI2().GetViewport().y);
 
 	if (!CommandLine()->FindParm("-nostartupsound"))
 	{
-		if (!IsBackgroundMusicPlaying())
+		if (IsBackgroundMusicPlaying() == false)
 		{
-			if (GameUI2().IsInBackgroundLevel() || !GameUI2().IsInLevel())
+			if (GetGameUI2().IsInBackgroundLevel() == true || GetGameUI2().IsInLevel() == false)
 				StartBackgroundMusic(1.0f);
 		}
-		else if (IsBackgroundMusicPlaying())
+		else if (IsBackgroundMusicPlaying() == true)
 		{
-			if (!GameUI2().IsInBackgroundLevel() || GameUI2().IsInLevel())
+			if (GetGameUI2().IsInBackgroundLevel() == false || GetGameUI2().IsInLevel() == true)
 				ReleaseBackgroundMusic();
 		}
 	}
+
+	BaseClass::OnThink();
 }
 
 void BasePanel::PaintBlurMask()
 {
 	BaseClass::PaintBlurMask();
 
-	if (GameUI2().IsInLevel())
+	if (GetGameUI2().IsInLevel() == true)
 	{
-		vgui::surface()->DrawSetColor(Color(128, 128, 128, 60));
-		vgui::surface()->DrawFilledRect(0, 0, GameUI2().GetViewport().x, GameUI2().GetViewport().y);
+		vgui::surface()->DrawSetColor(Color(255, 255, 255, 255));
+		vgui::surface()->DrawFilledRect(0, 0, GetWide(), GetTall());
 	}
 }
 
 bool BasePanel::IsBackgroundMusicPlaying()
 {
-	if (m_backgroundMusic.IsEmpty())
+	if (BackgroundMusic.IsEmpty() == true)
 		return false;
 
-	if (m_nBackgroundMusicGUID == 0)
+	if (BackgroundMusicGUID == 0)
 		return false;
 
-	return enginesound->IsSoundStillPlaying(m_nBackgroundMusicGUID);
+	return GetGameUI2().GetEngineSound()->IsSoundStillPlaying(BackgroundMusicGUID);
 }
 
-#define BACKGROUND_MUSIC_DUCK 0.15f
-
-bool BasePanel::StartBackgroundMusic(float fVol)
+bool BasePanel::StartBackgroundMusic(float Volume)
 {
-	if (IsBackgroundMusicPlaying())
+	if (IsBackgroundMusicPlaying() == true)
 		return true;
 
-	if (m_backgroundMusic.IsEmpty())
+	if (BackgroundMusic.IsEmpty() == true)
 		return false;
 
-	CSoundParameters params;
-	if (!soundemitterbase->GetParametersForSound(m_backgroundMusic.Get(), params, GENDER_NONE))
+	CSoundParameters SoundParameters;
+	if (GetGameUI2().GetSoundEmitterSystemBase()->GetParametersForSound(BackgroundMusic.Get(), SoundParameters, GENDER_NONE) == false)
 		return false;
 
-	enginesound->EmitAmbientSound(params.soundname, params.volume * fVol, params.pitch);
-	m_nBackgroundMusicGUID = enginesound->GetGuidForLastSoundEmitted();
+	GetGameUI2().GetEngineSound()->EmitAmbientSound(SoundParameters.soundname, SoundParameters.volume * Volume, SoundParameters.pitch);
+	BackgroundMusicGUID = GetGameUI2().GetEngineSound()->GetGuidForLastSoundEmitted();
 
-	return (m_nBackgroundMusicGUID != 0);
+	return (BackgroundMusicGUID != 0);
 }
 
-void BasePanel::UpdateBackgroundMusicVolume(float fVol)
+void BasePanel::UpdateBackgroundMusicVolume(float Volume)
 {
-	if (!IsBackgroundMusicPlaying())
+	if (IsBackgroundMusicPlaying() == false)
 		return;
 
-	enginesound->SetVolumeByGuid(m_nBackgroundMusicGUID, BACKGROUND_MUSIC_DUCK * fVol);
+	GetGameUI2().GetEngineSound()->SetVolumeByGuid(BackgroundMusicGUID, gameui2_background_music_duck.GetFloat() * Volume);
 }
 
 void BasePanel::ReleaseBackgroundMusic()
 {
-	if (m_backgroundMusic.IsEmpty())
+	if (BackgroundMusic.IsEmpty() == true)
 		return;
 
-	if (m_nBackgroundMusicGUID == 0)
+	if (BackgroundMusicGUID == 0)
 		return;
 
-	enginesound->StopSoundByGuid(m_nBackgroundMusicGUID);
+	GetGameUI2().GetEngineSound()->StopSoundByGuid(BackgroundMusicGUID);
 
-	m_nBackgroundMusicGUID = 0;
+	BackgroundMusicGUID = 0;
 }

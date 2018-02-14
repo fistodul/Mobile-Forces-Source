@@ -167,8 +167,8 @@ CWeaponMiniGun::CWeaponMiniGun( void )
   m_bDelayedAttack = false;
   m_flDelayedAttackTime = 0.0f;
   ROFI = ROF;
-  #ifdef Weighted_Weaponry
-  Minigun_Weight = 5;
+  #ifdef MFS
+  weight = 5;
   #endif
 }
  

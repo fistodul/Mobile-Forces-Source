@@ -1,61 +1,91 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #pragma once
 
 #include "igameui2.h"
 
 #include "cdll_int.h"
-#include "engine/IEngineSound.h"
+#include "engine/ienginesound.h"
 #include "ienginevgui.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "ivrenderview.h"
 #include "view_shared.h"
 #include "GameUI/IGameUI.h"
+#include "vgui_controls/AnimationController.h"
+#include "VGuiMatSurface/IMatSystemSurface.h"
+#include "materialsystem/imaterialsystem.h"
 
-class IVEngineClient;
-class IEngineSound;
-class IEngineVGui;
-class ISoundEmitterSystemBase;
-class IVRenderView;
-class IGameUI;
+extern IMatSystemSurface *g_pMatSystemSurface;
 
-class CGameUI2 : public IGameUI2
+class GameUI2 : public IGameUI2
 {
 public:
-	virtual void		Initialize(CreateInterfaceFn appFactory);
-	virtual void		Shutdown();
+	virtual void Initialize(CreateInterfaceFn AppFactory);
+	virtual void Shutdown();
 
-	virtual void		OnInitialize();
-	virtual void		OnShutdown();
-	virtual void		OnUpdate();
-	virtual void		OnLevelInitializePreEntity();
-	virtual void		OnLevelInitializePostEntity();
-	virtual void		OnLevelShutdown();
+	virtual void OnInitialize();
+	virtual void OnShutdown();
+	virtual void OnUpdate();
+	virtual void OnLevelInitializePreEntity();
+	virtual void OnLevelInitializePostEntity();
+	virtual void OnLevelShutdown();
 
-	virtual bool		IsInLevel();
-	virtual bool		IsInBackgroundLevel();
-	virtual bool		IsInMultiplayer();
-	virtual bool		IsInLoading();
+	virtual bool IsInLevel();
+	virtual bool IsInBackgroundLevel();
+	virtual bool IsInMultiplayer();
+	virtual bool IsInLoading();
 
-	virtual Vector2D	GetViewport();
-	virtual float		GetTime();
-	virtual vgui::VPANEL GetRootPanel();
-	virtual	vgui::VPANEL GetVPanel();
-	virtual CViewSetup	GetView();
-	virtual VPlane*		GetFrustum();
-	virtual ITexture*	GetMaskTexture();
-	virtual wchar_t*	GetLocalizedString(const char* text);
+	virtual void SetView(const CViewSetup& ViewSetup);
+	virtual void SetFrustum(VPlane* Plane);
+	virtual void SetMaskTexture(ITexture* Texture);
+	virtual void SetRenderContext(IMatRenderContext* Context);
 
-	virtual void		SetView(const CViewSetup& view);
-	virtual void		SetFrustum(VPlane* frustum);
-	virtual void		SetMaskTexture(ITexture* maskTexture);
+	virtual wchar_t* ConvertToLocalizedString(const char* Text);
+
+	virtual Vector2D GetViewport() const;
+	virtual vgui::VPANEL GetRootPanel() const;
+	virtual	vgui::VPANEL GetVPanel() const;
+
+	virtual vgui::AnimationController* GetAnimationController() const { return AnimationController; }
+
+	virtual float GetTime() const { return Plat_FloatTime(); }
+	virtual CViewSetup GetView() const { return View; }
+	virtual VPlane* GetFrustum() const { return Frustum; }
+	virtual ITexture* GetMaskTexture() const { return MaskTexture; }
+	virtual IMatRenderContext* GetRenderContext() const { return RenderContext; }
+
+	virtual IVEngineClient* GetEngineClient() const { return EngineClient; }
+	virtual IEngineSound* GetEngineSound() const { return EngineSound; }
+	virtual IEngineVGui* GetEngineVGui() const { return EngineVGui; }
+	virtual ISoundEmitterSystemBase* GetSoundEmitterSystemBase() const { return SoundEmitterSystemBase; }
+	virtual IVRenderView* GetRenderView() const { return RenderView; }
+	virtual IMaterialSystem* GetMaterialSystem() const { return MaterialSystem; }
+	virtual IMatSystemSurface* GetMaterialSystemSurface() const { return MaterialSystemSurface; }
+	virtual IGameUI* GetGameUI() const { return GameUI; }
 
 private:
-	CViewSetup			m_pView;
-	VPlane*				m_pFrustum;
-	ITexture*			m_pMaskTexture;
+	CViewSetup View;
+	VPlane* Frustum;
+	ITexture* MaskTexture;
+	IMatRenderContext* RenderContext;
+
+	vgui::AnimationController* AnimationController;
+
+	IVEngineClient* EngineClient;
+	IEngineSound* EngineSound;
+	IEngineVGui* EngineVGui;
+	ISoundEmitterSystemBase* SoundEmitterSystemBase;
+	IVRenderView* RenderView;
+	IMaterialSystem* MaterialSystem;
+	IMatSystemSurface* MaterialSystemSurface;
+	IGameUI* GameUI;
 };
 
-extern CGameUI2& GameUI2();
-extern IVEngineClient* engine;
-extern IEngineSound* enginesound;
-extern IEngineVGui* enginevgui;
-extern ISoundEmitterSystemBase* soundemitterbase;
+extern GameUI2& GetGameUI2();

@@ -487,6 +487,13 @@ inline float DistanceToRay( const Vector &pos, const Vector &rayStart, const Vec
 class IntervalTimer
 {
 public:
+#ifdef MFS
+	float GetStartTime() const
+	{
+		return m_timestamp;
+	}
+#endif
+
 	IntervalTimer( void )
 	{
 		m_timestamp = -1.0f;

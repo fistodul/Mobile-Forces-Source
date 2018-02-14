@@ -156,7 +156,14 @@ void C_Func_Dust::OnDataChanged( DataUpdateType_t updateType )
 
 	if( updateType == DATA_UPDATE_CREATED )
 	{
+#ifdef MFS
+		if (m_DustFlags == DUSTFLAGS_SCALEMOTES)
+#endif
 		m_hMaterial = m_Effect.GetPMaterial( "particle/sparkles" );
+#ifdef MFS
+		else
+			m_hMaterial = m_Effect.GetPMaterial( "particle/sparkles" );
+#endif
 
 		m_Effect.SetSortOrigin( WorldSpaceCenter( ) );
 

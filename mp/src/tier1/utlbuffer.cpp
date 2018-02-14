@@ -16,6 +16,7 @@
 #include <limits.h>
 #include "tier1/strtools.h"
 #include "tier1/characterset.h"
+#include "../../game/shared/secobmod/secobmod_shareddefs.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

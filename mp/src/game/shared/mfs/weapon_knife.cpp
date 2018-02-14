@@ -81,13 +81,30 @@ public:
 	float		GetRange( void )		{ return KNIFE_RANGE; }
 
 		float		GetFireRate(void)		{ 
+#ifdef MFS
 #ifdef CLIENT_DLL
 			CHL2MPRules *pRules = HL2MPRules();
+			if (pRules->IsFlash() == true)
+#else
+			if (HL2MPRules()->IsFlash() == true)
+#endif
+			{
+				CHL2MP_Player *pOwner = ToHL2MPPlayer(GetOwner());
+				return KNIFE_REFIRE - KNIFE_REFIRE * (pOwner->speed_modifier / 2000 - pOwner->speed_modifier / 4000); //An insane Refire Rate
+			}
+#endif
+#ifdef CLIENT_DLL
+#ifdef MFS
+			else
+#endif
 			if (pRules->IsKnifeFight() == true)
 #else
+#ifdef MFS
+			else
+#endif
 			if (HL2MPRules()->IsKnifeFight() == true)
 #endif
-				return KNIFE_REFIRE/2;
+				return KNIFE_REFIRE*0.7;
 			else
 				return KNIFE_REFIRE;
 		}

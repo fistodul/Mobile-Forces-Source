@@ -46,7 +46,7 @@ class CWeaponAR1 : public CHLMachineGun
 public:
 	DECLARE_CLASS( CWeaponAR1, CHLMachineGun );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	CWeaponAR1();
 
@@ -96,8 +96,8 @@ public:
 	DECLARE_ACTTABLE();
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponAR1, DT_WeaponAR1)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponAR1, DT_WeaponAR1)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_ar1, CWeaponAR1 );
 PRECACHE_WEAPON_REGISTER(weapon_ar1);

@@ -28,6 +28,9 @@
 #include "particlemgr.h"
 #include "c_vguiscreen.h"
 #include "c_team.h"
+#ifdef simulated_bullets
+#include "bullet_manager.h"
+#endif
 #include "c_rumble.h"
 #include "fmtstr.h"
 #include "achievementmgr.h"
@@ -1149,6 +1152,10 @@ void ClientModeShared::LevelInit( const char *newmap )
 	// Reset any player explosion/shock effects
 	CLocalPlayerFilter filter;
 	enginesound->SetPlayerDSP( filter, 0, true );
+#ifdef simulated_bullets
+	g_pBulletManager = (C_BulletManager *)CreateEntityByName("bullet_manager");
+	ClientEntityList().AddNonNetworkableEntity(g_pBulletManager);
+#endif
 }
 
 //-----------------------------------------------------------------------------

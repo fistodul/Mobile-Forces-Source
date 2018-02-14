@@ -146,7 +146,8 @@ ConVar	sk_max_sniper_round		( "sk_max_sniper_round","0", FCVAR_REPLICATED);
 //ConVar	sk_max_slam				( "sk_max_slam","0", FCVAR_REPLICATED);
 //ConVar	sk_max_tripwire			( "sk_max_tripwire","0", FCVAR_REPLICATED);
 
-//ConVar	sk_plr_dmg_molotov		( "sk_plr_dmg_molotov","0", FCVAR_REPLICATED);
+// MFS
+ConVar	sk_plr_dmg_molotov		( "sk_plr_dmg_molotov","50", FCVAR_REPLICATED);
 //ConVar	sk_npc_dmg_molotov		( "sk_npc_dmg_molotov","0", FCVAR_REPLICATED);
 //ConVar	sk_max_molotov			( "sk_max_molotov","0", FCVAR_REPLICATED);
 
@@ -159,8 +160,9 @@ ConVar	sk_max_hopwire			( "sk_max_hopwire", "3", FCVAR_REPLICATED);
 ConVar	sk_max_striderbuster	( "sk_max_striderbuster", "3", FCVAR_REPLICATED);
 #endif
 
-//ConVar sk_plr_dmg_brickbat	( "sk_plr_dmg_brickbat","0", FCVAR_REPLICATED);
-//ConVar sk_npc_dmg_brickbat	( "sk_npc_dmg_brickbat","0", FCVAR_REPLICATED);
+// MFS
+ConVar sk_plr_dmg_brickbat	( "sk_plr_dmg_brickbat","40", FCVAR_REPLICATED);
+ConVar sk_npc_dmg_brickbat	( "sk_npc_dmg_brickbat","40", FCVAR_REPLICATED);
 //ConVar sk_max_brickbat		( "sk_max_brickbat","0", FCVAR_REPLICATED);
 
 ConVar	sk_plr_dmg_smg1_grenade	( "sk_plr_dmg_smg1_grenade","0", FCVAR_REPLICATED);
@@ -1669,6 +1671,20 @@ void CHalfLife2::AdjustPlayerDamageTaken( CTakeDamageInfo *pInfo )
 	case SKILL_HARD:
 		pInfo->ScaleDamage( sk_dmg_take_scale3.GetFloat() );
 		break;
+
+#ifdef MFS
+	case SKILL_VERY_HARD:
+		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
+		break;
+
+	case SKILL_ULTRA_HARD:
+		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
+		break;
+
+	case SKILL_IMPOSIBLE:
+		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
+		break;
+#endif
 	}
 }
 

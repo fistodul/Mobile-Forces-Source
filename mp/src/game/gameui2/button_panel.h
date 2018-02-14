@@ -1,119 +1,110 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #pragma once
 
 #include "vgui2d/button2d.h"
-#include "vgui_controls/AnimationController.h"
-
-enum ButtonState
-{
-	Out,
-	Over,
-	Pressed,
-	Released
-};
 
 class Button_Panel : public Button2D
 {
 	DECLARE_CLASS_SIMPLE(Button_Panel, Button2D);
 
 public:
-	Button_Panel(vgui::Panel* parent, vgui::Panel* pActionSignalTarget = NULL, const char* pCmd = NULL);
+	Button_Panel(vgui::Panel* Parent, vgui::Panel* ActionSignalTarget = nullptr, const char* Command = NULL);
 
-	virtual void		Init();
-	virtual void		ApplySchemeSettings(vgui::IScheme* pScheme);
-	virtual void 		OnThink();
-	virtual void 		DrawButton();
-	virtual void 		DrawButton_Blur();
-	virtual void 		DrawText();
-	virtual void 		DrawDescription();
-	virtual void 		Paint();
-	virtual void 		PaintBlurMask();
-	virtual void		Animations();
+	virtual void Initialize();
+	virtual void ApplySchemeSettings(vgui::IScheme* Scheme);
+	virtual void OnThink();
+	virtual void DrawButton();
+	virtual void DrawButton_Blur();
+	virtual void DrawText();
+	virtual void DrawDescription();
+	virtual void Paint();
+	virtual void PaintBlurMask();
+	virtual void Animations();
 
-	virtual void		AdditionalCursorCheck();
-	virtual void		OnCursorEntered();
-	virtual void		OnCursorExited();
-	virtual void		OnMouseReleased(vgui::MouseCode code);
-	virtual void		OnMousePressed(vgui::MouseCode code);
+	virtual void OnMouseReleased(vgui::MouseCode MouseCode);
+	virtual void OnMousePressed(vgui::MouseCode MouseCode);
 
-	virtual void		SetButtonText(const char* text);
-	virtual void		SetButtonDescription(const char* description);
-
-	int32				GetWidth(){ return m_fWidth; }
-	int32				GetHeight(){ return m_fHeight; }
+	virtual void SetButtonText(const char* Text);
+	virtual void SetButtonDescription(const char* Description);
 
 private:
-	ButtonState			m_sButtonState;
-	ButtonState			m_sButtonStateOld;
-	vgui::AnimationController* m_pAnimController;
-	const char* 		m_pCmd;
-	wchar_t*			m_ButtonText;
-	wchar_t*			m_ButtonDescription;
-	int32				m_iPriority;
-	int32				m_iTextPositionX;
-	int32				m_iTextPositionY;
-	int32				m_iTextSizeX;
-	int32				m_iTextSizeY;
+	ButtonState PreviousState;
+	wchar_t* ButtonText;
+	wchar_t* ButtonDescription;
+	int32 Priority;
+	int32 TextPositionX;
+	int32 TextPositionY;
+	int32 TextSizeX;
+	int32 TextSizeY;
 
-	CPanelAnimationVar(float, m_fWidth, "m_fWidth", "340");
-	CPanelAnimationVar(float, m_fHeight, "m_fHeight", "0");
-	CPanelAnimationVar(Color, m_cBackground, "m_cBackground", "0 0 0 0");
-	CPanelAnimationVar(Color, m_cBackgroundOutline, "m_cBackgroundOutline", "0 0 0 0");
-	CPanelAnimationVar(Color, m_cText, "m_cText", "0 0 0 0");
-	CPanelAnimationVar(Color, m_cDescription, "m_cDescription", "0 0 0 0");
-	CPanelAnimationVar(Color, m_cBackgroundBlurAlpha, "m_cBackgroundBlurAlpha", "0 0 0 0");
+	CPanelAnimationVar(float, Width, "Width", "0");
+	CPanelAnimationVar(float, Height, "Height", "0");
+	CPanelAnimationVar(Color, BackgroundColor, "BackgroundColor", "0 0 0 0");
+	CPanelAnimationVar(Color, BackgroundOutlineColor, "BackgroundOutlineColor", "0 0 0 0");
+	CPanelAnimationVar(Color, TextColor, "TextColor", "0 0 0 0");
+	CPanelAnimationVar(Color, DescriptionColor, "DescriptionColor", "0 0 0 0");
+	CPanelAnimationVar(Color, BackgroundBlurAlpha, "BackgroundBlurAlpha", "0 0 0 0");
 
-	float				m_fWidthOut;
-	float				m_fWidthOver;
-	float				m_fWidthPressed;
-	float				m_fWidthReleased;
+	float WidthOut;
+	float WidthOver;
+	float WidthPressed;
+	float WidthReleased;
 
-	float				m_fHeightOut;
-	float				m_fHeightOver;
-	float				m_fHeightPressed;
-	float				m_fHeightReleased;
+	float HeightOut;
+	float HeightOver;
+	float HeightPressed;
+	float HeightReleased;
 
-	float				m_fTextOffsetX;
-	float				m_fTextOffsetY;
+	float TextOffsetX;
+	float TextOffsetY;
 
-	float				m_fDescriptionOffsetX;
-	float				m_fDescriptionOffsetY;
+	float DescriptionOffsetX;
+	float DescriptionOffsetY;
 
-	bool				m_bDescriptionHideOut;
-	bool				m_bDescriptionHideOver;
-	bool				m_bDescriptionHidePressed;
-	bool				m_bDescriptionHideReleased;
+	bool bDescriptionHideOut;
+	bool bDescriptionHideOver;
+	bool bDescriptionHidePressed;
+	bool bDescriptionHideReleased;
 
-	float				m_fAnimationWidth;
-	float				m_fAnimationHeight;
-	float				m_fAnimationBackground;
-	float				m_fAnimationText;
-	float				m_fAnimationDescription;
+	float AnimationWidth;
+	float AnimationHeight;
+	float AnimationBackground;
+	float AnimationText;
+	float AnimationDescription;
 
-	Color				m_cBackgroundOut;
-	Color				m_cBackgroundOver;
-	Color				m_cBackgroundPressed;
-	Color				m_cBackgroundReleased;
+	Color BackgroundColorOut;
+	Color BackgroundColorOver;
+	Color BackgroundColorPressed;
+	Color BackgroundColorReleased;
 
-	Color				m_cBackgroundOutlineOut;
-	Color				m_cBackgroundOutlineOver;
-	Color				m_cBackgroundOutlinePressed;
-	Color				m_cBackgroundOutlineReleased;
+	Color BackgroundOutlineColorOut;
+	Color BackgroundOutlineColorOver;
+	Color BackgroundOutlineColorPressed;
+	Color BackgroundOutlineColorReleased;
 
-	Color				m_cTextOut;
-	Color				m_cTextOver;
-	Color				m_cTextPressed;
-	Color				m_cTextReleased;
+	Color TextColorOut;
+	Color TextColorOver;
+	Color TextColorPressed;
+	Color TextColorReleased;
 
-	Color				m_cDescriptionOut;
-	Color				m_cDescriptionOver;
-	Color				m_cDescriptionPressed;
-	Color				m_cDescriptionReleased;
+	Color DescriptionColorOut;
+	Color DescriptionColorOver;
+	Color DescriptionColorPressed;
+	Color DescriptionColorReleased;
 
-	bool				m_bBackgroundBlurOut;
-	bool				m_bBackgroundBlurOver;
-	bool				m_bBackgroundBlurPressed;
-	bool				m_bBackgroundBlurReleased;
+	bool bBackgroundBlurOut;
+	bool bBackgroundBlurOver;
+	bool bBackgroundBlurPressed;
+	bool bBackgroundBlurReleased;
 
-	vgui::HFont			m_fTextFont;
-	vgui::HFont			m_fDescriptionFont;
+	vgui::HFont TextFont;
+	vgui::HFont DescriptionFont;
 };

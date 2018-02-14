@@ -1,5 +1,6 @@
 particles_manifest
 {
+// change into custom_particle_xxx
 	"file"		"particles/error.pcf"
 	"file"		"particles/explosion.pcf"
 	"file"		"particles/blood_impact.pcf"
@@ -48,6 +49,7 @@ particles_manifest
 	"file"		"particles/impact_fx.pcf"		
 	
 	"file"		"particles/portalgun.pcf"
+	"file"		"particles/combine_fx.pcf"
 
 	"file"		"particles/portal_projectile.pcf"
 	//portal_1_badsurface	shot onto bad surface

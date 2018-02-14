@@ -17,7 +17,7 @@ class CAssassinSmoke : public CBaseParticleEntity
 {
 public:
 	DECLARE_CLASS( CAssassinSmoke, CBaseParticleEntity );
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	static CAssassinSmoke* CreateAssassinSmoke (const Vector &pos);
 };

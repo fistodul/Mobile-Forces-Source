@@ -36,7 +36,7 @@ public:
 
 	CWeaponIRifle();
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 	DECLARE_CLASS( CWeaponIRifle, CBaseHLCombatWeapon );
 
 	void	Precache( void );
@@ -56,8 +56,8 @@ public:
 	DECLARE_ACTTABLE();
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponIRifle, DT_WeaponIRifle)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponIRifle, DT_WeaponIRifle)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_irifle, CWeaponIRifle );
 PRECACHE_WEAPON_REGISTER(weapon_irifle);

@@ -30,8 +30,8 @@
 // #include "mathlib/noise.h"
 
 // this file contains the definitions for the message ID constants (eg ADVISOR_MSG_START_BEAM etc)
-//Secobmod
-#include "../../npc_advisor_shared.h"
+//Secobmod, MFS this whole file
+#include "../../shared/episodic/npc_advisor_shared.h"
 	#include "ai_default.h"			
 	#include "ai_task.h"			
 	#include "npcevent.h"			
@@ -48,18 +48,18 @@
 // Skill settings.
 //
 ConVar sk_advisor_health( "sk_advisor_health", "0" );
-ConVar advisor_use_impact_table("advisor_use_impact_table","1",FCVAR_NONE,"If true, advisor will use her custom impact damage table.");
+ConVar advisor_use_impact_table("advisor_use_impact_table", "1", FCVAR_REPLICATED, "If true, advisor will use her custom impact damage table.");
 
 ConVar sk_advisor_melee_dmg("sk_advisor_melee_dmg", "0");
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
-ConVar advisor_throw_velocity( "advisor_throw_velocity", "1100" );
-ConVar advisor_throw_rate( "advisor_throw_rate", "4" );					// Throw an object every 4 seconds.
-ConVar advisor_throw_warn_time( "advisor_throw_warn_time", "1.0" );		// Warn players one second before throwing an object.
-ConVar advisor_throw_lead_prefetch_time ( "advisor_throw_lead_prefetch_time", "0.66", FCVAR_NONE, "Save off the player's velocity this many seconds before throwing.");
-ConVar advisor_throw_stage_distance("advisor_throw_stage_distance","180.0",FCVAR_NONE,"Advisor will try to hold an object this far in front of him just before throwing it at you. Small values will clobber the shield and be very bad.");
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
+ConVar advisor_throw_velocity( "advisor_throw_velocity", "1100", FCVAR_REPLICATED );
+ConVar advisor_throw_rate("advisor_throw_rate", "4", FCVAR_REPLICATED);					// Throw an object every 4 seconds.
+ConVar advisor_throw_warn_time("advisor_throw_warn_time", "1.0", FCVAR_REPLICATED);		// Warn players one second before throwing an object.
+ConVar advisor_throw_lead_prefetch_time("advisor_throw_lead_prefetch_time", "0.66", FCVAR_REPLICATED, "Save off the player's velocity this many seconds before throwing.");
+ConVar advisor_throw_stage_distance("advisor_throw_stage_distance", "180.0", FCVAR_REPLICATED, "Advisor will try to hold an object this far in front of him just before throwing it at you. Small values will clobber the shield and be very bad.");
 // ConVar advisor_staging_num("advisor_staging_num","1",FCVAR_NONE,"Advisor will queue up this many objects to throw at Gordon.");
-ConVar advisor_throw_clearout_vel("advisor_throw_clearout_vel","200",FCVAR_NONE,"TEMP: velocity with which advisor clears things out of a throwable's way");
+ConVar advisor_throw_clearout_vel("advisor_throw_clearout_vel", "200", FCVAR_REPLICATED, "TEMP: velocity with which advisor clears things out of a throwable's way");
 // ConVar advisor_staging_duration("
 
 // how long it will take an object to get hauled to the staging point
@@ -78,7 +78,7 @@ ConVar advisor_throw_clearout_vel("advisor_throw_clearout_vel","200",FCVAR_NONE,
 #define ADVISOR_MELEE_LEFT                                        ( 3 )		
 #define ADVISOR_MELEE_RIGHT                                        ( 4 )
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 //
 // Custom schedules.
 //
@@ -155,8 +155,8 @@ class CNPC_Advisor : public CAI_BaseNPC
 {
 	DECLARE_CLASS( CNPC_Advisor, CAI_BaseNPC );
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
-	DECLARE_SERVERCLASS();
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
+	//DECLARE_SERVERCLASS();
 #endif
 
 public:
@@ -179,7 +179,7 @@ public:
 	
 	virtual Class_T Classify();
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	virtual int GetSoundInterests();
 	virtual int SelectSchedule();
 	virtual void StartTask( const Task_t *pTask );
@@ -196,7 +196,7 @@ public:
 	virtual void IdleSound();
 	virtual void AlertSound();
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	virtual bool QueryHearSound( CSound *pSound );
 	virtual void GatherConditions( void );
 
@@ -212,7 +212,7 @@ public:
 	virtual const impactdamagetable_t &GetPhysicsImpactDamageTable( void );
 	COutputInt   m_OnHealthIsNow;
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 
 	DEFINE_CUSTOM_AI;
 
@@ -236,7 +236,7 @@ public:
 
 protected:
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	Vector GetThrowFromPos( CBaseEntity *pEnt ); ///< Get the position in which we shall hold an object prior to throwing it
 #endif
 
@@ -244,7 +244,7 @@ protected:
 	void StartLevitatingObjects( void );
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	// void PurgeThrownObjects(); ///< clean out the recently thrown objects array
 	void AddToThrownObjects(CBaseEntity *pEnt); ///< add to the recently thrown objects array
 
@@ -266,7 +266,7 @@ protected:
 	EHANDLE m_hLevitateGoal2;
 	EHANDLE m_hLevitationArea;
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	// EHANDLE m_hThrowEnt;
 	CUtlVector<EHANDLE>	m_hvStagedEnts;
 	CUtlVector<EHANDLE>	m_hvStagingPositions; 
@@ -293,7 +293,7 @@ protected:
 	string_t m_iszLevitationArea;
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	string_t m_iszStagingEntities;
 	string_t m_iszPriorityEntityGroupName;
 
@@ -328,7 +328,7 @@ BEGIN_DATADESC( CNPC_Advisor )
 	DEFINE_FIELD( m_hLevitateGoal2, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_hLevitationArea, FIELD_EHANDLE ),
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	DEFINE_KEYFIELD( m_iszStagingEntities, FIELD_STRING, "staging_ent_names"), ///< entities named this constitute the positions to which we stage objects to be thrown
 	DEFINE_KEYFIELD( m_iszPriorityEntityGroupName, FIELD_STRING, "priority_grab_name"),
 	
@@ -370,10 +370,10 @@ END_DATADESC()
 
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
-IMPLEMENT_SERVERCLASS_ST(CNPC_Advisor, DT_NPC_Advisor)
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
+/*IMPLEMENT_SERVERCLASS_ST(CNPC_Advisor, DT_NPC_Advisor)
 
-END_SEND_TABLE()
+END_SEND_TABLE()*/
 #endif
 
 
@@ -420,7 +420,7 @@ void CNPC_Advisor::Spawn()
 }
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 //-----------------------------------------------------------------------------
 // comparison function for qsort used below. Compares "StagingPriority" keyfield
 //-----------------------------------------------------------------------------
@@ -464,7 +464,7 @@ void CNPC_Advisor::Activate()
 
 	m_levitateCallback.m_Advisor = this;
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	// load the staging positions
 	CBaseEntity *pEnt = NULL;
 	m_hvStagingPositions.EnsureCapacity(6); // reserve six
@@ -577,7 +577,7 @@ bool CNPC_Advisor::CanLevitateEntity( CBaseEntity *pEntity, int minMass, int max
 			!DidThrow(pEntity) */ );
 }
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 // find an object to throw at the player and start the warning on it. Return object's 
 // pointer if we got something. Otherwise, return NULL if nothing left to throw. Will
 // always leave the prepared object at the head of m_hvStagedEnts
@@ -1144,7 +1144,7 @@ static bool AdvisorCanPickObject(CBasePlayer *pPlayer, CBaseEntity *pEnt)
 }
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 //-----------------------------------------------------------------------------
 // Choose an object to throw.
 // param bRequireInView : if true, only accept objects that are in the player's fov.
@@ -1535,7 +1535,7 @@ int	CNPC_Advisor::OnTakeDamage( const CTakeDamageInfo &info )
 
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	//-----------------------------------------------------------------------------			
 	// Purpose: For innate melee attack			
 	// Input :			
@@ -1682,7 +1682,7 @@ void CNPC_Advisor::Precache()
 	
 	PrecacheModel( STRING( GetModelName() ) );
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 	PrecacheModel( "sprites/lgtning.vmt" );
 #endif
 
@@ -1738,7 +1738,7 @@ int CNPC_Advisor::DrawDebugTextOverlays()
 }
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 //-----------------------------------------------------------------------------
 // Determines which sounds the advisor cares about.
 //-----------------------------------------------------------------------------
@@ -2126,7 +2126,7 @@ const impactdamagetable_t &CNPC_Advisor::GetPhysicsImpactDamageTable( void )
 
 
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 //-----------------------------------------------------------------------------
 //
 // Schedules

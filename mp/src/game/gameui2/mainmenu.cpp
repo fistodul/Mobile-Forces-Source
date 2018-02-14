@@ -1,3 +1,12 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #include "gameui2_interface.h"
 #include "basepanel.h"
 #include "mainmenu.h"
@@ -12,53 +21,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-MainMenu::MainMenu(vgui::Panel* parent) : BaseClass(NULL, "MainMenu")
-{
-	vgui::HScheme Scheme = vgui::scheme()->LoadSchemeFromFile("resource2/schememainmenu.res", "SchemeMainMenu");
-	SetScheme(Scheme);
-
-	SetProportional(false);
-	SetPaintBorderEnabled(false);
-	SetPaintBackgroundEnabled(false);
-	SetDeleteSelfOnClose(true);
-	SetSizeable(false);
-	SetMoveable(false);
-	SetCloseButtonVisible(false);
-	SetMenuButtonVisible(false);
-	Activate();
-
-	m_bFocused = true;
-
-	m_logoLeft = GameUI2().GetLocalizedString("#GameUI2_LogoLeft");
-	m_logoRight = GameUI2().GetLocalizedString("#GameUI2_LogoRight");
-
-	CreateMenu("resource2/mainmenu.res");
-}
-
-void MainMenu::CreateMenu(const char* menu)
-{
-	KeyValues* datafile = new KeyValues("MainMenu");
-	datafile->UsesEscapeSequences(true);
-	if (datafile->LoadFromFile(g_pFullFileSystem, menu))
-	{
-		for (KeyValues* dat = datafile->GetFirstSubKey(); dat != NULL; dat = dat->GetNextKey())
-		{
-			Button_MainMenu* button = new Button_MainMenu(this, this, dat->GetString("command", ""));
-			button->SetPriority(atoi(dat->GetString("priority", "1")));
-			button->SetButtonText(dat->GetString("text", "no text"));
-			button->SetButtonDescription(dat->GetString("description", "no description"));
-
-			const char* specifics = dat->GetString("specifics", "shared");
-			if (Equals(specifics, "ingame"))
-				m_pButtonsInGame.AddToTail(button);
-			else if (Equals(specifics, "mainmenu"))
-				m_pButtonsBackground.AddToTail(button);
-			else if (Equals(specifics, "shared"))
-				m_pButtonsShared.AddToTail(button);
-		}
-	}
-}
-
 int32 __cdecl ButtonsPositionBottom(Button_MainMenu* const* s1, Button_MainMenu* const* s2)
 {
 	return ((*s1)->GetPriority() > (*s2)->GetPriority());
@@ -69,129 +31,203 @@ int32 __cdecl ButtonsPositionTop(Button_MainMenu* const* s1, Button_MainMenu* co
 	return ((*s1)->GetPriority() < (*s2)->GetPriority());
 }
 
-void MainMenu::ApplySchemeSettings(vgui::IScheme* pScheme)
+MainMenu::MainMenu(vgui::Panel* Parent) : BaseClass(nullptr, "MainMenu")
 {
-	BaseClass::ApplySchemeSettings(pScheme);
+#ifdef MFS
+	vgui::HScheme Scheme = vgui::scheme()->LoadSchemeFromFile("resource/schememainmenu.res", "SchemeMainMenu");
+#else
+	vgui::HScheme Scheme = vgui::scheme()->LoadSchemeFromFile("resource2/schememainmenu.res", "SchemeMainMenu");
+#endif
+	SetScheme(Scheme);
 
-	m_fButtonsSpace = atof(pScheme->GetResourceString("MainMenu.Buttons.Space"));
-	m_fButtonsOffsetX = atof(pScheme->GetResourceString("MainMenu.Buttons.OffsetX"));
-	m_fButtonsOffsetY = atof(pScheme->GetResourceString("MainMenu.Buttons.OffsetY"));
-	m_fLogoOffsetX = atof(pScheme->GetResourceString("MainMenu.Logo.OffsetX"));
-	m_fLogoOffsetY = atof(pScheme->GetResourceString("MainMenu.Logo.OffsetY"));
-	m_cLogoLeft = GetSchemeColor("MainMenu.Logo.Left", pScheme);
-	m_cLogoRight = GetSchemeColor("MainMenu.Logo.Right", pScheme);
-	m_bLogoAttachToMenu = atoi(pScheme->GetResourceString("MainMenu.Logo.AttachToMenu"));
-	m_fLogoFont = pScheme->GetFont("MainMenu.Logo.Font");
+	SetProportional(false);
+	SetPaintBorderEnabled(false);
+	SetPaintBackgroundEnabled(false);
+	SetDeleteSelfOnClose(true);
+	SetSizeable(false);
+	SetMoveable(false);
+	SetCloseButtonVisible(false);
+	SetMenuButtonVisible(false);
+
+	bIsVisible = false;
+
+	LogoLeftText = GetGameUI2().ConvertToLocalizedString("#GameUI2_LogoLeft");
+	LogoRightText = GetGameUI2().ConvertToLocalizedString("#GameUI2_LogoRight");
+
+#ifdef MFS
+	CreateMenu("resource/mainmenu.res");
+#else
+	CreateMenu("resource2/mainmenu.res");
+#endif
+}
+
+void MainMenu::CreateMenu(const char* MenuScript)
+{
+	KeyValues* DataFile = new KeyValues("MainMenu");
+	DataFile->UsesEscapeSequences(true);
+	if (DataFile->LoadFromFile(g_pFullFileSystem, MenuScript) == true)
+	{
+		for (KeyValues* Data = DataFile->GetFirstSubKey(); Data != nullptr; Data = Data->GetNextKey())
+		{
+			Button_MainMenu* Button = new Button_MainMenu(this, this, Data->GetString("command", ""));
+			Button->SetPriority(atoi(Data->GetString("priority", "1")));
+			Button->SetButtonText(Data->GetString("text", "no text"));
+			Button->SetButtonDescription(Data->GetString("description", "no description"));
+
+			const char* Specifics = Data->GetString("specifics", "shared");
+			if (Q_stristr(Specifics, "ingame"))
+			{
+				ButtonsInGame.AddToTail(Button);
+			}
+#ifdef MFS
+			else if (Q_stristr(Specifics, "ingamesp"))
+			{
+				ButtonsInGameSP.AddToTail(Button);
+			}
+			else if (Q_stristr(Specifics, "ingamemp"))
+			{
+				ButtonsInGameMP.AddToTail(Button);
+			}
+#endif
+			else if (Q_stristr(Specifics, "mainmenu"))
+			{
+				ButtonsBackground.AddToTail(Button);
+			}
+			else if (Q_stristr(Specifics, "shared"))
+			{
+				ButtonsShared.AddToTail(Button);
+			}
+		}
+	}
+}
+
+void MainMenu::ApplySchemeSettings(vgui::IScheme* Scheme)
+{
+	BaseClass::ApplySchemeSettings(Scheme);
+
+	ConColorMsg(Color(0, 148, 0, 255), "Loading main menu scheme...\n");
+	
+	ButtonsSpace = atof(Scheme->GetResourceString("MainMenu.Buttons.Space"));
+	ButtonsOffsetX = atof(Scheme->GetResourceString("MainMenu.Buttons.OffsetX"));
+	ButtonsOffsetY = atof(Scheme->GetResourceString("MainMenu.Buttons.OffsetY"));
+	LogoOffsetX = atof(Scheme->GetResourceString("MainMenu.Logo.OffsetX"));
+	LogoOffsetY = atof(Scheme->GetResourceString("MainMenu.Logo.OffsetY"));
+	LogoLeftColor = GetSchemeColor("MainMenu.Logo.Left", Scheme);
+	LogoRightColor = GetSchemeColor("MainMenu.Logo.Right", Scheme);
+	bLogoAttachToMenu = atoi(Scheme->GetResourceString("MainMenu.Logo.AttachToMenu"));
+	bLogoAlignToLeft = atoi(Scheme->GetResourceString("MainMenu.Logo.AlignToLeft"));
+	LogoFont = Scheme->GetFont("MainMenu.Logo.Font");
 }
 
 void MainMenu::OnThink()
 {
 	BaseClass::OnThink();
 
-	SetBounds(0, 0, GameUI2().GetViewport().x, GameUI2().GetViewport().y);
+	SetBounds(0, 0, GetGameUI2().GetViewport().x, GetGameUI2().GetViewport().y);
 }
 
-bool MainMenu::IsVisible(void)
+bool MainMenu::IsVisible()
 {
-	if (GameUI2().IsInLoading())
+	if (GetGameUI2().IsInLoading() == true || GetGameUI2().GetGameUI()->IsMainMenuVisible() == false)
 		return false;
 
-	return m_bFocused;
+	return bIsVisible;
 }
 
 void MainMenu::DrawMainMenu()
 {
-	for (int8 i = 0; i < m_pButtonsInGame.Count(); i++)
-		m_pButtonsInGame[i]->SetVisible(GameUI2().IsInLevel());
+	if (ActiveButtons.IsEmpty() == true)
+		return;
 
-	for (int8 i = 0; i < m_pButtonsBackground.Count(); i++)
-		m_pButtonsBackground[i]->SetVisible(GameUI2().IsInBackgroundLevel());
-
-	for (int8 i = 0; i < m_pButtonsShared.Count(); i++)
-		m_pButtonsShared[i]->SetVisible(GameUI2().IsInLevel() || GameUI2().IsInBackgroundLevel());
-
-	CUtlVector<Button_MainMenu*> activeButtons;
-	if (GameUI2().IsInLevel())
-		activeButtons.AddVectorToTail(m_pButtonsInGame);
-	else if (GameUI2().IsInBackgroundLevel())
-		activeButtons.AddVectorToTail(m_pButtonsBackground);
-	activeButtons.AddVectorToTail(m_pButtonsShared);
-
-	m_pButtons = activeButtons;
-	
-	if (m_pButtons.Count() > 0)
-		m_pButtons.Sort(ButtonsPositionTop);
-
-	for (int8 i = 0; i < m_pButtons.Count(); i++)
+	for (int8 i = 0; i < ActiveButtons.Count(); i++)
 	{
-		if ((i + 1) < m_pButtons.Count())
+		int8 NextButton = i + 1;
+		
+		if (NextButton < ActiveButtons.Count())
 		{
-			int32 x0, y0;
-			m_pButtons[i + 1]->GetPos(x0, y0);
-			m_pButtons[i]->SetPos(m_fButtonsOffsetX, y0 - (m_pButtons[i]->GetHeight() + m_fButtonsSpace));
+			int32 NextButtonPositionX, NextButtonPositionY;
+			ActiveButtons[NextButton]->GetPos(NextButtonPositionX, NextButtonPositionY);
+			ActiveButtons[i]->SetPos(ButtonsOffsetX, NextButtonPositionY - (ActiveButtons[i]->GetTall() + ButtonsSpace));
 		}
 		else
 		{
-			m_pButtons[i]->SetPos(m_fButtonsOffsetX, GameUI2().GetViewport().y - (m_fButtonsOffsetY + m_pButtons[i]->GetHeight()));
+			ActiveButtons[i]->SetPos(ButtonsOffsetX, GetTall() - (ButtonsOffsetY + ActiveButtons[i]->GetTall()));
 		}
-
-		m_pButtons[i]->SetVisible(true);
 	}
 }
 
 void MainMenu::DrawLogo()
 {
-	vgui::surface()->DrawSetTextColor(m_cLogoLeft);
-	vgui::surface()->DrawSetTextFont(m_fLogoFont);
+	if (LogoLeftText == nullptr || LogoRightText == nullptr)
+		return;
+	
+	vgui::surface()->DrawSetTextColor(LogoLeftColor);
+	vgui::surface()->DrawSetTextFont(LogoFont);
 
-	int32 logoW, logoH;
-	vgui::surface()->GetTextSize(m_fLogoFont, m_logoLeft, logoW, logoH);
+	int32 LogoW, LogoH;
+	vgui::surface()->GetTextSize(LogoFont, LogoLeftText, LogoW, LogoH);
 
-	int32 logoX, logoY;
-	if (m_pButtons.Count() <= 0 || m_bLogoAttachToMenu == false)
+	int32 LogoX, LogoY;
+	if (ActiveButtons.IsEmpty() == true || bLogoAttachToMenu == false)
 	{
-		logoX = m_fLogoOffsetX;
-		logoY = GameUI2().GetViewport().y - (m_fLogoOffsetY + logoH);
+		if (bLogoAlignToLeft == false)
+		{
+			wchar_t FullLogoText[256];
+			wcscpy(FullLogoText, LogoLeftText);
+			wcscat(FullLogoText, LogoRightText);
+
+			int32 FullLogoW, FullLogoH;
+			vgui::surface()->GetTextSize(LogoFont, FullLogoText, FullLogoW, FullLogoH);
+			
+			LogoX = GetWide() - (LogoOffsetX + FullLogoW);
+		}
+		else
+		{
+			LogoX = LogoOffsetX;
+		}
+
+		LogoY = GetTall() - (LogoOffsetY + LogoH);
 	}
 	else
 	{
-		int32 x0, y0;
-		m_pButtons[0]->GetPos(x0, y0);
-		logoX = m_fButtonsOffsetX + m_fLogoOffsetX;
-		logoY = y0 - (logoH + m_fLogoOffsetY);
+		int32 ButtonPositionX, ButtonPositionY;
+		ActiveButtons[0]->GetPos(ButtonPositionX, ButtonPositionY);
+		LogoX = ButtonsOffsetX + LogoOffsetX;
+		LogoY = ButtonPositionY - (LogoH + LogoOffsetY);
 	}
-	vgui::surface()->DrawSetTextPos(logoX, logoY);
-	vgui::surface()->DrawPrintText(m_logoLeft, wcslen(m_logoLeft));
 
-	vgui::surface()->DrawSetTextColor(m_cLogoRight);
-	vgui::surface()->DrawSetTextFont(m_fLogoFont);
-	vgui::surface()->DrawSetTextPos(logoX + logoW, logoY);
-	vgui::surface()->DrawPrintText(m_logoRight, wcslen(m_logoRight));
+	vgui::surface()->DrawSetTextPos(LogoX, LogoY);
+	vgui::surface()->DrawPrintText(LogoLeftText, wcslen(LogoLeftText));
+
+	vgui::surface()->DrawSetTextColor(LogoRightColor);
+	vgui::surface()->DrawSetTextFont(LogoFont);
+	vgui::surface()->DrawSetTextPos(LogoX + LogoW, LogoY);
+	vgui::surface()->DrawPrintText(LogoRightText, wcslen(LogoRightText));
 }
 
 void MainMenu::Paint()
 {
 	BaseClass::Paint();
 
+	// TODO: Add script settings
+	vgui::surface()->DrawSetColor(Color(0, 0, 0, 255));
+	vgui::surface()->DrawFilledRectFade(0, 0, GetWide(), GetTall(), 255, 0, true);
+
 	DrawMainMenu();
 	DrawLogo();
 }
 
-void MainMenu::OnCommand(char const* cmd)
+void MainMenu::OnCommand(char const* Command)
 {
-	if (Q_stristr(cmd, "cvar"))
+	if (Q_stristr(Command, "cvar"))
 	{
-		const char* engineCMD = strstr(cmd, "cvar ") + strlen("cvar ");
-		if (strlen(engineCMD) > 0)
-			engine->ClientCmd_Unrestricted(const_cast<char*>(engineCMD));
-	}
-	else if (!Q_stricmp(cmd, "example"))
-	{
-		// Example
+		const char* EngineCommand = strstr(Command, "cvar ") + strlen("cvar ");
+		if (strlen(EngineCommand) > 0)
+			GetGameUI2().GetEngineClient()->ClientCmd_Unrestricted(const_cast<char*>(EngineCommand));
 	}
 	else
 	{
-		BaseClass::OnCommand(cmd);
+		BaseClass::OnCommand(Command);
 	}
 }
 
@@ -199,7 +235,9 @@ void MainMenu::OnSetFocus()
 {
 	BaseClass::OnSetFocus();
 
-	m_bFocused = true;
+	UpdateMenu();
+	
+	bIsVisible = true;
 	vgui::surface()->PlaySound("interface/ui/menu_open.wav");
 }
 
@@ -207,24 +245,76 @@ void MainMenu::OnKillFocus()
 {
 	BaseClass::OnKillFocus();
 
-	m_bFocused = false;
+	bIsVisible = false;
 	vgui::surface()->PlaySound("interface/ui/menu_close.wav");
 }
 
-bool MainMenu::Equals(char const* inputA, char const* inputB)
+void MainMenu::UpdateMenu()
 {
-	std::string str1Cpy(inputA);
-	std::string str2Cpy(inputB);
+	for (int8 i = 0; i < ButtonsInGame.Count(); i++)
+		ButtonsInGame[i]->SetVisible(GetGameUI2().IsInLevel());
 
-	std::transform(str1Cpy.begin(), str1Cpy.end(), str1Cpy.begin(), std::function<int32(int32)>(::tolower));
-	std::transform(str2Cpy.begin(), str2Cpy.end(), str2Cpy.begin(), std::function<int32(int32)>(::tolower));
+#ifdef MFS
+	for (int8 i = 0; i < ButtonsInGameSP.Count(); i++)
+		ButtonsInGameSP[i]->SetVisible(!GetGameUI2().IsInMultiplayer());
 
-	return (str1Cpy == str2Cpy);
+	for (int8 i = 0; i < ButtonsInGameMP.Count(); i++)
+		ButtonsInGameMP[i]->SetVisible(GetGameUI2().IsInMultiplayer());
+#endif
+	
+	for (int8 i = 0; i < ButtonsBackground.Count(); i++)
+		ButtonsBackground[i]->SetVisible(GetGameUI2().IsInBackgroundLevel());
+
+	for (int8 i = 0; i < ButtonsShared.Count(); i++)
+		ButtonsShared[i]->SetVisible(GetGameUI2().IsInLevel() || GetGameUI2().IsInBackgroundLevel());
+
+	CUtlVector<Button_MainMenu*> UpdatedActiveButtons;
+
+	if (GetGameUI2().IsInLevel() == true)
+	{
+		if (ButtonsInGame.IsEmpty() == false)
+		{
+			UpdatedActiveButtons.AddVectorToTail(ButtonsInGame);
+		}
+	}
+
+#ifdef MFS
+	if (GetGameUI2().IsInMultiplayer() == true)
+	{
+		if (ButtonsInGameMP.IsEmpty() == false)
+		{
+			UpdatedActiveButtons.AddVectorToTail(ButtonsInGameMP);
+		}
+	}
+	else
+	{
+		if (ButtonsInGameSP.IsEmpty() == false)
+		{
+			UpdatedActiveButtons.AddVectorToTail(ButtonsInGameSP);
+		}
+	}
+#endif
+	
+	if (GetGameUI2().IsInBackgroundLevel() == true)
+	{
+		if (ButtonsBackground.IsEmpty() == false)
+			UpdatedActiveButtons.AddVectorToTail(ButtonsBackground);
+	}
+
+	if (ButtonsShared.IsEmpty() == false)
+		UpdatedActiveButtons.AddVectorToTail(ButtonsShared);
+
+	if (UpdatedActiveButtons.IsEmpty() == false)
+		UpdatedActiveButtons.Sort(ButtonsPositionTop);
+
+	ActiveButtons = UpdatedActiveButtons;
+
+	ConColorMsg(Color(0, 148, 0, 255), "Updating main menu...\n");
 }
 
-MainMenuHelper::MainMenuHelper(MainMenu* menu, vgui::Panel* parent) : BaseClass(parent)
+MainMenuHelper::MainMenuHelper(MainMenu* Menu, vgui::Panel* Parent) : BaseClass(Parent)
 {
-	menu->SetParent(this);
-	menu->MakeReadyForUse();
-	menu->SetZPos(0);
+	Menu->SetParent(this);
+	Menu->MakeReadyForUse();
+	Menu->SetZPos(0);
 }

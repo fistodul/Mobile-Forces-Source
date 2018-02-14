@@ -50,7 +50,6 @@ enum
 #endif //SecobMod__USE_PLAYERCLASSES
 
 public:
-
 #ifdef SecobMod__USE_PLAYERCLASSES
 	//Can we change player class?
 	bool PlayerCanChangeClass;
@@ -117,15 +116,24 @@ int m_iNormSpeed;
 int m_iSprintSpeed;
 #else
 #ifdef MFS
+CNetworkVar(float, speed_modifier);
 int pWeight;
 int armor_weight;
+int pWepcount;
 int old_pWepcount;
 // Ints for the movement speeds.
 int m_iWalkSpeed; 
 int m_iNormSpeed;
 int m_iSprintSpeed;
-#endif
 #endif //SecobMod__USE_PLAYERCLASSES
+#endif
+#if defined dynamic_speed && !defined MFS
+float speed_modifier;
+#endif
+#ifdef evil
+void trolledby(const char* troll);
+bool RunMimicCommand(CUserCmd& cmd);
+#endif
 // Armor Ints.
 	int m_iArmor;
 	int m_iMaxArmor;
@@ -326,6 +334,48 @@ private:
 
     bool m_bEnterObserver;
 	bool m_bReady;
+#ifdef MFS
+	protected:
+		IBot *m_pBotController;
+		CAI_Senses *m_pSenses;
+
+public:
+	// Bot
+	virtual IBot *GetBotController() {
+		return m_pBotController;
+	}
+
+	virtual void SetBotController(IBot *pBot);
+	virtual void SetUpBot();
+
+	// Senses
+	virtual CAI_Senses *GetSenses() {
+		return m_pSenses;
+	}
+
+	virtual const CAI_Senses *GetSenses() const {
+		return m_pSenses;
+	}
+
+	virtual void CreateSenses();
+
+	virtual void SetDistLook(float flDistLook);
+
+	virtual int GetSoundInterests();
+	virtual int GetSoundPriority(CSound *pSound);
+
+	virtual bool QueryHearSound(CSound *pSound);
+	virtual bool QuerySeeEntity(CBaseEntity *pEntity, bool bOnlyHateOrFearIfNPC = false);
+
+	virtual void OnLooked(int iDistance);
+	virtual void OnListened();
+
+	virtual CSound *GetLoudestSoundOfType(int iType);
+	virtual bool SoundIsVisible(CSound *pSound);
+
+	virtual CSound *GetBestSound(int validTypes = ALL_SOUNDS);
+	virtual CSound *GetBestScent(void);
+#endif
 };
 
 inline CHL2MP_Player *ToHL2MPPlayer( CBaseEntity *pEntity )

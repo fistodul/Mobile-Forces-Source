@@ -34,7 +34,7 @@ class CWeaponHopwire: public CBaseHLCombatWeapon
 {
 	DECLARE_CLASS( CWeaponHopwire, CBaseHLCombatWeapon );
 public:
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	void	Precache( void );
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
@@ -86,8 +86,8 @@ acttable_t	CWeaponHopwire::m_acttable[] =
 
 IMPLEMENT_ACTTABLE(CWeaponHopwire);
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponHopwire, DT_WeaponHopwire)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponHopwire, DT_WeaponHopwire)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_hopwire, CWeaponHopwire );
 PRECACHE_WEAPON_REGISTER(weapon_hopwire);

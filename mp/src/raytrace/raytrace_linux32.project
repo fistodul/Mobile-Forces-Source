@@ -39,13 +39,13 @@
     <VirtualDirectory Name="Resources">
     </VirtualDirectory>
     <VirtualDirectory Name="VPC Files">
-      <File Name="../vpc_scripts/platform_dirs.vpc"/>
-      <File Name="../vpc_scripts/source_base.vpc"/>
-      <File Name="../vpc_scripts/source_lib_base.vpc"/>
-      <File Name="../vpc_scripts/source_lib_posix_base.vpc"/>
-      <File Name="../vpc_scripts/source_posix_base.vpc"/>
-      <File Name="../vpc_scripts/source_video_base.vpc"/>
-      <File Name="../vpc_scripts/version.vpc"/>
+      <File Name="..\vpc_scripts\platform_dirs.vpc"/>
+      <File Name="..\vpc_scripts\source_base.vpc"/>
+      <File Name="..\vpc_scripts\source_lib_base.vpc"/>
+      <File Name="..\vpc_scripts\source_lib_posix_base.vpc"/>
+      <File Name="..\vpc_scripts\source_posix_base.vpc"/>
+      <File Name="..\vpc_scripts\source_video_base.vpc"/>
+      <File Name="..\vpc_scripts\version.vpc"/>
       <File Name="raytrace.vpc"/>
     </VirtualDirectory>
 </CodeLite_Project>

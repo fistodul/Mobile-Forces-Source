@@ -39,8 +39,8 @@ BEGIN_DATADESC( CWeaponMolotov )
 END_DATADESC()
 
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponMolotov, DT_WeaponMolotov)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponMolotov, DT_WeaponMolotov)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_molotov, CWeaponMolotov );
 PRECACHE_WEAPON_REGISTER(weapon_molotov);
@@ -76,7 +76,7 @@ void CWeaponMolotov::Spawn( void )
 //------------------------------------------------------------------------------
 void CWeaponMolotov::SetPickupTouch( void )
 {
-	SetTouch(MolotovTouch);
+	SetTouch(&CWeaponMolotov::MolotovTouch);
 }
 
 //-----------------------------------------------------------------------------

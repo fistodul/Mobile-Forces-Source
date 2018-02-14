@@ -1,3 +1,12 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #include "gameui2_interface.h"
 #include "basepanel.h"
 
@@ -6,50 +15,65 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static CDllDemandLoader g_GameUI("GameUI");
+static CDllDemandLoader StaticGameUI("GameUI");
 
-IVEngineClient* engine = NULL;
-IEngineSound* enginesound = NULL;
-IEngineVGui* enginevgui = NULL;
-ISoundEmitterSystemBase* soundemitterbase = NULL;
-IVRenderView* render = NULL;
-IGameUI* gameui = NULL;
-
-static CGameUI2 g_GameUI2;
-CGameUI2& GameUI2()
+static GameUI2 StaticGameUI2;
+GameUI2& GetGameUI2()
 {
-	return g_GameUI2;
+	return StaticGameUI2;
 }
 
-EXPOSE_SINGLE_INTERFACE_GLOBALVAR(CGameUI2, IGameUI2, GAMEUI2_DLL_INTERFACE_VERSION, g_GameUI2);
+EXPOSE_SINGLE_INTERFACE_GLOBALVAR(GameUI2, IGameUI2, GAMEUI2_DLL_INTERFACE_VERSION, StaticGameUI2);
 
-void CGameUI2::Initialize(CreateInterfaceFn appFactory)
+void GameUI2::Initialize(CreateInterfaceFn AppFactory)
 {
 	MEM_ALLOC_CREDIT();
-	ConnectTier1Libraries(&appFactory, 1);
-	ConnectTier2Libraries(&appFactory, 1);
+	ConnectTier1Libraries(&AppFactory, 1);
+	ConnectTier2Libraries(&AppFactory, 1);
 	ConVar_Register(FCVAR_CLIENTDLL);
-	ConnectTier3Libraries(&appFactory, 1);
+	ConnectTier3Libraries(&AppFactory, 1);
 
-	engine = (IVEngineClient*)appFactory(VENGINE_CLIENT_INTERFACE_VERSION, NULL);
-	enginesound = (IEngineSound*)appFactory(IENGINESOUND_CLIENT_INTERFACE_VERSION, NULL);
-	enginevgui = (IEngineVGui*)appFactory(VENGINE_VGUI_VERSION, NULL);
-	soundemitterbase = (ISoundEmitterSystemBase*)appFactory(SOUNDEMITTERSYSTEM_INTERFACE_VERSION, NULL);
-	render = (IVRenderView*)appFactory(VENGINE_RENDERVIEW_INTERFACE_VERSION, NULL);
+	EngineClient = (IVEngineClient*)AppFactory(VENGINE_CLIENT_INTERFACE_VERSION, NULL);
+	EngineSound = (IEngineSound*)AppFactory(IENGINESOUND_CLIENT_INTERFACE_VERSION, NULL);
+	EngineVGui = (IEngineVGui*)AppFactory(VENGINE_VGUI_VERSION, NULL);
+	SoundEmitterSystemBase = (ISoundEmitterSystemBase*)AppFactory(SOUNDEMITTERSYSTEM_INTERFACE_VERSION, NULL);
+	RenderView = (IVRenderView*)AppFactory(VENGINE_RENDERVIEW_INTERFACE_VERSION, NULL);
+	MaterialSystem = (IMaterialSystem*)AppFactory(MATERIAL_SYSTEM_INTERFACE_VERSION, NULL);
+	MaterialSystemSurface = (IMatSystemSurface*)AppFactory(MAT_SYSTEM_SURFACE_INTERFACE_VERSION, NULL);
 
-	CreateInterfaceFn gameUIFactory = g_GameUI.GetFactory();
-	if (gameUIFactory)
-		gameui = (IGameUI*)gameUIFactory(GAMEUI_INTERFACE_VERSION, NULL);
+	CreateInterfaceFn GameUIFactory = StaticGameUI.GetFactory();
+	if (GameUIFactory)
+		GameUI = (IGameUI*)GameUIFactory(GAMEUI_INTERFACE_VERSION, NULL);
 
-	if (!enginesound || !enginevgui || !engine || !soundemitterbase || !render || !gameui)
-		Error("CGameUI2::Initialize() failed to get necessary interfaces.\n");
+	if (EngineClient == nullptr ||
+		EngineSound == nullptr ||
+		EngineVGui == nullptr ||
+		SoundEmitterSystemBase == nullptr ||
+		RenderView == nullptr ||
+		MaterialSystem == nullptr ||
+		MaterialSystemSurface == nullptr ||
+		GameUI == nullptr)
+		Error("GameUI2 failed to get necessary interfaces.\n");
 
 	GetBasePanel()->Create();
-	if (GetBasePanel())
-		gameui->SetMainMenuOverride(GetBasePanel()->GetVPanel());
+
+	if (GetBasePanel() != nullptr)
+	{
+		ConColorMsg(Color(255, 255, 0, 255), "Overriding original menu...\n");
+
+		GameUI->SetMainMenuOverride(GetBasePanel()->GetVPanel());
+
+		AnimationController = new vgui::AnimationController(GetBasePanel());
+		AnimationController->SetProportional(false);
+		AnimationController->SetScheme(GetBasePanel()->GetScheme());
+	}
+	else
+	{
+		ConColorMsg(Color(255, 255, 0, 255), "BasePanel initialization has failed.\n");
+	}
 }
 
-void CGameUI2::Shutdown()
+void GameUI2::Shutdown()
 {
 	ConVar_Unregister();
 	DisconnectTier3Libraries();
@@ -57,150 +81,172 @@ void CGameUI2::Shutdown()
 	DisconnectTier1Libraries();
 }
 
-void CGameUI2::OnInitialize()
+void GameUI2::OnInitialize()
 {
+	ConColorMsg(Color(255, 148, 0, 255), "On Initialize\n");
 
+	GetBasePanel()->SetVisible(true);
+	GetBasePanel()->GetMainMenuPanel()->Activate();
 }
 
-void CGameUI2::OnShutdown()
+void GameUI2::OnShutdown()
 {
-
+	ConColorMsg(Color(255, 148, 0, 255), "On Shutdown\n");
 }
 
-void CGameUI2::OnUpdate()
+void GameUI2::OnUpdate()
 {
-
-}
-
-void CGameUI2::OnLevelInitializePreEntity()
-{
-
-}
-
-void CGameUI2::OnLevelInitializePostEntity()
-{
-
-}
-
-void CGameUI2::OnLevelShutdown()
-{
-
-}
-
-bool CGameUI2::IsInLevel()
-{
-	if (engine->IsInGame() && !engine->IsLevelMainMenuBackground())
-		return true;
-
-	return false;
-}
-
-bool CGameUI2::IsInBackgroundLevel()
-{
-	if ((engine->IsInGame() && engine->IsLevelMainMenuBackground()) || !engine->IsInGame())
-		return true;
-
-	return false;
-}
-
-bool CGameUI2::IsInMultiplayer()
-{
-	return (IsInLevel() && engine->GetMaxClients() > 1);
-}
-
-bool CGameUI2::IsInLoading()
-{
-	return (engine->IsDrawingLoadingImage() || engine->GetLevelName() == 0) || (!IsInLevel() && !IsInBackgroundLevel());
-}
-
-wchar_t* CGameUI2::GetLocalizedString(const char* text)
-{
-	wchar_t* localizedString = (wchar_t*)malloc(sizeof(wchar_t) * 2048);
-//	wchar_t* localizedString = new wchar_t[2048];
+//	ConColorMsg(Color(255, 148, 0, 255), "On Update: %f\n", GetTime());
 	
-	if (text[0] == '#')
+	if (AnimationController != nullptr)
+		AnimationController->UpdateAnimations(GetTime());
+}
+
+void GameUI2::OnLevelInitializePreEntity()
+{
+	ConColorMsg(Color(255, 148, 0, 255), "On Level Initialize Pre Entity\n");
+}
+
+void GameUI2::OnLevelInitializePostEntity()
+{
+	ConColorMsg(Color(255, 148, 0, 255), "On Level Initialize Post Entity\n");
+}
+
+void GameUI2::OnLevelShutdown()
+{
+	ConColorMsg(Color(255, 148, 0, 255), "On Level Shutdown\n");
+
+	if (AnimationController != nullptr)
 	{
-		wchar_t* tempString = g_pVGuiLocalize->Find(text);
-		if (tempString)
+		AnimationController->UpdateAnimations(GetTime());
+		AnimationController->RunAllAnimationsToCompletion();
+	}
+}
+
+bool GameUI2::IsInLevel()
+{
+	if (EngineClient->IsInGame() == true && EngineClient->IsLevelMainMenuBackground() == false)
+		return true;
+
+	return false;
+}
+
+bool GameUI2::IsInBackgroundLevel()
+{
+//	if ((EngineClient->IsInGame() == true && EngineClient->IsLevelMainMenuBackground() == true) || EngineClient->IsInGame() == false) // ?!
+	if (EngineClient->IsLevelMainMenuBackground() == true || EngineClient->IsInGame() == false)
+		return true;
+
+	return false;
+}
+
+bool GameUI2::IsInMultiplayer()
+{
+	return (IsInLevel() == true && EngineClient->GetMaxClients() > 1);
+}
+
+bool GameUI2::IsInLoading()
+{
+	return (EngineClient->IsDrawingLoadingImage() == true || EngineClient->GetLevelName() == 0) || (IsInLevel() == false && IsInBackgroundLevel() == false);
+}
+
+wchar_t* GameUI2::ConvertToLocalizedString(const char* Text)
+{
+	// The alt. version of LocalizedString if something is wrong with current one:
+	// wchar_t* LocalizedString = new wchar_t[2048];
+	wchar_t* LocalizedString = (wchar_t*)malloc(sizeof(wchar_t) * 2048);
+	
+	if (Text[0] == '#' && g_pVGuiLocalize != nullptr)
+	{
+		wchar_t* TempString = g_pVGuiLocalize->Find(Text);
+		if (TempString != nullptr)
 		{
-			const size_t cSizeText = wcslen(tempString) + 1;
-			wcsncpy(localizedString, tempString, cSizeText);
-			localizedString[cSizeText - 1] = 0;
+			const size_t TextSize = wcslen(TempString) + 1;
+			wcsncpy(LocalizedString, TempString, TextSize);
+			LocalizedString[TextSize - 1] = 0;
 		}
 		else
 		{
-			const size_t cSizeText = strlen(text) + 1;
-			mbstowcs(localizedString, text, cSizeText);
+			const size_t TextSize = strlen(Text) + 1;
+			mbstowcs(LocalizedString, Text, TextSize);
 		}
 	}
 	else
 	{
-		const size_t cSizeText = strlen(text) + 1;
-		mbstowcs(localizedString, text, cSizeText);
+		const size_t TextSize = strlen(Text) + 1;
+		mbstowcs(LocalizedString, Text, TextSize);
 	}
 
-	return localizedString;
+	return LocalizedString;
 }
 
-Vector2D CGameUI2::GetViewport()
+void GameUI2::SetView(const CViewSetup& ViewSetup)
 {
-	int32 viewportX, viewportY;
-	engine->GetScreenSize(viewportX, viewportY);
-	return Vector2D(viewportX, viewportY);
+	View = ViewSetup;
 }
 
-float CGameUI2::GetTime()
+void GameUI2::SetFrustum(VPlane* Plane)
 {
-	return Plat_FloatTime();
+	Frustum = Plane;
 }
 
-vgui::VPANEL CGameUI2::GetRootPanel()
+void GameUI2::SetMaskTexture(ITexture* Texture)
 {
-	return enginevgui->GetPanel(PANEL_GAMEUIDLL);
+	MaskTexture = Texture;
 }
 
-vgui::VPANEL CGameUI2::GetVPanel()
+void GameUI2::SetRenderContext(IMatRenderContext* Context)
+{
+	RenderContext = Context;
+}
+
+Vector2D GameUI2::GetViewport() const
+{
+//	return Vector2D(View.width, View.height);
+	int32 ViewportX, ViewportY;
+	EngineClient->GetScreenSize(ViewportX, ViewportY);
+	return Vector2D(ViewportX, ViewportY);
+}
+
+vgui::VPANEL GameUI2::GetRootPanel() const
+{
+	return EngineVGui->GetPanel(PANEL_GAMEUIDLL);
+}
+
+vgui::VPANEL GameUI2::GetVPanel() const
 {
 	return GetBasePanel()->GetVPanel();
 }
 
-CViewSetup CGameUI2::GetView()
+CON_COMMAND(gameui2, "List of arguments: version, help")
 {
-	return m_pView;
-}
+	if (args.ArgC() > 1)
+	{
+		if (Q_stristr(args.Arg(1), "version"))
+		{
+			ConColorMsg(Color(0, 148, 255, 255), "\nLabel:\t");
+			Msg("%s\n", GAMEUI2_DLL_INTERFACE_VERSION);
 
-VPlane* CGameUI2::GetFrustum()
-{
-	return m_pFrustum;
-}
+			ConColorMsg(Color(0, 148, 255, 255), "Date:\t");
+			Msg("%s\n", __DATE__);
 
-ITexture* CGameUI2::GetMaskTexture()
-{
-	return m_pMaskTexture;
-}
-
-void CGameUI2::SetView(const CViewSetup& view)
-{
-	m_pView = view;
-}
-
-void CGameUI2::SetFrustum(VPlane* frustum)
-{
-	m_pFrustum = frustum;
-}
-
-void CGameUI2::SetMaskTexture(ITexture* maskTexture)
-{
-	m_pMaskTexture = maskTexture;
-}
-
-CON_COMMAND(gameui2_version, "")
-{
-	Msg("\n");
-	ConColorMsg(Color(0, 148, 255, 255), "Label:\t");
-		Msg("%s\n", GAMEUI2_DLL_INTERFACE_VERSION);
-	ConColorMsg(Color(0, 148, 255, 255), "Date:\t");
-		Msg("%s\n", __DATE__);
-	ConColorMsg(Color(0, 148, 255, 255), "Time:\t");
-		Msg("%s\n", __TIME__);
+			ConColorMsg(Color(0, 148, 255, 255), "Time:\t");
+			Msg("%s\n", __TIME__);
+		}
+		else if (Q_stristr(args.Arg(1), "help"))
+		{
+			Msg("\nVisit ");
+			#ifdef MFS
+			ConColorMsg(Color(0, 148, 255, 255), "https://facebook.com/groups/mobileforcesandmfs");
+			#else
+			ConColorMsg(Color(0, 148, 255, 255), "https://github.com/SourceEnginePlayground/Hyperborea");
+			#endif
+			Msg(" to get the latest version or report an issue\n");
+		}
+	}
+	else
+	{
+		ConColorMsg(Color(0, 148, 255, 255), "\nList of arguments: ");
+		Msg("version, help\n");
+	}
 }

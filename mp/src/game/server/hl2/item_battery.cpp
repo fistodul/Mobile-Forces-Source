@@ -12,7 +12,7 @@
 #include "items.h"
 #include "engine/IEngineSound.h"
 
-#ifdef SecobMod__USE_PLAYERCLASSES
+#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 #include "hl2mp_player.h"
 #endif //SecobMod__USE_PLAYERCLASSES
 
@@ -39,7 +39,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		#ifdef SecobMod__USE_PLAYERCLASSES
+		#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 			CHL2MP_Player *pHL2MPPlayer = dynamic_cast<CHL2MP_Player *>(pPlayer);
 			return ( pHL2MPPlayer && pHL2MPPlayer->ApplyBattery() );
 		#else

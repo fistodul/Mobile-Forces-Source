@@ -22,6 +22,9 @@ struct Ammo_t
 	int					nDamageType;
 	int					eTracerType;
 	float				physicsForceImpulse;
+#ifdef simulated_bullets
+	float				bulletSpeed;
+#endif
 	int					nMinSplashSize;
 	int					nMaxSplashSize;
 
@@ -83,8 +86,13 @@ public:
 	int					MaxSplashSize(int nAmmoIndex);
 	int					Flags(int nAmmoIndex);
 
+#ifdef simulated_bullets
+	void				AddAmmoType(char const* name, int damageType, int tracerType, int plr_dmg, int npc_dmg, int carry, float bulletSpeed, float physicsForceImpulse, int nFlags, int minSplashSize = 4, int maxSplashSize = 8);
+	void				AddAmmoType(char const* name, int damageType, int tracerType, char const* plr_cvar, char const* npc_var, char const* carry_cvar, float bulletSpeed, float physicsForceImpulse, int nFlags, int minSplashSize = 4, int maxSplashSize = 8);
+#else
 	void				AddAmmoType(char const* name, int damageType, int tracerType, int plr_dmg, int npc_dmg, int carry, float physicsForceImpulse, int nFlags, int minSplashSize = 4, int maxSplashSize = 8 );
 	void				AddAmmoType(char const* name, int damageType, int tracerType, char const* plr_cvar, char const* npc_var, char const* carry_cvar, float physicsForceImpulse, int nFlags, int minSplashSize = 4, int maxSplashSize = 8 );
+#endif
 
 	CAmmoDef(void);
 	virtual ~CAmmoDef( void );

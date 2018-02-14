@@ -2,6 +2,11 @@
 @include "halflife2.fgd"
 @include "hl2mp.fgd"
 
+@PointClass base(Angles) studio("models/items/combine_rifle_ammo01.mdl") = ent_spawner : "A weapon spawn point"
+[
+	Type(integer)		: "mp_type" : 1   : "What convar to get the item from?(1-7)"
+	//Item(string)		: "What item(overwrites mp_type)" : 0   : "What item to spawn regardless of the mp_type setting"
+]
 @PointClass base(BaseDriveableVehicle) studio("models/combine_apc.mdl") = prop_vehicle_apc2 :
 	"APC with mounted guns, besides by player can be driven by a vehicle driver or a npc_apcdriver."
 [

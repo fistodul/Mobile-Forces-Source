@@ -54,6 +54,9 @@ IMPLEMENT_CLIENTCLASS_DT(C_HL2MP_Player, DT_HL2MP_Player, CHL2MP_Player)
 	#ifdef SecobMod__USE_PLAYERCLASSES
 		RecvPropInt( RECVINFO( m_iClientClass)),
 	#endif //SecobMod__USE_PLAYERCLASSES
+#if /*defined dynamic_speed || */defined MFS
+		RecvPropFloat(RECVINFO(speed_modifier)),
+#endif //SecobMod__USE_PLAYERCLASSES
 	
 END_RECV_TABLE()
 
@@ -61,9 +64,15 @@ BEGIN_PREDICTION_DATA( C_HL2MP_Player )
 	DEFINE_PRED_FIELD( m_fIsWalking, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE ),
 END_PREDICTION_DATA()
 
+/*#if defined SecobMod__USE_PLAYERCLASSES || defined dynamic_speed || defined MFS
+#define HL2_WALK_SPEED CBasePlayer::GetWalkSpeed()
+#define HL2_NORM_SPEED CBasePlayer::GetNormSpeed()
+#define HL2_SPRINT_SPEED CBasePlayer::GetSprintSpeed()
+#else*/
 #define	HL2_WALK_SPEED 150
 #define	HL2_NORM_SPEED 190
 #define	HL2_SPRINT_SPEED 320
+//#endif
 
 static ConVar cl_playermodel( "cl_playermodel", "none", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_SERVER_CAN_EXECUTE, "Default Player Model");
 static ConVar cl_defaultweapon( "cl_defaultweapon", "weapon_physcannon", FCVAR_USERINFO | FCVAR_ARCHIVE, "Default Spawn Weapon");
@@ -72,6 +81,15 @@ static ConVar cl_defaultweapon( "cl_defaultweapon", "weapon_physcannon", FCVAR_U
 	static ConVar cl_fp_ragdoll ( "cl_fp_ragdoll", "1", FCVAR_ARCHIVE, "Allow first person ragdolls" );
 	static ConVar cl_fp_ragdoll_auto ( "cl_fp_ragdoll_auto", "1", FCVAR_ARCHIVE, "Autoswitch to ragdoll thirdperson-view when necessary" );
 #endif //SecobMod__FIRST_PERSON_RAGDOLL_CAMERA_ON_PLAYER_DEATH
+
+/*#if defined SecobMod__USE_PLAYERCLASSES || defined MFS || defined dynamic_speed
+	extern ConVar hl2_walkspeed;
+	extern ConVar hl2_normspeed;
+	extern ConVar hl2_sprintspeed;
+	extern ConVar sprintDisable;
+	extern ConVar hl2_jumpheight;
+	extern ConVar hl2_pronespeed;
+#endif*/
 
 #ifdef SecobMod__ENABLE_NIGHTVISION_FOR_HEAVY_CLASS
 	extern int m_iClientClass;
@@ -92,6 +110,33 @@ C_HL2MP_Player::C_HL2MP_Player() : m_PlayerAnimState( this ), m_iv_angEyeAngles(
 	m_blinkTimer.Invalidate();
 
 	m_pFlashlightBeam = NULL;
+
+/*#if defined dynamic_speed || defined MFS
+	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt()/*+speed_modifier*//*);
+#ifdef MFS
+	if (sprintDisable.GetBool() == true)
+	{
+		CBasePlayer::SetNormSpeed(hl2_sprintspeed.GetInt() + speed_modifier);
+	}
+	else
+	{
+		CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() + speed_modifier);
+	}
+#else
+	CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt() + speed_modifier);
+#endif
+	CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt() + speed_modifier);
+	CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt());
+	CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
+#else
+#ifdef SecobMod__USE_PLAYERCLASSES
+	CBasePlayer::SetWalkSpeed(hl2_walkspeed.GetInt());
+	CBasePlayer::SetNormSpeed(hl2_normspeed.GetInt());
+	CBasePlayer::SetSprintSpeed(hl2_sprintspeed.GetInt());
+	CBasePlayer::SetProneSpeed(hl2_pronespeed.GetInt());
+	CBasePlayer::SetJumpHeight(hl2_jumpheight.GetInt());
+#endif
+#endif*/
 }
 
 C_HL2MP_Player::~C_HL2MP_Player( void )

@@ -11,7 +11,7 @@
 // SecobMod ??
 #include "../../shared/episodic/npc_advisor_shared.h"
 
-#if NPC_ADVISOR_HAS_BEHAVIOR
+#ifdef NPC_ADVISOR_HAS_BEHAVIOR
 
 #include "particles_simple.h"
 #include "citadel_effects_shared.h"
@@ -47,7 +47,7 @@ ConVar advisor_elight_rfeet("advisor_elight_rfeet","52");
 class C_NPC_Advisor : public C_AI_BaseNPC
 {
 	DECLARE_CLASS( C_NPC_Advisor, C_AI_BaseNPC );
-	DECLARE_CLIENTCLASS();
+	//DECLARE_CLIENTCLASS();
 
 public:
 	// Server to client message received
@@ -71,9 +71,9 @@ private:
 
 };
 
-IMPLEMENT_CLIENTCLASS_DT( C_NPC_Advisor, DT_NPC_Advisor, CNPC_Advisor )
+/*IMPLEMENT_CLIENTCLASS_DT( C_NPC_Advisor, DT_NPC_Advisor, CNPC_Advisor )
 
-END_RECV_TABLE()
+END_RECV_TABLE()*/
 
 // Server to client message received
 void C_NPC_Advisor::ReceiveMessage( int classID, bf_read &msg )

@@ -68,6 +68,10 @@ public:
 	#ifdef SecobMod__USE_PLAYERCLASSES
 		CNetworkVar(int, m_iClientClass);
 	#endif //SecobMod__USE_PLAYERCLASSES
+
+#if /*defined dynamic_speed || */defined MFS
+	CNetworkVar(float, speed_modifier);
+#endif
 	
 	bool	CanSprint( void );
 	void	StartSprinting( void );

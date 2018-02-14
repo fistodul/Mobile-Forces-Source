@@ -34,8 +34,8 @@ BEGIN_DATADESC( CWeapon_Tripwire )
 END_DATADESC()
 
 
-IMPLEMENT_SERVERCLASS_ST(CWeapon_Tripwire, DT_Weapon_Tripwire)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeapon_Tripwire, DT_Weapon_Tripwire)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_tripwire, CWeapon_Tripwire );
 
@@ -86,7 +86,7 @@ void CWeapon_Tripwire::Precache( void )
 //------------------------------------------------------------------------------
 void CWeapon_Tripwire::SetPickupTouch( void )
 {
-	SetTouch(TripwireTouch);
+	SetTouch(&CWeapon_Tripwire::TripwireTouch);
 }
 
 //-----------------------------------------------------------------------------

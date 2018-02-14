@@ -23,7 +23,7 @@ public:
 
 	CWeaponSMG2();
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	const Vector	&GetBulletSpread( void );
 
@@ -37,8 +37,8 @@ public:
 	DECLARE_ACTTABLE();
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponSMG2, DT_WeaponSMG2)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponSMG2, DT_WeaponSMG2)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_smg2, CWeaponSMG2 );
 PRECACHE_WEAPON_REGISTER(weapon_smg2);

@@ -1280,13 +1280,16 @@ void QUA_StriderBlood( const Vector &origin, const Vector &normal, float scale )
 //	Vector vehicleEyeOrigin;
 //	QAngle vehicleEyeAngles;
 //	GetAttachment( eyeAttachmentIndex, vehicleEyeOrigin, vehicleEyeAngles );
+
 //	Vector up,forward;
 //	this->GetVectors(&forward,NULL,&up);
 //	vehicleEyeOrigin+=(forward*120)+(up*-10);
+
 //	m_vecLastEyeTarget = vehicleEyeOrigin;
 //	m_vecLastEyePos = vehicleEyeOrigin;
 //	m_vecEyeSpeed = vec3_origin;
 //}
+
 void C_QUA_Strider::UpdateViewAngles( C_BasePlayer *pLocalPlayer, CUserCmd *pCmd )
 {
 	

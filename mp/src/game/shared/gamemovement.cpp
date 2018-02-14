@@ -2278,7 +2278,12 @@ void CGameMovement::FullNoClipMove( float factor, float maxacceleration )
 	Vector forward, right, up;
 	Vector wishdir;
 	float wishspeed;
+#if defined MFS || defined SecobMod__USE_PLAYERCLASSES //You're welcome
+	//float maxspeed = player->GetSprintSpeed() * factor;
+	float maxspeed = 320 * factor; //For now we'll do this.. not like the normal speed will be higher than 1600 if the factor is 5 unless i'm cheating :P
+#else //I bet the game cant even handle 10K units
 	float maxspeed = sv_maxspeed.GetFloat() * factor;
+#endif
 
 	AngleVectors (mv->m_vecViewAngles, &forward, &right, &up);  // Determine movement angles
 
@@ -2452,9 +2457,11 @@ bool CGameMovement::CheckJumpButton( void )
 	if ( g_bMovementOptimizations )
 	{
 #if defined(HL2_DLL) || defined(HL2_CLIENT_DLL)
+#ifndef MFS //Such an ugly assert tbh
 		Assert( GetCurrentGravity() == 600.0f );
+#endif
 		
-	#ifdef SecobMod__USE_PLAYERCLASSES
+	#if defined SecobMod__USE_PLAYERCLASSES// || defined MFS
 		flMul = sqrt(2 * sv_gravity.GetFloat() * GAMEMOVEMENT_JUMP_HEIGHT);
 	#else
 		flMul = 160.0f;	// approx. 21 units.

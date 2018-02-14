@@ -81,9 +81,9 @@ void RecvProxy_ScaleZz( const CRecvProxyData *pData, void *pStruct, void *pOut )
 }
 
 IMPLEMENT_CLIENTCLASS_DT( C_PropScalable, DT_PropScalable, CPropScalable )
-	RecvPropFloat( RECVINFO( m_flScaleX ), 0, RecvProxy_ScaleX ),
-	RecvPropFloat( RECVINFO( m_flScaleY ), 0, RecvProxy_ScaleY ),
-	RecvPropFloat( RECVINFO( m_flScaleZ ), 0, RecvProxy_ScaleZ ),
+	RecvPropFloat( RECVINFO( m_flScaleX ), 0, RecvProxy_ScaleXx ),
+	RecvPropFloat( RECVINFO( m_flScaleY ), 0, RecvProxy_ScaleYy ),
+	RecvPropFloat( RECVINFO( m_flScaleZ ), 0, RecvProxy_ScaleZz ), //MFS:You forgot to change it here
 
 	RecvPropFloat( RECVINFO( m_flLerpTimeX ) ),
 	RecvPropFloat( RECVINFO( m_flLerpTimeY ) ),

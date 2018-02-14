@@ -208,8 +208,8 @@ CWeaponDualies::CWeaponDualies( void )
 	m_fMaxRange2		= 200;
 
 	m_bFiresUnderwater	= true;
-	#ifdef Weighted_Weaponry
-	weight = 1;
+	#ifdef MFS
+	weight = 2;
 	#endif
 	LeftAmmo = GetMaxClip1()/2;
 	RightAmmo = LeftAmmo;

@@ -19,7 +19,7 @@ WeaponData
 	"default_clip2"			"-1"
 
 	"primary_ammo"			"SMG3"
-	"secondary_ammo"		""
+	"secondary_ammo"		"None"
 
 	"weight"			"3"
 	"rumble"			"3"

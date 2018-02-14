@@ -70,8 +70,8 @@ void CPortableThumper::Spawn( void )
 	SetSolid( SOLID_BBOX );
 	UTIL_SetSize( this, vecBBMin, vecBBMax );
 
-	SetThink( ThumpThink );
-	SetUse( ThumperUse );
+	SetThink(&CPortableThumper::ThumpThink);
+	SetUse(&CPortableThumper::ThumperUse);
 	SetNextThink( gpGlobals->curtime + thumpFrequency.GetFloat() );
 }
 
@@ -94,7 +94,8 @@ void CPortableThumper::ThumpThink( void )
 {
 	EmitSound( "PortableThumper.ThumpSound" );
 
-	UTIL_RotorWash( GetAbsOrigin() + Vector( 0, 0, 32 ), Vector( 0, 0, -1 ), 512 );	
+	//FixMe lmao
+	//UTIL_RotorWash( GetAbsOrigin() + Vector( 0, 0, 32 ), Vector( 0, 0, -1 ), 512 );	
 
 	SetNextThink( gpGlobals->curtime + thumpFrequency.GetFloat() );
 
@@ -117,7 +118,7 @@ class CWeaponThumper: public CBaseHLCombatWeapon
 {
 	DECLARE_CLASS( CWeaponThumper, CBaseHLCombatWeapon );
 public:
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 	void				Spawn( void );
 	void				Precache( void );
 
@@ -127,8 +128,8 @@ public:
 	void				DecrementAmmo( CBaseCombatCharacter *pOwner );
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponThumper, DT_WeaponThumper)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponThumper, DT_WeaponThumper)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_thumper, CWeaponThumper );
 PRECACHE_WEAPON_REGISTER(weapon_thumper);

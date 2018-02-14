@@ -53,6 +53,10 @@ public:
 	float		m_flBlockDamage;		// Damage inflicted when blocked.
 	float		m_flStartPosition;		// Position of brush when spawned
 	float		m_flMoveDistance;		// Total distance the brush can move
+#ifdef MFS
+	EHANDLE		m_hPosition1;			// Used to mark end position
+	EHANDLE		m_hPosition2;			// Used to mark start position
+#endif
 
 	IPhysicsFluidController *m_pFluidController;
 

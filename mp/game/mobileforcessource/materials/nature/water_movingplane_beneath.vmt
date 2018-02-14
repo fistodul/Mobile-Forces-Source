@@ -1,0 +1,15 @@
+"UnlitGeneric"
+{
+	"$basetexture" "dev/water_moving_beneath"
+	"$bumpmap" "dev/water_normal"
+//	"$additive" "1"
+	"$translucent" "1"
+	"$surfaceprop" "water"
+	"%keywords" "wasteland"
+	"%compilewater" "1"
+	"$abovewater" "0"
+	"$fogenable" "1"
+	"$fogcolor" "[1 1 1]"
+	"$fogstart" "0"
+	"$fogend" "300"
+}

@@ -18,6 +18,9 @@
 #include "mapentities_shared.h"
 #include "debugoverlay_shared.h"
 #include "coordsize.h"
+#ifdef simulated_bullets
+#include "bullet_manager.h"
+#endif
 #include "vphysics/performance.h"
 
 #ifdef CLIENT_DLL
@@ -2018,7 +2021,21 @@ void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 			HandleShotImpactingGlass( info, tr, vecDir, &traceFilter );
 		}
 #endif
-
+#ifdef simulated_bullets
+		Vector vecSrc(info.m_vecSrc);
+		bool bTraceHull = (IsPlayer() && info.m_iShots > 1 && iShot % 2);
+		CSimulatedBullet *pBullet = new CSimulatedBullet(pAttacker, info.m_pAdditionalIgnoreEnt,
+			info.m_iAmmoType, vecDir, vecSrc, bTraceHull
+#ifndef CLIENT_DLL
+			, info.m_nFlags, this, info.m_iDamage
+#endif
+			);
+#ifdef CLIENT_DLL
+		BulletManager()->AddBullet(pBullet);
+#else
+		BulletManager()->AddBullet(pBullet, info.m_flLatency);
+#endif
+#endif
 		iSeed++;
 	}
 

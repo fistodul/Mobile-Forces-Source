@@ -18,6 +18,10 @@
 #include "hintsystem.h"
 #include "SoundEmitterSystem/isoundemittersystembase.h"
 #include "util_shared.h"
+#ifdef MFS
+#include "ai_senses.h"
+#include "soundent.h"
+#endif
 
 #if defined USES_ECON_ITEMS
 #include "game_item_schema.h"
@@ -229,10 +233,16 @@ public:
 
 	virtual CBotCmd GetLastUserCommand();
 
+#ifndef MFS //Fix The fucking bots so this doesnt have to get included in..everything
 private:
+#endif
 	CBasePlayer *m_pParent; 
 };
 
+#ifdef MFS
+class IBot;
+class CSquad;
+#endif
 
 class CBasePlayer : public CBaseCombatCharacter
 {
@@ -251,9 +261,47 @@ public:
 
 	// IPlayerInfo passthrough (because we can't do multiple inheritance)
 	IPlayerInfo *GetPlayerInfo() { return &m_PlayerInfo; }
+#ifdef MFS
+	virtual IBot *GetBotController() {
+		return NULL;
+	}
+
+	virtual void SetBotController(IBot *pBot) { }
+	virtual void SetUpBot() { }
+
+	virtual CAI_Senses *GetSenses() {
+		return NULL;
+	}
+
+	virtual const CAI_Senses *GetSenses() const {
+		return NULL;
+	}
+
+	virtual CSound *GetBestSound(int validTypes = ALL_SOUNDS) {
+		return NULL;
+	}
+
+	virtual CSound *GetBestScent(void) {
+		return NULL;
+	}
+
+	// Squad
+	virtual CSquad *GetSquad() {
+		return NULL;
+	}
+
+	virtual void SetSquad(CSquad *pSquad) { }
+	virtual void SetSquad(const char *name) { }
+
+	virtual void OnNewLeader(CBasePlayer *pMember) { }
+	virtual void OnMemberTakeDamage(CBasePlayer *pMember, const CTakeDamageInfo &info) { }
+	virtual void OnMemberDeath(CBasePlayer *pMember, const CTakeDamageInfo &info) { }
+	virtual void OnMemberReportEnemy(CBasePlayer *pMember, CBaseEntity *pEnemy) { }
+#else
 	IBotController *GetBotController() { return &m_PlayerInfo; }
+#endif
 	
-	#ifdef SecobMod__USE_PLAYERCLASSES
+	#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 	 // Here are the players speed is set:
 	void SetWalkSpeed(int WalkSpeed);
 	void SetNormSpeed(int NormSpeed);
@@ -271,31 +319,12 @@ public:
 	int GetNormSpeed();
 	int GetSprintSpeed();
 	float GetJumpHeight();
-	#else
-	#ifdef MFS
-	// Here are the players speed is set:
-	void SetWalkSpeed(int WalkSpeed);
-	void SetNormSpeed(int NormSpeed);
-	void SetSprintSpeed(int SprintSpeed);
-	void SetProneSpeed(int ProneSpeed);
-	void SetJumpHeight(float JumpHeight);
-
-	// Spielergeschwindigkeit:
-	int m_iWalkSpeed;
-	int m_iNormSpeed;
-	int m_iSprintSpeed;
-	int m_iProneSpeed;
-
-	CNetworkVar(float, m_iJumpHeight);
-
-	int GetWalkSpeed();
-	int GetNormSpeed();
-	int GetSprintSpeed();
-	int GetProneSpeed();
-	float GetJumpHeight();
-	#endif
-	#endif //SecobMod__USE_PLAYERCLASSES
+#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
+	bool IsinBuyzone(void);
+	void SetProneSpeed(int ProneSpeed);
+	int m_iProneSpeed;
+	int GetProneSpeed();
 	CNetworkVar(int, m_BlueTime);
 	CNetworkVar(int, m_RedTime);
 	int GetBlueTime() { return m_BlueTime; }
@@ -501,7 +530,6 @@ public:
 	virtual int				ObjectCaps( void ) { return BaseClass::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 	virtual void			Precache( void );
 	bool					IsOnLadder( void );
-	bool					IsinBuyzone(void);
 	virtual void			ExitLadder() {}
 	virtual surfacedata_t	*GetLadderSurface( const Vector &origin );
 
@@ -1327,11 +1355,10 @@ typedef CHandle<CBasePlayer> CBasePlayerHandle;
 
 EXTERN_SEND_TABLE(DT_BasePlayer)
 
-
-
 //-----------------------------------------------------------------------------
 // Inline methods
 //-----------------------------------------------------------------------------
+
 inline bool CBasePlayer::IsBotOfType( int botType ) const
 {
 	// bot type of zero is invalid

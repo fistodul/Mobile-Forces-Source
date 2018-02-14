@@ -1,3 +1,12 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #pragma once
 
 #include "vgui2d/panel2d.h"
@@ -9,22 +18,27 @@ class BasePanel : public Panel2D
 	DECLARE_CLASS_SIMPLE(BasePanel, Panel2D);
 
 public:
-	BasePanel(vgui::VPANEL parent);
+	BasePanel(vgui::VPANEL Parent);
 
-	static void			Create();
-	virtual void 		OnThink();
-	virtual void 		PaintBlurMask();
+	static void Create();
+	virtual void OnThink();
+	virtual void PaintBlurMask();
 	
-	virtual bool		IsBackgroundMusicPlaying();
-	virtual bool		StartBackgroundMusic(float fVol);
-	virtual void		UpdateBackgroundMusicVolume(float fVol);
-	virtual void		ReleaseBackgroundMusic();
+	virtual bool IsBackgroundMusicPlaying();
+	virtual bool StartBackgroundMusic(float Volume);
+	virtual void UpdateBackgroundMusicVolume(float Volume);
+	virtual void ReleaseBackgroundMusic();
 
 	virtual vgui::VPANEL GetVPanel();
+	virtual MainMenu* GetMainMenuPanel() const { return MainMenuPanel; }
+	virtual MainMenuHelper* GetMainMenuHelperPanel() const { return MainMenuHelperPanel; }
 
 private:
-	CUtlString			m_backgroundMusic;
-	int32				m_nBackgroundMusicGUID;
+	CUtlString BackgroundMusic;
+	int32 BackgroundMusicGUID;
+
+	MainMenu* MainMenuPanel;
+	MainMenuHelper* MainMenuHelperPanel;
 };
 
 extern BasePanel* GetBasePanel();

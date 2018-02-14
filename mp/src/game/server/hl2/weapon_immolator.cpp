@@ -29,7 +29,7 @@ class CWeaponImmolator : public CBaseHLCombatWeapon
 public:
 	DECLARE_CLASS( CWeaponImmolator, CBaseHLCombatWeapon );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	CWeaponImmolator( void );
 	
@@ -61,8 +61,8 @@ public:
 	Vector  m_vecImmolatorTarget;
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponImmolator, DT_WeaponImmolator)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponImmolator, DT_WeaponImmolator)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( info_target_immolator, CPointEntity );
 LINK_ENTITY_TO_CLASS( weapon_immolator, CWeaponImmolator );
@@ -104,7 +104,7 @@ void CWeaponImmolator::StartImmolating()
 	// determine whether the immolator is operating or not.
 	m_flBurnRadius = 0.1;
 	m_flTimeLastUpdatedRadius = gpGlobals->curtime;
-	SetThink( UpdateThink );
+	SetThink(&CWeaponImmolator::UpdateThink);
 	SetNextThink( gpGlobals->curtime );
 
 	CSoundEnt::InsertSound( SOUND_DANGER, m_vecImmolatorTarget, 256, 5.0, GetOwner() );
@@ -347,8 +347,12 @@ void CWeaponImmolator::ImmolationDamage( const CTakeDamageInfo &info, const Vect
 
 	Vector vecSrc = vecSrcIn;
 
+	//MFS
+	CEntitySphereQuery sphere(vecSrc, flRadius);
+	pEntity = sphere.GetCurrentEntity();
+
 	// iterate on all entities in the vicinity.
-	for ( CEntitySphereQuery sphere( vecSrc, flRadius ); pEntity = sphere.GetCurrentEntity(); sphere.NextEntity() )
+	for (sphere; pEntity; sphere.NextEntity())
 	{
 		CBaseCombatCharacter *pBCC;
 

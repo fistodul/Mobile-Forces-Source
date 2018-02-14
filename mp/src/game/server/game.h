@@ -27,6 +27,7 @@ extern ConVar	holdout;
 extern ConVar	hold_time;
 extern ConVar	knifefight;
 extern ConVar	captains;
+extern ConVar	flash;
 #endif
 extern ConVar	fraglimit;
 extern ConVar	falldamage;

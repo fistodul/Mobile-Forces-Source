@@ -55,7 +55,7 @@ public:
 
 	CWeaponSniperRifle(void);
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	void Precache( void );
 
@@ -80,8 +80,8 @@ protected:
 	int m_nZoomLevel;
 };
 
-IMPLEMENT_SERVERCLASS_ST(CWeaponSniperRifle, DT_WeaponSniperRifle)
-END_SEND_TABLE()
+/*IMPLEMENT_SERVERCLASS_ST(CWeaponSniperRifle, DT_WeaponSniperRifle)
+END_SEND_TABLE()*/
 
 LINK_ENTITY_TO_CLASS( weapon_sniperrifle, CWeaponSniperRifle );
 PRECACHE_WEAPON_REGISTER(weapon_sniperrifle);

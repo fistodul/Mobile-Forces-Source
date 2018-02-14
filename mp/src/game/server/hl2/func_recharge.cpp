@@ -19,7 +19,7 @@
 #include "engine/IEngineSound.h"
 #include "in_buttons.h"
 
-#ifdef SecobMod__USE_PLAYERCLASSES
+#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 #include "hl2mp_player.h"
 #endif //SecobMod__USE_PLAYERCLASSES
 
@@ -597,7 +597,7 @@ void CNewRecharge::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE 
 	if ( !pActivator || !pActivator->IsPlayer() )
 		return;
 
-	#ifdef SecobMod__USE_PLAYERCLASSES
+	#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 		CHL2MP_Player *pPlayer = static_cast<CHL2MP_Player *>(pActivator);
 	#else
 		CBasePlayer *pPlayer = static_cast<CBasePlayer *>(pActivator);
@@ -651,7 +651,7 @@ void CNewRecharge::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE 
 	}
 
 	// Get our maximum armor value
-	#ifdef SecobMod__USE_PLAYERCLASSES
+	#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 	 	int nMaxArmor = pPlayer->GetMaxArmorValue();
 	#else
 	 	int nMaxArmor = 100;

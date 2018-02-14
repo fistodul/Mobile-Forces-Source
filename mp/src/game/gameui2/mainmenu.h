@@ -1,56 +1,67 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #pragma once
 
 #include "vgui2d/frame2d.h"
 
 #include "button_mainmenu.h"
 
-#include <string>
-#include <algorithm>
-#include <functional>
-
 class MainMenu : public Frame2D
 {
 	DECLARE_CLASS_SIMPLE(MainMenu, Frame2D);
 
 public:
-	MainMenu(vgui::Panel* parent);
+	MainMenu(vgui::Panel* Parent);
 
-	virtual void		ApplySchemeSettings(vgui::IScheme* pScheme);
-	virtual void		CreateMenu(const char* menu);
-	virtual void 		OnThink();
-	virtual bool		IsVisible();
-	virtual void 		DrawMainMenu();
-	virtual void 		DrawLogo();
-	virtual void 		Paint();
-	virtual void		OnCommand(char const* cmd);
-	virtual void		OnSetFocus();
-	virtual void		OnKillFocus();
-	virtual bool		Equals(char const* inputA, char const* inputB);
+	virtual void ApplySchemeSettings(vgui::IScheme* Scheme);
+	virtual void CreateMenu(const char* MenuScript);
+	virtual void OnThink();
+	virtual void DrawMainMenu();
+	virtual void DrawLogo();
+	virtual void Paint();
+	virtual void OnCommand(char const* Command);
+	virtual void OnSetFocus();
+	virtual void OnKillFocus();
+	virtual void UpdateMenu();
+	virtual bool IsVisible();
 
 private:
-	CUtlVector<Button_MainMenu*> m_pButtons;
-	CUtlVector<Button_MainMenu*> m_pButtonsInGame;
-	CUtlVector<Button_MainMenu*> m_pButtonsBackground;
-	CUtlVector<Button_MainMenu*> m_pButtonsShared;
+	CUtlVector<Button_MainMenu*> ActiveButtons;
+	CUtlVector<Button_MainMenu*> ButtonsInGame;
+#ifdef MFS
+	CUtlVector<Button_MainMenu*> ButtonsInGameSP;
+	CUtlVector<Button_MainMenu*> ButtonsInGameMP;
+#endif
+	CUtlVector<Button_MainMenu*> ButtonsBackground;
+	CUtlVector<Button_MainMenu*> ButtonsShared;
 
-	bool				m_bFocused;
-	wchar_t*			m_logoLeft;
-	wchar_t*			m_logoRight;
+	bool bIsVisible;
 
-	float				m_fButtonsSpace;
+	wchar_t* LogoLeftText;
+	wchar_t* LogoRightText;
 
-	float				m_fButtonsOffsetX;
-	float				m_fButtonsOffsetY;
+	float ButtonsSpace;
 
-	float				m_fLogoOffsetX;
-	float				m_fLogoOffsetY;
+	float ButtonsOffsetX;
+	float ButtonsOffsetY;
 
-	bool				m_bLogoAttachToMenu;
+	float LogoOffsetX;
+	float LogoOffsetY;
 
-	Color				m_cLogoLeft;
-	Color				m_cLogoRight;
+	bool bLogoAttachToMenu;
+	bool bLogoAlignToLeft;
 
-	vgui::HFont			m_fLogoFont;
+	Color LogoLeftColor;
+	Color LogoRightColor;
+
+	vgui::HFont LogoFont;
 };
 
 class MainMenuHelper : public vgui::Panel
@@ -58,5 +69,5 @@ class MainMenuHelper : public vgui::Panel
 	DECLARE_CLASS_SIMPLE(MainMenuHelper, vgui::Panel);
 
 public:
-	MainMenuHelper(MainMenu* menu, vgui::Panel* parent);
+	MainMenuHelper(MainMenu* Menu, vgui::Panel* Parent);
 };

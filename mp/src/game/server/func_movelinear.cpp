@@ -84,8 +84,31 @@ void CFuncMoveLinear::Spawn( void )
 		m_flMoveDistance = DotProductAbs( m_vecMoveDir, vecOBB ) - m_flLip;
 	}
 
+#ifdef MFS
+	m_hPosition1 = CreateEntityByName("info_target");
+	m_hPosition2 = CreateEntityByName("info_target");
+
 	m_vecPosition1 = GetAbsOrigin() - (m_vecMoveDir * m_flMoveDistance * m_flStartPosition);
 	m_vecPosition2 = m_vecPosition1 + (m_vecMoveDir * m_flMoveDistance);
+
+	// Update position reference entities
+	if (m_hPosition1 != NULL)
+	{
+		m_hPosition1->SetAbsOrigin(m_vecPosition1);
+		if (GetParent())
+			m_hPosition1->SetParent(GetParent());
+	}
+
+	if (m_hPosition2 != NULL)
+	{
+		m_hPosition2->SetAbsOrigin(m_vecPosition2);
+		if (GetParent())
+			m_hPosition2->SetParent(GetParent());
+	}
+#else
+	m_vecPosition1 = GetAbsOrigin() - (m_vecMoveDir * m_flMoveDistance * m_flStartPosition);
+	m_vecPosition2 = m_vecPosition1 + (m_vecMoveDir * m_flMoveDistance);
+#endif
 	m_vecFinalDest = GetAbsOrigin();
 
 	SetTouch( NULL );
@@ -256,11 +279,19 @@ void CFuncMoveLinear::MoveDone( void )
 	SetNextThink( gpGlobals->curtime + 0.1f );
 	BaseClass::MoveDone();
 
+#ifdef MFS
+	if (GetLocalOrigin() == m_hPosition2->GetLocalOrigin())
+#else
 	if ( GetAbsOrigin() == m_vecPosition2 )
+#endif
 	{
 		m_OnFullyOpen.FireOutput( this, this );
 	}
+#ifdef MFS
+	else if (GetLocalOrigin() == m_hPosition1->GetLocalOrigin()
+#else
 	else if ( GetAbsOrigin() == m_vecPosition1 )
+#endif
 	{
 		m_OnFullyClosed.FireOutput( this, this );
 	}
@@ -277,8 +308,12 @@ void CFuncMoveLinear::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 
 	if ( value > 1.0 )
 		value = 1.0;
+#ifdef MFS
+	Vector move = m_hPosition1->GetLocalOrigin() + (value * (m_hPosition2->GetLocalOrigin() - m_hPosition1->GetLocalOrigin()));
+#else
 	Vector move = m_vecPosition1 + (value * (m_vecPosition2 - m_vecPosition1));
-	
+#endif
+
 	Vector delta = move - GetLocalOrigin();
 	float speed = delta.Length() * 10;
 
@@ -291,7 +326,11 @@ void CFuncMoveLinear::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TY
 //-----------------------------------------------------------------------------
 void CFuncMoveLinear::SetPosition( float flPosition )
 {
+#ifdef MFS
+	Vector vTargetPos = m_hPosition1->GetLocalOrigin() + (flPosition * (m_hPosition2->GetLocalOrigin() - m_hPosition1->GetLocalOrigin()));
+#else
 	Vector vTargetPos = m_vecPosition1 + ( flPosition * (m_vecPosition2 - m_vecPosition1));
+#endif
 	if ((vTargetPos - GetLocalOrigin()).Length() > 0.001)
 	{
 		MoveTo(vTargetPos, m_flSpeed);
@@ -304,9 +343,15 @@ void CFuncMoveLinear::SetPosition( float flPosition )
 //------------------------------------------------------------------------------
 void CFuncMoveLinear::InputOpen( inputdata_t &inputdata )
 {
+#ifdef MFS
+	if (GetLocalOrigin() != m_hPosition2->GetLocalOrigin())
+	{
+		MoveTo(m_hPosition2->GetLocalOrigin(), m_flSpeed);
+#else
 	if (GetLocalOrigin() != m_vecPosition2)
 	{
 		MoveTo(m_vecPosition2, m_flSpeed);
+#endif
 	}
 }
 
@@ -316,9 +361,15 @@ void CFuncMoveLinear::InputOpen( inputdata_t &inputdata )
 //------------------------------------------------------------------------------
 void CFuncMoveLinear::InputClose( inputdata_t &inputdata )
 {
+#ifdef MFS
+	if (GetLocalOrigin() != m_hPosition1->GetLocalOrigin())
+	{
+		MoveTo(m_hPosition1->GetLocalOrigin(), m_flSpeed);
+#else
 	if (GetLocalOrigin() != m_vecPosition1)
 	{
 		MoveTo(m_vecPosition1, m_flSpeed);
+#endif
 	}
 }
 

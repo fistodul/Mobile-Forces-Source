@@ -29,7 +29,7 @@ class CWeapon_Tripwire : public CBaseHLCombatWeapon
 public:
 	DECLARE_CLASS( CWeapon_Tripwire, CBaseHLCombatWeapon );
 
-	DECLARE_SERVERCLASS();
+	//DECLARE_SERVERCLASS();
 
 	bool				m_bNeedReload;
 	bool				m_bClearReload;

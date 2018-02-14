@@ -29,7 +29,9 @@ public:
 
 	virtual void	Spawn();
 	virtual void	Activate();
+#ifndef MFS
 	virtual void	Precache();
+#endif
 	virtual bool	KeyValue( const char *szKeyName, const char *szValue );
 
 
@@ -73,6 +75,9 @@ class CFunc_DustMotes : public CFunc_Dust
 	DECLARE_CLASS( CFunc_DustMotes, CFunc_Dust );
 public:
 					CFunc_DustMotes();
+#ifdef MFS
+					virtual void	Precache();
+#endif
 };
 
 
@@ -80,6 +85,9 @@ class CFunc_DustCloud : public CFunc_Dust
 {
 	DECLARE_CLASS( CFunc_DustCloud, CFunc_Dust );
 public:
+#ifdef MFS
+	virtual void	Precache();
+#endif
 };
 
 IMPLEMENT_SERVERCLASS_ST_NOBASE( CFunc_Dust, DT_Func_Dust )
@@ -168,11 +176,22 @@ void CFunc_Dust::Spawn()
 	BaseClass::Spawn();
 }
 
+#ifdef MFS
+void CFunc_DustMotes::Precache()
+{
+	PrecacheMaterial("particle/sparkles");
+}
 
+void CFunc_DustCloud::Precache()
+{
+	PrecacheMaterial( "particle/particle_smokegrenade" );
+}
+#else
 void CFunc_Dust::Precache()
 {
 	PrecacheMaterial( "particle/sparkles" );
 }
+#endif
 
 void CFunc_Dust::Activate()
 {

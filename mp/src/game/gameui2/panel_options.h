@@ -1,57 +1,89 @@
+/*
+Hyperborea (c) by Nicolas @ https://github.com/NicolasDe
+
+Hyperborea is licensed under a
+Creative Commons Attribution-ShareAlike 4.0 International License.
+
+You should have received a copy of the license along with this
+work.  If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
+*/
 #pragma once
+
+#define fuck2
 
 #include "vgui2d/frame2d.h"
 #include "vgui_controls/AnimationController.h"
-
+#if defined MFS && defined fuck || defined fuck2
+#include "vgui_controls/PropertyDialog.h"
+#endif
 #include "button_panel.h"
 
+#ifdef fuck
+class Panel_Options : public Frame2D, public vgui::PropertyDialog
+#else
 class Panel_Options : public Frame2D
+#endif
 {
 	DECLARE_CLASS_SIMPLE(Panel_Options, Frame2D);
-
 public:
-	Panel_Options(vgui::VPANEL parent, const char* pName);
+	Panel_Options(vgui::VPANEL Parent, const char* PanelName);
 
-	virtual void		ApplySchemeSettings(vgui::IScheme* pScheme);
-	virtual void 		OnThink();
-	virtual void 		SetContentBounds();
-	virtual void 		Paint();
-	virtual void 		PaintBlurMask();
-	virtual void		Animations();
-	virtual void 		DrawBackground();
-	virtual void 		DrawTitle();
-	virtual void 		DrawTabs();
-	virtual void 		DrawBasicButtons();
-	virtual void		OnCommand(char const* cmd);
+	virtual void ApplySchemeSettings(vgui::IScheme* Scheme);
+	virtual void OnThink();
+	virtual void SetContentBounds();
+	virtual void Paint();
+	virtual void PaintBlurMask();
+	virtual void Animations();
+	virtual void DrawBackground();
+	virtual void DrawTitle();
+	virtual void DrawTabs();
+	virtual void DrawBasicButtons();
+	virtual void OnCommand(char const* Command);
+
+#ifdef MFS
+	void OpenGammaDialog();
+#endif
 
 private:
-	vgui::AnimationController* m_pAnimController;
+	vgui::AnimationController* AnimationController;
 
-	Button_Panel*		m_pBtnApply;
-	Button_Panel*		m_pBtnDone;
-	Button_Panel*		m_pBtnBack;
+	Button_Panel* ButtonApply;
+	Button_Panel* ButtonDone;
+	Button_Panel* ButtonBack;
 
-	int32				m_iContentX0;
-	int32				m_iContentY0;
-	int32				m_iContentX1;
-	int32				m_iContentY1;
-	int32				m_iContentW;
-	int32				m_iContentH;
+	int32 ContentX0;
+	int32 ContentY0;
+	int32 ContentX1;
+	int32 ContentY1;
+	int32 ContentW;
+	int32 ContentH;
 
-	wchar_t*			m_PanelTitle;
+	wchar_t* PanelTitle;
 
-	int32				m_iTitlePositionX;
-	int32				m_iTitlePositionY;
-	int32				m_iTitleSizeX;
-	int32				m_iTitleSizeY;
+	int32 TitlePositionX;
+	int32 TitlePositionY;
+	int32 TitleSizeX;
+	int32 TitleSizeY;
 
-	Color				m_cBackgroundGradientTop;
-	Color				m_cBackgroundGradientBottom;
+	Color BackgroundGradientTop;
+	Color BackgroundGradientBottom;
 
-	Color				m_cTitleColor;
+	Color TitleColor;
 
-	float				m_fTitleOffsetX;
-	float				m_fTitleOffsetY;
+	float TitleOffsetX;
+	float TitleOffsetY;
 
-	vgui::HFont			m_fTitleFont;
+	vgui::HFont TitleFont;
+
+#ifdef MFS
+#if !defined fuck && defined fuck2
+	vgui::PropertyDialog *m_PDialog;
+#endif
+#if 0
+	class COptionsSubKeyboard *m_pOptionsSubKeyboard;
+	class COptionsSubMouse *m_pOptionsSubMouse;
+	class COptionsSubAudio *m_pOptionsSubAudio;
+#endif
+	//class COptionsSubVideo *m_pOptionsSubVideo;
+#endif
 };

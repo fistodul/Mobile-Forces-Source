@@ -69,7 +69,9 @@
 #include "dt_utlvector_send.h"
 #include "vote_controller.h"
 #include "ai_speech.h"
+#ifdef MFS
 #include "mfs/func_buyzone.h"
+#endif
 
 #ifdef LUA_SDK
 #include "luamanager.h"
@@ -123,10 +125,24 @@ bool IsInCommentaryMode( void );
 bool IsListeningToCommentary( void );
 
 #if !defined( CSTRIKE_DLL )
+#ifdef MFS //I have no clue what this is used for, nor why is it replicated here and not in in_main.cpp(but it suits MFS's cheating style this way)
+ConVar cl_sidespeed("cl_sidespeed", "8999", /*FCVAR_REPLICATED | */FCVAR_CHEAT);
+ConVar cl_upspeed("cl_upspeed", "8999", /*FCVAR_REPLICATED | */FCVAR_CHEAT);
+ConVar cl_forwardspeed("cl_forwardspeed", "8999", /*FCVAR_REPLICATED | */FCVAR_CHEAT);
+ConVar cl_backspeed("cl_backspeed", "8999", /*FCVAR_REPLICATED | */FCVAR_CHEAT);
+#else
+#ifdef SecobMod__USE_PLAYERCLASSES //MFS, idk was this left out on purpose
+ConVar cl_sidespeed( "cl_sidespeed", "4500", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar cl_upspeed( "cl_upspeed", "4500", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar cl_forwardspeed( "cl_forwardspeed", "4500", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar cl_backspeed("cl_backspeed", "4500", FCVAR_REPLICATED | FCVAR_CHEAT);
+#else
 ConVar cl_sidespeed( "cl_sidespeed", "450", FCVAR_REPLICATED | FCVAR_CHEAT );
 ConVar cl_upspeed( "cl_upspeed", "320", FCVAR_REPLICATED | FCVAR_CHEAT );
 ConVar cl_forwardspeed( "cl_forwardspeed", "450", FCVAR_REPLICATED | FCVAR_CHEAT );
 ConVar cl_backspeed( "cl_backspeed", "450", FCVAR_REPLICATED | FCVAR_CHEAT );
+#endif
+#endif
 #endif // CSTRIKE_DLL
 
 // This is declared in the engine, too
@@ -200,7 +216,7 @@ ConVar	sk_player_arm( "sk_player_arm","1" );
 ConVar	sk_player_leg( "sk_player_leg","1" );
 
 //ConVar	player_usercommand_timeout( "player_usercommand_timeout", "10", 0, "After this many seconds without a usercommand from a player, the client is kicked." );
-#ifdef _DEBUG
+#if defined _DEBUG || defined evil //Amazing
 ConVar  sv_player_net_suppress_usercommands( "sv_player_net_suppress_usercommands", "0", FCVAR_CHEAT, "For testing usercommand hacking sideeffects. DO NOT SHIP" );
 #endif // _DEBUG
 ConVar  sv_player_display_usercommand_errors( "sv_player_display_usercommand_errors", "0", FCVAR_CHEAT, "1 = Display warning when command values are out-of-range. 2 = Spew invalid ranges." );
@@ -802,10 +818,14 @@ bool CBasePlayer::WantsLagCompensationOnEntity( const CBaseEntity *pEntity, cons
 	//float maxDistance = 1.5 * pPlayer->MaxSpeed() * sv_maxunlag.GetFloat(); 
 	float maxspeed; 
 	CBasePlayer *pPlayer = ToBasePlayer((CBaseEntity*)pEntity); 
-	if ( pPlayer ) 
-		maxspeed = pPlayer->MaxSpeed(); 
-	else 
-		maxspeed = 600; 
+	if (pPlayer)
+		maxspeed = pPlayer->MaxSpeed();
+	else
+/*#ifdef MFS
+		maxspeed = sv_maxspeed.GetFloat(); //Clearly we are insane
+#else*/
+		maxspeed = 600;
+//#endif
 	float maxDistance = 1.5 * maxspeed * sv_maxunlag.GetFloat(); 
 #else
 bool CBasePlayer::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
@@ -2255,28 +2275,41 @@ bool CBasePlayer::IsOnLadder( void )
 	return (GetMoveType() == MOVETYPE_LADDER);
 }
 
+#ifdef MFS
 bool CBasePlayer::IsinBuyzone(void)
 {
-	int c = CBuyZone::GetBuyZoneCount();
-	if (c == 0)
-	{
+	//CBuyZone *pEntity = GetBaseEntity()->MyBuyZonePointer();
+	CBuyZone *pEntity = gEntList.FindEntityByClassname(NULL, "func_buyzone")->MyBuyZonePointer();
+	if (!pEntity)
 		return false;
-	}
 
-	for (int i = 0; i < c; i++)
-	{
-		CBuyZone *pBuyZone = CBuyZone::GetBuyZone(i);
-		
+	for (int i = 0; i <= pEntity->GetBuyZoneCount(); i++)
+	{	
+		CBuyZone *pBuyZone = pEntity->GetBuyZone(i);
 		float flDist = this->GetAbsOrigin().DistTo(pBuyZone->GetAbsOrigin());
-
 		if (flDist < 60)
-			return pBuyZone->isinbuyzone;
-
-		return false;
+		{
+			if (pBuyZone->TeamNum != 0)
+			{
+				if (GetTeamNumber() == pBuyZone->TeamNum)
+#ifdef lol
+					return pBuyZone->isplayerinbuyzone;
+#else
+					return true;
+#endif
+			}
+			else
+#ifdef lol
+				return pBuyZone->isplayerinbuyzone;
+#else
+				return true;
+#endif
+		}
 	}
 
 	return false;
 }
+#endif
 
 float CBasePlayer::GetWaterJumpTime() const
 {
@@ -3595,7 +3628,7 @@ void CBasePlayer::PhysicsSimulate( void )
 
 	float vphysicsArrivalTime = TICK_INTERVAL;
 
-#ifdef _DEBUG
+#if defined _DEBUG || defined MFS
 	if ( sv_player_net_suppress_usercommands.GetBool() )
 	{
 		commandsToRun = 0;
@@ -9055,6 +9088,7 @@ void SendProxy_CropFlagsToPlayerFlagBitsLength( const SendProp *pProp, const voi
 		SendPropInt		(SENDINFO(m_lifeState), 3, SPROP_UNSIGNED ),
 		SendPropInt		(SENDINFO(m_iBonusProgress), 15 ),
 		SendPropInt		(SENDINFO(m_iBonusChallenge), 4 ),
+//#ifdef MFS
 		SendPropFloat	(SENDINFO(m_flMaxspeed), 12, SPROP_ROUNDDOWN, 0.0f, 2048.0f ),  // CL
 		SendPropInt		(SENDINFO(m_fFlags), PLAYER_FLAG_BITS, SPROP_UNSIGNED|SPROP_CHANGES_OFTEN, SendProxy_CropFlagsToPlayerFlagBitsLength ),
 		SendPropInt		(SENDINFO(m_iObserverMode), 3, SPROP_UNSIGNED ),
@@ -10429,7 +10463,7 @@ void CBasePlayer::AdjustDrownDmg( int nAmount )
 	}
 }
 
-#ifdef SecobMod__USE_PLAYERCLASSES
+#if defined SecobMod__USE_PLAYERCLASSES || defined MFS
 void CBasePlayer::SetWalkSpeed(int WalkSpeed)
 {
         m_iWalkSpeed=WalkSpeed;
@@ -10469,59 +10503,18 @@ float CBasePlayer::GetJumpHeight()
 {
         return m_iJumpHeight;
 }
-#else
+#endif //SecobMod__USE_PLAYERCLASSES
 #ifdef MFS
-void CBasePlayer::SetWalkSpeed(int WalkSpeed)
-{
-		m_iWalkSpeed = WalkSpeed;
-}
-
-void CBasePlayer::SetNormSpeed(int NormSpeed)
-{
-	m_iNormSpeed = NormSpeed;
-}
-
-void CBasePlayer::SetSprintSpeed(int SprintSpeed)
-{
-	m_iSprintSpeed = SprintSpeed;
-}
-
 void CBasePlayer::SetProneSpeed(int ProneSpeed)
 {
 	m_iProneSpeed = ProneSpeed;
-}
-
-void CBasePlayer::SetJumpHeight(float JumpHeight)
-{
-	m_iJumpHeight = JumpHeight;
-}
-
-int CBasePlayer::GetWalkSpeed()
-{
-		return m_iWalkSpeed;
-}
-
-int CBasePlayer::GetNormSpeed()
-{
-		return m_iNormSpeed;
-}
-
-int CBasePlayer::GetSprintSpeed()
-{
-		return m_iSprintSpeed;
 }
 
 int CBasePlayer::GetProneSpeed()
 {
 		return m_iProneSpeed;
 }
-
-float CBasePlayer::GetJumpHeight()
-{
-		return m_iJumpHeight;
-}
 #endif
-#endif //SecobMod__USE_PLAYERCLASSES
 
 #ifdef SecobMod__ENABLE_FAKE_PASSENGER_SEATS
 //------------------------------------------------------------------------------

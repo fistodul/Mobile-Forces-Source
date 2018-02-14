@@ -71,7 +71,8 @@ WeaponData
 				"width"		"24"
 				"height"	"24"
 		}
-ExpOffset
+	}
+	ExpOffset
    {
       "x"   "-15"
       "y"   "-5.5"
@@ -80,5 +81,4 @@ ExpOffset
      // "yori"   "1.1" //Does not work
      // "zori"   "2.0" // Does not work
    }
-	}
 }
